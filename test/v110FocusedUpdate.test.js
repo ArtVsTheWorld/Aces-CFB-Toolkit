@@ -1,0 +1,15 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { validateSavePath } from "../src/main/services/files.js";
+import { resolveBundledSchemaForHeader, SUPPORTED_SCHEMAS } from "../src/main/services/save.js";
+import { validateEquipmentSeason } from "../src/main/tools/equipment/shared.js";
+import { visorChanceForPosition, visorPopulationGroup } from "../src/main/tools/equipment/core/globalFixes.js";
+const renderer=fs.readFileSync(new URL("../src/renderer/renderer.js",import.meta.url),"utf8"),index=fs.readFileSync(new URL("../src/renderer/index.html",import.meta.url),"utf8");
+test("supported schema compatibility metadata covers both verified save eras",()=>{assert.deepEqual(SUPPORTED_SCHEMAS.map(x=>[x.version,x.saveHeaders]),[["C27_468_2",["809_0","814_0"]],["C27_486_6",["833_0"]]]);assert.equal(resolveBundledSchemaForHeader(27,809,0).version,"C27_468_2");assert.equal(resolveBundledSchemaForHeader(27,833,0).version,"C27_486_6");assert.equal(resolveBundledSchemaForHeader(27,900,0),null);});
+test("generic save validation accepts autosaves",t=>{const dir=fs.mkdtempSync(path.join(os.tmpdir(),"autosave-"));t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));const file=path.join(dir,"DYNASTY-TEST-AUTOSAVE");fs.writeFileSync(file,"x");assert.equal(validateSavePath(file),file);});
+test("equipment season window allows preseason through postseason and rejects offseason",()=>{assert.doesNotThrow(()=>validateEquipmentSeason({CurrentWeekType:"PreSeason",CurrentWeek:0,PostSeasonNumWeeks:5}));assert.doesNotThrow(()=>validateEquipmentSeason({CurrentWeekType:"RegularSeason",CurrentWeek:15,PostSeasonNumWeeks:5}));assert.doesNotThrow(()=>validateEquipmentSeason({CurrentWeekType:"PostSeason",CurrentWeek:4,PostSeasonNumWeeks:5}));assert.throws(()=>validateEquipmentSeason({CurrentWeekType:"OffSeason",CurrentWeek:0,PostSeasonNumWeeks:5}),/preseason week/);});
+test("visor population ceilings use the requested localized groups",()=>{assert.equal(visorChanceForPosition("QB"),.2);assert.equal(visorChanceForPosition("DT"),.2);assert.equal(visorChanceForPosition("WR"),.6);assert.equal(visorChanceForPosition("CB"),.6);assert.equal(visorChanceForPosition("HB"),.4);assert.equal(visorChanceForPosition("FS"),.4);assert.equal(visorPopulationGroup("FS"),"S");assert.equal(visorPopulationGroup("CB"),"CB");});
+test("renderer exposes schema status, persistent settings, reset, checkbox pickers, and mixing chance UI",()=>{assert.match(index,/active-save-schema/);assert.match(renderer,/toolSettings: new Map/);assert.match(renderer,/Reset to Defaults/);assert.match(renderer,/return checkboxPicker/);assert.match(renderer,/equipment-cross-percent/);assert.match(renderer,/Best Practices \/ When to Run/);});

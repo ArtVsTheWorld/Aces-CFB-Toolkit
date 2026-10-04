@@ -1,0 +1,23 @@
+.home-matchups { border-top: 3px solid var(--action); background: var(--surface); padding: 18px 22px; margin-bottom: 18px; }
+.home-matchups .home-section-heading { margin-bottom: 12px; }
+.home-matchup-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.home-matchup-card { border: 1px solid var(--border, #d6dfdb); padding: 14px; }
+.home-matchup-teams { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.home-matchup-teams > div { display: flex; align-items: center; gap: 8px; flex: 1; }
+.home-matchup-teams img { width: 40px; height: 40px; object-fit: contain; }
+.home-matchup-teams strong { font-size: 13px; }
+.home-matchup-teams > span { font-size: 11px; color: var(--muted); }
+.home-matchup-numbers { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; border-top: 1px solid var(--border, #d6dfdb); padding-top: 12px; margin-top: 12px; }
+.home-matchup-card small { display: block; font-size: 10px; font-weight: 700; color: var(--muted); }
+.home-matchup-numbers strong { font-size: 14px; }
+.home-matchup-moneyline { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 10px; font-size: 11px; }
+.home-matchup-moneyline small { width: 100%; }
+.home-matchup-note { font-size: 11px; margin: 10px 0 0; }
+.matchup-rivalry { margin-top: 8px; }
+.helmet-balance-preview { margin: 16px 0; padding: 16px; border: 1px solid var(--border, #d6dfdb); }
+.helmet-balance-preview summary { cursor: pointer; }
+.helmet-balance-preview summary > span { margin-left: 12px; font-size: 12px; color: var(--muted); }
+.helmet-balance-preview h3 { font-size: 15px; margin: 18px 0 8px; }
+.nil-flag-change { grid-column: 2 / -1; padding: 8px 0; }
+@media (max-width: 1250px) { .home-matchup-teams { flex-direction: column; align-items: stretch; } .home-matchup-teams > span { text-align: center; } }
+@media (max-width: 950px) { .home-matchup-grid { grid-template-columns: 1fr; } .home-matchup-teams { flex-direction: row; } }

@@ -1,0 +1,173 @@
+{
+  "loadouts": [
+    {
+      "loadoutCategory": "Base",
+      "loadoutElements": [
+        {
+          "slotType": "LeftArmTattoo",
+          "itemAssetName": "ArmTattoo_None"
+        },
+        {
+          "slotType": "RightArmTattoo",
+          "itemAssetName": "ArmTattoo_None"
+        },
+        {
+          "slotType": "LeftLegTattoo",
+          "itemAssetName": "LegTattoo_None"
+        },
+        {
+          "slotType": "RightLegTattoo",
+          "itemAssetName": "LegTattoo_None"
+        }
+      ]
+    },
+    {
+      "loadoutType": "PlayerOnField",
+      "loadoutElements": [
+        {
+          "itemAssetName": "GearFaceMask_Speedflex3BarRB"
+        },
+        {
+          "itemAssetName": "ThighPad_Nike",
+          "slotType": "LeftThighWear"
+        },
+        {
+          "blends": [
+            {
+              "barycentricBlend": 1,
+              "baseBlend": 1
+            }
+          ],
+          "itemAssetName": "ThighPad_Nike",
+          "slotType": "RightThighWear"
+        },
+        {
+          "itemAssetName": "GearVisor_None",
+          "slotType": "Visor"
+        },
+        {
+          "itemAssetName": "HandwarmerStyle_Back",
+          "slotType": "WaistWearOverride"
+        },
+        {
+          "itemAssetName": "GearSpats_none",
+          "slotType": "RightSpat"
+        },
+        {
+          "itemAssetName": "GearSpats_none",
+          "slotType": "LeftSpat"
+        },
+        {
+          "itemAssetName": "GearHelmet_Speed_Flex",
+          "slotType": "HeadWear"
+        },
+        {
+          "blends": [
+            {
+              "barycentricBlend": 1,
+              "baseBlend": 1
+            }
+          ],
+          "itemAssetName": "Backplate_Standard",
+          "slotType": "BackPlate"
+        },
+        {
+          "itemAssetName": "Undershirt_None",
+          "slotType": "InnerShirt"
+        },
+        {
+          "itemAssetName": "Gear_Socks_Low",
+          "slotType": "InnerSocks"
+        },
+        {
+          "itemAssetName": "GearArmSleeve_NikeProDriFitSleeve_SecondaryColor",
+          "slotType": "LeftArmWear"
+        },
+        {
+          "itemAssetName": "GearArmSleeve_NikeProDriFitSleeve_SecondaryColor",
+          "slotType": "RightArmWear"
+        },
+        {
+          "itemAssetName": "CalfGear_None",
+          "slotType": "LeftCalfWear"
+        },
+        {
+          "itemAssetName": "CalfGear_None",
+          "slotType": "RightCalfWear"
+        },
+        {
+          "itemAssetName": "ElbowGear_None",
+          "slotType": "LeftElbowWear"
+        },
+        {
+          "itemAssetName": "ElbowGear_None",
+          "slotType": "RightElbowWear"
+        },
+        {
+          "itemAssetName": "KneePad_Regular",
+          "slotType": "KneeWear"
+        },
+        {
+          "blends": [
+            {}
+          ],
+          "itemAssetName": "Small_Pads",
+          "slotType": "Shoulderpads"
+        },
+        {
+          "itemAssetName": "Towel_South",
+          "slotType": "Towel"
+        },
+        {
+          "itemAssetName": "GearWrist_None",
+          "slotType": "LeftWristWear"
+        },
+        {
+          "itemAssetName": "GearWrist_None",
+          "slotType": "RightWristWear"
+        },
+        {
+          "itemAssetName": "GearMouthpiece_PacifierDual_White",
+          "slotType": "MouthWear"
+        },
+        {
+          "itemAssetName": "GearNeckpad_VintageSingleNeckRoll",
+          "slotType": "Neckpad"
+        },
+        {
+          "itemAssetName": "Gear_JerseyStyle_SleeveTight",
+          "slotType": "OuterShirt"
+        },
+        {
+          "itemAssetName": "Handwarmer_Standard",
+          "slotType": "WaistWear"
+        },
+        {
+          "itemAssetName": "GearFootwear_shoe_low_NikeLebronIV",
+          "slotType": "LeftShoe"
+        },
+        {
+          "itemAssetName": "GearFootwear_shoe_low_NikeLebronIV",
+          "slotType": "RightShoe"
+        },
+        {
+          "itemAssetName": "GearHand_glove_JordanVaporJet7_TeamColor",
+          "slotType": "LeftHandWear"
+        },
+        {
+          "itemAssetName": "GearHand_glove_JordanVaporJet7_TeamColor",
+          "slotType": "RightHandWear"
+        },
+        {
+          "slotType": "OuterPants",
+          "itemAssetName": "GearPants_AboveKnee"
+        },
+        {
+          "slotType": "FacePaint",
+          "itemAssetName": "FaceMarks_EyeTapeLeft"
+        }
+      ]
+    }
+  ],
+  "skinTone": 4
+}

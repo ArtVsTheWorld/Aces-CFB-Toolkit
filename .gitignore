@@ -1,0 +1,25 @@
+node_modules/
+.npm-cache/
+dist/
+outputs/
+coverage/
+*.log
+.DS_Store
+Thumbs.db
+
+# Local credentials and personal Toolkit data must never be published.
+.env
+.env.*
+!.env.example
+*.pem
+*.pfx
+*.p12
+settings.json
+history.json
+reports/
+logs/
+review-snapshots/
+saves/
+Ace's CFB Toolkit Backups/
+DYNASTY-*
+ROADTOGLORY-*

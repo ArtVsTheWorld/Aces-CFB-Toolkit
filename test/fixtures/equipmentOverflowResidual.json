@@ -1,0 +1,185 @@
+{
+  "description": "Two-byte overflow continuation followed by residual decodable equipment data; captured from a game-generated save",
+  "main": "eQEotS/9Y4tQ/GWKAl0LANKNNS5AtQ7DMAzDMF0URVGeovjahEBKuVwfdhnI1PzcFwC+qio45v5z/90QendqSVRbBjEUQ5H2NvWVuwrT77dxl1Hd96es+q7GZ3okky9nAGWXVgGiWn1AHALFcVZiCEYD8/FqSzXt3ST86kqKnUFIJHi02+381Q9v1O1bz3zWnlh1t6TWxCtq7SbeX8+uLreX+v5IwkydqSb1TG7LcdSP+29htZez9Py91OjL19vtO+zyUpuUjwUcSvIblUibRUYRjpOQz6jmPI43WnuW53ngZ9mdOsknAAZV7PAmGhpN0wGMOAA/uf/yJ/7ruX9HUVpkgyDjAVPxqOSBY9b+VB8ahaLLRuwPLc/eba3Fk+UhsexI03nT2FP771r9HwKWDFRA2r25fovr678EHTNV6D39L/lROhBVWZy6z+3/uAq9m38JsE58isjO0FjnVicp8OBiE5N4OO9FSDC+Fjxz5cc8xYUBqlDQFNE=",
+  "spill": "8w0otS/9Y4tQ/GWiAP0CAPPCCrzb6DZ6SaV+LIjxc3W1B+TojeR0ZJAyCuUZJ6w0MijSLLowgYgEr/GNAwIw/GDaqxkL32AgIT6qLlNbUj6JZ6GYiyZOqq5z/df7AGIXgDI4wY10EcF71YCDoRkBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+  "expected": {
+    "loadouts": [
+      {
+        "loadoutCategory": "Base",
+        "loadoutElements": [
+          {
+            "slotType": "LeftArmTattoo",
+            "itemAssetName": "ArmTattoo_None"
+          },
+          {
+            "slotType": "RightArmTattoo",
+            "itemAssetName": "ArmTattoo_None"
+          },
+          {
+            "slotType": "LeftLegTattoo",
+            "itemAssetName": "LegTattoo_Two"
+          },
+          {
+            "slotType": "RightLegTattoo",
+            "itemAssetName": "LegTattoo_Two"
+          }
+        ]
+      },
+      {
+        "loadoutType": "PlayerOnField",
+        "loadoutElements": [
+          {
+            "itemAssetName": "GearFaceMask_Speedflex2Bar"
+          },
+          {
+            "itemAssetName": "ThighPad_Nike",
+            "slotType": "LeftThighWear"
+          },
+          {
+            "blends": [
+              {
+                "barycentricBlend": 1,
+                "baseBlend": 1
+              }
+            ],
+            "itemAssetName": "ThighPad_Nike",
+            "slotType": "RightThighWear"
+          },
+          {
+            "itemAssetName": "GearVisor_visorOakley_clear",
+            "slotType": "Visor"
+          },
+          {
+            "itemAssetName": "HandwarmerStyle_Back",
+            "slotType": "WaistWearOverride"
+          },
+          {
+            "itemAssetName": "GearSpats_none",
+            "slotType": "RightSpat"
+          },
+          {
+            "itemAssetName": "GearSpats_none",
+            "slotType": "LeftSpat"
+          },
+          {
+            "itemAssetName": "GearHelmet_Speed_Flex",
+            "slotType": "HeadWear"
+          },
+          {
+            "blends": [
+              {
+                "barycentricBlend": 1,
+                "baseBlend": 1
+              }
+            ],
+            "itemAssetName": "Backplate_Standard",
+            "slotType": "BackPlate"
+          },
+          {
+            "itemAssetName": "GearLegsBase_RightSleeve",
+            "slotType": "InnerPants"
+          },
+          {
+            "itemAssetName": "G_CompressionT_Crew_LongSleeve_99Club_B_WHI",
+            "slotType": "InnerShirt"
+          },
+          {
+            "itemAssetName": "Gear_Socks_Low",
+            "slotType": "InnerSocks"
+          },
+          {
+            "itemAssetName": "GearArmSleeve_NikeProDriFitSleeve2_Black",
+            "slotType": "LeftArmWear"
+          },
+          {
+            "itemAssetName": "GearArmSleeve_Elbow_armTape_normal_Black",
+            "slotType": "RightArmWear"
+          },
+          {
+            "itemAssetName": "CalfGear_None",
+            "slotType": "LeftCalfWear"
+          },
+          {
+            "itemAssetName": "CalfGear_None",
+            "slotType": "RightCalfWear"
+          },
+          {
+            "itemAssetName": "ElbowGear_None",
+            "slotType": "LeftElbowWear"
+          },
+          {
+            "itemAssetName": "GearBicepBand_White",
+            "slotType": "RightElbowWear"
+          },
+          {
+            "itemAssetName": "KneePad_Regular",
+            "slotType": "KneeWear"
+          },
+          {
+            "blends": [
+              {}
+            ],
+            "itemAssetName": "Small_Pads",
+            "slotType": "Shoulderpads"
+          },
+          {
+            "itemAssetName": "Towel_South",
+            "slotType": "Towel"
+          },
+          {
+            "itemAssetName": "GearWrist_None",
+            "slotType": "LeftWristWear"
+          },
+          {
+            "itemAssetName": "GearWrist_None",
+            "slotType": "RightWristWear"
+          },
+          {
+            "itemAssetName": "GearMouthpiece_PacifierDualHanging_TeamColor",
+            "slotType": "MouthWear"
+          },
+          {
+            "itemAssetName": "GearNeckpad_None",
+            "slotType": "Neckpad"
+          },
+          {
+            "itemAssetName": "GearPants_AboveKnee",
+            "slotType": "OuterPants"
+          },
+          {
+            "itemAssetName": "Gear_JerseyStyle_SleeveTight",
+            "slotType": "OuterShirt"
+          },
+          {
+            "itemAssetName": "Handwarmer_Standard",
+            "slotType": "WaistWear"
+          },
+          {
+            "itemAssetName": "GearFootwear_shoe_low_NikeVaporEdge",
+            "slotType": "LeftShoe"
+          },
+          {
+            "itemAssetName": "GearFootwear_shoe_low_NikeVaporEdge",
+            "slotType": "RightShoe"
+          },
+          {
+            "itemAssetName": "GearHand_glove_NikeVaporKnit3_SecondaryColor",
+            "slotType": "LeftHandWear"
+          },
+          {
+            "itemAssetName": "GearHand_glove_NikeVaporKnit3_SecondaryColor",
+            "slotType": "RightHandWear"
+          },
+          {
+            "slotType": "FacePaint",
+            "itemAssetName": "FaceMarks_None"
+          },
+          {
+            "slotType": "NeckWear",
+            "itemAssetName": "NeckWear_Turtleneck_Scrunched_Black"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+export const IPC = Object.freeze({
+  bootstrap: "app:bootstrap",
+  getUpdateStatus: "updates:status",
+  checkUpdates: "updates:check",
+  downloadUpdate: "updates:download",
+  installUpdate: "updates:install",
+  updateStatus: "updates:status-changed",
+  chooseSave: "dialog:choose-save",
+  chooseFile: "dialog:choose-file",
+  setActiveSave: "context:set-active-save",
+  clearActiveSave: "context:clear-active-save",
+  updateTheme: "settings:update-theme",
+  updateAccent: "settings:update-accent",
+  savePreset: "settings:save-preset",
+  deletePreset: "settings:delete-preset",
+  homeContext: "home:context",
+  chooseTeamArtwork: "settings:choose-team-artwork",
+  clearTeamArtwork: "settings:clear-team-artwork",
+  runTool: "tools:run",
+  prepareTool: "tools:prepare",
+  searchPreview: "tools:search-preview",
+  listReports: "reports:list",
+  listHistory: "history:list",
+  getHistory: "history:get",
+  getReview: "history:get-review",
+  homeLines: "home:lines",
+  listLogs: "logs:list",
+  clearLogs: "logs:clear",
+  openPath: "shell:open-path"
+});
+
+export const RUN_MODES = Object.freeze(["preview", "apply"]);

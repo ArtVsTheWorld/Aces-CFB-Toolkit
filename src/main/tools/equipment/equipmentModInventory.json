@@ -1,0 +1,132 @@
+{
+  "verification": "Exact ItemNames recovered from loaded CollegeFB27 face-tape menu strings on 2026-10-02 and matched to the attached mod resource inventories. DYNASTY-TAPETEST confirms FacePaint save assignments for one item from each mod. Remaining individual styles need in-game rendering checks; names are not synthesized from lowercase resource keys.",
+  "saveEvidence": {
+    "sha256": "957b0ff96dc87177516e89d7c63b50ccd613d7f810b4ed2545040b9823656d0d",
+    "samples": [
+      { "player": "DeMarcus Hollins", "team": "East Point", "playerRow": 11745, "visualsRow": 12165, "slotType": "FacePaint", "itemAssetName": "FaceMarks_NoseTape_C1" },
+      { "player": "Mateo Iglesias", "team": "East Point", "playerRow": 6857, "visualsRow": 7117, "slotType": "FacePaint", "itemAssetName": "FaceMarks_RawNoseTape_dontblink" }
+    ]
+  },
+  "facepaintPositionRules": [
+    { "itemName": "FaceMarks_RawNoseTape_imfnopen", "positions": ["WR", "TE"], "reason": "Receiving slogan" },
+    { "itemName": "FaceMarks_RawNoseTape_1hitta", "positions": ["LE", "RE", "DT", "LOLB", "MLB", "ROLB", "CB", "FS", "SS", "LEDG", "REDG", "SAM", "MIKE", "WILL", "EDGE", "LB", "SAFETY"], "reason": "Defensive hitter slogan" }
+  ],
+  "equipmentVerification": {
+    "source": "Read-only runtime-equipment-colors-2026-10-02-1..6 scans and the supplied mod inventories. Original ItemInfo export verifies NeckWear, Neckpad, InnerPants and arm-tattoo slots. The user confirms Raw Slim turtleneck provenance and the GuardianCap slot for skullcaps. equipmentColorInventory.json records additional variants and deliberately unclassified styles; individual new appearances still need in-game checks.",
+    "slotEvidence": [
+      { "source": "UnlockedCollegeFBCharacterPrefab.xlsx", "sheet": "ItemInfo", "row": 5977, "itemName": "NeckWear_None", "slot": "NeckWear" },
+      { "source": "UnlockedCollegeFBCharacterPrefab.xlsx", "sheet": "ItemInfo", "row": 5298, "itemName": "GearNeckpad_VintageNeckRoll", "slot": "Neckpad" },
+      { "source": "UnlockedCollegeFBCharacterPrefab.xlsx", "sheet": "ItemInfo", "row": 9719, "itemName": "GearLegBase_Socks_Under_Both_Black", "slot": "InnerPants" },
+      { "source": "UnlockedCollegeFBCharacterPrefab.xlsx", "sheet": "ItemInfo", "row": 9747, "itemName": "GearLegBase_Socks_Under_NFL_Black", "slot": "InnerPants" },
+      { "source": "UnlockedCollegeFBCharacterPrefab.xlsx", "sheet": "ItemInfo", "row": 9150, "itemName": "ArmTattoo_Tattoos_Japanese_09_ArmFloating_v02", "slot": "LeftArmTattoo|RightArmTattoo" }
+    ],
+    "candidateOnlyItemNames": [],
+    "promotedInventory": "equipmentSourcedInventory.json records the live-verified labels for the former rubber-band, thigh-pad, and towel candidates."
+  },
+  "mods": {
+    "unlocked": {
+      "version": "0.96",
+      "sha256": "371e4ce2bbae9dd37bf5d2895abab6ac5720c5cd1543ec51d634e3ff19a9bc80",
+      "equipmentItems": [
+        { "itemName": "NeckWear_Turtleneck_Tight2", "displayName": "Battle Turtleneck Primary / White Logo", "category": "Neckwear", "slots": ["NeckWear"], "tags": [] },
+        { "itemName": "NeckWear_Turtleneck_Tight3", "displayName": "Battle Turtleneck Primary / Black Logo", "category": "Neckwear", "slots": ["NeckWear"], "tags": [] },
+        { "itemName": "NeckWear_Turtleneck_Tight4", "displayName": "NXTRND Turtleneck Primary / White Logo", "category": "Neckwear", "slots": ["NeckWear"], "tags": [] },
+        { "itemName": "NeckWear_Turtleneck_Tight5", "displayName": "NXTRND Turtleneck Primary / Black Logo", "category": "Neckwear", "slots": ["NeckWear"], "tags": [] },
+        { "itemName": "NeckWear_Turtleneck_Tight6", "displayName": "Battle Turtleneck White / Primary Logo", "category": "Neckwear", "slots": ["NeckWear"], "tags": [] },
+        { "itemName": "NeckWear_Turtleneck_Tight7", "displayName": "NXTRND Turtleneck White / Primary Logo", "category": "Neckwear", "slots": ["NeckWear"], "tags": [] }
+      ],
+      "facepaintItemNames": [
+        "FaceMarks_NoseTape_C1", "FaceMarks_NoseTape_C2", "FaceMarks_NoseTape_C3", "FaceMarks_NoseTape_C4", "FaceMarks_NoseTape_C5",
+        "FaceMarks_NoseTape_C6", "FaceMarks_NoseTape_C7", "FaceMarks_NoseTape_C8", "FaceMarks_NoseTape_C9", "FaceMarks_NoseTape_C10",
+        "FaceMarks_NoseTape_G", "FaceMarks_NoseTape_KE", "FaceMarks_NoseTape_T"
+      ],
+      "facepaintResourceKeys": [
+        "facemarks_nosetape_c1",
+        "facemarks_nosetape_c10",
+        "facemarks_nosetape_c2",
+        "facemarks_nosetape_c3",
+        "facemarks_nosetape_c4",
+        "facemarks_nosetape_c5",
+        "facemarks_nosetape_c6",
+        "facemarks_nosetape_c7",
+        "facemarks_nosetape_c8",
+        "facemarks_nosetape_c9",
+        "facemarks_nosetape_g",
+        "facemarks_nosetape_ke",
+        "facemarks_nosetape_t"
+      ],
+      "excludedResourceKeys": []
+    },
+    "raw": {
+      "version": "2.0.2",
+      "sha256": "72cb8465cdfb1bad6bea0aaa8f597a4493cfa9588920c30b46cc01aa4f53e3ad",
+      "equipmentItems": [
+        { "itemName": "NeckWear_Raw_Turtleneck", "displayName": "Raw Slim Turtleneck Primary Color", "category": "Neckwear", "slots": ["NeckWear"], "tags": [] },
+        { "itemName": "NeckWear_Raw_Turtleneck_Black", "displayName": "Raw Slim Turtleneck Black", "category": "Neckwear", "slots": ["NeckWear"], "tags": [] },
+        { "itemName": "NeckWear_Raw_Turtleneck_Secondary", "displayName": "Raw Slim Turtleneck Secondary Color", "category": "Neckwear", "slots": ["NeckWear"], "tags": [] },
+        { "itemName": "NeckWear_Raw_Turtleneck_White", "displayName": "Raw Slim Turtleneck White", "category": "Neckwear", "slots": ["NeckWear"], "tags": [] },
+        { "itemName": "GearNeckpad_Raw_GoldCrossNecklace", "displayName": "Raw gold cross necklace", "category": "Neck Pad", "slots": ["Neckpad"], "tags": [] },
+        { "itemName": "GearNeckpad_Raw_SilverCrossNecklace", "displayName": "Raw silver cross necklace", "category": "Neck Pad", "slots": ["Neckpad"], "tags": [] }
+      ],
+      "facepaintItemNames": [
+        "FaceMarks_NoseTape_DP", "FaceMarks_RawNoseEyeTape", "FaceMarks_RawNoseTape_1hitta", "FaceMarks_RawNoseTape_540baby",
+        "FaceMarks_RawNoseTape_builtdiff", "FaceMarks_RawNoseTape_dontblink", "FaceMarks_RawNoseTape_fearnone", "FaceMarks_RawNoseTape_imfnopen",
+        "FaceMarks_RawNoseTape_john316", "FaceMarks_RawNoseTape_killall", "FaceMarks_RawNoseTape_luke137", "FaceMarks_RawNoseTape_nolove",
+        "FaceMarks_RawNoseTape_notsorry", "FaceMarks_RawNoseTape_sickem", "FaceMarks_RawNoseTape_talkcrazy", "FaceMarks_RawNoseTape_theproblem",
+        "FaceMarks_RawNoseTape_watchme"
+      ],
+      "facepaintResourceKeys": [
+        "facemarks_nosetape_dp",
+        "facemarks_rawnoseeyetape",
+        "facemarks_rawnosetape_1hitta",
+        "facemarks_rawnosetape_540baby",
+        "facemarks_rawnosetape_builtdiff",
+        "facemarks_rawnosetape_dontblink",
+        "facemarks_rawnosetape_fearnone",
+        "facemarks_rawnosetape_imfnopen",
+        "facemarks_rawnosetape_john316",
+        "facemarks_rawnosetape_killall",
+        "facemarks_rawnosetape_luke137",
+        "facemarks_rawnosetape_nolove",
+        "facemarks_rawnosetape_notsorry",
+        "facemarks_rawnosetape_sickem",
+        "facemarks_rawnosetape_talkcrazy",
+        "facemarks_rawnosetape_theproblem",
+        "facemarks_rawnosetape_watchme"
+      ],
+      "excludedResourceKeys": [
+        "facemarks_rawdiamondstudearrings",
+        "facemarks_rawearringscombo_eyepaint",
+        "facemarks_rawearringscombo_eyepaint2",
+        "facemarks_rawearringscombo_eyepaint3",
+        "facemarks_rawearringscombo_eyepaintcross",
+        "facemarks_rawearringscombo_eyetape",
+        "facemarks_rawearringscombo_eyetapeleft",
+        "facemarks_rawearringscombo_eyetaperight",
+        "facemarks_rawearringscombo_noseeyetape",
+        "facemarks_rawearringscombo_nosetape",
+        "facemarks_rawearringscombo_nosetape_1hitta",
+        "facemarks_rawearringscombo_nosetape_540baby",
+        "facemarks_rawearringscombo_nosetape_builtdiff",
+        "facemarks_rawearringscombo_nosetape_dontblink",
+        "facemarks_rawearringscombo_nosetape_dp",
+        "facemarks_rawearringscombo_nosetape_fearnone",
+        "facemarks_rawearringscombo_nosetape_g",
+        "facemarks_rawearringscombo_nosetape_imfnopen",
+        "facemarks_rawearringscombo_nosetape_john316",
+        "facemarks_rawearringscombo_nosetape_ke",
+        "facemarks_rawearringscombo_nosetape_killall",
+        "facemarks_rawearringscombo_nosetape_luke137",
+        "facemarks_rawearringscombo_nosetape_nolove",
+        "facemarks_rawearringscombo_nosetape_notsorry",
+        "facemarks_rawearringscombo_nosetape_sickem",
+        "facemarks_rawearringscombo_nosetape_t",
+        "facemarks_rawearringscombo_nosetape_talkcrazy",
+        "facemarks_rawearringscombo_nosetape_theproblem",
+        "facemarks_rawearringscombo_nosetape_watchme",
+        "facemarks_rawearringscombo_nosetapeeyepaint",
+        "facemarks_rawearringscombo_rawnoseeyetape"
+      ]
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "source": "2026-10-03 CRASHTEST/backup audit, structurally verified loaded ItemInfo display labels, exported ItemInfo fields, and the user's in-game observations. Generation eligibility is distinct from donor copying. Player role and shoe-slot tags alone do not prove footwear is a football cleat.",
+  "itemOverrides": {
+    "GearFootwear_shoe_mid_NikeAlphaMenacePro299Club": { "displayName": "Nike Vapor Edge Pro 360 2 Spat", "labelSource": "Loaded ItemInfo repeated-name fields and DisplayName +56; CRASHTEST and user in-game validation" },
+    "GearFootwear_shoe_Low_NikeVaporUntouchable2": { "displayName": "Jordan 4 Alpha Menace", "labelSource": "Loaded ItemInfo repeated-name fields and DisplayName +56; brand tags remain independent of display label" },
+    "GearFootwear_shoe_mid_NikeAlphaMenacePro": { "displayName": "Nike Vapor Edge Pro 360 VC", "labelSource": "Loaded ItemInfo repeated-name fields and DisplayName +56" },
+    "GearFootwear_shoeLowVintage_nike": { "displayName": "Nike Foamposite Pro - School PE", "labelSource": "Loaded ItemInfo repeated-name fields and DisplayName +56" },
+    "GearMouthpiece_PacifierDualHanging_Black4": { "displayName": "Nike Hanging Mouthpiece — Light Blue / Pink", "menuDisplayName": "Nike Hanging Mouthpiece Pacifier Black", "themeColors": ["lightblue", "pink"], "randomColorOnly": true, "labelSource": "CRASHTEST Trae'Shawn Brown exact saved ID and user artwork validation; loaded menu label still says Black" }
+  },
+  "footballFootwearPatterns": [
+    "^GearFootwear_shoe_(?:low|mid|high)_Nike(?:AlphaMenace|DiamondTurf|FieldGeneral|ForceSavage|LebronIV|LunarBeast|Vapor|Equinox|EdgeSpeed|ZoomVapor|AlphaPro34TD|CodeEliteProShark)",
+    "^GearFootwear_shoeLowVintage_nike$",
+    "^GearFootwear_shoe_(?:low|mid|high)_(?:Adidas_?(?:Adizero|Adizone|Freak|Nasty)|Adizero)",
+    "^GearFootwear_shoe_(?:low|mid|high)_(?:AirJordan(?:Retro1$|RetroCement$|Retro1VaporEdge$|3Cement$|X$|XI$)|Jordan(?:5_99Club$|7$|5$|11TD$))",
+    "^GearFootwear_shoe_(?:low|mid|high)_UnderArmour(?:C1N|Blur|Clone|Hammer|Spotlight|UAFHighlight)",
+    "^GearFootwear_shoe_(?:low|mid|high)_NewBalance_(?:Trench|Fortress|Prodigy)$"
+  ],
+  "rules": [
+    { "pattern": "^GearFootwear_.*(?:Mercurial|Jordan5_99Club2$|AirJordanRetro199$)", "actualType": "soccer-cleat", "bodyRegion": "feet", "poolEligible": false },
+    { "pattern": "^GearFootwear_.*AirMax", "actualType": "sneaker", "bodyRegion": "feet", "poolEligible": false },
+    { "pattern": "^GearLegBase_Socks_Under_NFL_", "actualType": "nfl-undersock", "bodyRegion": "legs", "poolEligible": false },
+    { "pattern": "^GearNeckpad_Vintage(?:Single)?NeckRoll$", "actualType": "legacy-neckpad-mask", "groups": ["neckwear", "head-underlayer"], "bodyRegion": "neck", "poolEligible": false },
+    { "pattern": "^FaceGear_Balaclava(?:UnderLip|None)", "actualType": "excluded-balaclava", "poolEligible": false },
+    { "pattern": "^FaceGear_BalaclavaOverNose(?:_|$)", "actualType": "balaclava", "bodyRegion": "head-and-neck", "groups": ["neckwear", "head-underlayer"], "excludedPositions": ["QB"] },
+    { "pattern": "^(?:NeckWear_.*|GearNeckpad_Ski.*)$", "actualType": "neckwear", "bodyRegion": "neck", "groups": ["neckwear"] },
+    { "pattern": "^GuardianCap_Raw.*SkullCap", "actualType": "skullcap", "bodyRegion": "head", "groups": ["head-underlayer"] },
+    { "pattern": "^GearBicepBand_", "actualType": "bicep-band", "bodyRegion": "bicep" },
+    { "pattern": "^ElbowGear_elbowSweatband", "actualType": "sweatband", "bodyRegion": "elbow" },
+    { "pattern": "^ElbowGear_RubberBands[1-3]$", "actualType": "rubber-wristband", "bodyRegion": "wrist" },
+    { "pattern": "ShoulderStabilizer", "actualType": "shoulder-stabilizer", "groups": ["shoulder-stabilizer"] },
+    { "pattern": "^(?:ArmSleeve_None|Undershirt_None|Gear_Undershirt_(?:CompressionTCrewSleeveless.*|HoodieSleeveless)|G_CompressionT_Crew_(?:ShortSleeve_.*|LongSleeve_99Club_B_(?:GOL|WHI)))$", "coverage": [] },
+    { "pattern": "^Gear_JerseyStyle_(?:Normal|SleeveTight|SleeveLooser|SleeveLoose|Sleeveless|Rolled(?:Low|High)?|Tucked|Untucked)$", "coverage": [] },
+    { "pattern": "^GearArmSleeve_Elbow_armTape_", "coverage": ["elbow"] },
+    { "pattern": "^GearArmSleeve_Quarter_", "coverage": ["forearm", "wrist"] },
+    { "pattern": "^GearArmSleeve_Bands_", "coverage": ["bicep"] },
+    { "pattern": "^GearArmSleeve_.*armTape_", "coverage": ["forearm", "wrist"] },
+    { "pattern": "^GearArmSleeve_(?:Undershirt_sleeveLongUnderarmor_normal_|CompressionRolledUpShirt_)", "coverage": ["bicep", "elbow"] },
+    { "pattern": "^(?:GearArmSleeve_(?:Full|Half|Shooter|Branded|Baggy|Undershirt|Nike|McDavid|Compression)|G_CompressionT_Crew_LongSleeve_|Gear_JerseyStyle_.*LongSleeve)", "coverage": ["bicep", "elbow", "forearm", "wrist"] }
+  ]
+}

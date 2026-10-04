@@ -1,0 +1,189 @@
+{
+  "source": "Verified loaded/exported ItemInfo labels captured 2026-10-02. Public regression snapshot contains only equipment IDs and display labels; process addresses and private diagnostic metadata are deliberately excluded.",
+  "verified": [
+    {
+      "itemName": "ArmTattoo_Tattoos_Japanese_08_ArmSleeve_v02",
+      "displayName": "CM Generic 19"
+    },
+    {
+      "itemName": "ElbowGear_RubberBands1",
+      "displayName": "Rubber Bands 1"
+    },
+    {
+      "itemName": "ElbowGear_RubberBands2",
+      "displayName": "Rubber Bands 2"
+    },
+    {
+      "itemName": "ElbowGear_RubberBands3",
+      "displayName": "Rubber Bands 3"
+    },
+    {
+      "itemName": "FaceGear_BalaclavaNone",
+      "displayName": "Remove Balaclava"
+    },
+    {
+      "itemName": "FaceGear_BalaclavaOverNose",
+      "displayName": "Black Balaclava"
+    },
+    {
+      "itemName": "FaceGear_BalaclavaOverNose_Primary",
+      "displayName": "Team Color Balaclava"
+    },
+    {
+      "itemName": "FaceGear_BalaclavaOverNose_Secondary",
+      "displayName": "Secondary Color Balaclava"
+    },
+    {
+      "itemName": "FaceGear_BalaclavaOverNose_White",
+      "displayName": "White Balaclava"
+    },
+    {
+      "itemName": "FaceGear_BalaclavaUnderLip",
+      "displayName": "Black Balaclava (Under Lip)"
+    },
+    {
+      "itemName": "FaceGear_BalaclavaUnderLip_Primary",
+      "displayName": "Team Color Balaclava (Under Lip)"
+    },
+    {
+      "itemName": "FaceGear_BalaclavaUnderLip_Secondary",
+      "displayName": "Secondary Color Balaclava (Under Lip)"
+    },
+    {
+      "itemName": "FaceGear_BalaclavaUnderLip_White",
+      "displayName": "White Balaclava (Under Lip)"
+    },
+    {
+      "itemName": "GearArmSleeve_NikeProDriFitSleeve2_Black",
+      "displayName": "Double Sleeve Black and Primary"
+    },
+    {
+      "itemName": "GearArmSleeve_NikeProDriFitSleeve2_SecondaryColor",
+      "displayName": "Double Sleeve Secondary and Primary"
+    },
+    {
+      "itemName": "GearArmSleeve_NikeProDriFitSleeve2_TeamColor",
+      "displayName": "Double Sleeve Primary and Secondary"
+    },
+    {
+      "itemName": "GearArmSleeve_NikeProDriFitSleeve2a_Black",
+      "displayName": "Double Sleeve Black and Secondary"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_SecondaryColor4",
+      "displayName": "Battle Hanging Mouthpiece Pacifier Sec and Primary"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor10",
+      "displayName": "Nike Hanging Mouthpiece Pacifier Secondary and White"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor4",
+      "displayName": "Battle Hanging Mouthpiece Pacifier Primary and Sec"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor5",
+      "displayName": "Nike Hanging Mouthpiece Pacifier Primary and Black"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor6",
+      "displayName": "Nike Hanging Mouthpiece Pacifier Primary and White"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor7",
+      "displayName": "Shock Hanging Mouthpiece Pacifier Primary and Sec"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor8",
+      "displayName": "Shock Hanging Mouthpiece Pacifier Primary and White"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor9",
+      "displayName": "Nike Hanging Mouthpiece Pacifier Secondary and Black"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_White4",
+      "displayName": "Hanging Mouthpiece Pacifier Black and Green"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_White5",
+      "displayName": "Hanging Mouthpiece Pacifier Smoke Blue and Pink"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_White6",
+      "displayName": "Hanging Mouthpiece Pacifier Cosmic Peach"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_White7",
+      "displayName": "Hanging Mouthpiece Pacifier Neon Blue and Pink"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_White8",
+      "displayName": "Hanging Mouthpiece Pacifier Smoke Blue"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_White9",
+      "displayName": "Hanging Mouthpiece Pacifier Pink and Green"
+    },
+    {
+      "itemName": "GearNeckpad_QCollar",
+      "displayName": "Q Collar"
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Tight2",
+      "displayName": "Battle Turtleneck Primary White"
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Tight3",
+      "displayName": "Battle Turtleneck Primary Black"
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Tight4",
+      "displayName": "NXTRND Turtleneck Primary White"
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Tight5",
+      "displayName": "NXTRND Turtleneck Primary Black"
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Tight6",
+      "displayName": "Battle Turtleneck White Primary"
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Tight7",
+      "displayName": "NXTRND Turtleneck White Primary"
+    },
+    {
+      "itemName": "ThighPad_BeastMode_Logo",
+      "displayName": "Beast Mode"
+    },
+    {
+      "itemName": "ThighPad_CheatCode_Logo",
+      "displayName": "Cheat Code"
+    },
+    {
+      "itemName": "ThighPad_Chosen_Logo",
+      "displayName": "Chosen 1"
+    },
+    {
+      "itemName": "ThighPad_Joker_Logo",
+      "displayName": "Joker"
+    },
+    {
+      "itemName": "ThighPad_Lion_Logo",
+      "displayName": "Lion"
+    },
+    {
+      "itemName": "ThighPad_Logo",
+      "displayName": "Logo Thigh Pad"
+    },
+    {
+      "itemName": "ThighPad_Shells",
+      "displayName": "ThighPad Shells"
+    },
+    {
+      "itemName": "Towel2_South",
+      "displayName": "String Towel"
+    }
+  ]
+}

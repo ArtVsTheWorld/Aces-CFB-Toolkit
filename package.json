@@ -1,0 +1,75 @@
+{
+  "name": "cfb-toolkit",
+  "version": "18.3.0",
+  "description": "Unified Windows desktop toolkit for College Football 27 dynasty utilities.",
+  "author": "ArtVsTheWorld",
+  "license": "MIT",
+  "type": "module",
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test test/*.test.js",
+    "test:source": "node scripts/test-source.mjs",
+    "test:smoke": "electron . --smoke-test",
+    "build": "electron-builder --win nsis --x64 --publish never",
+    "build:portable": "electron-builder --win portable --x64 --publish never",
+    "dist": "electron-builder --win nsis portable --x64 --publish never",
+    "release": "electron-builder --win nsis --x64 --publish always"
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.9",
+    "madden-franchise": "^4.3.1"
+  },
+  "devDependencies": {
+    "electron": "^37.2.6",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.artvstheworld.cfbtoolkit",
+    "productName": "Ace's CFB Toolkit",
+    "artifactName": "Ace's CFB Toolkit ${version}.${ext}",
+    "asar": true,
+    "publish": {
+      "provider": "github",
+      "owner": "ArtVsTheWorld",
+      "repo": "Aces-CFB-Toolkit",
+      "releaseType": "draft"
+    },
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "resources/engine-data",
+        "to": "engine-data",
+        "filter": [
+          "C27_*.gz"
+        ]
+      },
+      {
+        "from": "resources/commentary-data/PlayerCommentaryidMap.txt",
+        "to": "commentary-data/PlayerCommentaryidMap.txt"
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "artifactName": "Aces-CFB-Toolkit-Setup-${version}.${ext}",
+      "oneClick": false,
+      "perMachine": false,
+      "deleteAppDataOnUninstall": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico"
+    },
+    "portable": {
+      "splashImage": "build/portable-splash.bmp"
+    }
+  }
+}

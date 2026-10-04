@@ -1,0 +1,52 @@
+{
+  "verification": "Display labels recovered from structurally checked live ItemInfo records on 2026-10-02; evidence: outputs/equipment-displaynames-sourced-2026-10-02.json. Slots follow the established Player equipment families. The supplied Unlocked manifest identifies the branded mouthpieces, rubber bands, thigh pads and towel. The user identifies non-Raw turtlenecks and normal balaclavas as Unlocked. Under-lip/removal entries are display-only. No missing color variants are synthesized.",
+  "displayNames": {
+    "NeckWear_Turtleneck_Tight2": "Battle Turtleneck Primary / White Logo",
+    "NeckWear_Turtleneck_Tight3": "Battle Turtleneck Primary / Black Logo",
+    "NeckWear_Turtleneck_Tight4": "NXTRND Turtleneck Primary / White Logo",
+    "NeckWear_Turtleneck_Tight5": "NXTRND Turtleneck Primary / Black Logo",
+    "NeckWear_Turtleneck_Tight6": "Battle Turtleneck White / Primary Logo",
+    "NeckWear_Turtleneck_Tight7": "NXTRND Turtleneck White / Primary Logo",
+    "GearNeckpad_VintageSingleNeckRoll": "Balaclava White",
+    "GearNeckpad_SkiBlack": "Ski Mask Black"
+  },
+  "items": [
+    { "itemName": "GearMouthpiece_PacifierDualHanging_SecondaryColor4", "displayName": "Battle Hanging Mouthpiece Secondary / Primary", "category": "Mouthpiece", "slots": ["MouthWear"], "tags": ["HangingMouthpiece"], "origin": "unlocked", "themeColors": ["secondary", "primary"] },
+    { "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor4", "displayName": "Battle Hanging Mouthpiece Primary / Secondary", "category": "Mouthpiece", "slots": ["MouthWear"], "tags": ["HangingMouthpiece"], "origin": "unlocked", "themeColors": ["primary", "secondary"] },
+    { "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor5", "displayName": "Nike Hanging Mouthpiece Primary / Black", "category": "Mouthpiece", "slots": ["MouthWear"], "tags": ["HangingMouthpiece"], "origin": "unlocked", "themeColors": ["primary", "black"] },
+    { "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor6", "displayName": "Nike Hanging Mouthpiece Primary / White", "category": "Mouthpiece", "slots": ["MouthWear"], "tags": ["HangingMouthpiece"], "origin": "unlocked", "themeColors": ["primary", "white"] },
+    { "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor7", "displayName": "Shock Hanging Mouthpiece Primary / Secondary", "category": "Mouthpiece", "slots": ["MouthWear"], "tags": ["HangingMouthpiece"], "origin": "unlocked", "themeColors": ["primary", "secondary"] },
+    { "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor8", "displayName": "Shock Hanging Mouthpiece Primary / White", "category": "Mouthpiece", "slots": ["MouthWear"], "tags": ["HangingMouthpiece"], "origin": "unlocked", "themeColors": ["primary", "white"] },
+    { "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor9", "displayName": "Nike Hanging Mouthpiece Secondary / Black", "category": "Mouthpiece", "slots": ["MouthWear"], "tags": ["HangingMouthpiece"], "origin": "unlocked", "themeColors": ["secondary", "black"] },
+    { "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor10", "displayName": "Nike Hanging Mouthpiece Secondary / White", "category": "Mouthpiece", "slots": ["MouthWear"], "tags": ["HangingMouthpiece"], "origin": "unlocked", "themeColors": ["secondary", "white"] },
+    { "itemName": "ElbowGear_RubberBands1", "displayName": "Rubber Bands 1", "category": "Elbow Wear", "slots": ["LeftElbowWear", "RightElbowWear"], "tags": [], "origin": "unlocked" },
+    { "itemName": "ElbowGear_RubberBands2", "displayName": "Rubber Bands 2", "category": "Elbow Wear", "slots": ["LeftElbowWear", "RightElbowWear"], "tags": [], "origin": "unlocked" },
+    { "itemName": "ElbowGear_RubberBands3", "displayName": "Rubber Bands 3", "category": "Elbow Wear", "slots": ["LeftElbowWear", "RightElbowWear"], "tags": [], "origin": "unlocked" },
+    { "itemName": "ThighPad_BeastMode_Logo", "displayName": "Beast Mode Thigh Pads", "category": "Thigh Pads", "slots": ["LeftThighWear", "RightThighWear"], "tags": [], "origin": "unlocked" },
+    { "itemName": "ThighPad_CheatCode_Logo", "displayName": "Cheat Code Thigh Pads", "category": "Thigh Pads", "slots": ["LeftThighWear", "RightThighWear"], "tags": [], "origin": "unlocked" },
+    { "itemName": "ThighPad_Chosen_Logo", "displayName": "Chosen 1 Thigh Pads", "category": "Thigh Pads", "slots": ["LeftThighWear", "RightThighWear"], "tags": [], "origin": "unlocked" },
+    { "itemName": "ThighPad_Joker_Logo", "displayName": "Joker Thigh Pads", "category": "Thigh Pads", "slots": ["LeftThighWear", "RightThighWear"], "tags": [], "origin": "unlocked" },
+    { "itemName": "ThighPad_Lion_Logo", "displayName": "Lion Thigh Pads", "category": "Thigh Pads", "slots": ["LeftThighWear", "RightThighWear"], "tags": [], "origin": "unlocked" },
+    { "itemName": "ThighPad_Shells", "displayName": "Shell Thigh Pads", "category": "Thigh Pads", "slots": ["LeftThighWear", "RightThighWear"], "tags": [], "origin": "unlocked" },
+    { "itemName": "Towel2_South", "displayName": "String Towel", "category": "Towel", "slots": ["Towel"], "tags": [], "origin": "unlocked" },
+    { "itemName": "FaceGear_BalaclavaOverNose", "displayName": "Black Balaclava", "category": "Face Wear", "slots": ["FaceWear"], "tags": [], "origin": "unlocked" },
+    { "itemName": "FaceGear_BalaclavaOverNose_White", "displayName": "White Balaclava", "category": "Face Wear", "slots": ["FaceWear"], "tags": [], "origin": "unlocked" },
+    { "itemName": "FaceGear_BalaclavaOverNose_Primary", "displayName": "Team Color Balaclava", "category": "Face Wear", "slots": ["FaceWear"], "tags": [], "origin": "unlocked" },
+    { "itemName": "FaceGear_BalaclavaOverNose_Secondary", "displayName": "Secondary Color Balaclava", "category": "Face Wear", "slots": ["FaceWear"], "tags": [], "origin": "unlocked" },
+    { "itemName": "FaceGear_BalaclavaUnderLip", "displayName": "Black Balaclava (Under Lip)", "category": "Face Wear", "slots": ["FaceWear"], "tags": [], "origin": "unverified", "displayOnly": true },
+    { "itemName": "FaceGear_BalaclavaUnderLip_White", "displayName": "White Balaclava (Under Lip)", "category": "Face Wear", "slots": ["FaceWear"], "tags": [], "origin": "unverified", "displayOnly": true },
+    { "itemName": "FaceGear_BalaclavaUnderLip_Primary", "displayName": "Team Color Balaclava (Under Lip)", "category": "Face Wear", "slots": ["FaceWear"], "tags": [], "origin": "unverified", "displayOnly": true },
+    { "itemName": "FaceGear_BalaclavaUnderLip_Secondary", "displayName": "Secondary Color Balaclava (Under Lip)", "category": "Face Wear", "slots": ["FaceWear"], "tags": [], "origin": "unverified", "displayOnly": true },
+    { "itemName": "FaceGear_BalaclavaNone", "displayName": "Remove Balaclava", "category": "Face Wear", "slots": ["FaceWear"], "tags": [], "origin": "unlocked", "displayOnly": true },
+    { "itemName": "LegTattoo_TEST", "displayName": "No Tattoo", "category": "Tattoos", "slots": ["LeftLegTattoo", "RightLegTattoo"], "tags": [], "origin": "catalog", "displayOnly": true, "labelSource": { "file": "UnlockedCollegeFBCharacterPrefab.xlsx", "sheet": "ItemInfo", "row": 708 } }
+  ],
+  "partialColorFamilies": [
+    { "primary": "NeckWear_Turtleneck_Tight2", "white": "NeckWear_Turtleneck_Tight6" },
+    { "primary": "NeckWear_Turtleneck_Tight4", "white": "NeckWear_Turtleneck_Tight7" },
+    { "primary": "GearMouthpiece_PacifierDualHanging_TeamColor4", "secondary": "GearMouthpiece_PacifierDualHanging_SecondaryColor4" },
+    { "primary": "GearMouthpiece_PacifierDualHanging_TeamColor5", "secondary": "GearMouthpiece_PacifierDualHanging_TeamColor9" },
+    { "primary": "GearMouthpiece_PacifierDualHanging_TeamColor6", "secondary": "GearMouthpiece_PacifierDualHanging_TeamColor10" },
+    { "primary": "GearMouthpiece_PacifierDualHanging_TeamColor7" },
+    { "primary": "GearMouthpiece_PacifierDualHanging_TeamColor8" }
+  ]
+}
