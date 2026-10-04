@@ -139,13 +139,19 @@ test("reopened verification allows original shared tails but rejects new sharing
 });
 test("the complete physical continuation capacity round-trips without truncation", { timeout: 60000 }, async t => {
   const savePath = setup(t), loaded = await read(savePath), record = eligible(loaded.visuals)[0], codec = field(record);
-  const payload = JSON.parse(record.RawData), marker = randomBytes(1000).toString("hex"), capacity = 2 * (codec.maxLength + 2);
+  const payload = JSON.parse(record.RawData), capacity = 2 * (codec.maxLength + 2);
   let expected;
-  for (let size = 300; size < marker.length; size++) {
-    payload.safetyTestMarker = marker.slice(0, size);
-    const json = JSON.stringify(payload), encoded = codec.strategy.setUnformattedValueFromFormatted(json, codec.unformattedValue, codec.maxLength, codec.strategyContext);
-    if (encoded.length === capacity) { expected = json; break; }
-    if (encoded.length > capacity + 5) break;
+  // A random prefix can jump over the exact compressed size, making a valid
+  // writer fail this test intermittently. Search repeatable marker variants;
+  // retain the strict assertion that both physical blocks are completely full.
+  for (let variant = 0; variant < 32 && !expected; variant++) {
+    const marker = Array.from({ length: 32 }, (_, block) => createHash("sha256").update(`v182-full-capacity:${variant}:${block}`).digest("hex")).join("");
+    for (let size = 300; size < marker.length; size++) {
+      payload.safetyTestMarker = marker.slice(0, size);
+      const json = JSON.stringify(payload), encoded = codec.strategy.setUnformattedValueFromFormatted(json, codec.unformattedValue, codec.maxLength, codec.strategyContext);
+      if (encoded.length === capacity) { expected = json; break; }
+      if (encoded.length > capacity + 5) break;
+    }
   }
   assert.ok(expected, "Exercise every byte of both physical blocks, including the continuation's final two bytes");
   await commit(loaded, record.index, expected);
