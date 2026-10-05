@@ -108,7 +108,7 @@ test("helmet balancing spreads FCS swaps by actual roster team even when TeamInd
   assert.deepEqual(Object.values(result.helmetBalance.fcs.changesByTeam).sort(), [6, 6, 6, 6, 6]);
 });
 test("new equipment settings validate and migrate the former mouthpiece-color option", () => {
-  const defaults = normalizeEquipmentOptions({}, false); assert.equal(defaults.allowVicisZero2, false); assert.equal(defaults.balanceExistingHelmets, false); assert.equal(defaults.tapeColorMode, "distribution"); assert.equal(defaults.brandedMouthpieceFrequency, 75); assert.equal(defaults.skipNilPlayers, true);
+  const defaults = normalizeEquipmentOptions({}, false); assert.equal(defaults.allowVicisZero2, false); assert.equal(defaults.balanceExistingHelmets, false); assert.equal(defaults.tapeColorMode, "accessory"); assert.equal(defaults.brandedMouthpieceFrequency, 75); assert.equal(defaults.skipNilPlayers, true);
   assert.equal(normalizeEquipmentOptions({ unlockedMouthpieceFix: true, randomizeExistingMouthpieceColors: true }, false).rerollExistingMouthpieces, true);
   for (const value of [-1, 101, 1.5, ""]) assert.throws(() => normalizeEquipmentOptions({ brandedMouthpieceFrequency: value }, false), /whole percentage/);
   assert.throws(() => normalizeEquipmentOptions({ tapeColorMode: "unknown" }, false), /tape/);
@@ -138,6 +138,6 @@ test("Team Boost specific attributes reject empty/unknown fields and retain rati
   assert.equal(result.ratingChanges.length, 1); assert.equal(result.ratingChanges[0].newRating, 99); assert.deepEqual(records, initial);
 });
 test("release versions match the requested increments", () => {
-  assert.equal(JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url))).version, "18.3.0");
-  assert.equal(tools.find(tool => tool.id === "freshman-equipment").version, "5.0"); assert.equal(tools.find(tool => tool.id === "equipment-patcher").version, "5.0"); assert.equal(tools.find(tool => tool.id === "team-boost").version, "2.0");
+  assert.equal(JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url))).version, "19.0.0");
+  assert.equal(tools.find(tool => tool.id === "freshman-equipment").version, "5.1"); assert.equal(tools.find(tool => tool.id === "equipment-patcher").version, "5.5"); assert.equal(tools.find(tool => tool.id === "team-boost").version, "2.0");
 });

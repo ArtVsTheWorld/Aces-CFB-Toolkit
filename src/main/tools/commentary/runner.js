@@ -54,7 +54,7 @@ export async function runCommentary(context) {
   let rejected = 0; for (const change of analysis.result.changes) if (change.match.method === "phonetic" && decisions[change.row] === false) { change.newId = change.oldId; change.preserved = true; rejected += 1; }
   const reviewRows = analysis.result.changes.map(change => ({ ...serialProposal(change), proposedId: change.preserved ? change.match.id : change.newId, decision: change.preserved ? "Rejected" : change.match.method === "phonetic" ? "Accepted" : "Automatic", changed: change.newId !== change.oldId }));
   analysis.result.changes = analysis.result.changes.filter(change => change.newId !== change.oldId); const accepted = analysis.phoneticRows.length - rejected;
-  const reportItems = analysis.normalized.showAll ? analysis.result.players : analysis.result.changes;
+  const reportItems = analysis.result.players;
   const reportPath = context.reports.create({ toolId: "commentary-id", toolName: "Commentary ID Patcher", prefix: "commentary-id-report", headings: ["Row", "Team", "Player", "OldID", "NewID", "Method", "Source", "MatchedName", "Approved"], rows: reportItems.map(player => [player.row, player.teamName, `${player.firstName} ${player.lastName}`, player.oldId, player.newId, player.match.method, player.match.source, player.match.name, !player.preserved]) });
   let backupPath = null; if (context.mode === "apply" && analysis.result.changes.length) { backupPath = createBackup(analysis.savePath); for (const change of analysis.result.changes) change.record.PLYR_COMMENT = change.newId; await analysis.franchise.save(); }
   const changed = analysis.result.changes.length; const status = context.mode === "preview" ? "preview" : changed ? "completed" : "no-changes";

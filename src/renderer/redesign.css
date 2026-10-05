@@ -248,9 +248,10 @@ body.experimental-ui {
 .season-lines-heading > div { display: grid; gap: 3px; }
 .season-lines-heading strong { font: 800 23px var(--sport-heading); }
 .season-lines-heading span { color: #a8d7bf; }
-.season-lines-heading label { display: grid; gap: 4px; color: #cce8d9; font-size: 11px; }
-.season-lines-filters { display: flex; gap: 9px; padding: 14px 18px; border-bottom: 1px solid var(--line); }
-.season-lines-filters input { flex: 1; }
+.experimental-ui .season-lines-heading label { display: grid; gap: 4px; color: #cce8d9; font-size: 11px; }
+.season-lines-filters { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 9px; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+.season-lines-filters input,.season-lines-filters select { width:100%; min-width:0; }
+@media(max-width:560px) { .season-lines-filters { grid-template-columns:1fr; } }
 .season-lines-games { padding: 8px 18px 18px; }
 .season-line-game { display: grid; grid-template-columns: minmax(260px, 1fr) minmax(340px, 1.2fr); gap: 20px; align-items: center; padding: 13px 4px; border-bottom: 1px solid var(--line); }
 .season-line-matchup { display: flex; align-items: center; gap: 10px; min-width: 0; }
@@ -789,3 +790,5 @@ body.experimental-ui {
   .command-stat { border-right: 0; border-bottom: 1px solid var(--line); }
   .jersey-change-card { grid-template-columns: 1fr; }
 }
+/* The shell stays dark in both workspace themes. */
+[data-theme="light"] .experimental-ui .nav-link.active .nav-label { color: #fff; }

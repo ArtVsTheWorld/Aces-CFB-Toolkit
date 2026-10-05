@@ -35,7 +35,7 @@ const player = (row, position = "WR", visualRow = row, teamIndex = 1) => ({
 const tattooedCount = visuals => visuals.filter(item => hasUnlockedBodyTattoo(JSON.parse(item.RawData))).length;
 const activeRows = count => new Set(Array.from({ length: count }, (_, row) => row));
 
-test("CFB 27 Unlocked tattoos are disabled by default with a validated 33% cap", () => {
+test("CFB27 Unlocked tattoos are disabled by default with a validated 33% cap", () => {
   const defaults = normalizeEquipmentOptions({}, false);
   assert.equal(defaults.unlockedTattooFix, false);
   assert.equal(defaults.unlockedTattooCap, 33);
@@ -263,5 +263,5 @@ test("tattoo option is user-visible, off by default, and included in review/help
   assert.match(renderer, /id="unlocked-tattoo-cap"[^>]+value="33"/);
   assert.match(renderer, /Existing sleeves and tattoos are preserved/);
   assert.match(renderer, /FBS and directional FCS populations are capped separately/);
-  assert.match(renderer, /Requires CFB 27 Unlocked/);
+  assert.match(renderer, /Requires CFB27 Unlocked/);
 });

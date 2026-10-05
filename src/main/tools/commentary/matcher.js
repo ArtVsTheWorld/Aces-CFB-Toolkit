@@ -1,4 +1,4 @@
-const SUFFIX = /(?:[\s,]+)(?:jr\.?|sr\.?|ii|iii|iv|v)$/i;
+const SUFFIX = /(?:[\s,]+)(?:jr\.?|sr\.?|junior|senior|ii|iii|iv|v|vi|vii|viii|ix|x|xi|xii|xiii|xiv|xv)$/i;
 
 export function normalizeName(value) {
   return String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "")
@@ -92,5 +92,4 @@ export function createCommentaryMatcher(commentaryMap, { allowPhonetic = false, 
     return { name: null, id: 0, method: "none", source: "none" };
   };
 }
-
 

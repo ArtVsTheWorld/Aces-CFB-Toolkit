@@ -10,7 +10,7 @@ test("v0.7 appearance navigation order, icon tokens, and recommendation are corr
   const appearance = tools.filter(tool => tool.category === "appearance" && !tool.hidden);
   assert.deepEqual(appearance.map(tool => tool.id), ["jersey-renumber", "commentary-id", "freshman-equipment", "equipment-patcher"]);
   assert.deepEqual(appearance.map(tool => tool.icon), ["#", "microphone", "shuffle", "shoulder-pads"]);
-  assert.equal(tools.find(tool => tool.id === "automatic-force-win").icon, "referee");
+  assert.equal(tools.find(tool => tool.id === "automatic-force-win").icon, "trophy");
   assert.match(tools.find(tool => tool.id === "equipment-patcher").description, /recommended after running Equipment Randomizer/);
 });
 

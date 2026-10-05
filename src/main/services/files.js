@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { randomUUID } from "node:crypto";
 
 export function validateSavePath(value) {
   if (typeof value !== "string" || !value.trim()) throw new Error("Select a Dynasty or Road To Glory save file.");
@@ -27,6 +28,22 @@ export function createBackup(savePath) {
 const csvCell = value => { const text = String(value ?? ""); return /[",\r\n]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text; };
 export function writeCsv(filePath, headings, rows) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
-  fs.writeFileSync(filePath, `${[headings, ...rows].map(row => row.map(csvCell).join(",")).join("\r\n")}\r\n`, "utf8");
+  // Write bounded chunks: a large dynasty report must not require one giant JS string.
+  const temporaryPath = `${filePath}.writing-${randomUUID()}`;
+  const descriptor = fs.openSync(temporaryPath, "wx");
+  let chunk = "";
+  try {
+    for (const row of [headings, ...rows]) {
+      chunk += `${row.map(csvCell).join(",")}\r\n`;
+      if (chunk.length >= 1024 * 1024) { fs.writeFileSync(descriptor, chunk, "utf8"); chunk = ""; }
+    }
+    if (chunk) fs.writeFileSync(descriptor, chunk, "utf8");
+    fs.closeSync(descriptor);
+    fs.renameSync(temporaryPath, filePath);
+  } catch (error) {
+    try { fs.closeSync(descriptor); } catch {}
+    if (fs.existsSync(temporaryPath)) fs.unlinkSync(temporaryPath);
+    throw error;
+  }
   return filePath;
 }

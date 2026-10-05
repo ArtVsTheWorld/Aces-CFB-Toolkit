@@ -1,0 +1,4532 @@
+{
+  "observed": "2026-10-05",
+  "session": {
+    "unlocked": "0.96",
+    "raw": "v2.0.4",
+    "source": "Versions and active mods confirmed by the user."
+  },
+  "suppliedManifests": [
+    {
+      "mod": "RAW Accessories",
+      "version": "2.0.2",
+      "sha256": "72cb8465cdfb1bad6bea0aaa8f597a4493cfa9588920c30b46cc01aa4f53e3ad"
+    },
+    {
+      "mod": "CFB27 Unlocked",
+      "version": "0.96",
+      "sha256": "371e4ce2bbae9dd37bf5d2895abab6ac5720c5cd1543ec51d634e3ff19a9bc80"
+    }
+  ],
+  "scope": "Structurally checked live ItemName/DisplayName pairs only. Not a guarantee every menu item is loaded. Loaded vanilla observations include locked assets; differences alone cannot establish mod provenance. Known vanilla/catalog assets changed by a mod remain marked as overrides, not claimed as new additions. Unresolved observations are not generated.",
+  "recordCheck": "Repeated ItemName fields; DisplayName at +56. No process addresses or raw bytes.",
+  "knownModPools": {
+    "unlocked": [
+      {
+        "itemName": "NeckWear_Turtleneck_Tight2",
+        "displayName": "Battle Turtleneck Primary / White Logo",
+        "category": "Neckwear",
+        "slots": [
+          "NeckWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "NeckWear_Turtleneck_Tight3",
+        "displayName": "Battle Turtleneck Primary / Black Logo",
+        "category": "Neckwear",
+        "slots": [
+          "NeckWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "NeckWear_Turtleneck_Tight4",
+        "displayName": "NXTRND Turtleneck Primary / White Logo",
+        "category": "Neckwear",
+        "slots": [
+          "NeckWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "NeckWear_Turtleneck_Tight5",
+        "displayName": "NXTRND Turtleneck Primary / Black Logo",
+        "category": "Neckwear",
+        "slots": [
+          "NeckWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "NeckWear_Turtleneck_Tight6",
+        "displayName": "Battle Turtleneck White / Primary Logo",
+        "category": "Neckwear",
+        "slots": [
+          "NeckWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "NeckWear_Turtleneck_Tight7",
+        "displayName": "NXTRND Turtleneck White / Primary Logo",
+        "category": "Neckwear",
+        "slots": [
+          "NeckWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "NeckWear_Turtleneck_Scrunched",
+        "displayName": "Scrunched Turtleneck Primary Color",
+        "category": "Neckwear",
+        "slots": [
+          "NeckWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "NeckWear_Turtleneck_Scrunched_Black",
+        "displayName": "Scrunched Turtleneck Black",
+        "category": "Neckwear",
+        "slots": [
+          "NeckWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "NeckWear_Turtleneck_Scrunched_White",
+        "displayName": "Scrunched Turtleneck White",
+        "category": "Neckwear",
+        "slots": [
+          "NeckWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "NeckWear_Turtleneck_Scrunched_Secondary",
+        "displayName": "Scrunched Turtleneck Secondary Color",
+        "category": "Neckwear",
+        "slots": [
+          "NeckWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "NeckWear_Turtleneck_Tight",
+        "displayName": "Tight Turtleneck Primary Color",
+        "category": "Neckwear",
+        "slots": [
+          "NeckWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "NeckWear_Turtleneck_Tight_Black",
+        "displayName": "Tight Turtleneck Black",
+        "category": "Neckwear",
+        "slots": [
+          "NeckWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "NeckWear_Turtleneck_Tight_White",
+        "displayName": "Tight Turtleneck White",
+        "category": "Neckwear",
+        "slots": [
+          "NeckWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "NeckWear_Turtleneck_Tight_Secondary",
+        "displayName": "Tight Turtleneck Secondary Color",
+        "category": "Neckwear",
+        "slots": [
+          "NeckWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "GearLegBase_Socks_Under_Both_Black",
+        "displayName": "Compression Pants Black",
+        "category": "Leg Sleeves",
+        "slots": [
+          "InnerPants"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": false
+      },
+      {
+        "itemName": "GearLegBase_Socks_Under_Both_White",
+        "displayName": "Compression Pants White",
+        "category": "Leg Sleeves",
+        "slots": [
+          "InnerPants"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": false
+      },
+      {
+        "itemName": "GearLegBase_Socks_Under_Both_Primary",
+        "displayName": "Compression Pants Primary",
+        "category": "Leg Sleeves",
+        "slots": [
+          "InnerPants"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": false
+      },
+      {
+        "itemName": "GearLegBase_Socks_Under_Both_Secondary",
+        "displayName": "Compression Pants Secondary",
+        "category": "Leg Sleeves",
+        "slots": [
+          "InnerPants"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": false
+      },
+      {
+        "itemName": "GearLegBase_Socks_Under_Both_Black2",
+        "displayName": "Compression Pants — variant 2 Black",
+        "category": "Leg Sleeves",
+        "slots": [
+          "InnerPants"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": false
+      },
+      {
+        "itemName": "GearLegBase_Socks_Under_Both_White2",
+        "displayName": "Compression Pants — variant 2 White",
+        "category": "Leg Sleeves",
+        "slots": [
+          "InnerPants"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": false
+      },
+      {
+        "itemName": "GearLegBase_Socks_Under_Both_Primary2",
+        "displayName": "Compression Pants — variant 2 Primary",
+        "category": "Leg Sleeves",
+        "slots": [
+          "InnerPants"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": false
+      },
+      {
+        "itemName": "GearLegBase_Socks_Under_Both_Secondary2",
+        "displayName": "Compression Pants — variant 2 Secondary",
+        "category": "Leg Sleeves",
+        "slots": [
+          "InnerPants"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": false
+      },
+      {
+        "itemName": "GearLegBase_Socks_Under_NFL_Black",
+        "displayName": "NFL Style Undersock Black",
+        "category": "Leg Sleeves",
+        "slots": [
+          "InnerPants"
+        ],
+        "generationEligible": false,
+        "observedInCurrentSession": false
+      },
+      {
+        "itemName": "GearLegBase_Socks_Under_NFL_White",
+        "displayName": "NFL Style Undersock White",
+        "category": "Leg Sleeves",
+        "slots": [
+          "InnerPants"
+        ],
+        "generationEligible": false,
+        "observedInCurrentSession": false
+      },
+      {
+        "itemName": "GearLegBase_Socks_Under_NFL_Primary",
+        "displayName": "NFL Style Undersock Primary",
+        "category": "Leg Sleeves",
+        "slots": [
+          "InnerPants"
+        ],
+        "generationEligible": false,
+        "observedInCurrentSession": false
+      },
+      {
+        "itemName": "GearLegBase_Socks_Under_NFL_Secondary",
+        "displayName": "NFL Style Undersock Secondary",
+        "category": "Leg Sleeves",
+        "slots": [
+          "InnerPants"
+        ],
+        "generationEligible": false,
+        "observedInCurrentSession": false
+      },
+      {
+        "itemName": "GearMouthpiece_PacifierDualHanging_SecondaryColor4",
+        "displayName": "Battle Hanging Mouthpiece Secondary / Primary",
+        "category": "Mouthpiece",
+        "slots": [
+          "MouthWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor4",
+        "displayName": "Battle Hanging Mouthpiece Primary / Secondary",
+        "category": "Mouthpiece",
+        "slots": [
+          "MouthWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor5",
+        "displayName": "Nike Hanging Mouthpiece Primary / Black",
+        "category": "Mouthpiece",
+        "slots": [
+          "MouthWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor6",
+        "displayName": "Nike Hanging Mouthpiece Primary / White",
+        "category": "Mouthpiece",
+        "slots": [
+          "MouthWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor7",
+        "displayName": "Shock Hanging Mouthpiece Primary / Secondary",
+        "category": "Mouthpiece",
+        "slots": [
+          "MouthWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor8",
+        "displayName": "Shock Hanging Mouthpiece Primary / White",
+        "category": "Mouthpiece",
+        "slots": [
+          "MouthWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor9",
+        "displayName": "Nike Hanging Mouthpiece Secondary / Black",
+        "category": "Mouthpiece",
+        "slots": [
+          "MouthWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor10",
+        "displayName": "Nike Hanging Mouthpiece Secondary / White",
+        "category": "Mouthpiece",
+        "slots": [
+          "MouthWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "ElbowGear_RubberBands1",
+        "displayName": "Rubber Bands 1",
+        "category": "Elbow Wear",
+        "slots": [
+          "LeftElbowWear",
+          "RightElbowWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": false
+      },
+      {
+        "itemName": "ElbowGear_RubberBands2",
+        "displayName": "Rubber Bands 2",
+        "category": "Elbow Wear",
+        "slots": [
+          "LeftElbowWear",
+          "RightElbowWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": false
+      },
+      {
+        "itemName": "ElbowGear_RubberBands3",
+        "displayName": "Rubber Bands 3",
+        "category": "Elbow Wear",
+        "slots": [
+          "LeftElbowWear",
+          "RightElbowWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": false
+      },
+      {
+        "itemName": "ThighPad_BeastMode_Logo",
+        "displayName": "Beast Mode Thigh Pads",
+        "category": "Thigh Pads",
+        "slots": [
+          "LeftThighWear",
+          "RightThighWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": false
+      },
+      {
+        "itemName": "ThighPad_CheatCode_Logo",
+        "displayName": "Cheat Code Thigh Pads",
+        "category": "Thigh Pads",
+        "slots": [
+          "LeftThighWear",
+          "RightThighWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": false
+      },
+      {
+        "itemName": "ThighPad_Chosen_Logo",
+        "displayName": "Chosen 1 Thigh Pads",
+        "category": "Thigh Pads",
+        "slots": [
+          "LeftThighWear",
+          "RightThighWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": false
+      },
+      {
+        "itemName": "ThighPad_Joker_Logo",
+        "displayName": "Joker Thigh Pads",
+        "category": "Thigh Pads",
+        "slots": [
+          "LeftThighWear",
+          "RightThighWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": false
+      },
+      {
+        "itemName": "ThighPad_Lion_Logo",
+        "displayName": "Lion Thigh Pads",
+        "category": "Thigh Pads",
+        "slots": [
+          "LeftThighWear",
+          "RightThighWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": false
+      },
+      {
+        "itemName": "ThighPad_Shells",
+        "displayName": "Shell Thigh Pads",
+        "category": "Thigh Pads",
+        "slots": [
+          "LeftThighWear",
+          "RightThighWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": false
+      },
+      {
+        "itemName": "Towel2_South",
+        "displayName": "String Towel",
+        "category": "Towel",
+        "slots": [
+          "Towel"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": false
+      },
+      {
+        "itemName": "FaceGear_BalaclavaOverNose",
+        "displayName": "Black Balaclava",
+        "category": "Face Wear",
+        "slots": [
+          "FaceWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "FaceGear_BalaclavaOverNose_White",
+        "displayName": "White Balaclava",
+        "category": "Face Wear",
+        "slots": [
+          "FaceWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "FaceGear_BalaclavaOverNose_Primary",
+        "displayName": "Team Color Balaclava",
+        "category": "Face Wear",
+        "slots": [
+          "FaceWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "FaceGear_BalaclavaOverNose_Secondary",
+        "displayName": "Secondary Color Balaclava",
+        "category": "Face Wear",
+        "slots": [
+          "FaceWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "FaceGear_BalaclavaNone",
+        "displayName": "Remove Balaclava",
+        "category": "Face Wear",
+        "slots": [
+          "FaceWear"
+        ],
+        "generationEligible": false,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "FaceMarks_NoseTape_C1",
+        "displayName": "Nose Tape Custom1",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_NoseTape_C2",
+        "displayName": "Nose Tape Custom2",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_NoseTape_C3",
+        "displayName": "Nose Tape Custom3",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_NoseTape_C4",
+        "displayName": "Nose Tape Custom4",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_NoseTape_C5",
+        "displayName": "Nose Tape Custom5",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_NoseTape_C6",
+        "displayName": "Nose Tape Custom6",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_NoseTape_C7",
+        "displayName": "Nose Tape Custom7",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_NoseTape_C8",
+        "displayName": "Nose Tape Custom8",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_NoseTape_C9",
+        "displayName": "Nose Tape Custom9",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_NoseTape_C10",
+        "displayName": "Nose Tape Custom10",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_NoseTape_G",
+        "displayName": "Nose Tape GABOS",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_NoseTape_KE",
+        "displayName": "Nose Tape Kill Everybody",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_NoseTape_T",
+        "displayName": "Nose Tape Trust God",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "CujoMatty_ArmTats_21",
+        "displayName": "CujoMatty custom arm design 21",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "CujoMatty_ArmTats_22",
+        "displayName": "CujoMatty custom arm design 22",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "CujoMatty_ArmTats_23",
+        "displayName": "CujoMatty custom arm design 23",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "CujoMatty_ArmTats_24",
+        "displayName": "CujoMatty custom arm design 24",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "CujoMatty_ArmTats_25",
+        "displayName": "CujoMatty custom arm design 25",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "CujoMatty_ArmTats_26",
+        "displayName": "CujoMatty custom arm design 26",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "CujoMatty_ArmTats_27",
+        "displayName": "CujoMatty custom arm design 27",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "CujoMatty_ArmTats_28",
+        "displayName": "CujoMatty custom arm design 28",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "CujoMatty_ArmTats_29",
+        "displayName": "CujoMatty custom arm design 29",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "CujoMatty_ArmTats_30",
+        "displayName": "CujoMatty custom arm design 30",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "CujoMatty_ArmTats_31",
+        "displayName": "CujoMatty custom arm design 31",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "CujoMatty_ArmTats_32",
+        "displayName": "CujoMatty custom arm design 32",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "CujoMatty_ArmTats_33",
+        "displayName": "CujoMatty custom arm design 33",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "CujoMatty_ArmTats_34",
+        "displayName": "CujoMatty custom arm design 34",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "CujoMatty_ArmTats_35",
+        "displayName": "CujoMatty custom arm design 35",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "CujoMatty_ArmTats_36",
+        "displayName": "CujoMatty custom arm design 36",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "CujoMatty_ArmTats_37",
+        "displayName": "CujoMatty custom arm design 37",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "CujoMatty_ArmTats_38",
+        "displayName": "CujoMatty custom arm design 38",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "CujoMatty_ArmTats_39",
+        "displayName": "CujoMatty custom arm design 39",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "CujoMatty_ArmTats_40",
+        "displayName": "CujoMatty custom arm design 40",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "CujoMatty_ArmTats_41",
+        "displayName": "CujoMatty custom arm design 41",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "LegTattoo_Three",
+        "displayName": "Custom leg design 3",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "LegTattoo_Four",
+        "displayName": "Custom leg design 4",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "LegTattoo_Five",
+        "displayName": "Custom leg design 5",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "LegTattoo_One",
+        "displayName": "Custom leg design 1",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "LegTattoo_Two",
+        "displayName": "Custom leg design 2",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "ArmTattoo_Tattoos_Japanese_01_FullSleeveR",
+        "displayName": "Japanese full-arm sleeve — design 01",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "ArmTattoo_Tattoos_Japanese_01_FullSleeveR2",
+        "displayName": "Japanese full-arm sleeve — design 01, alternate",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "ArmTattoo_Tattoos_Japanese_02_FullSleeveL",
+        "displayName": "Japanese full-arm sleeve — design 02",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "ArmTattoo_Tattoos_Japanese_02_FullSleeveL2",
+        "displayName": "Japanese full-arm sleeve — design 02, alternate",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "ArmTattoo_Tattoos_Japanese_03_ForearmHalfSleeve",
+        "displayName": "Japanese forearm half-sleeve — design 03",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "ArmTattoo_Tattoos_Japanese_03_ForearmHalfSleeve2",
+        "displayName": "Japanese forearm half-sleeve — design 03, alternate",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "ArmTattoo_Tattoos_Japanese_07_ArmSleeve_v02",
+        "displayName": "Japanese arm sleeve — design 07",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "ArmTattoo_Tattoos_Japanese_07_ArmSleeve_v03",
+        "displayName": "Japanese arm sleeve — design 07, alternate",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "ArmTattoo_Tattoos_Japanese_08_ArmSleeve_v01",
+        "displayName": "Japanese arm sleeve — design 08",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "ArmTattoo_Tattoos_Japanese_08_ArmSleeve_v02",
+        "displayName": "Japanese arm sleeve — design 08, alternate",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "ArmTattoo_Tattoos_Japanese_09_ArmFloating_v02",
+        "displayName": "Japanese floating arm design 09",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "ArmTattoo_Tattoos_Japanese_10_ArmFloating_v01",
+        "displayName": "Japanese floating arm design 10",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "ArmTattoo_Tattoos_Japanese_ArmFloating_v01",
+        "displayName": "Japanese floating arm design — alternate",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "ArmTattoo_Tattoos_Japanese_12_Arm_v02",
+        "displayName": "Japanese arm design 12",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "ArmTattoo_Tattoos_Polynesian_Hawaiian_Arm",
+        "displayName": "Polynesian Hawaiian I",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "ArmTattoo_Tattoos_Polynesian_Hawaiian_Arm_v02",
+        "displayName": "Polynesian Hawaiian II",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "ArmTattoo_Tattoos_Polynesian_Maori_Arm_A",
+        "displayName": "Polynesian Māori I",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "ArmTattoo_Tattoos_Polynesian_Maori_Arm_B",
+        "displayName": "Polynesian Māori II",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "ArmTattoo_Tattoos_Polynesian_Samoan_StickerA",
+        "displayName": "Polynesian Samoan I — sticker design",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "ArmTattoo_Tattoos_Polynesian_Samoan_StickerB",
+        "displayName": "Polynesian Samoan II — sticker design",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "ArmTattoo_Tattoos_Polynesian_Samoan_Arm_v01",
+        "displayName": "Polynesian Samoan III",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "ArmTattoo_Tattoos_Polynesian_Tongan_Arm_A",
+        "displayName": "Polynesian Tongan I",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "ArmTattoo_Tattoos_Polynesian_Tongan_Arm_B",
+        "displayName": "Polynesian Tongan II",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "ArmTattoo_Tattoos_Polynesian_Tongan_Arm_C_v01",
+        "displayName": "Polynesian Tongan III",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      },
+      {
+        "itemName": "ArmTattoo_Tattoos_Polynesian_Tongan_Arm_C_v02",
+        "displayName": "Polynesian Tongan IV",
+        "category": "Tattoo",
+        "observedInCurrentSession": false,
+        "source": "Existing verified Unlocked tattoo catalog; not newly verified by this session."
+      }
+    ],
+    "raw": [
+      {
+        "itemName": "NeckWear_Raw_Turtleneck",
+        "displayName": "Raw Slim Turtleneck Primary Color",
+        "category": "Neckwear",
+        "slots": [
+          "NeckWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "NeckWear_Raw_Turtleneck_Black",
+        "displayName": "Raw Slim Turtleneck Black",
+        "category": "Neckwear",
+        "slots": [
+          "NeckWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "NeckWear_Raw_Turtleneck_Secondary",
+        "displayName": "Raw Slim Turtleneck Secondary Color",
+        "category": "Neckwear",
+        "slots": [
+          "NeckWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "NeckWear_Raw_Turtleneck_White",
+        "displayName": "Raw Slim Turtleneck White",
+        "category": "Neckwear",
+        "slots": [
+          "NeckWear"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "GearNeckpad_Raw_GoldCrossNecklace",
+        "displayName": "Raw gold cross necklace",
+        "category": "Neck Pad",
+        "slots": [
+          "Neckpad"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": false
+      },
+      {
+        "itemName": "GearNeckpad_Raw_SilverCrossNecklace",
+        "displayName": "Raw silver cross necklace",
+        "category": "Neck Pad",
+        "slots": [
+          "Neckpad"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": false
+      },
+      {
+        "itemName": "GuardianCap_RawBattleSkullCap",
+        "displayName": "Black Battle Skullcap",
+        "category": "Guardian Cap",
+        "slots": [
+          "GuardianCap"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "GuardianCap_RawNikeSkullCap",
+        "displayName": "Black Nike Skullcap",
+        "category": "Guardian Cap",
+        "slots": [
+          "GuardianCap"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "GuardianCap_RawBattleSkullCapWhiteV87",
+        "displayName": "White Battle Skullcap",
+        "category": "Guardian Cap",
+        "slots": [
+          "GuardianCap"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "GuardianCap_RawNikeSkullCapWhiteV87",
+        "displayName": "White Nike Skullcap",
+        "category": "Guardian Cap",
+        "slots": [
+          "GuardianCap"
+        ],
+        "generationEligible": true,
+        "observedInCurrentSession": true
+      },
+      {
+        "itemName": "FaceMarks_NoseTape_DP",
+        "displayName": "DEE DOG Eye Paint",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_RawNoseEyeTape",
+        "displayName": "Nose and Eye Tape - All Gas",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_RawNoseTape_1hitta",
+        "displayName": "Nose and Eye Tape - #1 Hitta",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_RawNoseTape_540baby",
+        "displayName": "Nose and Eye Tape - 540 Baby",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_RawNoseTape_builtdiff",
+        "displayName": "Nose and Eye Tape - Built Diff",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_RawNoseTape_dontblink",
+        "displayName": "Nose and Eye Tape - Don't Blink",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_RawNoseTape_fearnone",
+        "displayName": "Nose and Eye Tape - Fear None",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_RawNoseTape_imfnopen",
+        "displayName": "Nose and Eye Tape — I'm F'n Open",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": false,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_RawNoseTape_john316",
+        "displayName": "Nose and Eye Tape - John 3:16",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_RawNoseTape_killall",
+        "displayName": "Nose and Eye Tape — Kill All",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": false,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_RawNoseTape_luke137",
+        "displayName": "Nose and Eye Tape - Luke 1:37",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_RawNoseTape_nolove",
+        "displayName": "Nose and Eye Tape - No Love",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_RawNoseTape_notsorry",
+        "displayName": "Nose and Eye Tape — Not Sorry",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": false,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_RawNoseTape_sickem",
+        "displayName": "Nose and Eye Tape - Sick 'Em",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_RawNoseTape_talkcrazy",
+        "displayName": "Nose and Eye Tape - Talk Crazy",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_RawNoseTape_theproblem",
+        "displayName": "Nose and Eye Tape - The Problem",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      },
+      {
+        "itemName": "FaceMarks_RawNoseTape_watchme",
+        "displayName": "Nose and Eye Tape - Watch Me",
+        "category": "Facepaint",
+        "slots": [
+          "FaceMarks"
+        ],
+        "observedInCurrentSession": true,
+        "source": "Existing verified mod/facepaint mapping; not inferred from memory differences."
+      }
+    ]
+  },
+  "counts": {
+    "catalog": 145,
+    "raw": 52,
+    "unlocked": 47,
+    "unresolved": 7
+  },
+  "items": [
+    {
+      "itemName": "GearArmSleeve_Full_sleeveLongUnderarmor_normal_Black",
+      "displayName": "Arm Sleeve Full Black",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_Full_sleeveLongUnderarmor_normal_SecondaryColor",
+      "displayName": "Arm Sleeve Full Secondary Color",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_Full_sleeveLongUnderarmor_normal_TeamColor",
+      "displayName": "Arm Sleeve Full Team Color",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_Full_sleeveLongUnderarmor_normal_White",
+      "displayName": "Arm Sleeve Full White",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_Half_sleeveLongUnderarmor_normal_Black",
+      "displayName": "Arm Sleeve Half Black",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_Half_sleeveLongUnderarmor_normal_SecondaryColor",
+      "displayName": "Arm Sleeve Half Secondary Color",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_Half_sleeveLongUnderarmor_normal_TeamColor",
+      "displayName": "Arm Sleeve Half Team Color",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_Half_sleeveLongUnderarmor_normal_White",
+      "displayName": "Arm Sleeve Half White",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_Quarter_sleeveLongUnderarmor_normal_Black",
+      "displayName": "Arm Sleeve Quarter Black",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_Quarter_sleeveLongUnderarmor_normal_SecondaryColor",
+      "displayName": "Arm Sleeve Quarter Secondary Color",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_Quarter_sleeveLongUnderarmor_normal_TeamColor",
+      "displayName": "Arm Sleeve Quarter Team Color",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Arm Sleeve Quarter Team Color",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_Quarter_sleeveLongUnderarmor_normal_White",
+      "displayName": "Arm Sleeve Quarter White",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_Shooter_sleeveLongUnderarmor_normal_Black",
+      "displayName": "Arm Sleeve Shooter Black",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_Shooter_sleeveLongUnderarmor_normal_SecondaryColor",
+      "displayName": "Arm Sleeve Shooter Secondary Color",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_Shooter_sleeveLongUnderarmor_normal_TeamColor",
+      "displayName": "Arm Sleeve Shooter Team Color",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Arm Sleeve Shooter Team Color",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_Shooter_sleeveLongUnderarmor_normal_White",
+      "displayName": "Arm Sleeve Shooter White",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearFaceMask_Axiom2BarJagged",
+      "displayName": "Axiom 2 Bar Jagged",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Axiom 2 Bar Jagged",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "FaceMask"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_Baggy_Black",
+      "displayName": "Baggy Arm Sleeve Black",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_Baggy_SecondaryColor",
+      "displayName": "Baggy Arm Sleeve Secondary Color",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_Baggy_TeamColor",
+      "displayName": "Baggy Arm Sleeve Team Color",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_Baggy_White",
+      "displayName": "Baggy Arm Sleeve White",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Black2",
+      "displayName": "Battle Hanging Mouthpiece Pacifier Black",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Blue2",
+      "displayName": "Battle Hanging Mouthpiece Pacifier Blue",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Green2",
+      "displayName": "Battle Hanging Mouthpiece Pacifier Green",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_LightBlue2",
+      "displayName": "Battle Hanging Mouthpiece Pacifier Light Blue",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Orange2",
+      "displayName": "Battle Hanging Mouthpiece Pacifier Orange",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Pink2",
+      "displayName": "Battle Hanging Mouthpiece Pacifier Pink",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Purple2",
+      "displayName": "Battle Hanging Mouthpiece Pacifier Purple",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Red2",
+      "displayName": "Battle Hanging Mouthpiece Pacifier Red",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_SecondaryColor2",
+      "displayName": "Battle Hanging Mouthpiece Pacifier Secondary Color",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor2",
+      "displayName": "Battle Hanging Mouthpiece Pacifier Team Color",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_White2",
+      "displayName": "Battle Hanging Mouthpiece Pacifier White",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Yellow2",
+      "displayName": "Battle Hanging Mouthpiece Pacifier Yellow",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Neon2",
+      "displayName": "Battle Mouthpiece Pacifier Neon",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_NikeProDriFitSleeve_Black",
+      "displayName": "Black Compression Sleeve",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_McDavidPaddedCompressionSleeve_Black",
+      "displayName": "Black Honeycomb Padded Sleeve",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_NikeHyperstrongPaddedSleeve_Black",
+      "displayName": "Black Multi Padded Sleeve",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_NikePaddedElbowCompressionSleeve_Black",
+      "displayName": "Black Padded Sleeve",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_CompressionRolledUpShirt_Black",
+      "displayName": "Black Rolled Sleeve",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "Gear_Undershirt_CompressionTCrewSleeveless_Black",
+      "displayName": "Black Sleeveless Compression Undershirt",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Black Sleeveless Compression Undershirt",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "InnerShirt"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_NikeProDriFitSleeve2_Black",
+      "displayName": "Double Sleeve Black and Primary",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_NikeProDriFitSleeve2a_Black",
+      "displayName": "Double Sleeve Black and Secondary",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_NikeProDriFitSleeve2_TeamColor",
+      "displayName": "Double Sleeve Primary and Secondary",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_NikeProDriFitSleeve2_SecondaryColor",
+      "displayName": "Double Sleeve Secondary and Primary",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_Elbow_armTape_normal_Black",
+      "displayName": "Elbow Sleeve Black",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_Elbow_armTape_normal_TeamColor",
+      "displayName": "Elbow Sleeve Primary",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_Elbow_armTape_normal_OffWhite",
+      "displayName": "Elbow Sleeve White",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "FaceMarks_EyePaint",
+      "displayName": "Eye Paint",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "FacePaint"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "FaceMarks_EyePaint2",
+      "displayName": "Eye Paint 2",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "FacePaint"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "FaceMarks_EyePaint3",
+      "displayName": "Eye Paint 3",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "FacePaint"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "FaceMarks_EyePaintCross",
+      "displayName": "Eye Paint Cross",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "FacePaint"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "FaceMarks_EyeTape",
+      "displayName": "Eye Tape",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "FacePaint"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "FaceMarks_EyeTapeRight",
+      "displayName": "Eye Tape Left",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "FacePaint"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "FaceMarks_EyeTapeLeft",
+      "displayName": "Eye Tape Right",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "FacePaint"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GuardianCap_GuardianXT_Sleeve",
+      "displayName": "Guardian Cap Sleeve",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "GuardianCap",
+        "Neckpad"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GuardianCap_GuardianXT2_Sleeve",
+      "displayName": "Guardian Cap Sleeve XT2",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "GuardianCap",
+        "Neckpad"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "Handwarmer_Standard",
+      "displayName": "Handwarmer Standard",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Handwarmer Standard",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "WaistWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Black",
+      "displayName": "Hanging Mouthpiece Pacifier Black",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Hanging Mouthpiece Pacifier Black",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_White4",
+      "displayName": "Hanging Mouthpiece Pacifier Black and Green",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Blue",
+      "displayName": "Hanging Mouthpiece Pacifier Blue",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Hanging Mouthpiece Pacifier Blue",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_White6",
+      "displayName": "Hanging Mouthpiece Pacifier Cosmic Peach",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Green",
+      "displayName": "Hanging Mouthpiece Pacifier Green",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Hanging Mouthpiece Pacifier Green",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_LightBlue",
+      "displayName": "Hanging Mouthpiece Pacifier Light Blue",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Hanging Mouthpiece Pacifier Light Blue",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Neon",
+      "displayName": "Hanging Mouthpiece Pacifier Neon",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Hanging Mouthpiece Pacifier Neon",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_White7",
+      "displayName": "Hanging Mouthpiece Pacifier Neon Blue and Pink",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Orange",
+      "displayName": "Hanging Mouthpiece Pacifier Orange",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Hanging Mouthpiece Pacifier Orange",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Pink",
+      "displayName": "Hanging Mouthpiece Pacifier Pink",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Hanging Mouthpiece Pacifier Pink",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_White9",
+      "displayName": "Hanging Mouthpiece Pacifier Pink and Green",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_White11",
+      "displayName": "Hanging Mouthpiece Pacifier Pure Gray",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Purple",
+      "displayName": "Hanging Mouthpiece Pacifier Purple",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Hanging Mouthpiece Pacifier Purple",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_White12",
+      "displayName": "Hanging Mouthpiece Pacifier Purple and Green",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Red",
+      "displayName": "Hanging Mouthpiece Pacifier Red",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Hanging Mouthpiece Pacifier Red",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_SecondaryColor",
+      "displayName": "Hanging Mouthpiece Pacifier Secondary Color",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Hanging Mouthpiece Pacifier Secondary Color",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_White8",
+      "displayName": "Hanging Mouthpiece Pacifier Smoke Blue",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_White5",
+      "displayName": "Hanging Mouthpiece Pacifier Smoke Blue and Pink",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_White10",
+      "displayName": "Hanging Mouthpiece Pacifier Smoke Green",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor",
+      "displayName": "Hanging Mouthpiece Pacifier Team Color",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Hanging Mouthpiece Pacifier Team Color",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_White",
+      "displayName": "Hanging Mouthpiece Pacifier White",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Hanging Mouthpiece Pacifier White",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Yellow",
+      "displayName": "Hanging Mouthpiece Pacifier Yellow",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Hanging Mouthpiece Pacifier Yellow",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearHelmet_LightGladiator",
+      "displayName": "Light Gladiator",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Light Gladiator",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "HeadWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearHelmet_LightLS2",
+      "displayName": "Light LS2",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "HeadWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_Mouthguard1_Black",
+      "displayName": "Mouthguard Black",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_Mouthguard1_SecondaryColor",
+      "displayName": "Mouthguard Secondary Color",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_Mouthguard1_TeamColor",
+      "displayName": "Mouthguard Team Color",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_Mouthguard1_White",
+      "displayName": "Mouthguard White",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDual_Black",
+      "displayName": "Mouthpiece Pacifier Black",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Mouthpiece Pacifier Black",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDual_SecondaryColor",
+      "displayName": "Mouthpiece Pacifier Secondary Color",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Mouthpiece Pacifier Secondary Color",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDual_TeamColor",
+      "displayName": "Mouthpiece Pacifier Team Color",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Mouthpiece Pacifier Team Color",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDual_White",
+      "displayName": "Mouthpiece Pacifier White",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Mouthpiece Pacifier White",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Black4",
+      "displayName": "Nike Hanging Mouthpiece Pacifier Black",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearFootwear_shoe_low_NikeEdgeSpeed3062",
+      "displayName": "Nike Vapor Edge Speed 360 2",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Nike Vapor Edge Speed 360 2",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftShoe",
+        "RightShoe"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearHelmet_None",
+      "displayName": "None",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "HeadWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_None",
+      "displayName": "None",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "None",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "FaceMarks_NoseEyeTape",
+      "displayName": "Nose and Eye Tape",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "FacePaint"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "FaceMarks_NoseTape",
+      "displayName": "Nose Tape",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "FacePaint"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "FaceMarks_NoseTapeEyePaint",
+      "displayName": "Nose Tape Eye Paint",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "FacePaint"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Black3",
+      "displayName": "NXTRND Hanging Mouthpiece Pacifier Black",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Blue3",
+      "displayName": "NXTRND Hanging Mouthpiece Pacifier Blue",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Green3",
+      "displayName": "NXTRND Hanging Mouthpiece Pacifier Green",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Orange3",
+      "displayName": "NXTRND Hanging Mouthpiece Pacifier Orange",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Pink3",
+      "displayName": "NXTRND Hanging Mouthpiece Pacifier Pink",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Purple3",
+      "displayName": "NXTRND Hanging Mouthpiece Pacifier Purple",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Red3",
+      "displayName": "NXTRND Hanging Mouthpiece Pacifier Red",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_SecondaryColor3",
+      "displayName": "NXTRND Hanging Mouthpiece Pacifier Secondary Color",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor3",
+      "displayName": "NXTRND Hanging Mouthpiece Pacifier Team Color",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_White3",
+      "displayName": "NXTRND Hanging Mouthpiece Pacifier White",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Yellow3",
+      "displayName": "NXTRND Hanging Mouthpiece Pacifier Yellow",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Neon3",
+      "displayName": "NXTRND Mouthpiece Pacifier Neon",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "Gear_Undershirt_CompressionTCrewSleeveless",
+      "displayName": "Primary Sleeveless Compression Undershirt",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Primary Sleeveless Compression Undershirt",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "InnerShirt"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearNeckpad_QCollar",
+      "displayName": "Q Collar",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "Neckpad"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearHelmet_Axiom",
+      "displayName": "Riddell Axiom",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Riddell Axiom",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "HeadWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearHelmet_Revolution",
+      "displayName": "Riddell Revolution",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Riddell Revolution",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "HeadWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearHelmet_RevolutionSpeed",
+      "displayName": "Riddell Revolution Speed",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Riddell Revolution Speed",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "HeadWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearHelmet_Speed_Flex",
+      "displayName": "Riddell SpeedFlex",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Riddell SpeedFlex",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "HeadWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearHelmet_RiddellTK",
+      "displayName": "Riddell TK",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Riddell TK",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "HeadWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearHelmet_Standard",
+      "displayName": "Riddell VSR4",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Riddell VSR4",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "HeadWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearHelmet_standardBrady",
+      "displayName": "Riddell VSR4 Softcup",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "HeadWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearHelmet_Schutt",
+      "displayName": "Schutt Air Advantage",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Schutt Air Advantage",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "HeadWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearHelmet_AirXP",
+      "displayName": "Schutt Air XP PRO VTD",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Schutt Air XP PRO VTD",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "HeadWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearHelmet_SchuttF7",
+      "displayName": "Schutt F7",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Schutt F7",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "HeadWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearHelmet_SchuttF7Pro",
+      "displayName": "Schutt F7 Pro",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Schutt F7 Pro",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "HeadWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_NikeProDriFitSleeve_SecondaryColor",
+      "displayName": "Secondary Color Compression Sleeve",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_McDavidPaddedCompressionSleeve_SecondaryColor",
+      "displayName": "Secondary Color Honeycomb Padded Sleeve",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_NikeHyperstrongPaddedSleeve_SecondaryColor",
+      "displayName": "Secondary Color Multi Padded Sleeve",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_NikePaddedElbowCompressionSleeve_SecondaryColor",
+      "displayName": "Secondary Color Padded Sleeve",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_CompressionRolledUpShirt_SecondaryColor",
+      "displayName": "Secondary Color Rolled Sleeve",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "Gear_Undershirt_CompressionTCrewSleeveless_Secondary",
+      "displayName": "Secondary Sleeveless Compression Undershirt",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Secondary Sleeveless Compression Undershirt",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "InnerShirt"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "Gear_Undershirt_HoodieSleeveless",
+      "displayName": "Sleeveless Hoodie",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Sleeveless Hoodie",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "InnerShirt"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_NikeProDriFitSleeve_TeamColor",
+      "displayName": "Team Color Compression Sleeve",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Team Color Compression Sleeve",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_McDavidPaddedCompressionSleeve_TeamColor",
+      "displayName": "Team Color Honeycomb Padded Sleeve",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_NikeHyperstrongPaddedSleeve_TeamColor",
+      "displayName": "Team Color Multi Padded Sleeve",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_NikePaddedElbowCompressionSleeve_TeamColor",
+      "displayName": "Team Color Padded Sleeve",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_CompressionRolledUpShirt_TeamColor",
+      "displayName": "Team Color Rolled Sleeve",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_Undershirt_sleeveLongUnderarmor_normal_Black",
+      "displayName": "Undershirt Black",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_Undershirt_sleeveLongUnderarmor_normal_TeamColor",
+      "displayName": "Undershirt Team Color",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_Undershirt_sleeveLongUnderarmor_normal_White",
+      "displayName": "Undershirt White",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearHelmet_VicisZero2",
+      "displayName": "Vicis Zero 2",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Vicis Zero 2",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "HeadWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearHelmet_VicisZero2Trench",
+      "displayName": "Vicis Zero 2 Trench",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Vicis Zero 2 Trench",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "HeadWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearHelmet_VicisZero1",
+      "displayName": "VICIS ZERO1",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "VICIS ZERO1",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "HeadWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_NikeProDriFitSleeve_White",
+      "displayName": "White Compression Sleeve",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_McDavidPaddedCompressionSleeve_White",
+      "displayName": "White Honeycomb Padded Sleeve",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_NikeHyperstrongPaddedSleeve_White",
+      "displayName": "White Multi Padded Sleeve",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_NikePaddedElbowCompressionSleeve_White",
+      "displayName": "White Padded Sleeve",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearArmSleeve_CompressionRolledUpShirt_White",
+      "displayName": "White Rolled Sleeve",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "Gear_Undershirt_CompressionTCrewSleeveless_White",
+      "displayName": "White Sleeveless Compression Undershirt",
+      "origin": "catalog",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "White Sleeveless Compression Undershirt",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "InnerShirt"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GuardianCap_RawBattleSkullCap",
+      "displayName": "Black Battle Skullcap",
+      "origin": "raw",
+      "evidence": "Checked live labels; user-confirmed RAW provenance/GuardianCap slot; older RAW manifest confirms black variants.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "slots": [
+        "GuardianCap"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GuardianCap_RawNikeSkullCap",
+      "displayName": "Black Nike Skullcap",
+      "origin": "raw",
+      "evidence": "Checked live labels; user-confirmed RAW provenance/GuardianCap slot; older RAW manifest confirms black variants.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "slots": [
+        "GuardianCap"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "FaceMarks_NoseTape_DP",
+      "displayName": "DEE DOG Eye Paint",
+      "origin": "raw",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawNoseTape_1hitta",
+      "displayName": "Nose and Eye Tape - #1 Hitta",
+      "origin": "raw",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawNoseTape_540baby",
+      "displayName": "Nose and Eye Tape - 540 Baby",
+      "origin": "raw",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawNoseEyeTape",
+      "displayName": "Nose and Eye Tape - All Gas",
+      "origin": "raw",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawNoseTape_builtdiff",
+      "displayName": "Nose and Eye Tape - Built Diff",
+      "origin": "raw",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawNoseTape_dontblink",
+      "displayName": "Nose and Eye Tape - Don't Blink",
+      "origin": "raw",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawNoseTape_fearnone",
+      "displayName": "Nose and Eye Tape - Fear None",
+      "origin": "raw",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawNoseTape_john316",
+      "displayName": "Nose and Eye Tape - John 3:16",
+      "origin": "raw",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawNoseTape_luke137",
+      "displayName": "Nose and Eye Tape - Luke 1:37",
+      "origin": "raw",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawNoseTape_nolove",
+      "displayName": "Nose and Eye Tape - No Love",
+      "origin": "raw",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawNoseTape_sickem",
+      "displayName": "Nose and Eye Tape - Sick 'Em",
+      "origin": "raw",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawNoseTape_talkcrazy",
+      "displayName": "Nose and Eye Tape - Talk Crazy",
+      "origin": "raw",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawNoseTape_theproblem",
+      "displayName": "Nose and Eye Tape - The Problem",
+      "origin": "raw",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawNoseTape_watchme",
+      "displayName": "Nose and Eye Tape - Watch Me",
+      "origin": "raw",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_EyePaint",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_EyePaint",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_EyePaint2",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_EyePaint2",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_EyePaint3",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_EyePaint3",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_EyePaintCross",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_EyePaintCross",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_EyeTape",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_EyeTape",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_EyeTapeLeft",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_EyeTapeLeft",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_EyeTapeRight",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_EyeTapeRight",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_NoseEyeTape",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_NoseEyeTape",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_NoseTape",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_NoseTape",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_NoseTape_DP",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_NoseTape_DP",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_NoseTape_G",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_NoseTape_G",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_NoseTape_KE",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_NoseTape_KE",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_NoseTape_T",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_NoseTape_T",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_NoseTapeEyePaint",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_NoseTapeEyePaint",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_RawNoseEyeTape",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_RawNoseEyeTape",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_NoseTape_1hitta",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_RawNoseTape_1hitta",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_NoseTape_540baby",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_RawNoseTape_540baby",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_NoseTape_builtdiff",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_RawNoseTape_builtdiff",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_NoseTape_dontblink",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_RawNoseTape_dontblink",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_NoseTape_fearnone",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_RawNoseTape_fearnone",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_NoseTape_imfnopen",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_RawNoseTape_imfnopen",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_NoseTape_john316",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_RawNoseTape_john316",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_NoseTape_killall",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_RawNoseTape_killall",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_NoseTape_luke137",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_RawNoseTape_luke137",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_NoseTape_nolove",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_RawNoseTape_nolove",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_NoseTape_notsorry",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_RawNoseTape_notsorry",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_NoseTape_sickem",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_RawNoseTape_sickem",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_NoseTape_talkcrazy",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_RawNoseTape_talkcrazy",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_NoseTape_theproblem",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_RawNoseTape_theproblem",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_RawEarringsCombo_NoseTape_watchme",
+      "displayName": "RAW_EARRINGS_COMBO:FaceMarks_RawNoseTape_watchme",
+      "origin": "raw",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "NeckWear_Raw_Turtleneck_Black",
+      "displayName": "Slim Turtleneck Black",
+      "origin": "raw",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "slots": [
+        "NeckWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "NeckWear_Raw_Turtleneck_Secondary",
+      "displayName": "Slim Turtleneck Secondary Team Color",
+      "origin": "raw",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "slots": [
+        "NeckWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "NeckWear_Raw_Turtleneck",
+      "displayName": "Slim Turtleneck Team Color",
+      "origin": "raw",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "slots": [
+        "NeckWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "NeckWear_Raw_Turtleneck_White",
+      "displayName": "Slim Turtleneck White",
+      "origin": "raw",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "raw"
+      ],
+      "slots": [
+        "NeckWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GuardianCap_RawBattleSkullCapWhiteV87",
+      "displayName": "White Battle Skullcap",
+      "origin": "raw",
+      "evidence": "Checked live labels; user-confirmed RAW provenance/GuardianCap slot; older RAW manifest confirms black variants.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "GuardianCap"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GuardianCap_RawNikeSkullCapWhiteV87",
+      "displayName": "White Nike Skullcap",
+      "origin": "raw",
+      "evidence": "Checked live labels; user-confirmed RAW provenance/GuardianCap slot; older RAW manifest confirms black variants.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "GuardianCap"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor4",
+      "displayName": "Battle Hanging Mouthpiece Pacifier Primary and Sec",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_SecondaryColor4",
+      "displayName": "Battle Hanging Mouthpiece Pacifier Sec and Primary",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Tight3",
+      "displayName": "Battle Turtleneck Primary Black",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "NeckWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Tight2",
+      "displayName": "Battle Turtleneck Primary White",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "NeckWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Tight6",
+      "displayName": "Battle Turtleneck White Primary",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "NeckWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "FaceGear_BalaclavaOverNose",
+      "displayName": "Black Balaclava",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "FaceWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "Gear_Low_TuckedUndershirt",
+      "displayName": "Jersey Rolled Low Tucked Undershirt",
+      "origin": "unlocked",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor5",
+      "displayName": "Nike Hanging Mouthpiece Pacifier Primary and Black",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor6",
+      "displayName": "Nike Hanging Mouthpiece Pacifier Primary and White",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor9",
+      "displayName": "Nike Hanging Mouthpiece Pacifier Secondary and Black",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor10",
+      "displayName": "Nike Hanging Mouthpiece Pacifier Secondary and White",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "FaceMarks_NoseTape_C1",
+      "displayName": "Nose Tape Custom1",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_NoseTape_C10",
+      "displayName": "Nose Tape Custom10",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_NoseTape_C2",
+      "displayName": "Nose Tape Custom2",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_NoseTape_C3",
+      "displayName": "Nose Tape Custom3",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_NoseTape_C4",
+      "displayName": "Nose Tape Custom4",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_NoseTape_C5",
+      "displayName": "Nose Tape Custom5",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_NoseTape_C6",
+      "displayName": "Nose Tape Custom6",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_NoseTape_C7",
+      "displayName": "Nose Tape Custom7",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_NoseTape_C8",
+      "displayName": "Nose Tape Custom8",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_NoseTape_C9",
+      "displayName": "Nose Tape Custom9",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_NoseTape_G",
+      "displayName": "Nose Tape GABOS",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_NoseTape_KE",
+      "displayName": "Nose Tape Kill Everybody",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceMarks_NoseTape_T",
+      "displayName": "Nose Tape Trust God",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Tight5",
+      "displayName": "NXTRND Turtleneck Primary Black",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "NeckWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Tight4",
+      "displayName": "NXTRND Turtleneck Primary White",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "NeckWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Tight7",
+      "displayName": "NXTRND Turtleneck White Primary ",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "NeckWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "FaceGear_BalaclavaNone",
+      "displayName": "Remove Balaclava",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "FaceWear"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Scrunched_Black",
+      "displayName": "Scrunched Turtleneck Black",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Scrunched Turtleneck Black",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "NeckWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Scrunched",
+      "displayName": "Scrunched Turtleneck Primary Color",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Scrunched Turtleneck Primary Color",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "NeckWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Scrunched_Secondary",
+      "displayName": "Scrunched Turtleneck Secondary Color",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Scrunched Turtleneck Secondary Color",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "NeckWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Scrunched_White",
+      "displayName": "Scrunched Turtleneck White",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Scrunched Turtleneck White",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "NeckWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "FaceGear_BalaclavaOverNose_Secondary",
+      "displayName": "Secondary Color Balaclava",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "FaceWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor7",
+      "displayName": "Shock Hanging Mouthpiece Pacifier Primary and Sec",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor8",
+      "displayName": "Shock Hanging Mouthpiece Pacifier Primary and White",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "slots": [
+        "MouthWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "G_Hoodie_Sleeveless_Ravens_ML_PUR",
+      "displayName": "Sleeveless Hoodie All Jerseys",
+      "origin": "unlocked",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceGear_BalaclavaOverNose_Primary",
+      "displayName": "Team Color Balaclava",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "FaceWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "Gear_JerseyStyle_SleeveTight_Untucked",
+      "displayName": "Tight Sleeves Untucked",
+      "origin": "unlocked",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Tight_Black",
+      "displayName": "Tight Turtleneck Black",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Tight Turtleneck Black",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "NeckWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Tight",
+      "displayName": "Tight Turtleneck Primary Color",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Tight Turtleneck Primary Color",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "NeckWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Tight_Secondary",
+      "displayName": "Tight Turtleneck Secondary Color",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Tight Turtleneck Secondary Color",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "NeckWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Tight_White",
+      "displayName": "Tight Turtleneck White",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Tight Turtleneck White",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "slots": [
+        "NeckWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "G_CompressionT_Crew_LongSleeve_NikeHQ_B_NAV",
+      "displayName": "Undershirt LongSleeve Black",
+      "origin": "unlocked",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "G_CompressionT_Crew_LongSleeve_NikeHQ_B_BEI",
+      "displayName": "Undershirt LongSleeve Secondary Color",
+      "origin": "unlocked",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "G_CompressionT_Crew_LongSleeve_NikeHQ_B_GRE",
+      "displayName": "Undershirt LongSleeve Team Color",
+      "origin": "unlocked",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "G_CompressionT_Crew_LongSleeve_NikeHQ_B_GLD",
+      "displayName": "Undershirt LongSleeve White",
+      "origin": "unlocked",
+      "evidence": "Exact resource in one supplied mod manifest; checked live ID/label. Slot/generation suitability still needs verification.",
+      "observedWithoutMods": false,
+      "resourceManifests": [
+        "unlocked"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceGear_BalaclavaOverNose_White",
+      "displayName": "White Balaclava",
+      "origin": "unlocked",
+      "evidence": "Established Toolkit catalog / mod inventory; live label cross-check.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "FaceWear"
+      ],
+      "generationEligible": true
+    },
+    {
+      "itemName": "FaceGear_BalaclavaUnderLip",
+      "displayName": "Black Balaclava (Under Lip)",
+      "origin": "unresolved",
+      "evidence": "Both mods are loaded; exclusive provenance is not established. Not added to generation pools.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "FaceWear"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "Gear_JerseyStyle_SleeveLong",
+      "displayName": "Long Sleeves",
+      "origin": "unresolved",
+      "evidence": "Both mods are loaded; exclusive provenance is not established. Not added to generation pools.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Long Sleeves",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "generationEligible": false
+    },
+    {
+      "itemName": "Gear_JerseyStyle_SleeveStandard",
+      "displayName": "Loose Sleeves",
+      "origin": "unresolved",
+      "evidence": "Both mods are loaded; exclusive provenance is not established. Not added to generation pools.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Loose Sleeves",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceGear_BalaclavaUnderLip_Secondary",
+      "displayName": "Secondary Color Balaclava (Under Lip)",
+      "origin": "unresolved",
+      "evidence": "Both mods are loaded; exclusive provenance is not established. Not added to generation pools.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "FaceWear"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceGear_BalaclavaUnderLip_Primary",
+      "displayName": "Team Color Balaclava (Under Lip)",
+      "origin": "unresolved",
+      "evidence": "Both mods are loaded; exclusive provenance is not established. Not added to generation pools.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "FaceWear"
+      ],
+      "generationEligible": false
+    },
+    {
+      "itemName": "Gear_JerseyStyle_SleeveTight",
+      "displayName": "Tight Sleeves",
+      "origin": "unresolved",
+      "evidence": "Both mods are loaded; exclusive provenance is not established. Not added to generation pools.",
+      "observedWithoutMods": true,
+      "vanillaDisplayName": "Tight Sleeves",
+      "labelChangedFromVanilla": false,
+      "resourceManifests": [],
+      "generationEligible": false
+    },
+    {
+      "itemName": "FaceGear_BalaclavaUnderLip_White",
+      "displayName": "White Balaclava (Under Lip)",
+      "origin": "unresolved",
+      "evidence": "Both mods are loaded; exclusive provenance is not established. Not added to generation pools.",
+      "observedWithoutMods": false,
+      "resourceManifests": [],
+      "slots": [
+        "FaceWear"
+      ],
+      "generationEligible": false
+    }
+  ]
+}

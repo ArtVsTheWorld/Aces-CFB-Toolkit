@@ -21,11 +21,11 @@ diagnostics, and build output are excluded from source control.
 Publishing source does not require moving the existing installer release tags
 or replacing their assets. The tags created before source publication point
 to the original release-only repository commit. Use `main` for the complete
-v18.3 source snapshot rather than assuming an older release's automatic
+current source snapshot rather than assuming an older release's automatic
 source ZIP contains the app. Tag future releases from their tested source
 commits.
 
-App display version v18.3 uses installer/update SemVer **18.3.0**. Existing
+App display version v19.0 uses installer/update SemVer **19.0.0**. Existing
 portable users must install the Setup edition once to receive automatic
 updates; portable copies do not gain this support just by publishing source.
 

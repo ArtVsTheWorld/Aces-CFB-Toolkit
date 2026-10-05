@@ -2,6 +2,8 @@ import path from "node:path";
 import { createBackup, nextBackupPath } from "../../services/files.js";
 import { openCfb27Save, readTables, availableTeams } from "../../services/save.js";
 import { completePlan, saveFingerprint, storePlan, takePlan } from "../jersey/planStore.js";
+import { CUSTOM_MODEL_FIELDS, normalizeCustomModel } from "./core/customModel.js";
+import { customModelPresets, createModelConfig } from "./core/modelProfiles.js";
 import FORCE_WIN_CONFIG from "./core/config.js";
 import { buildCsvReport } from "./core/logger.js";
 import { createRandom } from "./core/probabilityEngine.js";
@@ -83,6 +85,7 @@ export async function prepareForceWin({ savePath, schemaPath }) {
     userControlledTeams: teams.filter(team => userControlledTeamIdsValue.includes(team.value)).map(team => team.label),
     currentWeek: context.currentWeek,
     season: context.currentSeasonDisplay,
+    customModelFields: CUSTOM_MODEL_FIELDS, customModelPresets: customModelPresets(),
     fcsDisparityMultiplier: FORCE_WIN_CONFIG.fcs.disparityMultiplier,
     involvement: Object.entries(FORCE_WIN_CONFIG.involvement.levels)
       .map(([value, item]) => ({ value, label: item.label })),
@@ -91,8 +94,10 @@ export async function prepareForceWin({ savePath, schemaPath }) {
   };
 }
 
-export async function readSeasonLines({ savePath, schemaPath, modelProfile = FORCE_WIN_CONFIG.modelProfiles.default }) {
-  if (!FORCE_WIN_CONFIG.modelProfiles.profiles[modelProfile]) throw new Error("Unknown matchup model.");
+export async function readSeasonLines({ savePath, schemaPath, modelProfile = FORCE_WIN_CONFIG.modelProfiles.default, customModel = null }) {
+  const savedCustomModel = normalizeCustomModel(customModel);
+  if (modelProfile === "custom" && !savedCustomModel) throw new Error("Create and save your custom model in Smart Force Win first.");
+  if (modelProfile !== "custom" && !FORCE_WIN_CONFIG.modelProfiles.profiles[modelProfile]) throw new Error("Unknown matchup model.");
   const loaded = await load(savePath, schemaPath);
   const record = loaded.tables.seasonInfo.records.find(item => item && !item.isEmpty);
   if (!record) throw new Error("SeasonInfo has no active record.");
@@ -107,9 +112,11 @@ export async function readSeasonLines({ savePath, schemaPath, modelProfile = FOR
     rivalryPairs: buildPairSet(loaded.tables.rivalry.records, FORCE_WIN_SCHEMA.rivalry),
     neutralPairs: buildPairSet(loaded.tables.scheduleNeutralStadium.records, FORCE_WIN_SCHEMA.neutral, FORCE_WIN_SCHEMA.neutral.enabled),
     rosterRatings: buildRosterRatings({ teamTable: loaded.tables.team, playerTable: loaded.tables.player }),
-    modelProfile
+    modelProfile, customModel: savedCustomModel
   });
-  return { season: displaySeason, modelProfile, profiles: Object.entries(FORCE_WIN_CONFIG.modelProfiles.profiles).map(([value, profile]) => ({ value, label: profile.label })), rows };
+  const profiles = Object.entries(FORCE_WIN_CONFIG.modelProfiles.profiles).map(([value, profile]) => ({ value, label: profile.label }));
+  if (savedCustomModel) profiles.push({ value: "custom", label: "Saved Custom Model" });
+  return { season: displaySeason, modelProfile, profiles, rows };
 }
 
 function normalized(options = {}) {
@@ -122,8 +129,8 @@ function normalized(options = {}) {
   if (!FORCE_WIN_CONFIG.involvement.levels[involvement]) {
     throw new Error(`Tool involvement must be one of: ${Object.keys(FORCE_WIN_CONFIG.involvement.levels).join(", ")}.`);
   }
-  if (!FORCE_WIN_CONFIG.modelProfiles.profiles[modelProfile]) {
-    throw new Error("Matchup model must be ratings, balanced, coaching, matchup, or chaos.");
+  if (modelProfile !== "custom" && !FORCE_WIN_CONFIG.modelProfiles.profiles[modelProfile]) {
+    throw new Error("Choose an existing or Custom matchup model.");
   }
   if (!["regular", "next", "week"].includes(scope)) {
     throw new Error("Schedule scope must be regular, next, or week.");
@@ -143,6 +150,7 @@ function normalized(options = {}) {
     specificWeek,
     involvement,
     modelProfile,
+    customModel: modelProfile === "custom" ? normalizeCustomModel(options.customModel) : null,
     seed,
     forceAllFcs: Boolean(options.forceAllFcs),
     skippedTeamIds: Array.isArray(options.skippedTeamIds) ? options.skippedTeamIds.map(String) : [],
@@ -362,6 +370,7 @@ async function preview(context) {
       random: createRandom(options.seed),
       involvement: options.involvement,
       modelProfile: options.modelProfile,
+      customModel: options.customModel,
       rosterRatings,
       forceAllFcs: options.forceAllFcs
     });
@@ -380,7 +389,8 @@ async function preview(context) {
       season: season.currentSeasonDisplay,
       currentWeek: season.currentWeek,
       seed: options.seed,
-      modelProfile: FORCE_WIN_CONFIG.modelProfiles.profiles[options.modelProfile].label,
+      modelProfile: createModelConfig(options.modelProfile, FORCE_WIN_CONFIG, options.customModel).activeModelProfile.label,
+      customModel: options.customModel,
       backupPath: dryRun ? null : nextBackupPath(loaded.savePath),
       outputPath: dryRun ? null : loaded.savePath,
       dryRun
@@ -422,7 +432,7 @@ async function preview(context) {
     }],
     resultKind: TOOL_ID,
     details: {
-      action: options.action,
+      action: options.action, customModel: options.customModel, modelProfile: options.modelProfile,
       currentWeek: season.currentWeek,
       totalPreviewRows: sortedRows.length,
       changes: sortedRows.slice(0, 1000)

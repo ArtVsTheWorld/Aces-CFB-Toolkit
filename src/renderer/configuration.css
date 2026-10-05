@@ -1,0 +1,82 @@
+.configuration-source[hidden], .configuration-dialog [hidden] { display:none !important; }
+.configuration-entry { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:12px 16px; margin:10px 0; border:1px solid var(--border); border-left:3px solid var(--action); border-radius:5px; background:var(--panel); min-width:0; }
+.configuration-entry > div { min-width:0; }
+.configuration-entry p { color:var(--muted); font-size:12px; line-height:1.5; margin:5px 0 0; overflow-wrap:anywhere; font-size:12px; }
+.configuration-entry .button { flex-shrink:0; }
+.configuration-dialog { width:min(920px,94vw); max-height:90vh; border:1px solid var(--border); border-radius:8px; padding:0; background:var(--panel); color:var(--text); overflow:auto; overscroll-behavior:contain; box-shadow:0 24px 80px #0005; }
+.configuration-dialog::backdrop { background:rgba(0,15,10,.72); }
+.configuration-header { position:sticky; top:0; z-index:3; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:20px 24px 14px; background:var(--panel); border-bottom:1px solid var(--border); }
+.configuration-header h2 { margin:4px 0 0; }
+.configuration-description { margin:0; padding:16px 24px 0; line-height:1.5; }
+.configuration-body { padding:16px 24px 24px; }
+.configuration-footer { position:sticky; bottom:0; z-index:3; display:flex; justify-content:space-between; align-items:center; gap:16px; padding:14px 24px; border-top:1px solid var(--border); background:var(--panel); }
+.configuration-footer > div:first-child { min-width:0; font-size:12px; color:var(--muted); }
+.configuration-footer-actions { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:8px; flex-shrink:0; }
+.configuration-error { color:var(--danger,#b83c3c); margin:5px 0 0; font-weight:600; }
+.configuration-dialog .team-picker-list { max-height:40vh; min-height:100px; }
+.configuration-dialog .donor-player-picker .team-picker-list { max-height:35vh; }
+.configuration-dialog .tape-team-list { max-height:38vh; }
+.configuration-dialog .player-filter-group { background:transparent; padding:0; border:0; }
+.configuration-dialog .selector-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.configuration-dialog .team-picker-toolbar { flex-wrap:wrap; }
+.configuration-dialog .team-picker-toolbar .input { min-width:150px; }
+.configuration-dialog input:invalid { border-color:var(--danger,#b83c3c); }
+.configuration-dialog .tape-team-settings > summary { display:none; }
+.configuration-dialog .tape-team-settings { margin-top:20px; }
+.configuration-dialog .distribution-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.configuration-draft > [hidden]:first-child { display:block !important; }
+.compact-choice-picker .team-picker-toolbar,.compact-choice-picker .team-picker-summary { display:none; }
+.compact-choice-picker .team-picker-list { display:flex; flex-wrap:wrap; gap:6px; overflow:visible; max-height:none; min-height:0; padding:6px 0; }
+.compact-choice-picker .team-picker-row { width:auto; padding:6px 10px; min-height:0; border:1px solid var(--border); border-radius:4px; }
+.compact-choice-picker p { font-size:11px; }
+.configuration-advanced summary { cursor:pointer; padding:12px 16px; font-weight:700; }
+.equipment-control-center .equipment-wizard-body { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:18px; padding:16px; }
+.equipment-control-center [data-equipment-panel="0"],.equipment-control-center [data-equipment-panel="3"] { grid-column:1/-1; }
+.equipment-control-center .equipment-wizard-panel { padding:0; min-width:0; }
+.equipment-control-center .wizard-panel-heading { margin-bottom:12px; }
+.equipment-control-center .player-pool-layout { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.equipment-control-center .player-pool-layout > .configuration-entry { align-self:start; }
+.equipment-control-center .team-scope-group { padding:0; border:0; background:transparent; }
+.equipment-control-center .ops-subheading { margin:12px 0 8px; }
+.equipment-control-center .toggle-grid { grid-template-columns:1fr; gap:8px; }
+.equipment-control-center .toggle-card { min-height:0; padding:10px 12px; }
+.equipment-control-center .equipment-stepper { grid-template-columns:1fr 1fr; }
+.equipment-control-center #equipment-step-progress { color:var(--muted); font-size:12px; }
+.configuration-dialog.helmet-editor { padding:0; width:min(920px,94vw); }
+.configuration-dialog.helmet-editor .configuration-footer { bottom:0; margin:0; padding:14px 24px; }
+.experimental-ui .sidebar .nav-link.active { color:#f4faf7; }
+.artwork-editor-layout { display:grid; grid-template-columns:230px 1fr; gap:24px; }
+.artwork-team-list { max-height:50vh; overflow:auto; margin-top:10px; }
+.artwork-team-choice { display:flex; align-items:center; gap:10px; width:100%; border:1px solid transparent; border-radius:4px; padding:8px; background:transparent; color:var(--text); text-align:left; }
+.artwork-team-choice img { width:30px; height:30px; object-fit:contain; }
+.artwork-team-choice[aria-pressed="true"] { border-color:var(--action); background:var(--action-soft); }
+.artwork-editor-layout .settings-artwork-grid { grid-template-columns:1fr; }
+@media(max-width:680px) { .artwork-editor-layout { grid-template-columns:1fr; } .artwork-team-list { max-height:20vh; } }
+@media(max-width:1000px) { .equipment-control-center .equipment-wizard-body { grid-template-columns:1fr; } }
+@media(max-width:680px) { .configuration-header,.configuration-body,.configuration-footer { padding-left:16px; padding-right:16px; } .configuration-description { padding-left:16px; padding-right:16px; } .configuration-footer { align-items:stretch; flex-direction:column; } .configuration-dialog .selector-grid,.configuration-dialog .distribution-grid,.equipment-control-center .player-pool-layout { grid-template-columns:1fr; } .configuration-entry { flex-wrap:wrap; } .configuration-footer-actions { flex-shrink:1; } }
+.equipment-control-center .team-scope-group .configuration-entry { margin-top:0; }
+.equipment-control-center .player-pool-layout > .configuration-entry { margin-top:0; }
+.commentary-toggle-grid { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+.percentage-section { margin-bottom:24px; }
+.percentage-total { display:flex; justify-content:space-between; align-items:center; margin-top:12px; }
+@media(max-width:680px) { .commentary-toggle-grid { grid-template-columns:1fr !important; } }
+.facemask-pool-section { margin-top:24px; padding-top:20px; border-top:1px solid var(--border); }
+.facemask-pool-list { max-height:280px; overflow:auto; margin-top:12px; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
+.model-slider-section { margin-top:16px; padding:12px; border:1px solid var(--border); }
+.model-slider-section summary { cursor:pointer; padding:6px 0; }
+.model-slider { display:block; margin:14px 0; }
+.model-slider > span { display:flex; justify-content:space-between; gap:16px; }
+.model-slider output { color:var(--action); font-weight:700; }
+.model-slider input { width:100%; accent-color:var(--action); }
+.model-preset-toolbar { display:flex; gap:16px; align-items:end; }
+@media(max-width:680px) { .facemask-pool-list { grid-template-columns:1fr; } .model-preset-toolbar { flex-wrap:wrap; } }
+/* Facemask rows have no logo column: give their labels the available width. */
+.facemask-pool-list .team-picker-row { grid-template-columns:20px minmax(0,1fr); min-height:40px; align-items:start; gap:8px; }
+.facemask-pool-list .team-picker-row > span { white-space:normal; text-overflow:clip; overflow:visible; min-width:0; overflow-wrap:anywhere; }
+.model-slider-caption { display:inline-flex; align-items:center; gap:7px; min-width:0; }
+.model-slider output { flex-shrink:0; }
+.model-slider-caption > label { margin:0; color:inherit; font:inherit; }
+.model-help-button { display:inline-flex; justify-content:center; align-items:center; width:18px; height:18px; flex:0 0 18px; padding:0; border:1px solid var(--muted); border-radius:50%; background:transparent; color:var(--muted); font-family:inherit; font-size:11px; font-weight:700; line-height:1; cursor:help; }
+.model-help-button:hover,.model-help-button:focus-visible { border-color:var(--action); color:var(--action); background:var(--action-soft); }
+.model-help-button:focus-visible { outline:2px solid var(--action); outline-offset:2px; }
+.model-help-tooltip { position:fixed; z-index:100; width:min(330px,calc(100vw - 48px)); box-sizing:border-box; padding:12px 14px; border:1px solid var(--action); border-radius:6px; background:var(--surface); color:var(--text); box-shadow:0 8px 28px #0004; font-size:12px; line-height:1.5; }

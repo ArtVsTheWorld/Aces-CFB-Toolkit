@@ -62,7 +62,7 @@ test("QB visor cap handles below, exact, and above 20 percent without overshoot"
 });
 
 test("40 percent visor groups use localized position families, preserve gear, and remain seeded", () => {
-  assert.equal(visorPopulationGroup("HB"), "HB"); assert.equal(visorPopulationGroup("FS"), "S"); assert.equal(visorPopulationGroup("MLB"), "LB"); assert.equal(visorPopulationGroup("DT"), "DL");
+  assert.equal(visorPopulationGroup("HB"), "HB"); assert.equal(visorPopulationGroup("FS"), "FS"); assert.equal(visorPopulationGroup("MLB"), "LB"); assert.equal(visorPopulationGroup("DT"), "DT");
   const seed = seedThatAddsOne("TE", 10, 3), first = visorRun("TE", 10, 3, seed), repeat = visorRun("TE", 10, 3, seed);
   assert.equal(first.count, 4); assert.deepEqual(first.visuals, repeat.visuals);
   assert.equal(visorRun("TE", 10, 4, seed).count, 4); assert.equal(visorRun("TE", 10, 5, seed).count, 5);

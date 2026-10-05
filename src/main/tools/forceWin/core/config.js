@@ -1,5 +1,5 @@
 const FORCE_WIN_CONFIG = Object.freeze({
-  version: "4.0",
+  version: "4.5",
   // Involvement controls which mismatch categories the tool decides, not team strength.
   involvement: Object.freeze({
     default: "medium",

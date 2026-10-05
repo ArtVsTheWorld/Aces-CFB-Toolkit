@@ -1,0 +1,36 @@
+const { app, BrowserWindow } = require("electron");
+const fs = require("node:fs"), path = require("node:path"), os = require("node:os");
+const root = path.resolve(__dirname, "..");
+app.setPath("userData", fs.mkdtempSync(path.join(os.tmpdir(), "cfb-gear-reference-")));
+app.disableHardwareAcceleration();
+app.whenReady().then(async () => {
+  const window = new BrowserWindow({ show: false, width: 1440, height: 1100, webPreferences: { offscreen: true, sandbox: true, contextIsolation: true, backgroundThrottling: false } });
+  await window.loadFile(path.join(root, "docs/catalogs/gear-catalog-readable.html"));
+  const result = await window.webContents.executeJavaScript(`(() => {
+    const check=(value,message)=>{if(!value)throw new Error(message);};
+    const visible=()=>[...document.querySelectorAll('tbody tr')].filter(row=>!row.hidden);
+    const set=(id,value)=>{const node=document.getElementById(id);node.value=value;node.dispatchEvent(new Event(id==='search'?'input':'change',{bubbles:true}));};
+    const reset=()=>document.getElementById('reset').click();
+    check(visible().length===329,'All unique entries');
+    set('source','raw');check(visible().length===57,'RAW source includes observed and earlier entries');
+    set('search','White Nike Skullcap');check(visible().length===1,'Readable-name search');
+    reset();set('search','GuardianCap_RawBattleSkullCapWhiteV87');check(visible().length===1,'Exact-ID search');
+    reset();set('review','slot');check(visible().length===7,'New clothing checks');
+    reset();set('review','refresh');check(visible().length===78,'Earlier mapping checks');
+    set('source','raw');check(visible().length===5,'Composable source/review filters');
+    reset();set('observation','earlier');check(visible().length===78,'Scan-status filter');
+    reset();set('search','not-a-real-id');check(visible().length===0&&document.getElementById('empty').classList.contains('visible'),'Empty state');
+    reset();document.querySelector('[data-review-filter="combo"]').click();check(visible().length===30,'Review-group entry point');
+    document.querySelector('[data-reveal="GuardianCap_RawNikeSkullCapWhiteV87"]').click();check(visible().length===329,'Review link reveals filtered-out row');
+    reset();window.scrollTo(0,0);check(document.documentElement.scrollWidth<=innerWidth,'No desktop page overflow');
+    return 'Filters, counts, source/scan distinctions, review links, empty state and desktop layout passed.';
+  })()`);
+  console.log(result);
+  await new Promise(resolve => setTimeout(resolve, 300));
+  fs.writeFileSync(path.join(root, "outputs/gear-catalog-readable-desktop.png"), (await window.webContents.capturePage()).toPNG());
+  window.setSize(620, 1000);
+  await new Promise(resolve => setTimeout(resolve, 200));
+  console.log(await window.webContents.executeJavaScript(`(() => {if(document.documentElement.scrollWidth>innerWidth)throw new Error('Mobile page overflow');return '620px responsive layout passed; the catalog table scrolls inside its own container.';})()`));
+  fs.writeFileSync(path.join(root, "outputs/gear-catalog-readable-mobile.png"), (await window.webContents.capturePage()).toPNG());
+  window.destroy(); app.quit();
+}).catch(error => { console.error(error); app.exit(1); });

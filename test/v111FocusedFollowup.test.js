@@ -28,4 +28,4 @@ test("mid-sock replacement preserves every stored OL position and retains non-OL
 
 test("session restoration is one-shot, run actions capture current settings, and multi-select counts expose semantics",()=>{const renderer=fs.readFileSync(new URL("../src/renderer/renderer.js",import.meta.url),"utf8");assert.match(renderer,/dataset\.sessionRestored===\"true\"/);assert.match(renderer,/equipment-preview.*commentary-apply/);assert.match(renderer,/captureToolSettings\(\)/);assert.match(renderer,/data-multi-label-for/);assert.match(renderer,/data-empty-meaning/);assert.match(renderer,/All selected/);assert.match(renderer,/0 selected — \$\{empty\}/);assert.match(renderer,/return checkboxPicker/);assert.match(renderer,/state\.toolSettings\.delete\(tool\.id\)/);});
 
-test("Equipment Randomizer displays tool version 5.0",()=>{assert.equal(tools.find(tool=>tool.id==="freshman-equipment").version,"5.0");});
+test("Equipment Randomizer displays tool version 5.1",()=>{assert.equal(tools.find(tool=>tool.id==="freshman-equipment").version,"5.1");});

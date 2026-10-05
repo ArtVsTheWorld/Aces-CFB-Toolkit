@@ -37,7 +37,7 @@ test("old single-color tape settings migrate to 100% distributions and invalid m
   assert.deepEqual(teamTapeWeights("Oregon", overrides), { white: 0, black: 100, primary: 0, secondary: 0 });
   for (const color of ["white", "black", "primary", "secondary"]) assert.equal(normalizeTeamTapeColors({ Oregon: color }).oregon[color], 100);
   for (const color of ["pink", null, undefined, [], {}, { white: 101, black: -1, primary: 0, secondary: 0 }, { white: 50, black: 20, primary: 10, secondary: 0 }, { white: 100, black: 0, primary: 0, secondary: null }]) assert.throws(() => normalizeTeamTapeColors({ Oregon: color }), /Tape color for Oregon/);
-  assert.throws(() => normalizeEquipmentOptions({ unlockedRecolorFix: true, teamTapeColors: { Oregon: { white: 90, black: 0, primary: 0, secondary: 0 } } }, false), /total 100/);
+  assert.throws(() => normalizeEquipmentOptions({ unlockedRecolorFix: true, tapeColorMode: "distribution", teamTapeColors: { Oregon: { white: 90, black: 0, primary: 0, secondary: 0 } } }, false), /total 100/);
   assert.throws(() => normalizeTeamTapeColors({ Oregon: { white: 33.34, black: 33.33, primary: 33.33, secondary: 0 } }), /whole-number/);
   assert.doesNotThrow(() => normalizeEquipmentOptions({ unlockedRecolorFix: false, teamTapeColors: { Oregon: {} } }, false));
 });
@@ -65,7 +65,7 @@ test("weighted colors respect each interval and validate a complete percentage m
   for (const [roll, expected] of [[0, "white"], [0.6499, "white"], [0.65, "black"], [0.8499, "black"], [0.85, "primary"], [0.95, "secondary"]]) assert.equal(rollAccessoryColorTheme(() => roll), expected);
   assert.throws(() => normalizeAccessoryColorWeights({ white: 100, black: 10, primary: 0, secondary: 0 }), /total 100/);
   assert.throws(() => normalizeAccessoryColorWeights({ white: NaN, black: 20, primary: 10, secondary: 5 }), /numbers/);
-  assert.throws(() => normalizeEquipmentOptions({ unlockedRecolorFix: true, unlockedColorTheme: "weighted", accessoryColorWeights: { white: 70, black: 20, primary: 10, secondary: 5 } }, false), /total 100/);
+  assert.throws(() => normalizeEquipmentOptions({ unlockedRecolorFix: true, tapeColorMode: "distribution", unlockedColorTheme: "weighted", accessoryColorWeights: { white: 70, black: 20, primary: 10, secondary: 5 } }, false), /total 100/);
   assert.equal(normalizeEquipmentOptions({}, false).unlockedRecolorFix, false);
   assert.equal(normalizeEquipmentOptions({}, false).unlockedColorTheme, "weighted");
   assert.doesNotThrow(() => normalizeEquipmentOptions({ unlockedRecolorFix: false, accessoryColorWeights: {} }, false));
@@ -97,7 +97,7 @@ test("tape uses team black/white while wristbands follow accessories and mouthpi
 test("Recolor Accessories applies defaults and overrides across teams without changing tattoo layers", () => {
   const names = new Map([[1, "Georgia"], [2, "Alabama"], [3, "USC"], [4, "Penn State"], [5, "Oregon"]]);
   const players = [...names.keys()].map((team, row) => player(row, team)), visuals = players.map(visual);
-  const result = applyGlobalEquipmentFixes(players, visuals, 10, { unlockedRecolorFix: true, unlockedColorTheme: "white", teamNames: names, teamTapeColors: { georgia: "white", oregon: "black" } });
+  const result = applyGlobalEquipmentFixes(players, visuals, 10, { unlockedRecolorFix: true, tapeColorMode: "distribution", unlockedColorTheme: "white", teamNames: names, teamTapeColors: { georgia: "white", oregon: "black" } });
   assert.equal(result.unlockedRecolorPlayersChanged, 5);
   for (let row = 0; row < players.length; row++) {
     const color = row === 0 ? "White" : "Black", actual = slots(visuals[row].RawData);
@@ -110,7 +110,7 @@ test("Recolor Accessories applies defaults and overrides across teams without ch
 
 test("seeded weighted accessory themes are repeatable and match across each player's loadouts", () => {
   const players = Array.from({ length: 1500 }, (_, row) => player(row));
-  const run = () => { const visuals = players.map(() => { const record = visual(), raw = JSON.parse(record.RawData); raw.loadouts.push(structuredClone(raw.loadouts[0])); record.RawData = JSON.stringify(raw); return record; }); applyGlobalEquipmentFixes(players, visuals, 10, { unlockedRecolorFix: true, seed: 2026, teamNames: new Map([[1, "Oregon"]]) }); return visuals.map(record => record.RawData); };
+  const run = () => { const visuals = players.map(() => { const record = visual(), raw = JSON.parse(record.RawData); raw.loadouts.push(structuredClone(raw.loadouts[0])); record.RawData = JSON.stringify(raw); return record; }); applyGlobalEquipmentFixes(players, visuals, 10, { unlockedRecolorFix: true, tapeColorMode: "distribution", seed: 2026, teamNames: new Map([[1, "Oregon"]]) }); return visuals.map(record => record.RawData); };
   const first = run(); assert.deepEqual(first, run());
   const counts = { White: 0, Black: 0, TeamColor: 0, SecondaryColor: 0 };
   for (const raw of first) {
@@ -125,7 +125,7 @@ test("team tape rolls are seeded, independent per player, shared within a loadou
   const players = Array.from({ length: 2000 }, (_, row) => player(row));
   const run = (weights, seed = 1234) => {
     const visuals = players.map(() => { const record = visual(), raw = JSON.parse(record.RawData); raw.loadouts.push(structuredClone(raw.loadouts[0])); record.RawData = JSON.stringify(raw); return record; });
-    applyGlobalEquipmentFixes(players, visuals, 10, { unlockedRecolorFix: true, seed, teamNames: new Map([[1, "Texas"]]), teamTapeColors: { texas: weights } });
+    applyGlobalEquipmentFixes(players, visuals, 10, { unlockedRecolorFix: true, tapeColorMode: "distribution", seed, teamNames: new Map([[1, "Texas"]]), teamTapeColors: { texas: weights } });
     return visuals.map(record => record.RawData);
   };
   const mix = { white: 25, black: 25, primary: 25, secondary: 25 }, first = run(mix), fixed = run("white");
@@ -142,12 +142,12 @@ test("team tape rolls are seeded, independent per player, shared within a loadou
 });
 
 test("recolor respects NIL, exclusions, active-roster scope, and shared-row team conflicts", () => {
-  for (const options of [{}, { unlockedRecolorFix: true }, { unlockedRecolorFix: true, excludedTeamIndexes: new Set([1]) }, { unlockedRecolorFix: true, activePlayerRows: new Set() }]) {
+  for (const options of [{}, { unlockedRecolorFix: true }, { unlockedRecolorFix: true, tapeColorMode: "distribution", excludedTeamIndexes: new Set([1]) }, { unlockedRecolorFix: true, tapeColorMode: "distribution", activePlayerRows: new Set() }]) {
     const p = player(0), v = visual(); if (options.unlockedRecolorFix && !options.excludedTeamIndexes && !options.activePlayerRows) p.IsNIL = true;
     const before = v.RawData; applyGlobalEquipmentFixes([p], [v], 10, options); assert.equal(v.RawData, before);
   }
   const p = [player(0, 1), { ...player(1, 2), CharacterVisuals: ref(0) }], v = [visual()], before = v[0].RawData;
-  applyGlobalEquipmentFixes(p, v, 10, { unlockedRecolorFix: true, teamNames: new Map([[1, "Georgia"], [2, "Oregon"]]) });
+  applyGlobalEquipmentFixes(p, v, 10, { unlockedRecolorFix: true, tapeColorMode: "distribution", teamNames: new Map([[1, "Georgia"], [2, "Oregon"]]) });
   assert.equal(v[0].RawData, before);
 });
 
@@ -159,7 +159,7 @@ test("team tape settings follow actual roster membership even when team indexes 
   const names = buildRosterTeamNames(players, teams, rosters);
   assert.equal(names.get(0), "FCS East"); assert.equal(names.get(1), "FCS West");
   const visuals = [visual(), visual()];
-  applyGlobalEquipmentFixes(players.records, visuals, 10, { unlockedRecolorFix: true, unlockedColorTheme: "white", recolorTeamNames: names, teamNames: new Map([[255, "FCS West"]]), fcsTeamIndexes: new Set([255]), teamTapeColors: { "fcs east": "black", "fcs west": "white" } });
+  applyGlobalEquipmentFixes(players.records, visuals, 10, { unlockedRecolorFix: true, tapeColorMode: "distribution", unlockedColorTheme: "white", recolorTeamNames: names, teamNames: new Map([[255, "FCS West"]]), fcsTeamIndexes: new Set([255]), teamTapeColors: { "fcs east": "black", "fcs west": "white" } });
   assert.equal(slots(visuals[0].RawData).get("LeftSpat"), "GearSpats_spatThin_Black");
   assert.equal(slots(visuals[1].RawData).get("LeftSpat"), "GearSpats_spatThin_White");
 });

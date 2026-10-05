@@ -8,6 +8,7 @@ import vm from "node:vm";
 import { ReviewSnapshots } from "../src/main/services/reviewSnapshots.js";
 import { HistoryStore } from "../src/main/services/history.js";
 import { readSeasonLines } from "../src/main/tools/forceWin/runner.js";
+import { customModelPresets } from "../src/main/tools/forceWin/core/modelProfiles.js";
 import { runForceWin } from "../src/main/tools/forceWin/runner.js";
 import { ReportService } from "../src/main/services/reports.js";
 
@@ -71,4 +72,22 @@ test("Home season lines read the full current schedule, match Smart Force Win pr
   assert.ok(lines.rows.every(row => Number.isFinite(row.favoriteSpread) && Number.isFinite(row.total) && Number.isFinite(row.favoriteMoneyline) && Number.isFinite(row.underdogMoneyline)));
   const after = crypto.createHash("sha256").update(fs.readFileSync(savePath)).digest("hex");
   assert.equal(after, before);
+});
+test("saved custom season lines use the same complete matchup model without changing the dynasty", async t => {
+  const directory=fs.mkdtempSync(path.join(os.tmpdir(),"cfb-lines-custom-"));t.after(()=>fs.rmSync(directory,{recursive:true,force:true}));
+  const savePath=path.resolve("../EXAMPLE SAVES VANILLA GAME/DYNASTY-LSUTESTSAVEWEEK0"),schemaPath=path.resolve("resources/engine-data/C27_486_6.gz");
+  const before=crypto.createHash("sha256").update(fs.readFileSync(savePath)).digest("hex");
+  const model=customModelPresets().balanced;
+  model.values["homeField.home"]=3;model.values["bettingLines.totalBaseline"]=55;model.maxForceWinsPerWeek=1;
+  const lines=await readSeasonLines({savePath,schemaPath,modelProfile:"custom",customModel:model});
+  const preview=await runForceWin({savePath,schemaPath,mode:"preview",reports:new ReportService(directory),options:{modelProfile:"custom",customModel:model,involvement:"maximum",scope:"regular"}});
+  let matched=0;
+  for(const row of preview.details.changes.filter(row=>row.bettingLines)){
+    const projected=lines.rows.find(game=>game.row===row.row);assert.ok(projected);
+    for(const key of ["favoriteSpread","total","favoriteMoneyline","underdogMoneyline"])assert.equal(projected[key],row.bettingLines[key],key+" agrees with Custom Smart Force Win");
+    matched++;
+  }
+  assert.ok(matched>100);assert.equal(lines.modelProfile,"custom");assert.ok(lines.profiles.some(profile=>profile.value==="custom"));
+  await assert.rejects(readSeasonLines({savePath,schemaPath,modelProfile:"custom"}),/Create and save/);
+  const after=crypto.createHash("sha256").update(fs.readFileSync(savePath)).digest("hex");assert.equal(after,before);
 });

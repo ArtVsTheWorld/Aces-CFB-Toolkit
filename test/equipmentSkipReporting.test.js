@@ -47,9 +47,9 @@ test("mixed warnings and previously saved run reviews remain supported", () => {
   assert.match(html, /1 — invalid/); assert.doesNotMatch(html, /4 —/);
   assert.match(render({ resultKind: "freshman-equipment", details: { skipped: 1, skippedReasons: { shared: 1 } } }), /1 — shared/);
 });
-test("v18.3 display keeps valid installer SemVer and updates correctly from v0.18.3", () => {
+test("current display keeps valid installer SemVer and updates correctly from v0.18.3", () => {
   const version = JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url))).version;
-  assert.equal(version, "18.3.0"); assert.ok(semver.gt(version, "0.18.3"));
-  assert.equal(displayAppVersion(version), "18.3"); assert.equal(displayAppVersion("18.3.1"), "18.3.1");
+  assert.equal(version, "19.0.0"); assert.ok(semver.gt(version, "18.3.0"));
+  assert.equal(displayAppVersion(version), "19.0"); assert.equal(displayAppVersion("18.3.1"), "18.3.1");
   assert.equal(displayAppVersion("18.4.0-beta.1"), "18.4-beta.1");
 });

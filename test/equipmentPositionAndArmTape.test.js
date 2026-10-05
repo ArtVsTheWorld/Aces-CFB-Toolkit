@@ -89,7 +89,7 @@ test("seeded team tape rolls remain shared across long/short arms, wrists, spats
     { slotType: "LeftWristWear", itemAssetName: "GearWrist_wristTapedLite_White" },
     { slotType: "LeftSpat", itemAssetName: "GearSpats_spatThin_White" }
   ]), field([{ slotType: "RightArmWear", itemAssetName: tape("Undershirt", "white") }]), { loadoutCategory: "Base", loadoutElements: [{ slotType: "LeftArmTattoo", itemAssetName: "Keep" }] }] }) }));
-  const a = structuredClone(records), b = structuredClone(records), options = { seed: 99, unlockedRecolorFix: true, unlockedColorTheme: "black", teamNames: new Map([[1, "Team"]]), teamTapeColors: { team: { white: 25, black: 25, primary: 25, secondary: 25 } } };
+  const a = structuredClone(records), b = structuredClone(records), options = { seed: 99, unlockedRecolorFix: true, tapeColorMode: "distribution", unlockedColorTheme: "black", teamNames: new Map([[1, "Team"]]), teamTapeColors: { team: { white: 25, black: 25, primary: 25, secondary: 25 } } };
   applyGlobalEquipmentFixes(players, a, 10, options); applyGlobalEquipmentFixes(players, b, 10, options); assert.deepEqual(a, b);
   const seen = new Set();
   for (const record of a) {

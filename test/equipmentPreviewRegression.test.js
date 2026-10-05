@@ -46,3 +46,4 @@ test("equipment audit identifies changed gear and tattoo slots without flagging 
   assert.match(changes, /LeftArmTattoo/);
   assert.doesNotMatch(changes, /Helmet/);
 });
+// Updated defaults are covered in v190 follow-up tests.

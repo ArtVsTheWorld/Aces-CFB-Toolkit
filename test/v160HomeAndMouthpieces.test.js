@@ -69,7 +69,7 @@ test("Patcher color option preserves the safe default and adds Battle and NXTRND
   }
   assert.ok((colors.get("Blue") ?? 0) > (colors.get("Pink") ?? 0) * 4);
   assert.ok((brands.get("branded") ?? 0) > (brands.get("generic") ?? 0) * 2);
-  assert.equal(tools.find(tool => tool.id === "equipment-patcher").version, "5.0");
+  assert.equal(tools.find(tool => tool.id === "equipment-patcher").version, "5.5");
 });
 
 test("colorful Patcher preview proposes branded colors while the default does not write or use them", { timeout: 30000 }, async t => {
@@ -117,8 +117,10 @@ test("Home shows only saved context and recorded history, with existing tool nav
   assert.match(renderer, /data-history-id/);
   assert.match(renderer, /forceLogoUrl\(team\.name\)/);
   assert.match(renderer, /Allow Randomly Colored Mouthpieces/);
-  assert.match(renderer, /Upload Logo/);
-  assert.match(renderer, /Upload Header/);
+  const configuration = fs.readFileSync(new URL("../src/renderer/configuration.js", import.meta.url), "utf8");
+  assert.match(renderer, /Manage Artwork/);
+  assert.match(configuration, /Upload Logo/);
+  assert.match(configuration, /Upload Header/);
   assert.match(renderer, /URL\.createObjectURL/);
   assert.match(fs.readFileSync(new URL("../src/renderer/index.html", import.meta.url), "utf8"), /img-src 'self' data: blob:/);
   assert.match(main, /readHomeContext\(sessionActiveSave/);

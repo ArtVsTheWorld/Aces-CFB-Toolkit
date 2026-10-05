@@ -66,7 +66,7 @@ test("latest-patch team filtering uses explicit TeamIndex values without table-r
 test("bundled commentary map covers every rostered latest-patch player with a stored commentary ID", { timeout: 30000 }, async () => {
   const map = loadCommentaryMap(commentaryMap);
   const match = createCommentaryMatcher(map, { allowPhonetic: false, allowFirstName: false });
-  assert.equal(map.size, 6969);
+  assert.equal(map.size, 7032);
   for (const savePath of [preseason, weekZero]) {
     const loaded = await loadEquipmentTables(savePath, schemaPath);
     const rosterRows = buildRosterPlayerRows(loaded.players, loaded.teams, loaded.rosters);

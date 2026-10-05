@@ -14,7 +14,7 @@ const mapPath = path.resolve(dirname, "../resources/commentary-data/PlayerCommen
 const compact = result => ({ summary: result.summary, players: result.players.map(item => ({ row: item.row, firstName: item.firstName, lastName: item.lastName, teamIndex: item.teamIndex, teamName: item.teamName, oldId: item.oldId, newId: item.newId, match: item.match, preserved: item.preserved })), changes: result.changes.map(item => ({ row: item.row, oldId: item.oldId, newId: item.newId, match: item.match, preserved: item.preserved })) });
 
 test("bundled Commentary map parser exactly matches v1.6", () => {
-  const original = originalLoad(mapPath); const gui = guiLoad(mapPath); assert.equal(gui.size, 6969); assert.deepEqual([...gui], [...original]);
+  const original = originalLoad(mapPath); const gui = guiLoad(mapPath); assert.equal(gui.size, 7032); assert.deepEqual([...gui], [...original]);
   assert.equal(gui.get("Wydermyer"), 8598);
   assert.equal(gui.get("David"), 494);
   assert.equal(gui.get("Williams"), 5346);

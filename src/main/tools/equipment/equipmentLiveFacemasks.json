@@ -1,0 +1,285 @@
+{
+  "source": "2026-10-05 unmodded game ItemInfo records; name repeated twice and DisplayName at +56 verified. Compatibility families use agreement between exact resource and display-label families, not a claim of recovered runtime tags. New masks are opt-in and start unchecked.",
+  "items": [
+    {
+      "itemName": "GearFaceMask_Axiom2BarDoubleStraight",
+      "displayName": "Axiom 2 Bar Straight Double",
+      "category": "Facemask",
+      "slots": [
+        "FaceMask"
+      ],
+      "tags": [
+        "Riddell Axiom Facemasks"
+      ],
+      "origin": "vanilla-observed",
+      "defaultSelected": false,
+      "compatibilityEvidence": "Exact ItemInfo name and display-label helmet family agree; not a recovered runtime compatibility tag."
+    },
+    {
+      "itemName": "GearFaceMask_Axiom2BarStraight",
+      "displayName": "Axiom 2 Bar Straight",
+      "category": "Facemask",
+      "slots": [
+        "FaceMask"
+      ],
+      "tags": [
+        "Riddell Axiom Facemasks"
+      ],
+      "origin": "vanilla-observed",
+      "defaultSelected": false,
+      "compatibilityEvidence": "Exact ItemInfo name and display-label helmet family agree; not a recovered runtime compatibility tag."
+    },
+    {
+      "itemName": "GearFaceMask_Axiom3BarDoubleStraight",
+      "displayName": "Axiom 3 Bar Straight Double",
+      "category": "Facemask",
+      "slots": [
+        "FaceMask"
+      ],
+      "tags": [
+        "Riddell Axiom Facemasks"
+      ],
+      "origin": "vanilla-observed",
+      "defaultSelected": false,
+      "compatibilityEvidence": "Exact ItemInfo name and display-label helmet family agree; not a recovered runtime compatibility tag."
+    },
+    {
+      "itemName": "GearFaceMask_AxiomJRCross808",
+      "displayName": "Axiom JR Cross 808",
+      "category": "Facemask",
+      "slots": [
+        "FaceMask"
+      ],
+      "tags": [
+        "Riddell Axiom Facemasks"
+      ],
+      "origin": "vanilla-observed",
+      "defaultSelected": false,
+      "compatibilityEvidence": "Exact ItemInfo name and display-label helmet family agree; not a recovered runtime compatibility tag."
+    },
+    {
+      "itemName": "GearFaceMask_AxiomRobot808Straight",
+      "displayName": "Axiom Robot 808 Straight",
+      "category": "Facemask",
+      "slots": [
+        "FaceMask"
+      ],
+      "tags": [
+        "Riddell Axiom Facemasks"
+      ],
+      "origin": "vanilla-observed",
+      "defaultSelected": false,
+      "compatibilityEvidence": "Exact ItemInfo name and display-label helmet family agree; not a recovered runtime compatibility tag."
+    },
+    {
+      "itemName": "GearFaceMask_AxiomRobotJagged3",
+      "displayName": "Axiom Robot Jagged 3",
+      "category": "Facemask",
+      "slots": [
+        "FaceMask"
+      ],
+      "tags": [
+        "Riddell Axiom Facemasks"
+      ],
+      "origin": "vanilla-observed",
+      "defaultSelected": false,
+      "compatibilityEvidence": "Exact ItemInfo name and display-label helmet family agree; not a recovered runtime compatibility tag."
+    },
+    {
+      "itemName": "GearFaceMask_AxiomRobotRBJagged3",
+      "displayName": "Axiom Robot RB Jagged 3",
+      "category": "Facemask",
+      "slots": [
+        "FaceMask"
+      ],
+      "tags": [
+        "Riddell Axiom Facemasks"
+      ],
+      "origin": "vanilla-observed",
+      "defaultSelected": false,
+      "compatibilityEvidence": "Exact ItemInfo name and display-label helmet family agree; not a recovered runtime compatibility tag."
+    },
+    {
+      "itemName": "GearFaceMask_AxiomRobotStraightDouble",
+      "displayName": "Axiom Robot Straight Double",
+      "category": "Facemask",
+      "slots": [
+        "FaceMask"
+      ],
+      "tags": [
+        "Riddell Axiom Facemasks"
+      ],
+      "origin": "vanilla-observed",
+      "defaultSelected": false,
+      "compatibilityEvidence": "Exact ItemInfo name and display-label helmet family agree; not a recovered runtime compatibility tag."
+    },
+    {
+      "itemName": "GearFaceMask_AxiomVenom",
+      "displayName": "Axiom Venom",
+      "category": "Facemask",
+      "slots": [
+        "FaceMask"
+      ],
+      "tags": [
+        "Riddell Axiom Facemasks"
+      ],
+      "origin": "vanilla-observed",
+      "defaultSelected": false,
+      "compatibilityEvidence": "Exact ItemInfo name and display-label helmet family agree; not a recovered runtime compatibility tag."
+    },
+    {
+      "itemName": "GearFaceMask_AxiomWeb",
+      "displayName": "Axiom Web",
+      "category": "Facemask",
+      "slots": [
+        "FaceMask"
+      ],
+      "tags": [
+        "Riddell Axiom Facemasks"
+      ],
+      "origin": "vanilla-observed",
+      "defaultSelected": false,
+      "compatibilityEvidence": "Exact ItemInfo name and display-label helmet family agree; not a recovered runtime compatibility tag."
+    },
+    {
+      "itemName": "GearFaceMask_F7Spyder",
+      "displayName": "Schutt F7 Spyder",
+      "category": "Facemask",
+      "slots": [
+        "FaceMask"
+      ],
+      "tags": [
+        "Schutt Facemasks"
+      ],
+      "origin": "vanilla-observed",
+      "defaultSelected": false,
+      "compatibilityEvidence": "Exact ItemInfo name and display-label helmet family agree; not a recovered runtime compatibility tag."
+    },
+    {
+      "itemName": "GearFaceMask_SpeedflexRobot808HD",
+      "displayName": "SpeedFlex Robot 808 HD",
+      "category": "Facemask",
+      "slots": [
+        "FaceMask"
+      ],
+      "tags": [
+        "Riddell Speedflex Facemasks"
+      ],
+      "origin": "vanilla-observed",
+      "defaultSelected": false,
+      "compatibilityEvidence": "Exact ItemInfo name and display-label helmet family agree; not a recovered runtime compatibility tag."
+    },
+    {
+      "itemName": "GearFaceMask_SpeedflexRobotJagged2",
+      "displayName": "SpeedFlex Robot Jagged 2",
+      "category": "Facemask",
+      "slots": [
+        "FaceMask"
+      ],
+      "tags": [
+        "Riddell Speedflex Facemasks"
+      ],
+      "origin": "vanilla-observed",
+      "defaultSelected": false,
+      "compatibilityEvidence": "Exact ItemInfo name and display-label helmet family agree; not a recovered runtime compatibility tag."
+    },
+    {
+      "itemName": "GearFaceMask_SpeedflexRobotJagged808HD",
+      "displayName": "SpeedFlex Robot Jagged 808 HD",
+      "category": "Facemask",
+      "slots": [
+        "FaceMask"
+      ],
+      "tags": [
+        "Riddell Speedflex Facemasks"
+      ],
+      "origin": "vanilla-observed",
+      "defaultSelected": false,
+      "compatibilityEvidence": "Exact ItemInfo name and display-label helmet family agree; not a recovered runtime compatibility tag."
+    },
+    {
+      "itemName": "GearFaceMask_SpeedflexRobotMax",
+      "displayName": "SpeedFlex Robot Max",
+      "category": "Facemask",
+      "slots": [
+        "FaceMask"
+      ],
+      "tags": [
+        "Riddell Speedflex Facemasks"
+      ],
+      "origin": "vanilla-observed",
+      "defaultSelected": false,
+      "compatibilityEvidence": "Exact ItemInfo name and display-label helmet family agree; not a recovered runtime compatibility tag."
+    },
+    {
+      "itemName": "GearFaceMask_SpeedflexRobotX",
+      "displayName": "SpeedFlex Robot X",
+      "category": "Facemask",
+      "slots": [
+        "FaceMask"
+      ],
+      "tags": [
+        "Riddell Speedflex Facemasks"
+      ],
+      "origin": "vanilla-observed",
+      "defaultSelected": false,
+      "compatibilityEvidence": "Exact ItemInfo name and display-label helmet family agree; not a recovered runtime compatibility tag."
+    },
+    {
+      "itemName": "GearFaceMask_SpeedflexSpyder",
+      "displayName": "SpeedFlex Spyder",
+      "category": "Facemask",
+      "slots": [
+        "FaceMask"
+      ],
+      "tags": [
+        "Riddell Speedflex Facemasks"
+      ],
+      "origin": "vanilla-observed",
+      "defaultSelected": false,
+      "compatibilityEvidence": "Exact ItemInfo name and display-label helmet family agree; not a recovered runtime compatibility tag."
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero2BARJagged",
+      "displayName": "Vicis ZERO2 2 Bar Jagged",
+      "category": "Facemask",
+      "slots": [
+        "FaceMask"
+      ],
+      "tags": [
+        "Vicis Zero2 Facemasks"
+      ],
+      "origin": "vanilla-observed",
+      "defaultSelected": false,
+      "compatibilityEvidence": "Exact ItemInfo name and display-label helmet family agree; not a recovered runtime compatibility tag."
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero2JRCross",
+      "displayName": "Vicis ZERO2 JR Cross",
+      "category": "Facemask",
+      "slots": [
+        "FaceMask"
+      ],
+      "tags": [
+        "Vicis Zero2 Facemasks"
+      ],
+      "origin": "vanilla-observed",
+      "defaultSelected": false,
+      "compatibilityEvidence": "Exact ItemInfo name and display-label helmet family agree; not a recovered runtime compatibility tag."
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero2RobotMax",
+      "displayName": "Vicis ZERO2 Robot Max",
+      "category": "Facemask",
+      "slots": [
+        "FaceMask"
+      ],
+      "tags": [
+        "Vicis Zero2 Facemasks"
+      ],
+      "origin": "vanilla-observed",
+      "defaultSelected": false,
+      "compatibilityEvidence": "Exact ItemInfo name and display-label helmet family agree; not a recovered runtime compatibility tag."
+    }
+  ]
+}

@@ -237,7 +237,7 @@ const CSV_HEADERS = Object.freeze([
   "WhyFavorite", "TeamTalentImpact", "TeamTalentScale", "MatchupImpact", "MatchupScale",
   "CoachingImpact", "CoachingScale", "HomeFieldImpact", "HomeEnvironmentImpact",
   "RivalryMultiplier", "FCSMultiplier", "FavoriteSpread", "OverUnder", "FavoriteMoneyline",
-  "UnderdogMoneyline", "ProjectedFavoriteWinPercent", "SummaryMetric", "SummaryValue"
+  "UnderdogMoneyline", "ProjectedFavoriteWinPercent", "CustomModelJSON", "WeeklyLimitSuppressed", "SummaryMetric", "SummaryValue"
 ]);
 
 const csvRow = values => CSV_HEADERS.map(header => csvCell(values[header])).join(",");
@@ -254,7 +254,8 @@ export function buildCsvReport(result, {
   outputPath = null,
   dryRun = true,
   generatedAt = new Date(),
-  modelProfile = result.summary.modelProfileLabel
+  modelProfile = result.summary.modelProfileLabel,
+  customModel = null
 } = {}) {
   const generated = generatedAt.toISOString();
   const common = {
@@ -266,6 +267,8 @@ export function buildCsvReport(result, {
     CurrentWeek: currentWeek ?? "unknown",
     RandomSource: seed === undefined ? "standard randomness" : `seed ${seed}`,
     Involvement: result.summary.involvement,
+    CustomModelJSON: customModel ? JSON.stringify(customModel) : "",
+    WeeklyLimitSuppressed: result.summary.weeklyLimitSuppressed ?? 0,
     ModelProfile: modelProfile
   };
   const lines = [CSV_HEADERS.join(",")];

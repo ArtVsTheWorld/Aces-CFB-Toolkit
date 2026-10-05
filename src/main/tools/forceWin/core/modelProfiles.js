@@ -1,3 +1,4 @@
+import { applyCustomModel, customModelFromConfig } from "./customModel.js";
 import FORCE_WIN_CONFIG from "./config.js";
 
 export function modelProfileRule(profile = FORCE_WIN_CONFIG.modelProfiles.default, config = FORCE_WIN_CONFIG) {
@@ -10,7 +11,8 @@ export function modelProfileRule(profile = FORCE_WIN_CONFIG.modelProfiles.defaul
 }
 
 // Return an isolated configuration view so selecting a profile never mutates global defaults.
-export function createModelConfig(profile = FORCE_WIN_CONFIG.modelProfiles.default, config = FORCE_WIN_CONFIG) {
+export function createModelConfig(profile = FORCE_WIN_CONFIG.modelProfiles.default, config = FORCE_WIN_CONFIG, customModel = null) {
+  if (profile === "custom") return applyCustomModel(createModelConfig(customModel?.basePreset ?? "balanced", config), customModel);
   const rule = modelProfileRule(profile, config);
   const probabilityCurve = config.probabilityCurve.map(point => ({
     ...point,
@@ -30,4 +32,5 @@ export function createModelConfig(profile = FORCE_WIN_CONFIG.modelProfiles.defau
     probabilityCurve
   };
 }
+export function customModelPresets() { return Object.fromEntries(Object.keys(FORCE_WIN_CONFIG.modelProfiles.profiles).map(key => [key, customModelFromConfig(createModelConfig(key), key)])); }
 

@@ -10,8 +10,8 @@ import { sf } from "../openSave.js";
 
 // Read-only projections for the full current regular-season schedule. This does
 // not run force-win decisions or use the tool's eligibility/assignment logic.
-export function projectSeasonLines({ records, teamTable, coachTable, context, rivalryPairs = new Set(), neutralPairs = new Set(), rosterRatings, modelProfile = FORCE_WIN_CONFIG.modelProfiles.default }) {
-  const config = createModelConfig(modelProfile);
+export function projectSeasonLines({ records, teamTable, coachTable, context, rivalryPairs = new Set(), neutralPairs = new Set(), rosterRatings, modelProfile = FORCE_WIN_CONFIG.modelProfiles.default, customModel = null }) {
+  const config = createModelConfig(modelProfile, FORCE_WIN_CONFIG, customModel);
   const rows = [];
   for (const [row, record] of records.entries()) {
     if (!record || record.isEmpty || Number(sf(record, FORCE_WIN_SCHEMA.game.season)) !== context.currentSeasonRecord || sf(record, FORCE_WIN_SCHEMA.game.weekType) !== FORCE_WIN_SCHEMA.game.regularSeasonType) continue;

@@ -102,7 +102,7 @@ test("Unlocked Equipment Pool and No Drip options are separate and disabled by d
   const renderer = fs.readFileSync(new URL("../src/renderer/renderer.js", import.meta.url), "utf8");
   assert.match(renderer, /optionalPass\("equipment-no-drip", "No Drip Profile", "Gives some players a simpler look by removing selected accessories\."/);
   assert.match(renderer, /optionalPass\("equipment-unlocked", "Unlocked Equipment Pool"/);
-  assert.match(renderer, /Adds extra accessories, rubber bands, double\/elbow sleeves, compression-leg layers, branded turtlenecks and mouthpieces, normal balaclavas, thigh pads, a string towel, and 13 custom facepaint styles from CFB 27 Unlocked/);
+  assert.match(renderer, /Adds extra accessories, rubber bands, double\/elbow sleeves, compression-leg layers, branded turtlenecks and mouthpieces, normal balaclavas, thigh pads, a string towel, and 13 custom facepaint styles from CFB27 Unlocked/);
   assert.match(renderer, /optionalPass\("fix-unlocked-mouthpieces"/); assert.match(renderer, /optionalPass\("fix-unlocked-recolor"/);
-  assert.equal(tools.find(tool => tool.id === "freshman-equipment").version, "5.0"); assert.equal(tools.find(tool => tool.id === "equipment-patcher").version, "5.0");
+  assert.equal(tools.find(tool => tool.id === "freshman-equipment").version, "5.1"); assert.equal(tools.find(tool => tool.id === "equipment-patcher").version, "5.5");
 });

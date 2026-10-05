@@ -1,0 +1,37 @@
+.helmet-settings-summary { border-left:3px solid var(--action); padding:0 16px; margin:12px 0 20px; }
+.helmet-settings-summary [hidden] { display:none !important; }
+.helmet-editor-launch { display:flex; align-items:center; justify-content:space-between; gap:14px; }
+.helmet-editor-launch button { flex-shrink:0; }
+.helmet-editor-launch p { color:var(--muted); font-size:12px; margin:5px 0; }
+.helmet-mode-note { background:var(--bg); border-left:3px solid var(--action); padding:10px 12px; font-size:12px; margin:10px 0; }
+.helmet-preview-intent { padding:12px 16px; border:1px solid var(--border); margin:12px 0; }
+.helmet-preview-intent p { color:var(--muted); margin:5px 0 0; }
+.helmet-action-choices { padding:0; border:0; margin:12px 0; display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.helmet-action-choices legend { font-weight:700; margin-bottom:8px; }
+.helmet-action-choices label { display:flex; align-items:flex-start; gap:8px; padding:12px; border:1px solid var(--border); border-radius:4px; cursor:pointer; margin:0; }
+.helmet-action-choices label:has(:checked) { border-color:var(--action); box-shadow:inset 0 0 0 1px var(--action); background:var(--bg); }
+.helmet-action-choices input { margin-top:3px; flex-shrink:0; accent-color:var(--action); }
+.helmet-inherit input { accent-color:var(--action); }
+.helmet-action-choices small { display:block; color:var(--muted); line-height:1.4; margin-top:5px; }
+.helmet-repair-help { margin:14px 0; font-size:12px; }
+.helmet-repair-help summary { cursor:pointer; font-weight:700; }
+.helmet-repair-help p { color:var(--muted); line-height:1.6; }
+.helmet-editor { width:min(870px,92vw); max-height:90vh; overflow:auto; border:1px solid var(--border); padding:24px; background:var(--panel); color:var(--text); border-radius:8px; }
+.helmet-editor::backdrop { background:rgba(0,15,10,.72); }
+.helmet-editor [hidden] { display:none !important; }
+.helmet-editor header,.helmet-editor footer,.helmet-editor-total { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.helmet-editor header h2 { margin:4px 0; }
+.helmet-editor footer { position:sticky; bottom:-24px; background:var(--panel); margin-top:18px; justify-content:flex-end; border-top:1px solid var(--border); padding:16px 0; }
+.helmet-editor-toolbar { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+.helmet-editor-toolbar label { margin:8px 0 4px; }
+.helmet-inherit { display:flex; align-items:center; gap:8px; margin-top:16px; }
+.helmet-weight-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px 20px; }
+.helmet-weight { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:6px 0; margin:0; border-bottom:1px solid var(--border); }
+.helmet-weight .input-suffix { width:92px; flex-shrink:0; }
+.helmet-weight .input { padding:7px 8px; }
+.helmet-weight small { display:block; color:var(--muted); }
+.helmet-weight.unavailable { opacity:.55; }
+.helmet-editor-total { margin-top:14px; }
+@media(max-width:640px) { .helmet-weight-grid,.helmet-editor-toolbar,.helmet-action-choices { grid-template-columns:1fr; } .helmet-editor-total,.helmet-editor-launch { flex-wrap:wrap; } }
+.helmet-pass-block { margin-bottom:16px; }
+.helmet-pass-block > .toggle-card { min-height:0; }

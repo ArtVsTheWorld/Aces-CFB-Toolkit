@@ -32,6 +32,6 @@ export function rollFacePaint(rng, pool = VANILLA_FACE_PAINT_OPTIONS, position) 
 }
 
 export function facePaintSource(asset, diagnostics) {
-  for (const [id, pool] of Object.entries(diagnostics)) if (pool.enabled && pool.assets.includes(asset)) return id === "raw" ? "Raw Accessories Equipment Pool" : "Unlocked Equipment Pool";
+  for (const [id, pool] of Object.entries(diagnostics)) if (pool.enabled && pool.assets.includes(asset)) return id === "raw" ? "RAW Accessories Equipment Pool" : "Unlocked Equipment Pool";
   return "Vanilla facepaint pool";
 }

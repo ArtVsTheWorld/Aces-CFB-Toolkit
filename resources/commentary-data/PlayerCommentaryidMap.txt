@@ -1,5 +1,5 @@
 CFB 27 Commentary Name List
-Total names | 6969
+Total names | 7032
 
 Aaitui | 5657
 Abanikanda | 8677
@@ -6970,3 +6970,66 @@ Durr | 7006
 Gurley | 2024
 Henry Jr. | 9508
 Moten | 3496
+Alston II | 75
+Baker IV | 219
+Barber Jr. | 246
+Barnes III | 261
+Barnett Jr. | 262
+Bates Jr. | 301
+Bishop Jr. | 438
+Bonner Jr. | 517
+Bullock Jr. | 686
+Canty Jr. | 777
+Chadwick Jr. | 7598
+Church Jr. | 918
+Clarke Jr. | 934
+Cotton III | 1064
+Cox Jr. | 6597
+Cunningham Jr. | 1137
+Dawson II | 1196
+DeBose IV | 5835
+Dickerson Jr. | 1272
+Eldridge Jr. | 1460
+Ellis Jr. | 1472
+Flynn Jr. | 1643
+Foster II | 1678
+Francis Jr. | 1690
+Gaines III | 1753
+Gardner Jr. | 1787
+Golston II | 1911
+Goodman Jr. | 1921
+Goodwin III | 1926
+Hardy Jr. | 2110
+Hatton Jr. | 8162
+Haynes IV | 2168
+Hemphill II | 8017
+Holland II | 2300
+Holmes II | 2316
+Irvin III | 2431
+Joseph Jr. | 2517
+Kennedy Jr. | 2594
+Marion III | 3101
+McAllister III | 3180
+McManus IV | 3303
+Melvin Jr. | 5754
+Miles II | 3395
+Moody III | 3465
+Morris II | 3484
+Moseley | 7008
+Nelson III | 3571
+Nickerson Jr. | 3602
+Nix Jr | 3618
+Ollison II | 7340
+Peko Jr. | 3854
+Pickett III | 3901
+Poteat III | 3975
+Quinn Jr. | 4045
+Reagan Jr. | 7738
+Reynolds Jr. | 4150
+Roye Jr. | 4264
+Sykes Jr. | 4845
+Vollmer Jr. | 5193
+Warren Jr. | 5231
+Waters Jr. | 5238
+Webb III | 5257
+Williamson Jr. | 5347

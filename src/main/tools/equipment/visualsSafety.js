@@ -6,6 +6,7 @@ import { openCfb27Save, readTables } from "../../services/save.js";
 import { parseRef, sf } from "./openSave.js";
 import { installVisualStorage, overflowOwners, validateVisualStorageLayout } from "./visualStorage.js";
 import { writeFixedSaveCandidate, validateSaveContainer } from "../../services/saveContainer.js";
+import { encodeVisualData } from "./visualEncoding.js";
 
 const hash = data => createHash("sha256").update(data).digest("hex");
 const installed = Symbol("visualsWriteSafety");
@@ -31,7 +32,7 @@ export function installVisualsWriteSafety(table, logicalRows = new Set()) {
     field.strategy = {
       ...original,
       setUnformattedValueFromFormatted(value, old, maxLength, context) {
-        const encoded = original.setUnformattedValueFromFormatted(value, old, maxLength, context);
+        const encoded = encodeVisualData(original, value, old, maxLength, context);
         let decoded;
         try { decoded = original.getFormattedValueFromUnformatted(encoded, context); }
         catch (error) { throw new Error(`Equipment row ${record.index} could not be encoded safely: ${error.message}`); }

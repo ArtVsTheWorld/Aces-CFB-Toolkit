@@ -9,7 +9,7 @@ import { createRandom, probabilityForDisparity } from "../src/main/tools/forceWi
 const here = path.dirname(fileURLToPath(import.meta.url));
 const originalCore = path.resolve(here, "legacy-reference/forceWin");
 const migratedCore = path.resolve(here, "../src/main/tools/forceWin/core");
-const modules = ["diagnostics.js", "disparityCalculator.js", "favoriteExplanation.js", "modelProfiles.js", "protections.js"];
+const modules = ["diagnostics.js", "disparityCalculator.js", "favoriteExplanation.js", "protections.js"];
 
 test("unchanged Automatic Force Win core modules remain text-identical to the reference CLI", () => {
   for (const module of modules) assert.equal(fs.readFileSync(path.join(migratedCore, module), "utf8").trimEnd(), fs.readFileSync(path.join(originalCore, module), "utf8").trimEnd(), module);

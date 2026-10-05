@@ -88,11 +88,12 @@ export function processSchedule({
   random = Math.random,
   involvement = FORCE_WIN_CONFIG.involvement.default,
   modelProfile = FORCE_WIN_CONFIG.modelProfiles.default,
+  customModel = null,
   rosterRatings = null,
   forceAllFcs = false,
   schema = FORCE_WIN_SCHEMA
 }) {
-  const modelConfig = createModelConfig(modelProfile);
+  const modelConfig = createModelConfig(modelProfile, FORCE_WIN_CONFIG, customModel);
   const results = [];
   const changes = [];
   const skippedTeamNamesLower = new Set(
@@ -338,6 +339,18 @@ export function processSchedule({
     }
   });
 
+  const weeklyLimit = modelConfig.customModel?.maxForceWinsPerWeek ?? 0;
+  if (weeklyLimit) {
+    const weeks = new Map();
+    for (const change of changes) { const group = weeks.get(change.week) ?? []; group.push(change); weeks.set(change.week, group); }
+    const retained = new Set();
+    for (const group of weeks.values()) for (const game of group.sort((a, b) => b.breakdown.finalDisparity - a.breakdown.finalDisparity || a.index - b.index).slice(0, weeklyLimit)) retained.add(game.index);
+    for (let index = changes.length - 1; index >= 0; index--) if (!retained.has(changes[index].index)) {
+      const game = changes[index]; game.assignment = null; game.status = "untouched"; game.reason = "Weekly force-win limit reached — stronger mismatches take priority"; game.decision = { ...game.decision, forced: false, limitedByWeek: true, reason: game.reason }; changes.splice(index, 1);
+    }
+    summary.forceWinsApplied = changes.length; summary.fcsForceWinsApplied = changes.filter(game => game.fcsGame).length;
+    summary.weeklyLimit = weeklyLimit; summary.weeklyLimitSuppressed = results.filter(game => game.decision?.limitedByWeek).length;
+  }
   return { results, changes, summary, actionableWeek };
 }
 

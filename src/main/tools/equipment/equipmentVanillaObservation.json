@@ -1,0 +1,1010 @@
+{
+  "observed": "2026-10-05",
+  "source": "Structurally checked ItemInfo records from a user-confirmed unmodded College Football 27 process.",
+  "scope": "Observation only, not proof of menu availability. Built-in locked items can be loaded without a mod. Do not automatically move these into vanilla generation pools or replace mod-specific display labels.",
+  "recordCheck": "Repeated ItemName fields and the DisplayName field at +56 agree. Process addresses and raw memory are not distributed.",
+  "items": [
+    {
+      "itemName": "Gear_JerseyStyle_SleeveLong",
+      "displayName": "Long Sleeves"
+    },
+    {
+      "itemName": "Gear_JerseyStyle_SleeveStandard",
+      "displayName": "Loose Sleeves"
+    },
+    {
+      "itemName": "Gear_JerseyStyle_SleeveTight",
+      "displayName": "Tight Sleeves"
+    },
+    {
+      "itemName": "Gear_Undershirt_CompressionTCrewSleeveless",
+      "displayName": "Primary Sleeveless Compression Undershirt"
+    },
+    {
+      "itemName": "Gear_Undershirt_CompressionTCrewSleeveless_Black",
+      "displayName": "Black Sleeveless Compression Undershirt"
+    },
+    {
+      "itemName": "Gear_Undershirt_CompressionTCrewSleeveless_Secondary",
+      "displayName": "Secondary Sleeveless Compression Undershirt"
+    },
+    {
+      "itemName": "Gear_Undershirt_CompressionTCrewSleeveless_White",
+      "displayName": "White Sleeveless Compression Undershirt"
+    },
+    {
+      "itemName": "Gear_Undershirt_HoodieSleeveless",
+      "displayName": "Sleeveless Hoodie"
+    },
+    {
+      "itemName": "GearArmSleeve_NikeProDriFitSleeve_TeamColor",
+      "displayName": "Team Color Compression Sleeve"
+    },
+    {
+      "itemName": "GearArmSleeve_Quarter_sleeveLongUnderarmor_normal_TeamColor",
+      "displayName": "Arm Sleeve Quarter Team Color"
+    },
+    {
+      "itemName": "GearArmSleeve_Shooter_sleeveLongUnderarmor_normal_TeamColor",
+      "displayName": "Arm Sleeve Shooter Team Color"
+    },
+    {
+      "itemName": "GearFaceMask_2Bar",
+      "displayName": "2 Bar"
+    },
+    {
+      "itemName": "GearFaceMask_2BarNose",
+      "displayName": "2 Bar Nose"
+    },
+    {
+      "itemName": "GearFaceMask_2BarQBBull",
+      "displayName": "2 Bar QB Bull"
+    },
+    {
+      "itemName": "GearFaceMask_2BarQBSingle",
+      "displayName": "2 Bar QB Single"
+    },
+    {
+      "itemName": "GearFaceMask_2BarSingle",
+      "displayName": "2 Bar Single"
+    },
+    {
+      "itemName": "GearFaceMask_3Bar",
+      "displayName": "3 Bar"
+    },
+    {
+      "itemName": "GearFaceMask_3BarNose",
+      "displayName": "3 Bar Nose"
+    },
+    {
+      "itemName": "GearFaceMask_3BarQB",
+      "displayName": "3 Bar QB"
+    },
+    {
+      "itemName": "GearFaceMask_3BarQBSingle",
+      "displayName": "3 Bar QB Single"
+    },
+    {
+      "itemName": "GearFaceMask_3BarRB",
+      "displayName": "3 Bar RB"
+    },
+    {
+      "itemName": "GearFaceMask_3BarRBJagged",
+      "displayName": "3 Bar RB Jagged"
+    },
+    {
+      "itemName": "GearFaceMask_3BarRBSingle",
+      "displayName": "3 Bar RB Single"
+    },
+    {
+      "itemName": "GearFaceMask_3BarSingle",
+      "displayName": "3 Bar Single"
+    },
+    {
+      "itemName": "GearFaceMask_Axiom2BarDoubleStraight",
+      "displayName": "Axiom 2 Bar Straight Double"
+    },
+    {
+      "itemName": "GearFaceMask_Axiom2BarJagged",
+      "displayName": "Axiom 2 Bar Jagged"
+    },
+    {
+      "itemName": "GearFaceMask_Axiom2barsingle",
+      "displayName": "Axiom 2 Bar Single"
+    },
+    {
+      "itemName": "GearFaceMask_Axiom2BarStraight",
+      "displayName": "Axiom 2 Bar Straight"
+    },
+    {
+      "itemName": "GearFaceMask_Axiom3BarDouble",
+      "displayName": "Axiom 3 Bar Double"
+    },
+    {
+      "itemName": "GearFaceMask_Axiom3BarDoubleStraight",
+      "displayName": "Axiom 3 Bar Straight Double"
+    },
+    {
+      "itemName": "GearFaceMask_Axiom3BarJagged",
+      "displayName": "Axiom 3 Bar Jagged"
+    },
+    {
+      "itemName": "GearFaceMask_Axiom3BarJaggedDouble",
+      "displayName": "Axiom 3 Bar Jagged Double"
+    },
+    {
+      "itemName": "GearFaceMask_Axiom3BarLBJagged",
+      "displayName": "Axiom 3 Bar LB Jagged"
+    },
+    {
+      "itemName": "GearFaceMask_Axiom3BarLBJaggedDouble",
+      "displayName": "Axiom 3 Bar LB Jagged Double"
+    },
+    {
+      "itemName": "GearFaceMask_Axiom3BarLBSingle",
+      "displayName": "Axiom 3 Bar LB Single"
+    },
+    {
+      "itemName": "GearFaceMask_Axiom3BarRB",
+      "displayName": "Axiom 3 Bar RB"
+    },
+    {
+      "itemName": "GearFaceMask_Axiom3BarSingle",
+      "displayName": "Axiom 3 Bar Single"
+    },
+    {
+      "itemName": "GearFaceMask_Axiom808",
+      "displayName": "Axiom 808"
+    },
+    {
+      "itemName": "GearFaceMask_AxiomFullcage",
+      "displayName": "Axiom Fullcage"
+    },
+    {
+      "itemName": "GearFaceMask_AxiomGrid",
+      "displayName": "Axiom Grid"
+    },
+    {
+      "itemName": "GearFaceMask_AxiomJRCross",
+      "displayName": "Axiom JR Cross"
+    },
+    {
+      "itemName": "GearFaceMask_AxiomJRCross808",
+      "displayName": "Axiom JR Cross 808"
+    },
+    {
+      "itemName": "GearFaceMask_AxiomRobot808",
+      "displayName": "Axiom Robot 808"
+    },
+    {
+      "itemName": "GearFaceMask_AxiomRobot808Straight",
+      "displayName": "Axiom Robot 808 Straight"
+    },
+    {
+      "itemName": "GearFaceMask_AxiomRobotCage",
+      "displayName": "Axiom Robot Cage"
+    },
+    {
+      "itemName": "GearFaceMask_AxiomRobotJagged",
+      "displayName": "Axiom Robot Jagged"
+    },
+    {
+      "itemName": "GearFaceMask_AxiomRobotJagged2",
+      "displayName": "Axiom Robot Jagged 2"
+    },
+    {
+      "itemName": "GearFaceMask_AxiomRobotJagged3",
+      "displayName": "Axiom Robot Jagged 3"
+    },
+    {
+      "itemName": "GearFaceMask_AxiomRobotRBJagged",
+      "displayName": "Axiom Robot RB Jagged"
+    },
+    {
+      "itemName": "GearFaceMask_AxiomRobotRBJagged2",
+      "displayName": "Axiom Robot RB Jagged 2"
+    },
+    {
+      "itemName": "GearFaceMask_AxiomRobotRBJagged3",
+      "displayName": "Axiom Robot RB Jagged 3"
+    },
+    {
+      "itemName": "GearFaceMask_AxiomRobotRBStraight",
+      "displayName": "Axiom Robot RB Straight"
+    },
+    {
+      "itemName": "GearFaceMask_AxiomRobotStraight",
+      "displayName": "Axiom Robot Straight"
+    },
+    {
+      "itemName": "GearFaceMask_AxiomRobotStraightDouble",
+      "displayName": "Axiom Robot Straight Double"
+    },
+    {
+      "itemName": "GearFaceMask_AxiomSnowflake",
+      "displayName": "Axiom Snowflake"
+    },
+    {
+      "itemName": "GearFaceMask_AxiomSpyder",
+      "displayName": "Axiom Spyder"
+    },
+    {
+      "itemName": "GearFaceMask_AxiomVenom",
+      "displayName": "Axiom Venom"
+    },
+    {
+      "itemName": "GearFaceMask_AxiomWeb",
+      "displayName": "Axiom Web"
+    },
+    {
+      "itemName": "GearFaceMask_F72Bar",
+      "displayName": "Schutt F7 2 Bar"
+    },
+    {
+      "itemName": "GearFaceMask_F72BarJagged",
+      "displayName": "Schutt F7 2 Bar Jagged"
+    },
+    {
+      "itemName": "GearFaceMask_F73Bar",
+      "displayName": "Schutt F7 3 Bar"
+    },
+    {
+      "itemName": "GearFaceMask_F73BarRB",
+      "displayName": "Schutt F7 3 Bar RB"
+    },
+    {
+      "itemName": "GearFaceMask_F7808",
+      "displayName": "Schutt F7 808"
+    },
+    {
+      "itemName": "GearFaceMask_F7FullCage",
+      "displayName": "Schutt F7 Fullcage"
+    },
+    {
+      "itemName": "GearFaceMask_F7FullcageRobot",
+      "displayName": "Schutt F7 Fullcage Robot"
+    },
+    {
+      "itemName": "GearFaceMask_F7JRCross",
+      "displayName": "Schutt F7 JR Cross"
+    },
+    {
+      "itemName": "GearFaceMask_F7Kicker",
+      "displayName": "Schutt F7 Kicker"
+    },
+    {
+      "itemName": "GearFaceMask_F7Pro2Bar",
+      "displayName": "Schutt F7 Pro 2 Bar"
+    },
+    {
+      "itemName": "GearFaceMask_F7Pro3BarLB",
+      "displayName": "Schutt F7 Pro 3 Bar LB"
+    },
+    {
+      "itemName": "GearFaceMask_F7Pro3BarRB",
+      "displayName": "Schutt F7 Pro 3 Bar RB"
+    },
+    {
+      "itemName": "GearFaceMask_F7ProJRCross",
+      "displayName": "Schutt F7 Pro JR Cross"
+    },
+    {
+      "itemName": "GearFaceMask_F7ProRobot",
+      "displayName": "Schutt F7 Pro Robot"
+    },
+    {
+      "itemName": "GearFaceMask_F7ProRobotJagged",
+      "displayName": "Schutt F7 Pro Robot Jagged"
+    },
+    {
+      "itemName": "GearFaceMask_F7ProRobotJagged2",
+      "displayName": "Schutt F7 Pro Robot Jagged 2"
+    },
+    {
+      "itemName": "GearFaceMask_F7ProRobotJagged3",
+      "displayName": "Schutt F7 Pro Robot Jagged 3"
+    },
+    {
+      "itemName": "GearFaceMask_F7ProRobotRB",
+      "displayName": "Schutt F7 Pro Robot RB"
+    },
+    {
+      "itemName": "GearFaceMask_F7Robot",
+      "displayName": "Schutt F7 Robot"
+    },
+    {
+      "itemName": "GearFaceMask_F7Robot808",
+      "displayName": "Schutt F7 Robot 808"
+    },
+    {
+      "itemName": "GearFaceMask_F7RobotJagged",
+      "displayName": "Schutt F7 Robot Jagged"
+    },
+    {
+      "itemName": "GearFaceMask_F7RobotJagged2",
+      "displayName": "Schutt F7 Robot Jagged 2"
+    },
+    {
+      "itemName": "GearFaceMask_F7RobotJagged3",
+      "displayName": "Schutt F7 Robot Jagged 3"
+    },
+    {
+      "itemName": "GearFaceMask_F7RobotRB",
+      "displayName": "Schutt F7 Robot RB"
+    },
+    {
+      "itemName": "GearFaceMask_F7RobotRB2",
+      "displayName": "Schutt F7 Robot RB 2"
+    },
+    {
+      "itemName": "GearFaceMask_F7Spyder",
+      "displayName": "Schutt F7 Spyder"
+    },
+    {
+      "itemName": "GearFaceMask_FullCageRobot",
+      "displayName": "Full Cage Robot"
+    },
+    {
+      "itemName": "GearFaceMask_Light2BarJagged",
+      "displayName": "Light 2 Bar Jagged"
+    },
+    {
+      "itemName": "GearFaceMask_Light3Bar",
+      "displayName": "Light 3 Bar"
+    },
+    {
+      "itemName": "GearFaceMask_LightKicker",
+      "displayName": "Light Kicker"
+    },
+    {
+      "itemName": "GearFaceMask_LightRobot",
+      "displayName": "Light Robot"
+    },
+    {
+      "itemName": "GearFaceMask_LightRobotRB",
+      "displayName": "Light Robot RB"
+    },
+    {
+      "itemName": "GearFaceMask_LightRobotRB2",
+      "displayName": "Light Robot RB 2"
+    },
+    {
+      "itemName": "GearFaceMask_LightRobotRBJagged",
+      "displayName": "Light Robot RB Jagged"
+    },
+    {
+      "itemName": "GearFaceMask_REVO3Bar",
+      "displayName": "Revo 3 Bar Single"
+    },
+    {
+      "itemName": "GearFaceMask_REVO3BarLb",
+      "displayName": "Revo 3 Bar LB"
+    },
+    {
+      "itemName": "GearFaceMask_REVO3BarRB",
+      "displayName": "Revo 3 Bar RB"
+    },
+    {
+      "itemName": "GearFaceMask_RevoNormal",
+      "displayName": "Revo 2 Bar"
+    },
+    {
+      "itemName": "GearFaceMask_RevoNormal2",
+      "displayName": "Revo 3 Bar"
+    },
+    {
+      "itemName": "GearFaceMask_RevoRobot",
+      "displayName": "Revo Robot"
+    },
+    {
+      "itemName": "GearFaceMask_RevoRobot2",
+      "displayName": "Revo Robot 2"
+    },
+    {
+      "itemName": "GearFaceMask_Revospeed_RC",
+      "displayName": "Revospeed Robot Cage"
+    },
+    {
+      "itemName": "GearFaceMask_revospeed2bar",
+      "displayName": "Revo Speed 2 Bar"
+    },
+    {
+      "itemName": "GearFaceMask_revospeed2barSingle",
+      "displayName": "Revo Speed 2 Bar Single"
+    },
+    {
+      "itemName": "GearFaceMask_Revospeed2BarWR",
+      "displayName": "Revo Speed 2 Bar WR"
+    },
+    {
+      "itemName": "GearFaceMask_Revospeed3bar",
+      "displayName": "Revo Speed 3 Bar"
+    },
+    {
+      "itemName": "GearFaceMask_revoSpeed3barLb",
+      "displayName": "Revo Speed 3 Bar LB"
+    },
+    {
+      "itemName": "GearFaceMask_revospeed3BarLBStraight",
+      "displayName": "Revo Speed 3 Bar LB Straight"
+    },
+    {
+      "itemName": "GearFaceMask_Revospeed3BarQB",
+      "displayName": "Revo Speed 3 Bar QB"
+    },
+    {
+      "itemName": "GearFaceMask_revoSpeed3barSingle",
+      "displayName": "Revo Speed 3 Bar Single"
+    },
+    {
+      "itemName": "GearFaceMask_revospeed3barstraight",
+      "displayName": "Revo Speed 3 Bar Straight"
+    },
+    {
+      "itemName": "GearFaceMask_revoSpeedRobot",
+      "displayName": "Revo Speed Robot"
+    },
+    {
+      "itemName": "GearFaceMask_revoSpeedRobot2",
+      "displayName": "Revo Speed Robot 2"
+    },
+    {
+      "itemName": "GearFaceMask_revoSpeedRobotRB",
+      "displayName": "Revo Speed Robot RB"
+    },
+    {
+      "itemName": "GearFaceMask_Robot",
+      "displayName": "Robot"
+    },
+    {
+      "itemName": "GearFaceMask_RobotRB",
+      "displayName": "Robot RB"
+    },
+    {
+      "itemName": "GearFaceMask_Speedflex_3_Bar_LB_Jewel",
+      "displayName": "SpeedFlex Jewel"
+    },
+    {
+      "itemName": "GearFaceMask_Speedflex_Robot_Z",
+      "displayName": "SpeedFlex Robot Z"
+    },
+    {
+      "itemName": "GearFaceMask_Speedflex2Bar",
+      "displayName": "SpeedFlex 2 Bar"
+    },
+    {
+      "itemName": "GearFaceMask_Speedflex2Bar_WR",
+      "displayName": "SpeedFlex 2 Bar WR"
+    },
+    {
+      "itemName": "GearFaceMask_Speedflex2BarQB",
+      "displayName": "SpeedFlex 2 Bar QB"
+    },
+    {
+      "itemName": "GearFaceMask_Speedflex2BarSingle",
+      "displayName": "SpeedFlex 2 Bar Single"
+    },
+    {
+      "itemName": "GearFaceMask_Speedflex3Bar",
+      "displayName": "SpeedFlex 3 Bar "
+    },
+    {
+      "itemName": "GearFaceMask_Speedflex3BarJagged",
+      "displayName": "SpeedFlex 3 Bar Jagged"
+    },
+    {
+      "itemName": "GearFaceMask_Speedflex3BarLB",
+      "displayName": "SpeedFlex 3 Bar LB"
+    },
+    {
+      "itemName": "GearFaceMask_SpeedFlex3BarLBGrid",
+      "displayName": "SpeedFlex 3 Bar LB Grid "
+    },
+    {
+      "itemName": "GearFaceMask_Speedflex3BarQB",
+      "displayName": "SpeedFlex 3 Bar QB"
+    },
+    {
+      "itemName": "GearFaceMask_Speedflex3BarRB",
+      "displayName": "SpeedFlex 3 Bar RB"
+    },
+    {
+      "itemName": "GearFaceMask_Speedflex3BarRBJagged",
+      "displayName": "SpeedFlex 3 Bar RB Jagged "
+    },
+    {
+      "itemName": "GearFaceMask_SpeedFlex3BarRBSingle",
+      "displayName": "SpeedFlex 3 Bar RB Single "
+    },
+    {
+      "itemName": "GearFaceMask_Speedflex3BarSingle",
+      "displayName": "SpeedFlex 3 Bar Single"
+    },
+    {
+      "itemName": "GearFaceMask_SpeedFlex808",
+      "displayName": "SpeedFlex 808 "
+    },
+    {
+      "itemName": "GearFaceMask_SpeedFlexBulldog",
+      "displayName": "SpeedFlex Bulldog "
+    },
+    {
+      "itemName": "GearFaceMask_SpeedflexCage",
+      "displayName": "SpeedFlex Cage"
+    },
+    {
+      "itemName": "GearFaceMask_SpeedFlexCageHook",
+      "displayName": "SpeedFlex Cage Hook "
+    },
+    {
+      "itemName": "GearFaceMask_SpeedflexFullcage",
+      "displayName": "SpeedFlex Full Cage"
+    },
+    {
+      "itemName": "GearFaceMask_SpeedflexFullcageHook",
+      "displayName": "SpeedFlex Fullcage Hook "
+    },
+    {
+      "itemName": "GearFaceMask_SpeedflexFullcageRobot",
+      "displayName": "SpeedFlex Fullcage Robot "
+    },
+    {
+      "itemName": "GearFaceMask_SpeedflexHalfCage",
+      "displayName": "SpeedFlex Half Cage "
+    },
+    {
+      "itemName": "GearFaceMask_SpeedflexHalfCage2",
+      "displayName": "SpeedFlex Half Cage 2"
+    },
+    {
+      "itemName": "GearFaceMask_SpeedflexJRCross",
+      "displayName": "SpeedFlex JR Cross"
+    },
+    {
+      "itemName": "GearFaceMask_SpeedFlexKicker",
+      "displayName": "SpeedFlex Kicker "
+    },
+    {
+      "itemName": "GearFaceMask_SpeedflexRBBull",
+      "displayName": "SpeedFlex RB Bull "
+    },
+    {
+      "itemName": "GearFaceMask_SpeedflexRobot",
+      "displayName": "SpeedFlex Robot"
+    },
+    {
+      "itemName": "GearFaceMask_SpeedflexRobot808",
+      "displayName": "SpeedFlex Robot 808"
+    },
+    {
+      "itemName": "GearFaceMask_SpeedflexRobot808HD",
+      "displayName": "SpeedFlex Robot 808 HD"
+    },
+    {
+      "itemName": "GearFaceMask_SpeedflexRobot808Jagged",
+      "displayName": "SpeedFlex Robot 808 Jagged"
+    },
+    {
+      "itemName": "GearFaceMask_SpeedFlexRobotCage",
+      "displayName": "SpeedFlex Robot Cage "
+    },
+    {
+      "itemName": "GearFaceMask_SpeedflexRobotJagged",
+      "displayName": "SpeedFlex Robot Jagged"
+    },
+    {
+      "itemName": "GearFaceMask_SpeedflexRobotJagged2",
+      "displayName": "SpeedFlex Robot Jagged 2"
+    },
+    {
+      "itemName": "GearFaceMask_SpeedflexRobotJagged808HD",
+      "displayName": "SpeedFlex Robot Jagged 808 HD"
+    },
+    {
+      "itemName": "GearFaceMask_SpeedflexRobotMax",
+      "displayName": "SpeedFlex Robot Max"
+    },
+    {
+      "itemName": "GearFaceMask_SpeedflexRobotRB",
+      "displayName": "SpeedFlex Robot RB"
+    },
+    {
+      "itemName": "GearFaceMask_SpeedflexRobotRBJagged",
+      "displayName": "SpeedFlex Robot RB Jagged"
+    },
+    {
+      "itemName": "GearFaceMask_SpeedflexRobotX",
+      "displayName": "SpeedFlex Robot X"
+    },
+    {
+      "itemName": "GearFaceMask_SpeedflexSpyder",
+      "displayName": "SpeedFlex Spyder"
+    },
+    {
+      "itemName": "GearFaceMask_Standard2BarWR",
+      "displayName": "2 Bar WR"
+    },
+    {
+      "itemName": "GearFaceMask_Vicis_Kicker",
+      "displayName": "Vicis Kicker"
+    },
+    {
+      "itemName": "GearFaceMask_VicisTrenchRobot",
+      "displayName": "Vicis Trench Robot"
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero12Bar",
+      "displayName": "VICIS 2 Bar"
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero13Bar",
+      "displayName": "VICIS 3 Bar"
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero13BarLB",
+      "displayName": "VICIS 3 Bar LB"
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero13BarRB",
+      "displayName": "VICIS 3 Bar RB"
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero1BullRB",
+      "displayName": "VICIS Bull RB"
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero1Fullcage",
+      "displayName": "VICIS Full Cage"
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero1Robot",
+      "displayName": "VICIS Robot"
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero1RobotRB",
+      "displayName": "VICIS Robot RB"
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero2_808",
+      "displayName": "Vicis Zero 2 808"
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero2_Robot808",
+      "displayName": "Vicis Zero 2 Robot 808"
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero2_RobotJagged",
+      "displayName": "Vicis Zero 2 Robot Jagged"
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero2_RobotJagged2",
+      "displayName": "Vicis ZERO2 Robot Jagged 2"
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero23BARLB",
+      "displayName": "Vicis ZERO2 3 Bar LB"
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero23BARRB",
+      "displayName": "Vicis ZERO2 3 Bar RB"
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero2BAR",
+      "displayName": "Vicis ZERO2 2 Bar"
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero2BARJagged",
+      "displayName": "Vicis ZERO2 2 Bar Jagged"
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero2JRCross",
+      "displayName": "Vicis ZERO2 JR Cross"
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero2Kicker",
+      "displayName": "Vicis ZERO2 Kicker"
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero2Robot",
+      "displayName": "Vicis ZERO2 Robot"
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero2RobotLB",
+      "displayName": "Vicis ZERO2 Robot LB"
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero2RobotMax",
+      "displayName": "Vicis ZERO2 Robot Max"
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero2RobotRB",
+      "displayName": "Vicis ZERO2 Robot RB"
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero2RobotRB2",
+      "displayName": "Vicis ZERO2 Robot RB 2"
+    },
+    {
+      "itemName": "GearFaceMask_VicisZero2Trench",
+      "displayName": "Vicis ZERO2 Trench"
+    },
+    {
+      "itemName": "GearFaceMask_Vintage2BarBull",
+      "displayName": "Vintage 2 Bar Bull"
+    },
+    {
+      "itemName": "GearFaceMask_Vintage2BarNose",
+      "displayName": "Vintage 2 Bar Nose"
+    },
+    {
+      "itemName": "GearFaceMask_Vintage2BarQBSingle",
+      "displayName": "Vintage 2 Bar QB Single"
+    },
+    {
+      "itemName": "GearFootwear_shoe_low_Adidas_AdizeroElectricPlus",
+      "displayName": "Adidas Adizero Electric+"
+    },
+    {
+      "itemName": "GearFootwear_shoe_low_NikeEdgeSpeed3062",
+      "displayName": "Nike Vapor Edge Speed 360 2"
+    },
+    {
+      "itemName": "GearFootwear_shoe_low_NikeVaporEdgePro3602",
+      "displayName": "Nike Vapor Edge Pro 360 2"
+    },
+    {
+      "itemName": "GearFootwear_shoe_mid_NikeAlphaMenacePro3WDP",
+      "displayName": "Nike Alpha Menace Pro 3"
+    },
+    {
+      "itemName": "GearFootwear_shoe_mid_NikeVaporPro1",
+      "displayName": "Nike Vapor Pro 1"
+    },
+    {
+      "itemName": "GearHand_glove_NikeSuperbad7_TeamColor",
+      "displayName": "Nike Superbad 7 Glove Team Color"
+    },
+    {
+      "itemName": "GearHand_glove_NikeSuperbad7_White",
+      "displayName": "Nike Superbad 7 Glove White"
+    },
+    {
+      "itemName": "GearHand_glove_NikeVaporJet8_White",
+      "displayName": "Nike Vapor Jet 8 Glove White"
+    },
+    {
+      "itemName": "GearHelmet_AirXP",
+      "displayName": "Schutt Air XP PRO VTD"
+    },
+    {
+      "itemName": "GearHelmet_Axiom",
+      "displayName": "Riddell Axiom"
+    },
+    {
+      "itemName": "GearHelmet_LightGladiator",
+      "displayName": "Light Gladiator"
+    },
+    {
+      "itemName": "GearHelmet_Revolution",
+      "displayName": "Riddell Revolution"
+    },
+    {
+      "itemName": "GearHelmet_RevolutionSpeed",
+      "displayName": "Riddell Revolution Speed"
+    },
+    {
+      "itemName": "GearHelmet_RiddellTK",
+      "displayName": "Riddell TK"
+    },
+    {
+      "itemName": "GearHelmet_Schutt",
+      "displayName": "Schutt Air Advantage"
+    },
+    {
+      "itemName": "GearHelmet_SchuttF7",
+      "displayName": "Schutt F7"
+    },
+    {
+      "itemName": "GearHelmet_SchuttF7Pro",
+      "displayName": "Schutt F7 Pro"
+    },
+    {
+      "itemName": "GearHelmet_Speed_Flex",
+      "displayName": "Riddell SpeedFlex"
+    },
+    {
+      "itemName": "GearHelmet_Standard",
+      "displayName": "Riddell VSR4"
+    },
+    {
+      "itemName": "GearHelmet_VicisZero1",
+      "displayName": "VICIS ZERO1"
+    },
+    {
+      "itemName": "GearHelmet_VicisZero2",
+      "displayName": "Vicis Zero 2"
+    },
+    {
+      "itemName": "GearHelmet_VicisZero2Trench",
+      "displayName": "Vicis Zero 2 Trench"
+    },
+    {
+      "itemName": "GearLegsBase_LeftSleeve",
+      "displayName": "Leg Sleeve Left"
+    },
+    {
+      "itemName": "GearLegsBase_RightSleeve",
+      "displayName": "Leg Sleeve Right"
+    },
+    {
+      "itemName": "GearMouthpiece_None",
+      "displayName": "None"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDual_Black",
+      "displayName": "Mouthpiece Pacifier Black"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDual_SecondaryColor",
+      "displayName": "Mouthpiece Pacifier Secondary Color"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDual_TeamColor",
+      "displayName": "Mouthpiece Pacifier Team Color"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDual_White",
+      "displayName": "Mouthpiece Pacifier White"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Black",
+      "displayName": "Hanging Mouthpiece Pacifier Black"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Blue",
+      "displayName": "Hanging Mouthpiece Pacifier Blue"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Green",
+      "displayName": "Hanging Mouthpiece Pacifier Green"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_LightBlue",
+      "displayName": "Hanging Mouthpiece Pacifier Light Blue"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Neon",
+      "displayName": "Hanging Mouthpiece Pacifier Neon"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Orange",
+      "displayName": "Hanging Mouthpiece Pacifier Orange"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Pink",
+      "displayName": "Hanging Mouthpiece Pacifier Pink"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Purple",
+      "displayName": "Hanging Mouthpiece Pacifier Purple"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Red",
+      "displayName": "Hanging Mouthpiece Pacifier Red"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_SecondaryColor",
+      "displayName": "Hanging Mouthpiece Pacifier Secondary Color"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor",
+      "displayName": "Hanging Mouthpiece Pacifier Team Color"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_White",
+      "displayName": "Hanging Mouthpiece Pacifier White"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Yellow",
+      "displayName": "Hanging Mouthpiece Pacifier Yellow"
+    },
+    {
+      "itemName": "GearNeckpad_CowboyCollarNeckRoll",
+      "displayName": "Cowboy Collar Neck Roll"
+    },
+    {
+      "itemName": "GearWrist_wristBandCoach_Black",
+      "displayName": "Wrist Band Coach Black"
+    },
+    {
+      "itemName": "Handwarmer_Standard",
+      "displayName": "Handwarmer Standard"
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Scrunched",
+      "displayName": "Scrunched Turtleneck Primary Color"
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Scrunched_Black",
+      "displayName": "Scrunched Turtleneck Black"
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Scrunched_Secondary",
+      "displayName": "Scrunched Turtleneck Secondary Color"
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Scrunched_White",
+      "displayName": "Scrunched Turtleneck White"
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Tight",
+      "displayName": "Tight Turtleneck Primary Color"
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Tight_Black",
+      "displayName": "Tight Turtleneck Black"
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Tight_Secondary",
+      "displayName": "Tight Turtleneck Secondary Color"
+    },
+    {
+      "itemName": "NeckWear_Turtleneck_Tight_White",
+      "displayName": "Tight Turtleneck White"
+    },
+    {
+      "itemName": "Towel_East",
+      "displayName": "Towel - East"
+    },
+    {
+      "itemName": "Towel_None",
+      "displayName": "No Towel"
+    },
+    {
+      "itemName": "Towel_North",
+      "displayName": "Towel - North"
+    },
+    {
+      "itemName": "Towel_NorthEast",
+      "displayName": "Towel - North East"
+    },
+    {
+      "itemName": "Towel_NorthWest",
+      "displayName": "Towel - North West"
+    },
+    {
+      "itemName": "Towel_South",
+      "displayName": "Towel - South"
+    },
+    {
+      "itemName": "Towel_SouthEast",
+      "displayName": "Towel - South East"
+    },
+    {
+      "itemName": "Towel_SouthWest",
+      "displayName": "Towel - South West"
+    },
+    {
+      "itemName": "Towel_West",
+      "displayName": "Towel - West"
+    },
+    {
+      "itemName": "Waist_PlaycallSheet_Black",
+      "displayName": "Waist Playcall Band Black"
+    },
+    {
+      "itemName": "Waist_PlaycallSheet_TeamColor",
+      "displayName": "Waist Playcall Band Team Color"
+    },
+    {
+      "itemName": "Waist_PlaycallSheet_White",
+      "displayName": "Waist Playcall Band White"
+    }
+  ],
+  "tokenInventory": {
+    "date": "2026-10-05",
+    "readableScanComplete": true,
+    "loadedCandidates": 1214,
+    "scope": "Exact string candidates from bounded read-only scans. Not every string has a verified ItemInfo record; neither these strings nor loaded/locked ItemInfo records alone prove menu availability."
+  }
+}

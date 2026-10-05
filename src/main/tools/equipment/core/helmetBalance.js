@@ -1,4 +1,5 @@
 import { mulberry32 } from "../core/patcher.js";
+import { HELMET_MODELS, effectiveHelmetWeights, helmetAllowed, helmetPosition } from "./helmets.js";
 
 export const VICIS_HELMET = "GearHelmet_VicisZero2";
 const VICIS_POSITIONS = new Set(["QB", "TE", "LOLB", "MLB", "ROLB", "LB", "SAM", "MIKE", "WILL", "LE", "RE", "DT", "EDGE", "DE", "DL", "LEDG", "REDG"]);
@@ -38,7 +39,8 @@ function helmetForFamily(family, rng) {
 // Callers supply only uniquely owned, safe-to-edit, scoped non-OL players.
 // Deficient families receive invalid helmets first, then only surplus helmets.
 // F7 variants are a single family with Vicis enabled, avoiding needless swaps.
-export function buildHelmetBalancePlan(entries, { allowVicis = false, seed = 1 } = {}) {
+export function buildHelmetBalancePlan(entries, { allowVicis = false, seed = 1, distribution = null } = {}) {
+  if (distribution) return buildCustomHelmetBalance(entries, distribution, seed);
   const rng = mulberry32((seed ^ 0x48454C4D) >>> 0), targets = helmetTargets(allowVicis), plans = new Map(), cohorts = {};
   for (const cohort of ["fbs", "fcs"]) {
     const players = entries.filter(entry => entry.cohort === cohort), total = players.length, requestedCounts = targetCounts(total, targets);
@@ -99,4 +101,47 @@ export function buildHelmetBalancePlan(entries, { allowVicis = false, seed = 1 }
       families: Object.keys(before).map(family => ({ family, before: before[family], after: after[family], targetCount: counts[family] ?? 0, requestedTargetCount: requestedCounts[family] ?? 0, targetPercent: targets[family] ?? 0, beforePercent: total ? before[family] * 100 / total : 0, afterPercent: total ? after[family] * 100 / total : 0 })) };
   }
   return { plans, diagnostics: { allowVicis, ...cohorts } };
+}
+
+function buildCustomHelmetBalance(entries, distribution, seed) {
+  const rng = mulberry32((seed ^ 0x48454C4D) >>> 0), plans = new Map(), cohorts = {};
+  const labels = Object.fromEntries(HELMET_MODELS.map(model => [model.id, model.label]));
+  labels.other = "Other / mixed";
+  for (const cohort of ["fbs", "fcs"]) {
+    const players = entries.filter(entry => entry.cohort === cohort), positions = [], changesByTeam = {};
+    for (const position of [...new Set(players.map(entry => helmetPosition(entry.position)))]) {
+      const scoped = players.filter(entry => helmetPosition(entry.position) === position), weights = effectiveHelmetWeights(distribution, position);
+      const counts = targetCounts(scoped.length, weights);
+      const familyOf = entry => entry.family === "Other / mixed" || !helmetAllowed(entry.helmet, position) ? "other" : entry.helmet;
+      const groups = new Map([...HELMET_MODELS.map(model => model.id), "other"].map(id => [id, []]));
+      for (const entry of scoped) groups.get(familyOf(entry)).push(entry);
+      const before = Object.fromEntries([...groups].map(([id, group]) => [id, group.length])), after = { ...before };
+      const candidates = spreadAcrossTeams(groups.get("other"), rng);
+      for (const [id, group] of groups) if (id !== "other") candidates.push(...spreadAcrossTeams(group, rng).slice(0, Math.max(0, group.length - (counts[id] ?? 0))));
+      for (const entry of candidates) after[familyOf(entry)]--;
+      const deficits = Object.entries(counts).map(([id, count]) => ({ id, count: Math.max(0, count - after[id]) }));
+      const ordered = spreadAcrossTeams(candidates, rng);
+      let index = 0;
+      while (index < ordered.length) {
+        let assigned = false;
+        for (const deficit of deficits) {
+          if (!deficit.count || index === ordered.length) continue;
+          const entry = ordered[index++]; plans.set(entry.visualsRow, deficit.id); deficit.count--; after[deficit.id]++;
+          changesByTeam[entry.team] = (changesByTeam[entry.team] ?? 0) + 1; assigned = true;
+        }
+        if (!assigned) throw new Error("Helmet balancing could not satisfy the validated targets.");
+      }
+      positions.push({ position, eligiblePlayers: scoped.length, changes: candidates.length,
+        families: Object.keys(before).map(id => ({ id, family: labels[id], before: before[id], after: after[id], targetCount: counts[id] ?? 0, targetPercent: weights[id] ?? 0,
+          beforePercent: before[id] * 100 / scoped.length, afterPercent: after[id] * 100 / scoped.length })) });
+    }
+    const families = [...HELMET_MODELS.map(model => model.id), "other"].map(id => {
+      const rows = positions.map(position => position.families.find(family => family.id === id));
+      const sum = key => rows.reduce((total, row) => total + row[key], 0);
+      return { id, family: labels[id], before: sum("before"), after: sum("after"), targetCount: sum("targetCount"), targetPercent: players.length ? sum("targetCount") * 100 / players.length : 0,
+        beforePercent: players.length ? sum("before") * 100 / players.length : 0, afterPercent: players.length ? sum("after") * 100 / players.length : 0 };
+    });
+    cohorts[cohort] = { eligiblePlayers: players.length, changes: positions.reduce((total, group) => total + group.changes, 0), changesByTeam, families, positions };
+  }
+  return { plans, diagnostics: { custom: true, ...cohorts } };
 }

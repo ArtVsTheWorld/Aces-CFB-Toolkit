@@ -19,8 +19,9 @@ import { readHomeContext } from "./services/homeContext.js";
 import { readTeamArtwork, saveTeamArtwork, teamArtworkKey } from "./services/teamArtwork.js";
 import { validateSavePath } from "./services/files.js";
 import { executableToolIds, getToolHandler } from "./tools/handlers.js";
-import { searchPlanRows, snapshotPlanRows } from "./tools/jersey/planStore.js";
+import { searchPlanRows, snapshotPlanRows, planAudit, setPlanAudit } from "./tools/jersey/planStore.js";
 import { readSeasonLines } from "./tools/forceWin/runner.js";
+import { saveCustomMatchupModel } from "./services/customMatchupModel.js";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 const ownsInstance = !app.isPackaged || process.argv.includes("--smoke-test") || app.requestSingleInstanceLock();
@@ -81,6 +82,7 @@ function createWindow() {
     backgroundColor: settings.get().theme === "dark" ? "#0c0f0d" : "#f4f7f5", show: false,
     webPreferences: { preload: path.join(dirname, "preload.cjs"), contextIsolation: true, nodeIntegration: false, sandbox: true, webSecurity: true }
   });
+  window.webContents.setWindowOpenHandler(({ url }) => { if (url === "https://github.com/ArtVsTheWorld/Aces-CFB-Toolkit") void shell.openExternal(url); return { action: "deny" }; });
   window.removeMenu();
   window.loadFile(path.join(dirname, "..", "renderer", "index.html"));
   window.once("ready-to-show", () => {
@@ -119,11 +121,12 @@ function registerIpc() {
     const context = await readHomeContext(sessionActiveSave, schema.path);
     return { ...context, artwork: readTeamArtwork(paths.data, settings.get().teamArtwork, context.teams.map(team => team.name)) };
   });
+  ipcMain.handle(IPC.saveCustomMatchupModel, (_event, model) => saveCustomMatchupModel(settings, model));
   ipcMain.handle(IPC.homeLines, async (_event, request) => {
     if (!sessionActiveSave) throw new Error("Select an Active Dynasty first.");
     const savePath = validateSavePath(sessionActiveSave);
     const schema = assertToolSaveCompatibility("home", savePath);
-    return readSeasonLines({ savePath, schemaPath: schema.path, modelProfile: request?.modelProfile });
+    return readSeasonLines({ savePath, schemaPath: schema.path, modelProfile: request?.modelProfile, customModel: settings.get().customMatchupModel });
   });
   ipcMain.handle(IPC.chooseTeamArtwork, async (_event, request) => {
     if (!sessionActiveSave) throw new Error("Select an Active Dynasty first.");
@@ -154,7 +157,10 @@ function registerIpc() {
     if (!tool || tool.status !== "available" || !handler?.prepare) return {};
     const savePath = validateSavePath(request.savePath || sessionActiveSave);
     const schema = assertToolSaveCompatibility(tool.id, savePath);
-    return handler.prepare({ savePath, options: request.options ?? {}, schemaPath: schema.path, defaultMapPath: commentaryMapPath() });
+    const [prepared, home] = await Promise.all([handler.prepare({ savePath, options: request.options ?? {}, schemaPath: schema.path, defaultMapPath: commentaryMapPath() }), readHomeContext(savePath, schema.path).catch(error => { logger.write("warn", "optional-user-team-context-unavailable", { toolId: tool.id, message: error.message }); return null; })]);
+    if (!home) return prepared; // Optional markers must not prevent a supported tool from opening.
+    const controlled = new Map([...(prepared.userControlledTeams ?? []), ...(home.controlledTeams ?? [])].map(team => [team.name ?? team, team]));
+    return { ...prepared, userControlledTeams: [...controlled.values()] };
   }));
   ipcMain.handle(IPC.searchPreview, (_event, request) => searchPlanRows(request?.planId, request?.query, 1000, request?.filters));
   ipcMain.handle(IPC.runTool, async (_event, request) => toolOperation(async () => {
@@ -167,7 +173,10 @@ function registerIpc() {
     const runId = crypto.randomUUID();
     logger.write("info", "tool-started", { runId, toolId: tool.id, toolVersion: tool.version, mode: request.mode, savePath });
     try {
-      const result = await handler.run({ savePath, mode: request.mode, options: request.options ?? {}, schemaPath: schema.path, defaultMapPath: commentaryMapPath(), reports });
+      const previousAudit = request.mode === "apply" && request.options?.planId ? planAudit(request.options.planId) : null;
+      const audit = { runId, toolVersion: tool.version, mode: request.mode, savePath, schemaVersion: schema.version, options: previousAudit?.options ?? request.options ?? {}, previewRunId: previousAudit?.runId ?? null };
+      const result = await handler.run({ savePath, mode: request.mode, options: request.options ?? {}, schemaPath: schema.path, defaultMapPath: commentaryMapPath(), reports: reports.forRun(audit) });
+      if (request.mode === "preview" && result.planId) setPlanAudit(result.planId, audit);
       logger.write("info", "tool-completed", { runId, toolId: tool.id, status: result.status, outputPath: result.savePath, reportPath: result.reportPath, backupPath: result.backupPath, summary: result.historySummary });
       let reviewAvailable = false;
       try { reviewAvailable = reviews.save(runId, result, result.planId ? snapshotPlanRows(result.planId) : null); }

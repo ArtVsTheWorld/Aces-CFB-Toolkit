@@ -23,6 +23,7 @@ contextBridge.exposeInMainWorld("cfbToolkit", Object.freeze({
   deletePreset: request => ipcRenderer.invoke("settings:delete-preset", request),
   homeContext: () => ipcRenderer.invoke(channels.homeContext),
   homeLines: request => ipcRenderer.invoke(channels.homeLines, request),
+  saveCustomMatchupModel: model => ipcRenderer.invoke("settings:save-custom-matchup-model", model),
   chooseTeamArtwork: request => ipcRenderer.invoke(channels.chooseTeamArtwork, request),
   clearTeamArtwork: request => ipcRenderer.invoke(channels.clearTeamArtwork, request),
   runTool: request => ipcRenderer.invoke(channels.runTool, request),

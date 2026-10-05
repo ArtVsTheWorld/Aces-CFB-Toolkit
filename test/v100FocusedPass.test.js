@@ -12,7 +12,7 @@ const formula = JSON.parse(fs.readFileSync(new URL("../docs/reference/CFB27_OVR_
 test("focused-pass navigation, copy, and removed controls are wired", () => {
   assert.equal(tools.some(tool => tool.id === "white-helmet-fix"), false);
   assert.equal(tools.find(tool => tool.id === "automatic-force-win").name, "Smart Force Win");
-  assert.equal(tools.find(tool => tool.id === "commentary-id").version, "1.7");
+  assert.equal(tools.find(tool => tool.id === "commentary-id").version, "2.0");
   assert.match(index, /Help \/ Instructions/); assert.match(renderer, /function helpPage/); assert.match(renderer, /open source/);
   assert.doesNotMatch(renderer, /id="(?:equipment-seed|force-seed|db-seed|map-path)"/);
   assert.match(renderer, /collapseEquipmentScope/); assert.match(renderer, /window\.cfbToolkit\.chooseSave\(\)/);

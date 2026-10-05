@@ -8,8 +8,10 @@ const catalog = JSON.parse(fs.readFileSync(catalogPath, "utf8"));
 const modInventory = JSON.parse(fs.readFileSync(new URL("./equipmentModInventory.json", import.meta.url), "utf8"));
 const colorInventory = JSON.parse(fs.readFileSync(new URL("./equipmentColorInventory.json", import.meta.url), "utf8"));
 const sourcedInventory = JSON.parse(fs.readFileSync(new URL("./equipmentSourcedInventory.json", import.meta.url), "utf8"));
+const raw204Inventory = JSON.parse(fs.readFileSync(new URL("./equipmentRaw204Inventory.json", import.meta.url), "utf8"));
+const liveFacemasks = JSON.parse(fs.readFileSync(new URL("./equipmentLiveFacemasks.json", import.meta.url), "utf8"));
 const modItems = Object.entries(modInventory.mods).flatMap(([origin, mod]) => (mod.equipmentItems ?? []).map(item => ({ ...item, origin })));
-const mergedItems = new Map([...catalog.items, ...modItems, ...colorInventory.items, ...sourcedInventory.items].map(item => [item.itemName, item]));
+const mergedItems = new Map([...catalog.items, ...modItems, ...colorInventory.items, ...sourcedInventory.items, ...liveFacemasks.items, ...raw204Inventory.items].map(item => [item.itemName, item]));
 export const EQUIPMENT_ITEMS = Object.freeze([...mergedItems.values()].map(item => {
   const resolved = { ...item, displayName: sourcedInventory.displayNames[item.itemName] ?? item.displayName, ...GENERATION_METADATA.itemOverrides[item.itemName] };
   return Object.freeze({ ...resolved, semantic: describeEquipment(resolved) });
@@ -73,6 +75,7 @@ const registerExplicitFamily = family => {
   const targets = new Map(Object.entries(family));
   for (const itemName of new Set(Object.values(family))) EXPLICIT_COLOR_LOOKUP.set(itemName, targets);
 };
+raw204Inventory.colorFamilies.forEach(registerExplicitFamily);
 registerExplicitFamily({
   white: "G_CompressionT_Crew_ShortSleeve_Basic_WHI",
   black: "G_CompressionT_Crew_ShortSleeve_Basic_BLA",

@@ -1,0 +1,14 @@
+{
+  "verification": "Exact ItemName and DisplayName pairs read on 2026-10-05 from structurally checked ItemInfo records in the user-confirmed RAW Accessories v2.0.4 / CFB27 Unlocked 0.96 session. Repeated ItemName fields and DisplayName at +56 agree. The user identifies the new white Nike/Battle skullcaps as RAW; existing black variants also occur in the RAW 2.0.2 manifest. GuardianCap is the previously confirmed skullcap slot. This does not pretend the older supplied RAW manifest is v2.0.4.",
+  "source": "outputs/v190-modded-labels-1.json",
+  "items": [
+    { "itemName": "GuardianCap_RawBattleSkullCap", "displayName": "Black Battle Skullcap", "category": "Guardian Cap", "slots": ["GuardianCap"], "tags": [], "origin": "raw", "themeColors": ["black"] },
+    { "itemName": "GuardianCap_RawBattleSkullCapWhiteV87", "displayName": "White Battle Skullcap", "category": "Guardian Cap", "slots": ["GuardianCap"], "tags": [], "origin": "raw", "themeColors": ["white"] },
+    { "itemName": "GuardianCap_RawNikeSkullCap", "displayName": "Black Nike Skullcap", "category": "Guardian Cap", "slots": ["GuardianCap"], "tags": ["Nike"], "origin": "raw", "themeColors": ["black"] },
+    { "itemName": "GuardianCap_RawNikeSkullCapWhiteV87", "displayName": "White Nike Skullcap", "category": "Guardian Cap", "slots": ["GuardianCap"], "tags": ["Nike"], "origin": "raw", "themeColors": ["white"] }
+  ],
+  "colorFamilies": [
+    { "black": "GuardianCap_RawBattleSkullCap", "white": "GuardianCap_RawBattleSkullCapWhiteV87" },
+    { "black": "GuardianCap_RawNikeSkullCap", "white": "GuardianCap_RawNikeSkullCapWhiteV87" }
+  ]
+}

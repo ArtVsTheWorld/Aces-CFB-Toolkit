@@ -1,5 +1,6 @@
 import { isDeepStrictEqual } from "node:util";
 import { parseRef, sf } from "./openSave.js";
+import { encodeVisualData } from "./visualEncoding.js";
 
 const EMPTY = "0".repeat(32), states = new WeakMap();
 const rawField = record => record?.getFieldByKey?.("RawData")?.thirdTableField;
@@ -113,7 +114,7 @@ export function installVisualStorage(table, logicalRows = new Set()) {
       get() { return owners.has(record.index) ? null : originalGet.call(this); },
       set(value) {
         if (record.isEmpty || owners.has(record.index)) throw new Error(`Equipment row ${record.index} is empty or overflow storage, not a player loadout. The save has not been written.`);
-        const encoded = codec.setUnformattedValueFromFormatted(value, this.unformattedValue, this.maxLength, this.strategyContext);
+        const encoded = encodeVisualData(codec, value, this.unformattedValue, this.maxLength, this.strategyContext);
         let decoded;
         try { decoded = codec.getFormattedValueFromUnformatted(encoded, this.strategyContext); }
         catch (error) { throw new Error(`Equipment row ${record.index} could not be encoded safely: ${error.message}`); }

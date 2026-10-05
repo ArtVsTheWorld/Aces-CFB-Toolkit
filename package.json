@@ -1,6 +1,6 @@
 {
   "name": "cfb-toolkit",
-  "version": "18.3.0",
+  "version": "19.0.0",
   "description": "Unified Windows desktop toolkit for College Football 27 dynasty utilities.",
   "author": "ArtVsTheWorld",
   "license": "MIT",
@@ -8,7 +8,7 @@
   "main": "src/main/main.js",
   "scripts": {
     "start": "electron .",
-    "test": "node --test test/*.test.js",
+    "test": "node --test --test-concurrency=2 test/*.test.js",
     "test:source": "node scripts/test-source.mjs",
     "test:smoke": "electron . --smoke-test",
     "build": "electron-builder --win nsis --x64 --publish never",

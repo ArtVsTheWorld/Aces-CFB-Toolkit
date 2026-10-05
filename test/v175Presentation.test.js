@@ -37,15 +37,15 @@ test("presentation deduplicates matching loadout changes without dropping distin
 });
 
 test("release versions, normal defaults, and professional control labels are consistent", () => {
-  assert.equal(JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url), "utf8")).version, "18.3.0");
-  for (const id of ["freshman-equipment", "equipment-patcher"]) assert.equal(tools.find(tool => tool.id === id).version, "5.0");
-  for (const id of ["jersey-renumber", "automatic-force-win"]) assert.equal(tools.find(tool => tool.id === id).version, "4.0");
+  assert.equal(JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url), "utf8")).version, "19.0.0");
+  for (const id of ["freshman-equipment", "equipment-patcher"]) assert.equal(tools.find(tool => tool.id === id).version, id === "freshman-equipment" ? "5.1" : "5.5");
+  for (const id of ["jersey-renumber", "automatic-force-win"]) assert.equal(tools.find(tool => tool.id === id).version, id === "automatic-force-win" ? "4.5" : "4.0");
   const randomizer = normalizeEquipmentOptions({}, true), patcher = normalizeEquipmentOptions({}, false);
   assert.equal(randomizer.usingUnlockedMod, false);
   assert.equal(randomizer.usingRawAccessoriesMod, false);
   assert.equal(patcher.unlockedRecolorFix, false);
   assert.equal(patcher.unlockedMouthpieceFix, false);
-  for (const label of ["Improve Non-OL Helmets and Facemasks", "Above-Knee Pants", "Mid-Sock Replacement", "Add Mouthpieces", "Recolor Accessories", "Add Tattoos"]) assert.ok(renderer.includes(label), label);
+  for (const label of ["Improve Helmets and Facemasks", "Above-Knee Pants", "Mid-Sock Replacement", "Add Mouthpieces", "Recolor Accessories", "Add Tattoos"]) assert.ok(renderer.includes(label), label);
   assert.match(renderer, /Reset to Defaults/);
-  assert.match(renderer, /Requires CFB 27 Unlocked/);
+  assert.match(renderer, /Requires CFB27 Unlocked/);
 });

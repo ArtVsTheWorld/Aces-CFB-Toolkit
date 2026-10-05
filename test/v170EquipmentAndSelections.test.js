@@ -19,9 +19,9 @@ const runRandomizer = options => {
 };
 const read = file => fs.readFileSync(new URL(file, import.meta.url), "utf8");
 
-test("v18.3.0 and both v5.0 equipment versions retain all original chance defaults", () => {
-  assert.equal(JSON.parse(read("../package.json")).version, "18.3.0");
-  for (const id of ["freshman-equipment", "equipment-patcher"]) assert.equal(tools.find(tool => tool.id === id).version, "5.0");
+test("v19.0.0 and v5.1 Randomizer and v5.5 Patcher retain all original chance defaults", () => {
+  assert.equal(JSON.parse(read("../package.json")).version, "19.0.0");
+  for (const id of ["freshman-equipment", "equipment-patcher"]) assert.equal(tools.find(tool => tool.id === id).version, id === "freshman-equipment" ? "5.1" : "5.5");
   const normalized = normalizeEquipmentOptions({}, true);
   assert.equal(normalized.crossPositionPercent, 10); assert.equal(normalized.multipleDonorPercent, 30);
   assert.equal(normalized.expandedEquipmentPercent, 10);

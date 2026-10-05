@@ -23,7 +23,13 @@ function nilToggleResults(result) {
 }
 function helmetBalancePreview(diagnostics) {
   if (!diagnostics) return "";
-  return `<details class="helmet-balance-preview" open><summary><strong>Helmet Population Balance</strong><span>Minimum swaps toward the selected targets</span></summary><p class="muted">Counts cover safe, uniquely owned, eligible non-OL equipment records. FBS and directional FCS are balanced separately. Players outside your filters and protected/shared records are not included in balancing.</p>${[["FBS", diagnostics.fbs], ["Directional FCS", diagnostics.fcs]].filter(([, cohort]) => cohort?.eligiblePlayers).map(([name, cohort]) => `<h3>${name} · ${cohort.eligiblePlayers} players · ${cohort.changes} planned replacements</h3>${cohort.vicisTargetLimited ? `<p class="muted">There are only ${cohort.vicisEligiblePlayers} eligible QB, TE, LB, or DL players for Vicis. The achievable target is adjusted to respect that limit; the other helmet families share the remaining players.</p>` : ""}<div class="preview-scroll"><table><thead><tr><th>Helmet Family</th><th>Before</th><th>After</th><th>Target</th></tr></thead><tbody>${cohort.families.map(family => `<tr><td>${escapeHtml(family.family)}</td><td>${family.before} (${family.beforePercent.toFixed(1)}%)</td><td>${family.after} (${family.afterPercent.toFixed(1)}%)</td><td>${family.targetCount} (${family.targetPercent}%)</td></tr>`).join("")}</tbody></table></div><details><summary>Replacements by Team</summary><p class="muted">${Object.entries(cohort.changesByTeam).map(([team, count]) => `${escapeHtml(team)}: ${count}`).join(" · ") || "No swaps needed."}</p></details>`).join("")}</details>`;
+  const table = families => `<div class="preview-scroll"><table><thead><tr><th>Helmet Model</th><th>Before</th><th>After</th><th>Target</th></tr></thead><tbody>${families.filter(family => family.before || family.after || family.targetCount).map(family => `<tr><td>${escapeHtml(family.family)}</td><td>${family.before} (${family.beforePercent.toFixed(1)}%)</td><td>${family.after} (${family.afterPercent.toFixed(1)}%)</td><td>${family.targetCount} (${Number(family.targetPercent.toFixed(1))}%)</td></tr>`).join("")}</tbody></table></div>`;
+  return `<details class="helmet-balance-preview" open><summary><strong>Helmet Population Balance</strong><span>Minimum swaps toward the selected targets</span></summary><p class="muted">Counts cover eligible non-OL players whose equipment can be changed without affecting another player. FBS and directional FCS are balanced separately. Custom mixes are balanced within each position, and small groups use the nearest achievable player counts.</p>${[["FBS", diagnostics.fbs], ["Directional FCS", diagnostics.fcs]].filter(([, cohort]) => cohort?.eligiblePlayers).map(([name, cohort]) => `<section data-helmet-cohort><h3>${name} · ${cohort.eligiblePlayers} players · ${cohort.changes} planned replacements</h3>${cohort.vicisTargetLimited ? `<p class="muted">There are only ${cohort.vicisEligiblePlayers} eligible QB, TE, LB, or DL players for Vicis. The achievable target is adjusted to respect that limit; the other helmet families share the remaining players.</p>` : ""}${cohort.positions?.length ? `<label><strong>Position Breakdown</strong><select data-helmet-balance-position><option value="all">All Positions</option>${[...cohort.positions].sort((a, b) => positionCompare(a.position, b.position)).map(group => `<option value="${escapeHtml(group.position)}">${escapeHtml(localizedPosition(group.position))}</option>`).join("")}</select></label>` : ""}<div data-helmet-breakdown="all">${table(cohort.families)}</div>${(cohort.positions ?? []).map(group => `<div data-helmet-breakdown="${escapeHtml(group.position)}" hidden><p>${escapeHtml(localizedPosition(group.position))} · ${group.eligiblePlayers} players · ${group.changes} replacements</p>${table(group.families)}</div>`).join("")}<details><summary>Replacements by Team</summary><p class="muted">${Object.entries(cohort.changesByTeam).map(([team, count]) => `${escapeHtml(team)}: ${count}`).join(" · ") || "No swaps needed."}</p></details></section>`).join("")}</details>`;
+}
+function bindHelmetBalanceFilters(root) {
+  root.querySelectorAll("[data-helmet-balance-position]").forEach(select => select.addEventListener("change", () => {
+    select.closest("[data-helmet-cohort]").querySelectorAll("[data-helmet-breakdown]").forEach(group => { group.hidden = group.dataset.helmetBreakdown !== select.value; });
+  }));
 }
 function notableWeekMatchups(rows, week) {
   const ranked = rank => Number.isInteger(rank) && rank >= 1 && rank <= 25;
@@ -44,10 +50,11 @@ async function ensureHomeLines() {
   const savePath = state.activeSave?.path;
   if (!state.activeSave?.schema?.supported || !savePath || state.homeLinesLoading || state.seasonLinesSave === savePath || state.seasonLinesError) return;
   state.homeLinesLoading = true;
+  const requestId = state.seasonLinesRequest ?? 0;
   try {
     const data = await window.cfbToolkit.homeLines({});
-    if (state.activeSave?.path !== savePath) return;
+    if (state.activeSave?.path !== savePath || (state.seasonLinesRequest ?? 0) !== requestId) return;
     state.seasonLines = data; state.seasonLinesSave = savePath;
-  } catch (error) { if (state.activeSave?.path === savePath) state.seasonLinesError = readableError(error).message; }
+  } catch (error) { if (state.activeSave?.path === savePath && (state.seasonLinesRequest ?? 0) === requestId) state.seasonLinesError = readableError(error).message; }
   finally { state.homeLinesLoading = false; if (state.page === "home") { content.innerHTML = homePage(); bindCommon(); } }
 }

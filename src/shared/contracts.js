@@ -24,6 +24,7 @@ export const IPC = Object.freeze({
   getHistory: "history:get",
   getReview: "history:get-review",
   homeLines: "home:lines",
+  saveCustomMatchupModel: "settings:save-custom-matchup-model",
   listLogs: "logs:list",
   clearLogs: "logs:clear",
   openPath: "shell:open-path"
