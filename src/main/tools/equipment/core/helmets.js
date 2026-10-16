@@ -83,23 +83,48 @@ export function rollCustomHelmet(configuration, positions, rng) {
   for (const [id, weight] of weights) { roll -= weight; if (roll < 0) return id; }
   return weights.at(-1)[0];
 }
-export function normalizeFacemaskPools(input) {
-  if (input == null) return null;
+function normalizeMaskGroup(input, label, complete) {
   if (typeof input !== "object" || Array.isArray(input)) throw new Error("Invalid facemask pools.");
+  if (!input) throw new Error("Invalid facemask pools.");
   for (const id of Object.keys(input)) if (!byId.has(id)) throw new Error(`Unknown helmet in facemask pools: ${id}.`);
-  return Object.fromEntries(HELMET_MODELS.map(model => {
+  return Object.fromEntries(HELMET_MODELS.filter(model => complete || Object.hasOwn(input, model.id)).map(model => {
     const pool = input[model.id] ?? model.defaultMasks;
-    if (!Array.isArray(pool) || !pool.length || pool.some(mask => !model.masks.includes(mask))) throw new Error(`${model.label}: select at least one compatible facemask.`);
+    if (!Array.isArray(pool) || !pool.length || pool.some(mask => !model.masks.includes(mask))) throw new Error(`${label} / ${model.label}: select at least one compatible facemask.`);
     return [model.id, [...new Set(pool)]];
   }));
 }
-export function rollCompatibleFacemask(helmet, position, rng, selections = null) {
+export function normalizeFacemaskPools(input) {
+  if (input == null) return null;
+  // Old presets remain global pools; new presets override each helmet separately.
+  if (!Object.hasOwn(input, "global") && !Object.hasOwn(input, "positions")) return normalizeMaskGroup(input, "All Positions", true);
+  for (const key of Object.keys(input)) if (!["global", "positions"].includes(key)) throw new Error(`Unknown facemask setting: ${key}.`);
+  const global = normalizeMaskGroup(input.global ?? {}, "All Positions", true), positions = {};
+  if (input.positions != null && (typeof input.positions !== "object" || Array.isArray(input.positions))) throw new Error("Invalid facemask position settings.");
+  for (const [position, values] of Object.entries(input.positions ?? {})) {
+    const group = helmetPosition(position);
+    if (!HELMET_POSITIONS.includes(group)) throw new Error(`Unknown facemask position group ${position}.`);
+    const pool = normalizeMaskGroup(values, group, false);
+    if (positions[group] && position !== group && !Object.hasOwn(input.positions, group)) throw new Error(`Use one facemask override for the ${group} position group.`);
+    if (!positions[group] || position === group) positions[group] = pool;
+  }
+  return { global, positions };
+}
+export function facemaskPoolForPosition(helmet, position, selections = null) {
   const model = byId.get(helmet);
   if (!model) throw new Error(`No verified facemask pool for ${helmet}.`);
   const key = helmetPosition(position);
-  const available = selections?.[helmet] ?? model.masks.filter(mask => equipmentItem(mask).defaultSelected !== false);
+  if (selections) return selections.positions?.[key]?.[helmet] ?? selections.global?.[helmet] ?? selections[helmet] ?? model.defaultMasks;
+  const available = model.masks.filter(mask => equipmentItem(mask).defaultSelected !== false);
   const filtered = selections ? available : available.filter(mask => key === "K/P" ? /Kicker/i.test(mask) : !/Kicker|Trench/i.test(mask));
-  const pool = filtered.length ? filtered : available;
-  if (!pool.length) throw new Error(`${model.label}: select at least one compatible facemask.`);
+  return filtered.length ? filtered : available;
+}
+export function facemaskAllowedForPositions(mask, helmet, positions, selections = null) {
+  return facemaskFitsHelmet(mask, helmet) && (!selections || positions.every(position => facemaskPoolForPosition(helmet, position, selections).includes(mask)));
+}
+export function rollCompatibleFacemask(helmet, position, rng, selections = null) {
+  const positions = Array.isArray(position) ? position : [position];
+  const pools = positions.map(value => facemaskPoolForPosition(helmet, value, selections));
+  const pool = (pools[0] ?? []).filter(mask => pools.every(values => values.includes(mask)));
+  if (!pool.length) throw new Error(`${byId.get(helmet)?.label ?? helmet}: no compatible facemask is allowed by every linked player's position group. Select an overlapping pool for those groups.`);
   return pool[Math.min(pool.length - 1, Math.floor(rng() * pool.length))];
 }

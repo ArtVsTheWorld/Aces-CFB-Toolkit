@@ -116,14 +116,14 @@ test("new mod accessories have explicit slot mappings and candidate-only assets 
   assert.equal(inventory.equipmentVerification.slotEvidence[0].slot, "NeckWear");
 });
 
-test("every Raw turtleneck, necklace, and skullcap is reachable in its own slot without replacing unrelated gear", () => {
+test("every RAW turtleneck, necklace, skullcap, and backplate is reachable in its own slot without replacing unrelated gear", () => {
   const original = [field([{ slotType: "HeadWear", itemAssetName: "KeepHelmet" }, { slotType: "LeftShoe", itemAssetName: "KeepCleat" }, { slotType: "FacePaint", itemAssetName: "KeepPaint" }]), field([{ slotType: "Visor", itemAssetName: "KeepVisor" }])];
   const seen = new Set();
   for (let seed = 0; seed < 100; seed++) {
     const a = structuredClone(original), b = structuredClone(original);
     const changes = applyRawRandomizerEquipment(a, mulberry32(seed), 1);
     assert.deepEqual(applyRawRandomizerEquipment(b, mulberry32(seed), 1), changes); assert.deepEqual(a, b);
-    assert.equal(changes.length, 2); changes.forEach(change => seen.add(change.newItem));
+    assert.equal(changes.length, 3, "neckwear, skullcaps and jacket-free backplates are separate categories"); changes.forEach(change => seen.add(change.newItem));
     const items = changes.map(change => equipmentItem(change.newItem));
     const changedSlots = new Set(items.flatMap(item => item.slots));
     for (const [index, loadout] of a.entries()) {
@@ -132,7 +132,7 @@ test("every Raw turtleneck, necklace, and skullcap is reachable in its own slot 
       assert.equal(loadout.loadoutType, "PlayerOnField"); assert.equal(loadout.loadoutCategory, undefined);
     }
   }
-  assert.deepEqual([...seen].sort(), [...RAW_ACCESSORIES_POOLS.neckwear, ...RAW_ACCESSORIES_POOLS.skullcaps].map(item => item.itemName).sort());
+  assert.deepEqual([...seen].sort(), [...RAW_ACCESSORIES_POOLS.neckwear, ...RAW_ACCESSORIES_POOLS.skullcaps, ...RAW_ACCESSORIES_POOLS.backplates].map(item => item.itemName).sort());
   const disabled = structuredClone(original);
   assert.deepEqual(applyRawRandomizerEquipment(disabled, mulberry32(12), 0), []); assert.deepEqual(disabled, original);
 });

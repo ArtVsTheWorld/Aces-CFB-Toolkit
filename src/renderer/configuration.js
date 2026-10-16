@@ -35,6 +35,16 @@ function configurationRead(root, id) { return root.querySelector(`[data-config-o
 function configurationLabel(root, id) { const control = configurationRead(root, id); return control?.selectedOptions?.[0]?.textContent.trim() ?? ""; }
 function configurationNumber(root, id) { const control = configurationRead(root, id); return control?.value.trim() === "" ? NaN : Number(control?.value); }
 function commitConfigurationDraft(controls, draft, original, close) {
+  const donor = configurationRead(draft, 'equipment-donor-players');
+  if (donor) {
+    const source = configurationRead(draft, 'equipment-donor-fingerprint');
+    const catalog = equipmentDonorCatalogs.get(configurationRead(draft, 'equipment-donor').value.trim() || state.activeSave.path);
+    if (catalog && source.value === catalog.donorFingerprint) {
+      replaceDonorPicker(content, catalog, [...donor.selectedOptions].map(option => option.value));
+      controls = controls.map(control => document.getElementById(control.id) ?? control);
+      document.getElementById('equipment-donor-fingerprint').dataset.sourcePath = source.dataset.sourcePath ?? '';
+    }
+  }
   const changed = controls.filter(control => JSON.stringify(configurationValue(configurationRead(draft, control.id))) !== JSON.stringify(original[control.id]));
   changed.forEach(control => setConfigurationValue(control, configurationValue(configurationRead(draft, control.id))));
   close();
@@ -53,7 +63,9 @@ function condenseConfiguration(element, specification) {
   const defaults = configurationDefaults(source);
   const refresh = () => {
     entry.querySelector("[data-config-summary]").textContent = specification.summary?.(source) ?? "Customize these settings.";
-    entry.querySelector("button").disabled = specification.enabled ? !specification.enabled() : false;
+    const enabled = specification.enabled ? Boolean(specification.enabled()) : true;
+    entry.hidden = !enabled;
+    entry.querySelector("button").disabled = !enabled;
   };
   configurationEntries.set(element, { source, entry, refresh });
   source.addEventListener("change", refresh);
@@ -70,7 +82,7 @@ function openConfigurationEditor(source, defaults, specification, refresh) {
   if (draft.firstElementChild) draft.firstElementChild.hidden = false;
   const identifiers = [...draft.querySelectorAll("[id]")].map(node => node.id);
   for (const node of [draft, ...draft.querySelectorAll("*")]) {
-    delete node.dataset.bound; delete node.dataset.sessionRestored;
+    delete node.dataset.bound; delete node.dataset.refinementBound; delete node.dataset.sessionRestored;
     for (const attribute of [...node.attributes]) {
       if (attribute.name === "id") { node.dataset.configOriginal = attribute.value; node.id = prefix + attribute.value; }
       else if (attribute.name === "name" && node.type === "radio") node.name = prefix + attribute.value;
@@ -82,7 +94,7 @@ function openConfigurationEditor(source, defaults, specification, refresh) {
   }
   for (const [id, value] of Object.entries(original)) setConfigurationValue(configurationRead(draft, id), value);
   dialog.querySelector(".configuration-body").append(draft);
-  bindMultiSelectEnhancements(draft); bindTeamPickers(draft); bindTeamLogoFallbacks(draft);
+  bindMultiSelectEnhancements(draft); bindTeamPickers(draft); bindTeamLogoFallbacks(draft); if (typeof addExplicitSelectionModes === "function") addExplicitSelectionModes(draft);
   const update = () => {
     syncConfigurationDraft(draft);
     const error = validateConfigurationDraft(draft, specification), node = dialog.querySelector("[data-config-error]");
@@ -92,10 +104,15 @@ function openConfigurationEditor(source, defaults, specification, refresh) {
   };
   draft.addEventListener("input", update); draft.addEventListener("change", update);
   draft.querySelectorAll("[data-balance-tape]").forEach(button => button.addEventListener("click", () => { balanceTeamTapeWeights(button.closest("[data-tape-team-row]")); update(); }));
-  configurationRead(draft, "browse-donor")?.addEventListener("click", async () => {
-    try { const value = await window.cfbToolkit.chooseSave(); if (value && dialog.isConnected) { configurationRead(draft, "equipment-donor").value = value; update(); } }
-    catch (error) { toast(readableError(error).message); }
-  });
+  const loadDonor = async value => {
+    dialog.querySelector('[data-config-save]').disabled = true;
+    try { await loadDonorSelection(draft, value); }
+    catch (error) { configurationRead(draft, 'equipment-donor-fingerprint').value = ''; configurationRead(draft, 'equipment-donor-status').textContent = readableError(error).message; }
+    finally { if (dialog.isConnected) update(); }
+  };
+  configurationRead(draft, 'browse-donor')?.addEventListener('click', async () => { const value = await window.cfbToolkit.chooseSave("equipment-donor"); if (value && dialog.isConnected) await loadDonor(value); });
+  configurationRead(draft, 'equipment-load-donor')?.addEventListener('click', () => loadDonor(configurationRead(draft, 'equipment-donor').value.trim()));
+  configurationRead(draft, 'equipment-active-donor')?.addEventListener('click', () => loadDonor(''));
   const tapeSearch = configurationRead(draft, "tape-team-search");
   tapeSearch?.addEventListener("input", () => {
     const query = tapeSearch.value.trim().toLowerCase(); draft.querySelectorAll("[data-tape-team-row]").forEach(row => row.hidden = !row.dataset.tapeTeamRow.includes(query));
@@ -103,6 +120,13 @@ function openConfigurationEditor(source, defaults, specification, refresh) {
   });
   dialog.querySelector("[data-config-reset]").addEventListener("click", () => {
     for (const [id, value] of Object.entries(defaults)) setConfigurationValue(configurationRead(draft, id), value);
+    if (configurationRead(draft, 'equipment-donor')) {
+      draft.dataset.donorRequest = String((Number(draft.dataset.donorRequest) || 0) + 1); draft.dataset.donorLoading = 'false';
+      const active = state.prepared.get(`freshman-equipment|${state.activeSave.path}`);
+      const catalog = { donorPlayers: active.donorPlayers, donorFingerprint: '', donorKind: 'active' };
+      equipmentDonorCatalogs.set(state.activeSave.path, catalog); replaceDonorPicker(draft, catalog);
+      configurationRead(draft, 'equipment-donor-fingerprint').dataset.sourcePath = '';
+    }
     draft.querySelectorAll("[data-option-picker]").forEach(picker => { sortDonorPicker(picker); filterCheckboxPicker(picker); syncCheckboxPicker(picker); });
     draft.querySelectorAll("[data-team-picker]").forEach(picker => syncTeamPicker(picker.dataset.teamPicker, draft));
     update();
@@ -117,11 +141,11 @@ function openConfigurationEditor(source, defaults, specification, refresh) {
     commitConfigurationDraft(controls, draft, original, () => dialog.closeEditor());
     refresh(); captureToolSettings();
   });
-  update(); dialog.showModal();
+  update(); if (typeof installPositionCopy === "function") installPositionCopy(dialog); dialog.showModal();
 }
 
 function syncConfigurationDraft(root) {
-  syncAdvancedDraft(root);
+  syncAdvancedDraft(root); syncDonorMouthpieceDraft(root);
   const control = id => configurationRead(root, id), show = (id, visible) => { const node = control(id); if (node) node.hidden = !visible; };
   if (control("equipment-donor-mode")) {
     const manual = control("equipment-donor-mode").value === "selected";
@@ -147,6 +171,7 @@ function syncConfigurationDraft(root) {
 }
 function validateConfigurationDraft(root, specification) {
   const control = id => configurationRead(root, id);
+  for (const select of root.querySelectorAll("select[data-explicit-selection]")) if (configurationRead(root, "selection-mode-" + (select.dataset.configOriginal ?? select.id))?.value === "selected" && !select.selectedOptions.length) return "Select at least one team, or choose All / None explicitly.";
   const active = node => !node.disabled && !node.closest("[hidden]");
   for (const input of root.querySelectorAll('input[type="number"]')) {
     if (!active(input) || input.value.trim() === "" && !input.hasAttribute("value")) continue;
@@ -161,7 +186,7 @@ function validateConfigurationDraft(root, specification) {
     if (invalid) return `${invalid.querySelector(".tape-team-name strong").textContent}: Tape Color must use whole percentages totaling 100%. Find this team or use Balance to 100%.`;
   }
   if (control("db-total") && Math.abs([...root.querySelectorAll(".db-percent")].reduce((sum, input) => sum + Number(input.value), 0) - 100) > 1e-9) return "Starting percentages must total exactly 100%.";
-  return (typeof validateAdvancedDraft === "function" ? validateAdvancedDraft(root) : "") || specification.validate?.(root) || "";
+  return (typeof validateAdvancedDraft === "function" ? validateAdvancedDraft(root) : "") || validateDonorMouthpieceDraft(root) || specification.validate?.(root) || "";
 }
 
 function bindConfigurationWindows() {
@@ -174,10 +199,10 @@ function bindConfigurationWindows() {
     if (donor && !donor.querySelector(".configuration-entry")) {
       const group = document.createElement("div"); group.className = "donor-settings-content";
       [...donor.children].filter(node => !node.matches("header")).forEach(node => group.append(node)); donor.append(group);
-      condenseConfiguration(group, { title: "Donor Settings", description: "Choose donors and mixing chances in one place. Specific-player donors come only from your active dynasty; their checked selections stay saved across positions.", summary: root => `${configurationLabel(root, "equipment-donor-mode")} · ${configurationRead(root, "equipment-donor-mode").value === "selected" ? configurationRead(root, "equipment-donor-players").selectedOptions.length + " players" : configurationRead(root, "equipment-top").value + " per position"} · Cross-position ${configurationRead(root, "equipment-cross-percent").value}% · Multiple donors ${configurationRead(root, "equipment-multiple-percent").value}%` });
+      condenseConfiguration(group, { title: "Donor Settings", description: "Choose donors and mixing chances in one place. Use your active save or a read-only dynasty/roster donor file. Choose cross-position sources and donor players here; checked players stay selected across positions.", summary: root => `${configurationLabel(root, "equipment-donor-mode")} · ${configurationRead(root, "equipment-donor-mode").value === "selected" ? configurationRead(root, "equipment-donor-players").selectedOptions.length + " players" : configurationRead(root, "equipment-top").value + " per position"} · Cross-position ${configurationRead(root, "equipment-cross-percent").value}% · Multiple donors ${configurationRead(root, "equipment-multiple-percent").value}%` });
     }
     feature("#equipment-no-drip-chances", { title: "No Drip Chances", description: "Chance to remove selected accessories for each position group.", dependencies: ["equipment-no-drip"], enabled: () => get("#equipment-no-drip").checked, summary: root => ["skill", "balanced", "heavy"].map(key => `${configurationRead(root, "equipment-no-drip-" + key).value}%`).join(" / ") });
-    feature("#unlocked-mouthpiece-color-field", { title: "Mouthpiece Settings", description: "Colors, existing-mouthpiece rerolls and branded frequency apply together. QBs, kickers and punters remain excluded.", dependencies: ["fix-unlocked-mouthpieces"], enabled: () => get("#fix-unlocked-mouthpieces").checked, summary: root => `${configurationLabel(root, "unlocked-mouthpiece-colors")} · ${configurationRead(root, "mouthpiece-branded-frequency").value}% branded · ${configurationRead(root, "randomize-existing-mouthpieces").checked ? "Reroll existing" : "Keep existing"}` });
+    feature("#unlocked-mouthpiece-color-field", { title: "Mouthpiece Settings", description: "Choose allowed positions and style mixes, colors, rerolls, and branded frequency together. QB and K/P start disabled but can be enabled.", dependencies: ["fix-unlocked-mouthpieces"], enabled: () => get("#fix-unlocked-mouthpieces").checked, summary: root => `${configurationLabel(root, "unlocked-mouthpiece-colors")} · ${configurationRead(root, "mouthpiece-branded-frequency").value}% branded · ${configurationRead(root, "randomize-existing-mouthpieces").checked ? "Reroll existing" : "Keep existing"}` });
     feature("#unlocked-color-field", { title: "Colors & Tape", description: "Choose one accessory theme per player, then decide whether tape matches it or uses your team-by-team percentages. Tape is recolored, not added.", dependencies: ["fix-unlocked-recolor"], enabled: () => get("#fix-unlocked-recolor").checked, summary: root => `${configurationLabel(root, "unlocked-color-theme")} · ${configurationLabel(root, "tape-color-mode")}` });
     feature("#unlocked-tattoo-field", { title: "Tattoo Settings", description: "Choose a population cap and the designs that may be added. Existing tattoos are kept. Japanese and Polynesian styles start unchecked.", dependencies: ["fix-unlocked-tattoos"], enabled: () => get("#fix-unlocked-tattoos").checked, summary: root => `${configurationRead(root, "unlocked-tattoo-cap").value}% population cap · ${configurationRead(root, "unlocked-tattoo-pool").selectedOptions.length} designs selected` });
   }
@@ -194,6 +219,7 @@ function bindConfigurationWindows() {
     condenseConfiguration(picker, { title: label, action: "Select", description: picker.querySelector("p.muted")?.textContent ?? "Search and check the options you want.", summary: () => configurationSelectionSummary(select, select.id === "team-search" ? "No teams selected — choose at least one" : undefined), validate: root => select.id === "team-search" && !configurationRead(root, select.id).selectedOptions.length ? "Choose at least one team." : select.id === "boost-attributes" && !configurationRead(root, select.id).selectedOptions.length ? "Choose at least one attribute." : "" });
   }
   bindAdvancedPassWindows();
+  bindModPoolWindows();
 }
 function settingsArtworkMarkup() {
   const teams = state.homeContext?.teams ?? [], selected = teams.find(team => team.name === state.selectedArtworkTeam) ?? teams[0], artwork = selected ? state.artwork[selected.name.trim().toLowerCase()] ?? {} : {};

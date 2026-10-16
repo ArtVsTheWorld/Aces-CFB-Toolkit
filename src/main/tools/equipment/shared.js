@@ -13,7 +13,16 @@ export const VALID_POSITIONS = ["QB", "HB", "FB", "WR", "TE", "LT", "LG", "C", "
 export const VALID_CLASSES = ["Freshman", "Sophomore", "Junior", "Senior"];
 export const VALID_BODY_TYPES = ["Standard", "Lean", "Thin", "Muscular", "Heavy"];
 export const REDSHIRT_FILTERS = Object.freeze({ true: ["Eligible", "Current"], redshirt: ["Previous"] });
-export function validateEquipmentSeason(record) { const type=String(sf(record,"CurrentWeekType")??""),week=Number(sf(record,"CurrentWeek")),postWeeks=Number(sf(record,"PostSeasonNumWeeks")); const allowed=type==="PreSeason"&&week===0||type==="RegularSeason"&&week>=0&&week<=15||type==="PostSeason"&&week>=0&&Number.isFinite(postWeeks)&&week<postWeeks; if(!allowed)throw new Error(`Equipment tools are available from the preseason week immediately before Week 0 through National Championship week. This save is ${type||"an unknown season stage"}, week ${Number.isFinite(week)?week:"unknown"}. Advance to the supported season window and try again.`); return { currentWeekType:type,currentWeek:week,postSeasonWeeks:postWeeks }; }
+// CurrentWeekType uses named bowl/playoff stages in CFB 27. Those stages can
+// carry absolute season weeks (e.g. BowlSeason1 at 17), not postseason indexes.
+export const EQUIPMENT_PLAYOFF_STAGES = new Set(["BowlSeason1", "BowlSeason2", "BowlSeason3", "NationalChampionship"]);
+export function validateEquipmentSeason(record) {
+  const type = String(sf(record, "CurrentWeekType") ?? ""), week = Number(sf(record, "CurrentWeek")), postWeeks = Number(sf(record, "PostSeasonNumWeeks"));
+  const validWeek = Number.isInteger(week) && week >= 0;
+  const allowed = validWeek && (type === "PreSeason" && week === 0 || type === "RegularSeason" && week <= 15 || EQUIPMENT_PLAYOFF_STAGES.has(type) || type === "PostSeason" && Number.isInteger(postWeeks) && week < postWeeks);
+  if (!allowed) throw new Error(`Equipment tools are available from the preseason week immediately before Week 0 through National Championship week. This save is ${type || "an unknown season stage"}, week ${Number.isFinite(week) ? week : "unknown"}. Advance to the supported season window and try again.`);
+  return { currentWeekType: type, currentWeek: week, postSeasonWeeks: postWeeks };
+}
 export async function loadEquipmentTables(savePath, schemaPath, visuals = true, enforceSeason = true) { const opened = await openCfb27Save(savePath, schemaPath); const tables=await readTables(opened.franchise, { players: PLAYER_TABLE_UID, teams: TEAM_TABLE_UID, rosters: ROSTER_TABLE_UID, ...(enforceSeason?{seasonInfo:SEASON_INFO_TABLE_UID}:{}), ...(visuals ? { visuals: VISUALS_TABLE_UID } : {}) }); const season=enforceSeason?validateEquipmentSeason(tables.seasonInfo.records.find(record=>record&&!record.isEmpty)):null; installVisualsWriteSafety(tables.visuals, new Set(tables.players.records.filter(record => !record.isEmpty).map(record => parseRef(sf(record, "CharacterVisuals"))).filter(ref => ref?.tableId === tables.visuals?.header.tableId).map(ref => ref.row))); return { ...opened, ...tables, season }; }
 export function validateTable(table, fields, label) { const sample = table.records.find(record => record && !record.isEmpty); if (!sample || fields.some(field => sf(sample, field) === undefined)) throw new Error(`${label} table does not contain the expected fields.`); }
 export function buildTeamNames(records) { const names = new Map(); records.forEach((record, row) => { if (!record || record.isEmpty) return; const name = String(sf(record, "DisplayName") || sf(record, "LongName") || sf(record, "ShortName") || `Team ${row}`); const index = Number(sf(record, "TeamIndex")); if (Number.isInteger(index)) names.set(index, name); if (!names.has(row)) names.set(row, name); }); return names; }
@@ -91,6 +100,7 @@ export async function applyEquipmentPlan({ toolId, savePath, options, schemaPath
   const plan = takePlan(options?.planId);
   if (plan.toolId !== toolId || path.resolve(plan.savePath) !== path.resolve(savePath)) throw new Error("The preview does not belong to this tool and Active Save.");
   if (saveFingerprint(plan.savePath) !== plan.saveFingerprint) throw new Error("The save changed after Preview. Run Preview again before Apply.");
+  if (plan.donorSource && saveFingerprint(plan.donorSource.path) !== plan.donorSource.fingerprint) throw new Error('The donor file changed after Preview. Reload donors and run Preview again before Apply.');
   const loaded = await loadEquipmentTables(savePath, schemaPath, plan.needsVisuals);
   for (const change of plan.assignments) {
     const table = change.table === "players" ? loaded.players : loaded.visuals, record = table.records[change.row];

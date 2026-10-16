@@ -1,3 +1,4 @@
+import { normalizePlayerScope, playerScopeCatalog } from "../playerScope.js";
 import path from "node:path";
 import { createBackup } from "../../services/files.js";
 import { openCfb27Save, readTables, PLAYER_TABLE_UID, TEAM_TABLE_UID } from "../../services/save.js";
@@ -21,10 +22,13 @@ async function load(savePath, schemaPath) {
 function normalize(options = {}) {
   const seed = Math.floor(Math.random() * 0x100000000), distribution = normalizeDistribution(options.distribution ?? DEFAULT_DISTRIBUTION);
 
-  return { seed, distribution, fixInvalidPlayingStyle: Boolean(options.fixInvalidPlayingStyle) };
+  const protectedRows = normalizePlayerScope({ playerRows: options.protectedRows }).playerRows;
+  const protectedValues = options.protectedValues ?? [];
+  if (!Array.isArray(protectedValues) || protectedValues.some(value => !ALLOWED_DEALBREAKERS.includes(value))) throw new Error("Select supported dealbreakers to preserve.");
+  return { seed, distribution, protectedRows, protectedValues, fixInvalidPlayingStyle: Boolean(options.fixInvalidPlayingStyle) };
 }
 
-export async function prepareDealbreaker() { return { defaults: DEFAULT_DISTRIBUTION, values: ALLOWED_DEALBREAKERS.map(value => ({ value, label: label(value) })) }; }
+export async function prepareDealbreaker(context) { const loaded = context?.savePath ? await load(context.savePath, context.schemaPath) : null; return { ...(loaded ? playerScopeCatalog(loaded.players.records, loaded.teamNames) : {}), defaults: DEFAULT_DISTRIBUTION, values: ALLOWED_DEALBREAKERS.map(value => ({ value, label: label(value) })) }; }
 
 async function applyPlan(context) {
   const plan = takePlan(context.options?.planId);
@@ -47,7 +51,7 @@ async function preview(context) {
   const report = { prefix: "dealbreaker-fixer-report", headings: ["Row", "Team", "Player", "Position", "Class", "Overall", "Scope", "CurrentDealbreaker", "ProposedDealbreaker", "Context", "Seed", "ResolvedOptionsJSON"], rows: rows.map((row, index) => [row.row, row.team, row.player, row.position, row.classYear, row.overall, row.scope, row.currentValue, row.proposedValue, row.context, options.seed, index === 0 ? JSON.stringify(options) : ""]) };
   const reportPath = context.reports.create({ ...report, toolId: TOOL_ID, toolName: TOOL_NAME });
   const percent = value => `${(value * 100).toFixed(1)}%`;
-  const result = { status: "preview", mode: "preview", savePath: loaded.savePath, backupPath: null, reportPath, summary: [{ label: "Players evaluated", value: rows.length }, { label: "Changes proposed", value: assignments.length }, { label: "Starting None", value: percent(core.population.startingNonePercentage) }, { label: "Configured None minimum", value: percent(core.population.configuredFloorPercentage) }, { label: "Projected None", value: percent(core.population.projectedNonePercentage) }, { label: "Minimum protected players", value: core.population.floorLimited ? "Yes" : "No" }], historySummary: [{ label: "Players evaluated", value: rows.length }, { label: "Players changed", value: assignments.length }], resultKind: TOOL_ID, details: { seed: options.seed, distribution: options.distribution, population: core.population, totalPreviewRows: changedRows.length, changes: changedRows.slice(0, MAX_PREVIEW_ROWS) } };
+  const result = { status: "preview", mode: "preview", savePath: loaded.savePath, backupPath: null, reportPath, summary: [{ label: "Players evaluated", value: rows.length }, { label: "Changes proposed", value: assignments.length }, { label: "Starting None", value: percent(core.population.startingNonePercentage) }, { label: "Configured None minimum", value: percent(core.population.configuredFloorPercentage) }, { label: "Projected None", value: percent(core.population.projectedNonePercentage) }, { label: "None Minimum Limited Changes", value: core.population.floorLimited ? "Yes" : "No" }], historySummary: [{ label: "Players evaluated", value: rows.length }, { label: "Players changed", value: assignments.length }], resultKind: TOOL_ID, details: { protectedRows: options.protectedRows, protectedValues: options.protectedValues, seed: options.seed, distribution: options.distribution, population: core.population, totalPreviewRows: changedRows.length, changes: changedRows.slice(0, MAX_PREVIEW_ROWS) } };
   const planId = storePlan({ toolId: TOOL_ID, toolName: TOOL_NAME, savePath: loaded.savePath, saveFingerprint: saveFingerprint(loaded.savePath), assignments, previewRows: changedRows, report, result });
   return { ...result, planId };
 }

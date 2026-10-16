@@ -1,14 +1,17 @@
+import { helmetPopulationAudit } from "./helmetPopulation.js";
 import { parseRef, sf } from "../openSave.js";
 import { EQUIPMENT_COLOR_THEMES, equipmentDisplayName, isInvalidMouthpieceAsset, mouthpieceColorVariants, UNLOCKED_POOLS } from "../catalog.js";
 import { normalizeAccessoryColorWeights, normalizeTeamTapeColors, recolorPlayerAccessories, rollAccessoryColorTheme, teamTapeWeights } from "./recolor.js";
 import { mulberry32 } from "./patcher.js";
-import { enforceArmSleeveCompatibility, equippedMask } from "./compatibility.js";
-import { applyUnlockedTattooPlan, buildUnlockedTattooPopulationPlan, repairUnlockedTattooLoadout, UNLOCKED_TATTOO_ELIGIBLE_POSITIONS } from "./tattoos.js";
+import { enforceArmSleeveCompatibility, enforceMouthpieceCompatibility, equippedMask } from "./compatibility.js";
+import { applyUnlockedTattooPlan, buildUnlockedTattooPopulationPlan, clearPlayerTattoos, repairUnlockedTattooLoadout, UNLOCKED_TATTOO_ELIGIBLE_POSITIONS } from "./tattoos.js";
 import { buildHelmetBalancePlan, canUseVicis, helmetFamily, VICIS_HELMET } from "./helmetBalance.js";
-import { effectiveHelmetWeights, facemaskFitsHelmet, helmetAllowed, helmetAllowedInMix, helmetModel, normalizeHelmetDistribution, rollCompatibleFacemask, rollCustomHelmet } from "./helmets.js";
+import { effectiveHelmetWeights, facemaskAllowedForPositions, helmetAllowed, helmetAllowedInMix, helmetModel, normalizeHelmetDistribution, rollCompatibleFacemask, rollCustomHelmet } from "./helmets.js";
 import { POSITION_GROUPS, UNDERSHIRT_ASSETS, normalizeUndershirtWeights, normalizeVisorFrequencies, positionGroup } from "./passSettings.js";
 import { normalizeFacemaskPools } from "./helmets.js";
 import { correctBearsPadsSleeves, removeHandwarmers } from "./targetedCorrections.js";
+import { replaceUnlockedSocks } from "./unlockedSocks.js";
+import { mouthpieceProfile, normalizeMouthpiecePositions } from './mouthpieceSettings.js';
 
 export const APPROVED_SKILL_HELMETS = ["GearHelmet_Axiom", "GearHelmet_SchuttF7", "GearHelmet_SchuttF7Pro", "GearHelmet_Speed_Flex"];
 const APPROVED_HELMET_SET = new Set(APPROVED_SKILL_HELMETS);
@@ -197,8 +200,18 @@ function rollHangingMouthpiece(rng, allowRandomMouthpieceColors, brandedOnly) {
 }
 
 export const isBrandedMouthpiece = item => /^(?:Battle|NXTRND|Nike|Shock)\b/i.test(item?.displayName ?? "");
+const groupMouthpiecesEnabled = (players, settings) => players.every(player => settings ? mouthpieceProfile(player.position, settings)?.enabled : mouthpiecePopulationGroup(player.position));
 
-export function rollUnlockedMouthpiece(group, rng, allowRandomMouthpieceColors = false, brandedFrequency, masked = false) {
+export function rollUnlockedMouthpiece(group, rng, allowRandomMouthpieceColors = false, brandedFrequency, masked = false, profile) {
+  if (profile) {
+    if (!profile.enabled || masked && !profile.hanging) return { type: 'none', item: null };
+    const type = masked ? 'hanging' : weightedChoice([['mouthguard', profile.standard], ['pacifier', profile.pacifier], ['hanging', profile.hanging]], rng);
+    // Choose style first: verified branded gear exists only in the hanging pool.
+    // Brand frequency is conditional on that pool, never a reason to override a user's style weights.
+    if (type === 'hanging') return { type, item: rollHangingMouthpiece(rng, allowRandomMouthpieceColors, rng() < (brandedFrequency ?? 75) / 100) };
+    const pool = type === 'pacifier' ? UNLOCKED_POOLS.standardPacifiers : UNLOCKED_POOLS.mouthguards;
+    return { type, item: pool[Math.floor(rng() * pool.length)] };
+  }
   if (brandedFrequency !== undefined) {
     const branded = rng() < brandedFrequency / 100;
     // All verified branded choices are hanging pacifiers. Never invent
@@ -237,7 +250,7 @@ function noneUndershirt(loadouts) {
   return loadouts.some(loadout => loadout.loadoutElements.find(element => slotOf(element) === "InnerShirt")?.itemAssetName === "Undershirt_None");
 }
 
-export function equipmentPopulationState(playerRecords, visualsRecords, visualsTableId, teamNames = new Map(), fcsTeamIndexes = new Set(), activePlayerRows, visorFrequencies) {
+export function equipmentPopulationState(playerRecords, visualsRecords, visualsTableId, teamNames = new Map(), fcsTeamIndexes = new Set(), activePlayerRows, visorFrequencies, mouthpiecePositions) {
   const createCohort = () => ({ visorGroups: new Map(), mouthpieceGroups: new Map(), undershirts: { total: 0, none: 0, floor: 0, limited: false } });
   const populations = { fbs: createCohort(), fcs: createCohort() };
   const populationByVisualRow = new Map();
@@ -260,7 +273,8 @@ export function equipmentPopulationState(playerRecords, visualsRecords, visualsT
       stats.total += 1; if (equippedVisor(loadouts)) stats.equipped += 1; cohort.visorGroups.set(group, stats);
       if (!equippedVisor(loadouts)) cohortEntry.visorGroups.set(group, (cohortEntry.visorGroups.get(group) ?? 0) + 1);
     }
-    const mouthpieceGroup = mouthpiecePopulationGroup(sf(record, "Position"));
+    const profile = mouthpieceProfile(sf(record, 'Position'), mouthpiecePositions);
+    const mouthpieceGroup = mouthpiecePositions ? profile?.enabled ? positionGroup(sf(record, 'Position')) : null : mouthpiecePopulationGroup(sf(record, "Position"));
     if (mouthpieceGroup) {
       const stats = cohort.mouthpieceGroups.get(mouthpieceGroup) ?? { total: 0, equipped: 0, ceiling: 0.85, limited: false };
       stats.total += 1; if (equippedMouthpiece(loadouts)) stats.equipped += 1; cohort.mouthpieceGroups.set(mouthpieceGroup, stats);
@@ -279,6 +293,7 @@ export function isApprovedHelmetForPosition(helmet, position, allowVicis = false
 }
 
 export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visualsTableId, options = {}) {
+  if (options.clearTattoos && options.unlockedTattooFix) throw new Error('Clear Tattoos and Add Tattoos cannot both be enabled. Choose one tattoo pass.');
   const { helmetFix = false, rolledJerseyFix = false, sockFix = false, sleeveCompatibilityFix = false, nikeThighPads = false, visorFix = false, unlockedRecolorFix = false, unlockedColorTheme = "weighted", unlockedMouthpieceFix = false, allowRandomMouthpieceColors = false, unlockedTattooFix = false, unlockedTattooCap = 33, undershirtColor = "weighted", pantsFix = false, skipNilPlayers = true, seed = 1, teamNames = new Map(), fcsTeamIndexes = new Set(), excludedTeamIndexes = new Set(), activePlayerRows, eligiblePlayer = () => true } = options;
   const visorFrequencies = normalizeVisorFrequencies(options.visorFrequencies), facemaskPools = normalizeFacemaskPools(options.facemaskPools);
   const rng = mulberry32((seed ^ 0xA5A5A5A5) >>> 0);
@@ -290,7 +305,8 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
   const tapeRng = mulberry32((seed ^ 0x7A9EC010) >>> 0);
   const mouthpieceColorRng = mulberry32((seed ^ 0x4D50434C) >>> 0);
   const brandedFrequency = options.brandedMouthpieceFrequency ?? 75;
-  const population = equipmentPopulationState(playerRecords, visualsRecords, visualsTableId, teamNames, fcsTeamIndexes, activePlayerRows, visorFrequencies);
+  const mouthpiecePositions = normalizeMouthpiecePositions(options.mouthpiecePositions);
+  const population = equipmentPopulationState(playerRecords, visualsRecords, visualsTableId, teamNames, fcsTeamIndexes, activePlayerRows, visorFrequencies, mouthpiecePositions);
   if (undershirtColor === "custom") for (const cohort of Object.values(population.populations)) cohort.undershirts.floor = Math.ceil(cohort.undershirts.total * normalizeUndershirtWeights(options.undershirtWeights).large.none / 100);
   const playersByVisualRow = new Map();
   const allPlayerReferences = new Map();
@@ -307,11 +323,11 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
     playersByVisualRow.set(ref.row, list);
   });
 
-  const helmetEntries = [];
+  const helmetEntries = [], helmetAfter = new Map();
   if (helmetFix && helmetDistribution) for (const players of playersByVisualRow.values()) for (const player of players) {
     if (!(skipNilPlayers && player.isNil) && !player.excluded) effectiveHelmetWeights(helmetDistribution, player.position);
   }
-  if (helmetFix && options.balanceExistingHelmets) for (const [visualsRow, players] of playersByVisualRow) {
+  if (helmetFix) for (const [visualsRow, players] of playersByVisualRow) {
     // Balancing uses single-owner records only. The existing correction path
     // still protects shared rows if even one linked player is excluded.
     if (players.length !== 1 || allPlayerReferences.get(visualsRow) !== 1) continue;
@@ -373,6 +389,8 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
   const sleeveCompatibilityChanges = [];
   const nikeThighPadChanges = [];
   const sockChanges = [];
+  const unlockedSockChanges = [];
+  let unlockedSockPlayersChanged = 0;
   const visorChanges = [];
   const oakleyVisorChanges = [];
   const bearsPadsChanges = [], handwarmerChanges = [], helmetAccessoryChanges = [];
@@ -380,6 +398,8 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
   const unlockedRecolorChanges = [];
   const unlockedMouthpieceChanges = [];
   const unlockedTattooChanges = [];
+  const clearedTattooChanges = [];
+  let clearedTattooPlayers = 0;
   let rolledJerseyPlayersChanged = 0;
   let sleeveCompatibilityPlayersChanged = 0;
   let nikeThighPadPlayersChanged = 0;
@@ -422,12 +442,14 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
     const skillPlayers = helmetFix && (helmetDistribution || players.every(player => !OFFENSIVE_LINE_POSITIONS.has(player.position))) ? players : [];
     const currentHelmets = loadouts.map(loadout => loadout.loadoutElements.find(element => slotOf(element) === "HeadWear")?.itemAssetName);
     const invalidHelmet = currentHelmets.some(helmet => !skillPlayers.every(player => approved(helmet, player.position)));
-    const invalidMask = (helmetDistribution || facemaskPools) && loadouts.some(loadout => (!facemaskFitsHelmet(loadout.loadoutElements.find(element => slotOf(element) === "FaceMask")?.itemAssetName, loadout.loadoutElements.find(element => slotOf(element) === "HeadWear")?.itemAssetName) || facemaskPools && !facemaskPools[loadout.loadoutElements.find(element => slotOf(element) === "HeadWear")?.itemAssetName]?.includes(loadout.loadoutElements.find(element => slotOf(element) === "FaceMask")?.itemAssetName)));
+    const linkedPositions = skillPlayers.map(player => player.position);
+    const invalidMask = (helmetDistribution || facemaskPools) && loadouts.some(loadout => !facemaskAllowedForPositions(loadout.loadoutElements.find(element => slotOf(element) === "FaceMask")?.itemAssetName, loadout.loadoutElements.find(element => slotOf(element) === "HeadWear")?.itemAssetName, linkedPositions, facemaskPools));
     if (skillPlayers.length && (helmetBalance?.plans.has(visualsRow) || invalidHelmet || invalidMask)) {
       const position = skillPlayers[0].position;
       const helmet = helmetBalance?.plans.get(visualsRow) ?? (helmetDistribution ? invalidHelmet ? rollCustomHelmet(helmetDistribution, skillPlayers.map(player => player.position), helmetRng) : currentHelmets[0] : invalidHelmet ? rollApprovedHelmet(helmetRng, options.allowVicisZero2, skillPlayers.every(player => canUseVicis(player.position)) ? position : "") : currentHelmets[0]);
-      const facemask = helmetDistribution || facemaskPools ? rollCompatibleFacemask(helmet, position, helmetRng, facemaskPools) : rollFacemask(helmet, position, helmetRng);
+      const facemask = helmetDistribution || facemaskPools ? rollCompatibleFacemask(helmet, linkedPositions, helmetRng, facemaskPools) : rollFacemask(helmet, position, helmetRng);
       const oldHelmet = [...new Set(currentHelmets.filter(Boolean))].join(", ") || "None";
+      const oldFacemask = [...new Set(loadouts.map(loadout => loadout.loadoutElements.find(element => slotOf(element) === "FaceMask")?.itemAssetName).filter(Boolean))].join(", ") || "None";
       for (const loadout of loadouts) {
         setSlot(loadout.loadoutElements, "HeadWear", helmet);
         setSlot(loadout.loadoutElements, "FaceMask", facemask);
@@ -458,6 +480,7 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
           overall: Number(sf(record, "OverallRating") ?? 0),
           isFcs: fcsTeamIndexes.has(teamIndex),
           oldHelmet,
+          oldFacemask,
           newHelmet: helmet,
           newFacemask: facemask
         });
@@ -498,7 +521,7 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
         changed = true;
       }
     }
-    if (sockFix && players.every(player => !OFFENSIVE_LINE_POSITIONS.has(String(player.position).toUpperCase()))) {
+    if (sockFix && !options.unlockedSocksFix && players.every(player => !OFFENSIVE_LINE_POSITIONS.has(String(player.position).toUpperCase()))) {
       const midSockLoadouts = loadouts.filter(loadout =>
         loadout.loadoutElements.find(element => slotOf(element) === "InnerSocks")?.itemAssetName === "Gear_Socks_Mid" &&
         !hasSpatsOnBothFeet(loadout.loadoutElements)
@@ -512,6 +535,14 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
         }
         sockPlayersChanged += players.length;
         for (const player of players) sockChanges.push(playerLogInfo(player, teamNames, fcsTeamIndexes, { oldItem: "Gear_Socks_Mid", newItem: [...selectedSocks].join(", ") }));
+        changed = true;
+      }
+    }
+    if (options.unlockedSocksFix) {
+      const corrections = replaceUnlockedSocks(loadouts);
+      if (corrections.length) {
+        unlockedSockPlayersChanged += players.length;
+        for (const player of players) for (const correction of corrections) unlockedSockChanges.push(playerLogInfo(player, teamNames, fcsTeamIndexes, correction));
         changed = true;
       }
     }
@@ -572,7 +603,10 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
       }
     }
     if (unlockedMouthpieceFix) {
-      if (!options.rerollExistingMouthpieces && options.randomizeExistingMouthpieceColors && equippedMouthpiece(loadouts)) {
+      const groups = new Set(players.map(player => mouthpiecePositions ? mouthpieceProfile(player.position, mouthpiecePositions)?.enabled ? positionGroup(player.position) : null : mouthpiecePopulationGroup(player.position)));
+      const group = groups.size === 1 ? [...groups][0] : null;
+      const profile = mouthpiecePositions?.[group];
+      if ((!mouthpiecePositions || group) && !options.rerollExistingMouthpieces && options.randomizeExistingMouthpieceColors && equippedMouthpiece(loadouts)) {
         const colors = randomizeExistingMouthpieceColors(loadouts, mouthpieceColorRng, allowRandomMouthpieceColors);
         if (colors.length) {
           existingMouthpieceColorsChanged += players.length;
@@ -580,11 +614,9 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
           changed = true;
         }
       }
-      const groups = new Set(players.map(player => mouthpiecePopulationGroup(player.position)));
-      const group = groups.size === 1 ? [...groups][0] : null;
       const repairInvalid = loadouts.some(loadout => loadout.loadoutElements.some(element => slotOf(element) === "MouthWear" && isInvalidMouthpieceAsset(element.itemAssetName)));
       if ((options.rerollExistingMouthpieces || repairInvalid) && group && equippedMouthpiece(loadouts)) {
-        const rolled = rollUnlockedMouthpiece(group, mouthpieceColorRng, allowRandomMouthpieceColors, brandedFrequency, loadouts.some(loadout => equippedMask(loadout.loadoutElements, true)));
+        const rolled = rollUnlockedMouthpiece(group, mouthpieceColorRng, allowRandomMouthpieceColors, brandedFrequency, loadouts.some(loadout => equippedMask(loadout.loadoutElements, true)), profile);
         const oldItems = [...new Set(loadouts.map(loadout => loadout.loadoutElements.find(element => slotOf(element) === "MouthWear")?.itemAssetName ?? "GearMouthpiece_None"))];
         if (rolled.item && oldItems.some(item => item !== rolled.item.itemName)) {
           for (const loadout of loadouts) setSlot(loadout.loadoutElements, "MouthWear", rolled.item.itemName);
@@ -600,7 +632,7 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
           for (const name of affectedGroups.keys()) { const stats = populationCohort.mouthpieceGroups.get(name); if (stats) stats.limited = true; }
         } else {
           const masked = loadouts.some(loadout => equippedMask(loadout.loadoutElements, true));
-          const rolled = rollUnlockedMouthpiece(group, rng, allowRandomMouthpieceColors, brandedFrequency, masked);
+          const rolled = rollUnlockedMouthpiece(group, rng, allowRandomMouthpieceColors, brandedFrequency, masked, profile);
           if (rolled.item) {
             for (const loadout of loadouts) setSlot(loadout.loadoutElements, "MouthWear", rolled.item.itemName);
             for (const [name, count] of affectedGroups) populationCohort.mouthpieceGroups.get(name).equipped += count;
@@ -609,6 +641,13 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
             changed = true;
           }
         }
+      }
+    }
+    if (unlockedMouthpieceFix && groupMouthpiecesEnabled(players, mouthpiecePositions)) {
+      const corrections = loadouts.flatMap(loadout => enforceMouthpieceCompatibility(loadout.loadoutElements, { usingUnlockedMod: true }));
+      if (corrections.length) {
+        changed = true; existingMouthpieceColorsChanged += players.length;
+        for (const player of players) for (const correction of corrections) existingMouthpieceColorChanges.push(playerLogInfo(player, teamNames, fcsTeamIndexes, { oldItem: correction.oldMouthpiece, newItem: 'GearMouthpiece_None', mouthpieceType: 'none', reason: 'Balaclava requires a hanging mouthpiece; no allowed hanging style.' }));
       }
     }
     const recolorTeams = players.map(player => options.recolorTeamNames?.has(player.row) ? options.recolorTeamNames.get(player.row) : teamNames.get(Number(sf(player.record, "TeamIndex"))) ?? `Team ${sf(player.record, "TeamIndex")}`);
@@ -624,25 +663,6 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
         for (const player of players) unlockedRecolorChanges.push(playerLogInfo(player, teamNames, fcsTeamIndexes, { team: recolorTeams[0], oldItem, newItem, colorTheme: theme, tapeColor, displayValues: true }));
         changed = true;
       }
-    }
-    const tattooPlan = tattooPlans.get(visualsRow);
-    if (tattooPlan) {
-      const tattooChange = applyUnlockedTattooPlan(parsed, tattooPlan);
-      if (tattooChange) {
-        unlockedTattooPlayersChanged += players.length;
-        for (const player of players) unlockedTattooChanges.push(playerLogInfo(player, teamNames, fcsTeamIndexes, tattooChange));
-        changed = true;
-      }
-    } else if (unlockedTattooFix && players.length === 1 && allPlayerReferences.get(visualsRow) === 1
-      && (!activePlayerRows || activePlayerRows.has(players[0].row))
-      && UNLOCKED_TATTOO_ELIGIBLE_POSITIONS.has(String(players[0].position).toUpperCase())
-      && repairUnlockedTattooLoadout(parsed)) {
-      unlockedTattooPlayersRepaired += 1;
-      unlockedTattooChanges.push(playerLogInfo(players[0], teamNames, fcsTeamIndexes, {
-        oldItem: "Tattoo layer preventing equipment from displaying",
-        newItem: "Tattoo layer repaired; equipment preserved"
-      }));
-      changed = true;
     }
     // Re-run after optional CFB27 Unlocked passes because they can introduce
     // an arm-gear or mask/mouthpiece combination after the main correction pass.
@@ -666,6 +686,35 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
       for (const player of players) for (const correction of corrections) handwarmerChanges.push(playerLogInfo(player, teamNames, fcsTeamIndexes, correction));
       if (corrections.length) changed = true;
     }
+    // Tattoos are the last correction: preserve their Base layer and visibility.
+    if (options.clearTattoos) {
+      const correction = clearPlayerTattoos(parsed);
+      if (correction) {
+        clearedTattooPlayers += players.length;
+        for (const player of players) clearedTattooChanges.push(playerLogInfo(player, teamNames, fcsTeamIndexes, correction));
+        changed = true;
+      }
+    }
+    const tattooPlan = tattooPlans.get(visualsRow);
+    if (tattooPlan) {
+      const tattooChange = applyUnlockedTattooPlan(parsed, tattooPlan);
+      if (tattooChange) {
+        unlockedTattooPlayersChanged += players.length;
+        for (const player of players) unlockedTattooChanges.push(playerLogInfo(player, teamNames, fcsTeamIndexes, tattooChange));
+        changed = true;
+      }
+    } else if (unlockedTattooFix && players.length === 1 && allPlayerReferences.get(visualsRow) === 1
+      && (!activePlayerRows || activePlayerRows.has(players[0].row))
+      && UNLOCKED_TATTOO_ELIGIBLE_POSITIONS.has(String(players[0].position).toUpperCase())
+      && repairUnlockedTattooLoadout(parsed)) {
+      unlockedTattooPlayersRepaired += 1;
+      unlockedTattooChanges.push(playerLogInfo(players[0], teamNames, fcsTeamIndexes, {
+        oldItem: "Tattoo layer preventing equipment from displaying",
+        newItem: "Tattoo layer repaired; equipment preserved"
+      }));
+      changed = true;
+    }
+    helmetAfter.set(visualsRow, loadouts[0]?.loadoutElements.find(element => slotOf(element) === 'HeadWear')?.itemAssetName);
     if (changed) {
       visual.RawData = JSON.stringify(parsed);
       visualsChanged++;
@@ -678,7 +727,7 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
   });
   const fbsSafeguards = serializeCohort(population.populations.fbs), fcsSafeguards = serializeCohort(population.populations.fcs);
   const populationSafeguards = { ...fbsSafeguards, fbs: fbsSafeguards, fcs: fcsSafeguards };
-  return { bearsPadsChanges, handwarmerChanges, helmetAccessoryChanges, helmetBalance: helmetBalance?.diagnostics ?? null, oakleyVisorPlayersChanged, oakleyVisorChanges, pantsPlayersChanged, helmetPlayersChanged, rolledJerseyPlayersChanged, sockPlayersChanged, sleeveCompatibilityPlayersChanged, nikeThighPadPlayersChanged, visorPlayersChanged, unlockedRecolorPlayersChanged, unlockedMouthpiecePlayersChanged, existingMouthpieceColorsChanged, existingMouthpieceColorChanges, unlockedTattooPlayersChanged, unlockedTattooPlayersRepaired, visualsChanged, helmetChanges, pantsChanges, rolledJerseyChanges, sockChanges, sleeveCompatibilityChanges, nikeThighPadChanges, visorChanges, unlockedRecolorChanges, unlockedMouthpieceChanges, unlockedTattooChanges, unlockedTattooPopulation, populationSafeguards };
+  return { clearedTattooPlayers, clearedTattooChanges, helmetPopulation: helmetFix ? helmetPopulationAudit(helmetEntries, helmetAfter, options) : null, unlockedSockPlayersChanged, unlockedSockChanges, bearsPadsChanges, handwarmerChanges, helmetAccessoryChanges, helmetBalance: helmetBalance?.diagnostics ?? null, oakleyVisorPlayersChanged, oakleyVisorChanges, pantsPlayersChanged, helmetPlayersChanged, rolledJerseyPlayersChanged, sockPlayersChanged, sleeveCompatibilityPlayersChanged, nikeThighPadPlayersChanged, visorPlayersChanged, unlockedRecolorPlayersChanged, unlockedMouthpiecePlayersChanged, existingMouthpieceColorsChanged, existingMouthpieceColorChanges, unlockedTattooPlayersChanged, unlockedTattooPlayersRepaired, visualsChanged, helmetChanges, pantsChanges, rolledJerseyChanges, sockChanges, sleeveCompatibilityChanges, nikeThighPadChanges, visorChanges, unlockedRecolorChanges, unlockedMouthpieceChanges, unlockedTattooChanges, unlockedTattooPopulation, populationSafeguards };
 }
 
 function playerLogInfo(player, teamNames, fcsTeamIndexes, extra = {}) {

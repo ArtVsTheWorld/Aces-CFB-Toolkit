@@ -110,13 +110,6 @@ function setSlot(elements, slot, asset) {
   else elements.push({ slotType: slot, itemAssetName: asset });
 }
 
-function setVisibleSocks(elements) {
-  const socks = elements.find(element => slotOf(element) === "InnerSocks")
-    ?? elements.find(element => slotOf(element) === "assetName");
-  if (socks) socks.itemAssetName = "Gear_Socks_Low";
-  else elements.push({ slotType: "InnerSocks", itemAssetName: "Gear_Socks_Low" });
-}
-
 export function hasUnlockedBodyTattoo(parsed) {
   for (const loadout of parsed?.loadouts ?? []) {
     for (const element of loadout?.loadoutElements ?? []) {
@@ -124,6 +117,28 @@ export function hasUnlockedBodyTattoo(parsed) {
     }
   }
   return false;
+}
+
+// Clear tattoo slots only. Never reconstruct the Base/Head/on-field layers or
+// touch sleeves, socks, skin, faces, and other equipment sharing those layers.
+export function clearPlayerTattoos(parsed) {
+  const removed = [];
+  for (const loadout of parsed?.loadouts ?? []) {
+    if (!Array.isArray(loadout?.loadoutElements)) continue;
+    loadout.loadoutElements = loadout.loadoutElements.filter(element => {
+      const slot = slotOf(element);
+      if (!/Tattoo$/i.test(slot) || isNoneTattoo(element.itemAssetName)) return true;
+      removed.push({ slot, asset: element.itemAssetName });
+      if (DEFAULT_TATTOO_ASSETS[slot]) {
+        element.itemAssetName = DEFAULT_TATTOO_ASSETS[slot];
+        return true;
+      }
+      // Unnamed/future tattoo designs need no asset guess: an omitted tattoo
+      // slot uses no tattoo. Preserve the containing layer and its metadata.
+      return false;
+    });
+  }
+  return removed.length ? { oldItem: removed.map(item => `${item.slot}: ${item.asset}`).join(', '), newItem: 'No Tattoos', removed } : null;
 }
 
 export function hasPlayerOnFieldEquipment(parsed) {
@@ -288,7 +303,6 @@ export function applyUnlockedTattooPlan(parsed, plan) {
     setSlot(tattooElements, "LeftLegTattoo", plan.legs.asset);
     setSlot(tattooElements, "RightLegTattoo", plan.legs.asset);
     for (const loadout of gearLoadouts) {
-      setVisibleSocks(loadout.loadoutElements);
       setSlot(loadout.loadoutElements, "InnerPants", "BottomBase_None");
     }
   }
@@ -298,7 +312,7 @@ export function applyUnlockedTattooPlan(parsed, plan) {
   }
   const parts = [
     ...Object.entries(plan.arms).map(([side, item]) => `${side} arm: ${item.label}`),
-    ...(plan.legs ? [`both legs: ${plan.legs.label}; low socks and bare legs`] : [])
+    ...(plan.legs ? [`both legs: ${plan.legs.label}; bare legs`] : [])
   ];
   return {
     oldItem: "No body tattoo",

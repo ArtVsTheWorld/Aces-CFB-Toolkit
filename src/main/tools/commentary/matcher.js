@@ -61,12 +61,19 @@ export function createCommentaryMatcher(commentaryMap, { allowPhonetic = false, 
     }
   }
 
-  function matchOne(rawName, { phoneticAllowed = allowPhonetic } = {}) {
+  function matchOne(rawName, { phoneticAllowed = allowPhonetic, hyphenAllowed = false } = {}) {
     const original = String(rawName ?? "").trim();
     const stripped = stripSuffix(original);
     for (const candidate of [original, stripped]) {
       const hit = exact.get(normalizeName(candidate));
       if (hit) return { ...hit, method: candidate === original ? "exact" : "suffix" };
+    }
+    // Prefer the complete surname (including suffix handling) before using
+    // the final part of a hyphenated surname. Never split first names.
+    if (hyphenAllowed && /[-\u2010-\u2015]/u.test(stripped)) {
+      const finalPart = stripped.split(/[-\u2010-\u2015]/u).at(-1).trim();
+      const hit = finalPart && exact.get(normalizeName(finalPart));
+      if (hit) return { ...hit, method: "hyphen" };
     }
     if (!phoneticAllowed) return null;
     const normalized = normalizeName(stripped);
@@ -84,7 +91,7 @@ export function createCommentaryMatcher(commentaryMap, { allowPhonetic = false, 
   }
 
   return function matchPlayer(firstName, lastName) {
-    const last = matchOne(lastName);
+    const last = matchOne(lastName, { hyphenAllowed: true });
     if (last) return { ...last, source: "last" };
     if (!allowFirstName) return { name: null, id: 0, method: "none", source: "none" };
     const first = matchOne(firstName, { phoneticAllowed: false });
@@ -92,4 +99,3 @@ export function createCommentaryMatcher(commentaryMap, { allowPhonetic = false, 
     return { name: null, id: 0, method: "none", source: "none" };
   };
 }
-

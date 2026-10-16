@@ -1,0 +1,67 @@
+const { app, BrowserWindow, ipcMain } = require('electron');
+const fs = require('node:fs'), os = require('node:os'), path = require('node:path'), { pathToFileURL } = require('node:url');
+const root = path.resolve(__dirname, '..'), uiRoot = path.resolve(process.argv.find(arg => arg.startsWith('--ui-root='))?.slice(10) || root);
+app.setPath('userData', fs.mkdtempSync(path.join(os.tmpdir(), 'cfb-v191-donor-ui-'))); app.disableHardwareAcceleration();
+app.whenReady().then(async () => {
+  const imported = async file => import(pathToFileURL(path.join(root, file)));
+  const { registrySnapshot } = await imported('src/shared/toolRegistry.js'), { prepareEquipmentTool } = await imported('src/main/tools/equipment/runner.js'), { prepareEquipmentDonors } = await imported('src/main/tools/equipment/donorSource.js');
+  const fixture = path.resolve(root, '../EXAMPLE SAVES VANILLA GAME/DYNASTY-LSUTESTSAVEPRESZN'), schemaPath = path.join(root, 'resources/engine-data/C27_486_6.gz'), roster = 'C:/Users/Art/Documents/EA SPORTS College Football 27/saves/ROSTER-Official';
+  const prepared = await prepareEquipmentTool({ savePath: fixture, schemaPath }); let donorCache, runs = 0;
+  ipcMain.handle('app:bootstrap', () => ({ app: { version: JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).version.replace(/\.0$/, ''), schemas: ['C27_486_6'] }, registry: registrySnapshot(), settings: { theme: 'light', toolPresets: [] }, activeSave: { path: fixture, name: 'UI Test', exists: true, schema: { supported: true } } }));
+  for (const channel of ['history:list', 'reports:list']) ipcMain.handle(channel, () => []);
+  ipcMain.handle('home:lines', () => ({ rows: [], profiles: [], season: 2026 }));
+  ipcMain.handle('updates:status', () => ({ phase: 'disabled' })); ipcMain.handle('home:context', () => ({ controlledTeams: [], teams: [], artwork: {} }));
+  ipcMain.handle('tools:prepare', () => prepared);
+  ipcMain.handle('equipment:prepare-donors', async (_event, request) => donorCache ??= await prepareEquipmentDonors({ savePath: request.savePath, schemaPath }));
+  ipcMain.handle('dialog:choose-save', (_event, purpose) => { if (purpose !== 'equipment-donor') throw new Error('Donor picker must use CFB save dialog'); return roster; }); ipcMain.handle('tools:run', () => { runs++; throw new Error('Configuration must not run tools'); });
+  const window = new BrowserWindow({ show: false, width: 1480, height: 1000, webPreferences: { preload: path.join(uiRoot, 'src/main/preload.cjs'), contextIsolation: true, sandbox: true, offscreen: true, backgroundThrottling: false } });
+  const errors = []; window.webContents.on('console-message', ({ level, message }) => { if (level === 'error' && !message.includes('ERR_FILE_NOT_FOUND') && !message.includes('frame-ancestors')) errors.push(message); });
+  await window.loadFile(path.join(uiRoot, 'src/renderer/index.html'));
+  const result = await window.webContents.executeJavaScript(`(async () => {
+    const check=(value,message)=>{if(!value)throw new Error(message)}, delay=()=>new Promise(resolve=>setTimeout(resolve,30));
+    const wait=async predicate=>{for(let i=0;i<1000;i++){if(predicate()){await delay();return}await delay()}throw new Error('UI wait timed out')};
+    const open=title=>{[...content.querySelectorAll('.configuration-entry')].find(node=>node.querySelector('strong').textContent===title).querySelector('button').click();return document.querySelector('dialog[open] .configuration-draft')};
+    const field=id=>configurationRead(document.querySelector('dialog[open] .configuration-draft'),id);
+    const change=(input,value)=>{input.value=value;input.dispatchEvent(new Event('change',{bubbles:true}))};
+    const save=()=>{const button=document.querySelector('dialog[open] [data-config-save]');check(!button.disabled,document.querySelector('[data-config-error]').textContent);button.click()};
+    const cancel=()=>document.querySelector('dialog[open] .configuration-footer [data-config-cancel]').click();
+    const unique=()=>{const ids=[...document.querySelectorAll('[id]')].map(node=>node.id);check(new Set(ids).size===ids.length,'No duplicate IDs')};
+    await wait(()=>state.bootstrap); navigate('freshman-equipment'); await wait(()=>document.getElementById('equipment-donor-mode'));
+    let draft=open('Donor Settings'); change(draft.querySelector('[data-cross-receiver]'),'QB'); draft.querySelector('[data-cross-source="TE"]').click();
+    change(field('equipment-cross-percent'),'100'); change(field('equipment-multiple-percent'),'0'); save();
+    check(equipmentOptions('freshman-equipment').crossDonorGroups.QB.join()==='TE','Custom QB source commits');
+    const original=JSON.stringify(equipmentOptions('freshman-equipment')), count=document.getElementById('equipment-donor-players').options.length;
+    draft=open('Donor Settings'); field('browse-donor').click(); await wait(()=>field('equipment-donor-fingerprint').value && draft.dataset.donorLoading==='false');
+    check(field('equipment-donor-players').options.length>8000,'External roster donor list');unique(); cancel();
+    check(JSON.stringify(equipmentOptions('freshman-equipment'))===original && document.getElementById('equipment-donor-players').options.length===count,'Cancel preserves original source and choices');
+    draft=open('Donor Settings'); field('browse-donor').click(); await wait(()=>field('equipment-donor-fingerprint').value && draft.dataset.donorLoading==='false');
+    change(field('equipment-donor-mode'),'selected');draft.querySelector('[data-option-position="TE"]').click();
+    const rows=[...draft.querySelectorAll('[data-option-row]')].filter(row=>!row.hidden);rows[0].querySelector('input').click();rows[4].querySelector('input').dispatchEvent(new MouseEvent('click',{bubbles:true,shiftKey:true}));
+    check(field('equipment-donor-players').selectedOptions.length===5,'External roster shift-click works');save();
+    const selected=equipmentOptions('freshman-equipment');check(selected.donorSave===${JSON.stringify(roster)} && selected.donorRows.length===5 && selected.donorFingerprint.length===64,'Source and selected donor pool commit together');
+    const preset=presetConfiguration();check(Array.isArray(preset.values['equipment-donor-players']) && !preset.teamSelections['equipment-donor-players'],'External preset stores compact verified row identities');
+    check(JSON.stringify(presetValues(preset)['equipment-donor-players'])===JSON.stringify(selected.donorRows),'External preset restores same donors');
+    navigate('equipment-patcher');await wait(()=>document.getElementById('fix-unlocked-mouthpieces'));document.getElementById('fix-unlocked-mouthpieces').click();
+    draft=open('Mouthpiece Settings');change(field('mouthpiece-style-mode'),'custom');field('mouthpiece-enabled-QB').click();
+    for(const style of ['standard','pacifier','hanging'])change(field('mouthpiece-QB-'+style),style==='hanging'?'100':'0');
+    change(field('mouthpiece-QB-hanging'),'99');change(draft.querySelector('[data-mouthpiece-receiver]'),'WR');
+    check(document.querySelector('[data-config-save]').disabled && document.querySelector('[data-config-error]').textContent.includes('QB'),'Hidden group totals remain validated');
+    change(draft.querySelector('[data-mouthpiece-receiver]'),'QB');draft.querySelector('[data-mouthpiece-group="QB"] [data-mouthpiece-balance]').click();
+    change(draft.querySelector('[data-mouthpiece-receiver]'),'WR');field('mouthpiece-enabled-WR').click();save();
+    check(equipmentOptions('equipment-patcher').mouthpiecePositions.QB.hanging===100 && !equipmentOptions('equipment-patcher').mouthpiecePositions.WR.enabled,'Enabled QB, disabled WR and exact styles commit');
+    const mouth=JSON.stringify(equipmentOptions('equipment-patcher'));open('Mouthpiece Settings');document.querySelector('[data-config-reset]').click();cancel();check(JSON.stringify(equipmentOptions('equipment-patcher'))===mouth,'Reset plus Cancel discards mouthpiece draft');
+    const mouthPreset=presetConfiguration(), values=presetValues(mouthPreset);check(JSON.parse(values['mouthpiece-positions-json']).QB.hanging===100,'Mouthpiece preset contains exact weights');
+    navigate('freshman-equipment');await wait(()=>document.getElementById('equipment-donor-players')?.options.length>8000);check(JSON.stringify(equipmentOptions('freshman-equipment').donorRows)===JSON.stringify(selected.donorRows),'External source and selections survive navigation');
+    open('Donor Settings');change(field('equipment-donor'),'');check(document.querySelector('[data-config-save]').disabled,'Typing blank does not silently reuse external donor rows as active rows');cancel();
+    return 'Cross sources, external roster checkbox/sort/shift-click, Save/Cancel, navigation, stale-source blocking, mouthpiece groups/weights, hidden-group validation, compact presets and no automatic tool run passed.';
+  })()`);
+  for (const [tool, title] of [['freshman-equipment','Donor Settings'], ['equipment-patcher','Mouthpiece Settings']]) for (const width of [1480, 520]) {
+    window.setSize(width, width===1480?1000:680);
+    await window.webContents.executeJavaScript(`closeConfigurationDialogs();navigate(${JSON.stringify(tool)})`); await new Promise(resolve=>setTimeout(resolve,200));
+    const measured=await window.webContents.executeJavaScript(`(() => {const entry=[...content.querySelectorAll('.configuration-entry')].find(node=>node.querySelector('strong').textContent===${JSON.stringify(title)});entry.querySelector('button').click();const dialog=document.querySelector('dialog[open]'),r=dialog.getBoundingClientRect();return {left:r.left,right:r.right,width:innerWidth,scroll:dialog.scrollWidth,client:dialog.clientWidth};})()`);
+    if(measured.left<0 || measured.right>measured.width+1 || measured.scroll>measured.client+1)throw new Error('Dialog overflow: '+JSON.stringify(measured));
+    await new Promise(resolve=>setTimeout(resolve,250)); // Allow the offscreen frame to paint the opened dialog.
+    fs.writeFileSync(path.join(root, `outputs/v191-${tool}-${width}.png`), (await window.webContents.capturePage()).toPNG());
+  }
+  if(errors.length)throw new Error(errors.join('\n'));if(runs)throw new Error('Unexpected automatic tool run');console.log(result);window.destroy();app.quit();
+}).catch(error=>{console.error(error);app.exit(1)});

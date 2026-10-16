@@ -81,6 +81,7 @@ test("Commentary Analyze opens final Preview directly when no decisions are need
       commentaryOptionsFromForm: () => ({ freshmenOnly: true }),
       render: () => events.push("render"),
       runCommentaryReview: async mode => events.push(mode),
+      beginToolRun: () => "test", currentToolRun: () => true,
       readableError: error => error,
       showError: () => { throw new Error("Unexpected analysis error"); }
     });
@@ -100,7 +101,8 @@ test("Commentary Analyze keeps decision review when a phonetic choice is needed"
     commentaryOptionsFromForm: () => ({}),
     render: () => events.push("render"),
     runCommentaryReview: async mode => events.push(mode),
-    readableError: error => error,
+    beginToolRun: () => "test", currentToolRun: () => true,
+      readableError: error => error,
     showError: () => { throw new Error("Unexpected analysis error"); }
   });
   vm.runInContext(rendererFunction("analyzeCommentary"), context);

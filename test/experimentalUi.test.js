@@ -12,7 +12,7 @@ test("the stable shell and packaging no longer show experimental release labels"
   assert.doesNotMatch(index, /Experimental UI|EXPERIMENTAL UI|UI REDESIGN|\(Experimental\)/);
   assert.doesNotMatch(renderer, /\(Experimental\)|This experimental build/);
   assert.doesNotMatch(pkg.build.artifactName, /Experimental/);
-  assert.equal(pkg.version, "19.0.0");
+  assert.equal(pkg.version, "20.0.0");
 });
 
 test("sports operations navigation retains every registered primary tool", () => {
@@ -113,7 +113,7 @@ test("Smart Force Win uses settings review and a dedicated schedule preview", ()
   }
   assert.match(renderer, /Approve Settings &amp; Preview Schedule/);
   assert.match(renderer, /showForceWinStage\("preview"\)/);
-  assert.match(renderer, /mode === "preview" \? forceWinOptions\(\) : \{ planId: preview\?\.planId \}/);
+  assert.match(renderer, /mode === "preview" \? forceWinOptions\(\) : \{ planId: preview\?\.planId, leaveUnchangedRows: preview\?\.details\?\.leaveUnchangedRows \?\? \[\] \}/);
   assert.match(css, /force-review-grid/);
 });
 

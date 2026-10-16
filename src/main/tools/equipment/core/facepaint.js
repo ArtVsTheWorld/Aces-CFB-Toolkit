@@ -6,15 +6,18 @@ export const VANILLA_FACE_PAINT_OPTIONS = Object.freeze(["FaceMarks_EyePaint", "
 // samples confirming the FacePaint slot. Donor ranking/NIL filters must not
 // decide whether an installed mod's catalog is available for generation.
 const modItems = Object.fromEntries(Object.entries(inventory.mods).map(([id, mod]) => [id, Object.freeze([...mod.facepaintItemNames])]));
+export const MOD_FACE_PAINT_ITEMS = Object.freeze(modItems);
 const positionRules = new Map(inventory.facepaintPositionRules.map(rule => [rule.itemName, new Set(rule.positions)]));
 
-export function buildFacePaintPool(_donors, { usingUnlockedMod = false, usingRawAccessoriesMod = false } = {}) {
+export function buildFacePaintPool(_donors, { usingUnlockedMod = false, usingRawAccessoriesMod = false, modPools } = {}) {
   // Keep the donor argument for existing callers; facepaint is rolled
   // independently rather than copied from an equipment donor.
   const enabled = { unlocked: usingUnlockedMod, raw: usingRawAccessoriesMod }, options = [...VANILLA_FACE_PAINT_OPTIONS], diagnostics = {};
   for (const [id, values] of Object.entries(modItems)) {
-    diagnostics[id] = { enabled: enabled[id], available: values.length, assets: [...values], inventoryCount: inventory.mods[id].facepaintResourceKeys.length, source: "catalog" };
-    if (enabled[id]) for (const asset of values) if (!options.includes(asset)) options.push(asset);
+    const selected = modPools?.[id]?.facepaint?.items ?? values, chance = modPools?.[id]?.facepaint?.chance ?? 100;
+    const assets = values.filter(value => selected.includes(value));
+    diagnostics[id] = { enabled: enabled[id], chance, available: values.length, assets, inventoryCount: inventory.mods[id].facepaintResourceKeys.length, source: "catalog" };
+    if (enabled[id] && chance > 0) for (const asset of assets) if (!options.includes(asset)) options.push(asset);
   }
   return { options, diagnostics };
 }
@@ -25,9 +28,11 @@ export function facePaintOptionsForPosition(pool, position) {
   return pool.filter(asset => !positionRules.has(asset) || positionRules.get(asset).has(value));
 }
 
-export function rollFacePaint(rng, pool = VANILLA_FACE_PAINT_OPTIONS, position) {
-  const allowed = facePaintOptionsForPosition(pool, position);
-  if (rng() < 0.60 || !allowed.length) return "FaceMarks_None";
+export function rollFacePaint(rng, pool = VANILLA_FACE_PAINT_OPTIONS, position, diagnostics) {
+  if (rng() < 0.60) return "FaceMarks_None";
+  const excluded = new Set(Object.values(diagnostics ?? {}).filter(group => group.enabled && (group.chance === 0 || group.chance < 100 && rng() >= group.chance / 100)).flatMap(group => group.assets));
+  const allowed = facePaintOptionsForPosition(pool, position).filter(asset => !excluded.has(asset) || VANILLA_FACE_PAINT_OPTIONS.includes(asset));
+  if (!allowed.length) return "FaceMarks_None";
   return allowed[Math.floor(rng() * allowed.length)];
 }
 

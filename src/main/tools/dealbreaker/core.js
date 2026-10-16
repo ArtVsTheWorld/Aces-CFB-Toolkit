@@ -69,7 +69,7 @@ export function weightedSelection(normalized, random) {
   return ALLOWED_DEALBREAKERS.slice(1).findLast(value => (normalized[value] ?? 0) > 0);
 }
 
-export function patchDealbreakers(records, { teamNames, distribution = DEFAULT_DISTRIBUTION, fixInvalidPlayingStyle = false, seed = 1, random = null, apply = false } = {}) {
+export function patchDealbreakers(records, { teamNames, distribution = DEFAULT_DISTRIBUTION, fixInvalidPlayingStyle = false, protectedValues = [], protectedRows = [], seed = 1, random = null, apply = false } = {}) {
   const base = normalizeDistribution(distribution); const rng = random ?? mulberry32(seed); const qbs = new Map();
   const legitimate = records.filter(record => isRosteredPlayer(record, teamNames));
   const startingNone = legitimate.filter(record => String(read(record, DEALBREAKER_FIELD) ?? "") === "Invalid").length;
@@ -78,7 +78,7 @@ export function patchDealbreakers(records, { teamNames, distribution = DEFAULT_D
   for (const record of records) if (isRosteredPlayer(record, teamNames) && String(read(record, "Position")) === "QB") { const team = Number(read(record, "TeamIndex")); if (!qbs.has(team)) qbs.set(team, []); qbs.get(team).push(record); }
   const outcomes = [], changes = [];
   records.forEach((record, row) => {
-    if (!isRosteredPlayer(record, teamNames)) return;
+    if (!isRosteredPlayer(record, teamNames) || protectedRows.includes(String(row)) || protectedValues.includes(read(record, DEALBREAKER_FIELD))) return;
     const oldValue = String(read(record, DEALBREAKER_FIELD) ?? ""); const position = String(read(record, "Position") ?? "").toUpperCase();
     const invalid = oldValue === "Invalid", invalidStyle = oldValue === "PlayingStyle" && !PLAYING_STYLE_POSITIONS.has(position);
     if (!invalid && !(fixInvalidPlayingStyle && invalidStyle)) return;

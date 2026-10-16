@@ -507,15 +507,16 @@ export function runRenumberEngine(teamGroups, teamNames, {
   enableTeamRules = false,
   enableRetiredNumbers = false,
   enablePromotions = true,
+  customRetired = {}, customTraditions = [],
   random = Math.random
 } = {}) {
   const stats = createStats();
-  if (enableRetiredNumbers) applyRetiredNumberRules(teamGroups, teamNames);
+  if (enableRetiredNumbers) applyRetiredNumberRules(teamGroups, teamNames, customRetired);
 
   const allPlayers = [...teamGroups.values()].flatMap(team => [...team.offense, ...team.defense, ...(team.specialists ?? [])]);
   const initialSuboptimal = allPlayers.filter(player => !isProtectedNil(player) && !isLegalNumber(player)).length;
 
-  if (enableTeamRules) applyTeamSpecificRules(teamGroups, teamNames, stats, random);
+  if (enableTeamRules) applyTeamSpecificRules(teamGroups, teamNames, stats, random, customTraditions);
   if (enablePromotions) releaseTrueFreshmanClaims(teamGroups);
   for (const [teamIndex, team] of teamGroups) {
     if (![...team.offense, ...team.defense, ...(team.specialists ?? [])].length) continue;

@@ -1,4 +1,4 @@
-import { sf } from "../openSave.js";
+import { parseRef, sf } from "../openSave.js";
 import FORCE_WIN_CONFIG from "./config.js";
 import { calculateDisparity, determineMatchupFavorite } from "./disparityCalculator.js";
 import { calculateBettingLines } from "./bettingLines.js";
@@ -7,7 +7,7 @@ import { buildFavoriteExplanation } from "./favoriteExplanation.js";
 import { createModelConfig } from "./modelProfiles.js";
 import { pairKey, protectionReason } from "./protections.js";
 import { FORCE_WIN_SCHEMA, getForceWinValue } from "./schema.js";
-import { resolveTeamReference } from "./teamRatings.js";
+import { resolveTeamReference, teamTableId } from "./teamRatings.js";
 import {
   calculateCoachingScore,
   calculateHomeContext,
@@ -73,6 +73,19 @@ export function inSelectedScope(record, context, scope, specificWeek, schema = F
   throw new Error(`Unknown schedule scope: ${scope}`);
 }
 
+// Schedule references use runtime team-table rows, not TeamIndex or display names.
+// This check does not restrict the opponent's ratings or donor/model data.
+export function gameInvolvesUserTeam(record, teamTable, teamIds, schema = FORCE_WIN_SCHEMA) {
+  const tableId = teamTableId(teamTable);
+  return [schema.game.homeTeam, schema.game.awayTeam].some(field => {
+    const value = sf(record, field);
+    if (typeof value !== "string" || !/^[01]{32}$/.test(value)) return false;
+    const reference = parseRef(value);
+    return reference?.tableId === tableId && teamIds.has(String(reference.row)) &&
+      Boolean(teamTable.records[reference.row] && !teamTable.records[reference.row].isEmpty);
+  });
+}
+
 // Evaluate schedule records without mutating them. Writes happen later, after confirmation.
 export function processSchedule({
   records,
@@ -91,8 +104,15 @@ export function processSchedule({
   customModel = null,
   rosterRatings = null,
   forceAllFcs = false,
+  userScheduleOnly = false,
+  userControlledTeamIds = [],
   schema = FORCE_WIN_SCHEMA
 }) {
+  const userTeamIds = new Set([...userControlledTeamIds].map(String));
+  if (userScheduleOnly && ![...userTeamIds].some(id => /^\d+$/.test(id) && teamTable.records[Number(id)] && !teamTable.records[Number(id)].isEmpty)) {
+    throw new Error("User Schedule Only requires a user-controlled team in this save. Select a save with a user team or turn this option off.");
+  }
+  const inUserSchedule = record => !userScheduleOnly || gameInvolvesUserTeam(record, teamTable, userTeamIds, schema);
   const modelConfig = createModelConfig(modelProfile, FORCE_WIN_CONFIG, customModel);
   const results = [];
   const changes = [];
@@ -104,6 +124,8 @@ export function processSchedule({
     modelProfile,
     modelProfileLabel: modelConfig.activeModelProfile.label,
     coachingModifiersEnabled: Boolean(coachTable),
+    userScheduleOnly,
+    cpuGamesIgnored: 0,
     gamesFound: 0,
     gamesEligible: 0,
     gamesRolled: 0,
@@ -120,7 +142,8 @@ export function processSchedule({
     upsetChancesPreserved: 0,
     recordsModified: 0
   };
-  const actionableWeek = scope === "next" ? findNextActionableWeek(records, context, schema) : null;
+  // A user team's bye week must not select a CPU-only "next" week.
+  const actionableWeek = scope === "next" ? findNextActionableWeek(records.filter(inUserSchedule), context, schema) : null;
 
   // Evaluate chronologically so seeded rolls and output consistently follow the schedule.
   const orderedRecords = records
@@ -136,6 +159,8 @@ export function processSchedule({
 
   orderedRecords.forEach(({ record, fallbackIndex }) => {
     if (record?.isEmpty || !inSelectedScope(record, context, scope, specificWeek, schema, actionableWeek)) return;
+    // Ignore CPU games before ratings/model evaluation or seeded random draws.
+    if (!inUserSchedule(record)) { summary.cpuGamesIgnored += 1; return; }
     summary.gamesFound += 1;
     const index = recordIndex(record, fallbackIndex);
     const week = Number(sf(record, schema.game.week));

@@ -246,14 +246,14 @@ test("one player can receive different left and right tattoos plus matching leg 
   assert.match(change.newItem, /both legs: Leg Tattoo Four/);
 });
 
-test("leg tattoos use both tattoo slots, low socks, and bare legs", () => {
+test("leg tattoos use both tattoo slots, preserve socks, and retain bare legs", () => {
   const parsed = { loadouts: [onField()] };
   applyUnlockedTattooPlan(parsed, { kind: "leg", arms: {}, legs: { asset: "LegTattoo_Three", label: "Leg Tattoo Three" } });
   const allElements = parsed.loadouts.flatMap(loadout => loadout.loadoutElements ?? []);
   const slots = new Map(allElements.map(element => [element.slotType, element.itemAssetName]));
   assert.equal(slots.get("LeftLegTattoo"), "LegTattoo_Three");
   assert.equal(slots.get("RightLegTattoo"), "LegTattoo_Three");
-  assert.equal(slots.get("InnerSocks"), "Gear_Socks_Low");
+  assert.equal(slots.get("InnerSocks"), "Gear_Socks_Mid");
   assert.equal(slots.get("InnerPants"), "BottomBase_None");
 });
 

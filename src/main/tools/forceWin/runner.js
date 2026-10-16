@@ -5,6 +5,7 @@ import { completePlan, saveFingerprint, storePlan, takePlan } from "../jersey/pl
 import { CUSTOM_MODEL_FIELDS, normalizeCustomModel } from "./core/customModel.js";
 import { customModelPresets, createModelConfig } from "./core/modelProfiles.js";
 import FORCE_WIN_CONFIG from "./core/config.js";
+import { approvedMatchupReport } from "./applyReport.js";
 import { buildCsvReport } from "./core/logger.js";
 import { createRandom } from "./core/probabilityEngine.js";
 import { buildPairSet } from "./core/protections.js";
@@ -153,6 +154,7 @@ function normalized(options = {}) {
     customModel: modelProfile === "custom" ? normalizeCustomModel(options.customModel) : null,
     seed,
     forceAllFcs: Boolean(options.forceAllFcs),
+    userScheduleOnly: Boolean(options.userScheduleOnly),
     skippedTeamIds: Array.isArray(options.skippedTeamIds) ? options.skippedTeamIds.map(String) : [],
     skippedTeams: Array.isArray(options.skippedTeams) ? options.skippedTeams : [],
     clearScope,
@@ -186,6 +188,7 @@ function stableGame(game, existing = FORCE_WIN_SCHEMA.game.noForceWin) {
     underdog: game.underdog?.name ?? "—",
     favoriteSide: game.favoriteSide ?? null,
     favoriteLocation: game.favoriteLocation ?? null,
+    strongestFactors: [...(game.explanation?.contributions ?? [])].sort((a, b) => Math.abs(b.value) - Math.abs(a.value)).slice(0, 3),
     rule: reason,
     reason,
     status: game.status,
@@ -232,17 +235,20 @@ async function applyPlan(context) {
   if (saveFingerprint(plan.savePath) !== plan.saveFingerprint) {
     throw new Error("The save changed after Preview. Run Preview again before Apply.");
   }
+  const excludedRows = context.options?.leaveUnchangedRows ?? [];
+  if (!Array.isArray(excludedRows) || excludedRows.some(row => !/^\d+$/.test(String(row)) || !Number.isSafeInteger(Number(row)) || !plan.assignments.some(change => change.row === Number(row)))) throw new Error("Choose unchanged matchups from this preview.");
+  const excluded = new Set(excludedRows.map(Number)), assignments = plan.assignments.filter(change => !excluded.has(change.row));
   const loaded = await load(context.savePath, context.schemaPath, ["seasonGame"]);
-  for (const change of plan.assignments) {
+  for (const change of assignments) {
     const record = loaded.tables.seasonGame.records[change.row];
     if (!record || record.isEmpty || sf(record, FORCE_WIN_SCHEMA.game.forceWin) !== change.oldValue) {
       throw new Error(`Schedule record ${change.row} changed after Preview. Run Preview again.`);
     }
   }
   let backupPath = null;
-  if (plan.assignments.length) {
+  if (assignments.length) {
     backupPath = createBackup(loaded.savePath);
-    for (const change of plan.assignments) {
+    for (const change of assignments) {
       loaded.tables.seasonGame.records[change.row][FORCE_WIN_SCHEMA.game.forceWin] = change.newValue;
     }
     await loaded.franchise.save();
@@ -251,12 +257,20 @@ async function applyPlan(context) {
     toolId: TOOL_ID,
     toolName: TOOL_NAME,
     prefix: plan.reportPrefix,
-    content: plan.applyReport
+    content: approvedMatchupReport(plan.applyReport, assignments, excluded, plan.assignments)
   });
   completePlan(context.options.planId);
   return {
     ...plan.result,
-    status: plan.assignments.length ? "completed" : "no-changes",
+    summary: plan.result.summary.map(item => {
+      if (item.label === 'Games affected' || item.label === 'Assignments to clear') return { ...item, value: assignments.length };
+      if (item.label === 'Games left untouched') return { ...item, value: Number(item.value) + excluded.size };
+      if (item.label === 'Force wins: Medium / High / Extreme') return { ...item, value: ['medium', 'high', 'extreme'].map(level => plan.previewRows.filter(row => row.affected && !excluded.has(row.row) && row.mismatch === level).length).join(' / ') };
+      return item;
+    }),
+    historySummary: [{ label: 'Games changed', value: assignments.length }, { label: 'Left unchanged by user', value: excluded.size }],
+    details: { ...plan.result.details, leaveUnchangedRows: [...excluded], changes: plan.previewRows.map(row => excluded.has(row.row) ? { ...row, affected: false, forcedWinner: 'Unchanged', proposedForceWin: row.existingForceWin, status: 'Left unchanged by user' } : row).slice(0, 1000) },
+    status: assignments.length ? "completed" : "no-changes",
     mode: "apply",
     backupPath,
     reportPath,
@@ -372,7 +386,9 @@ async function preview(context) {
       modelProfile: options.modelProfile,
       customModel: options.customModel,
       rosterRatings,
-      forceAllFcs: options.forceAllFcs
+      forceAllFcs: options.forceAllFcs,
+      userScheduleOnly: options.userScheduleOnly,
+      userControlledTeamIds: userControlledTeamIds(tables.team.records)
     });
     assignments = coreResult.changes.map(change => ({
       row: change.index,
@@ -391,6 +407,8 @@ async function preview(context) {
       seed: options.seed,
       modelProfile: createModelConfig(options.modelProfile, FORCE_WIN_CONFIG, options.customModel).activeModelProfile.label,
       customModel: options.customModel,
+      userScheduleOnly: options.userScheduleOnly,
+      userControlledTeams: userControlledTeamNames(tables.team.records),
       backupPath: dryRun ? null : nextBackupPath(loaded.savePath),
       outputPath: dryRun ? null : loaded.savePath,
       dryRun
@@ -409,6 +427,7 @@ async function preview(context) {
       ]
     : [
         { label: "Games analyzed", value: coreResult.summary.gamesFound },
+        ...(options.userScheduleOnly ? [{ label: "CPU-only games ignored", value: coreResult.summary.cpuGamesIgnored }] : []),
         { label: "Games affected", value: assignments.length },
         { label: "Games left untouched", value: coreResult.summary.gamesFound - assignments.length },
         { label: "Force wins: Medium / High / Extreme", value: `${coreResult.changes.filter(game => game.level?.label === "medium").length} / ${coreResult.changes.filter(game => game.level?.label === "high").length} / ${coreResult.changes.filter(game => game.level?.label === "extreme").length}` }
@@ -433,6 +452,8 @@ async function preview(context) {
     resultKind: TOOL_ID,
     details: {
       action: options.action, customModel: options.customModel, modelProfile: options.modelProfile,
+      userScheduleOnly: options.action === "evaluate" && options.userScheduleOnly,
+      userControlledTeams: userControlledTeamNames(tables.team.records),
       currentWeek: season.currentWeek,
       totalPreviewRows: sortedRows.length,
       changes: sortedRows.slice(0, 1000)

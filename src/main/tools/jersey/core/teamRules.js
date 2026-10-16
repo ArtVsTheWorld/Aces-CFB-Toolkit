@@ -1,5 +1,6 @@
 import { logChange, logInfo, logWarning, playerDetails, playerName } from "./logger.js";
 import { isProtectedNil } from "./nilPolicy.js";
+import { matchesTraditionPersonality } from '../personalities.js';
 
 // Team-specific traditions are data-driven. Multiple rules may apply to one
 // team, and a rule can reserve its number team-wide or on one side only.
@@ -38,9 +39,9 @@ function normalizeTeamName(name) {
     return String(name ?? "").trim().toLowerCase();
 }
 
-function findRules(teamName) {
+function findRules(teamName, customRules = []) {
     const normalized = normalizeTeamName(teamName);
-    return TEAM_RULES.filter(rule =>
+    return [...TEAM_RULES.filter(rule => !customRules.some(custom => custom.teamNames.includes(teamName) && custom.number === rule.number)), ...customRules].filter(rule =>
         rule.teamNames.some(name => normalizeTeamName(name) === normalized)
     );
 }
@@ -96,7 +97,8 @@ function eligiblePlayersForRule(roster, rule, excluded = new Set()) {
         !isProtectedNil(player) &&
         !player.teamRuleLocked &&
         (!rule.upperclassmenOnly || isUpperclassman(player)) &&
-        (!rule.eligiblePositions || rule.eligiblePositions.includes(player.Position))
+        (!rule.eligiblePositions || rule.eligiblePositions.includes(player.Position)) &&
+        matchesTraditionPersonality(player, rule)
     );
 
     if (rule.preferCaptains) {
@@ -182,10 +184,10 @@ function applyRule(team, teamName, rule, stats, random) {
     stats.teamRuleDisplacements += displaced.size;
 }
 
-export function applyTeamSpecificRules(teamGroups, teamNames, stats, random = Math.random) {
+export function applyTeamSpecificRules(teamGroups, teamNames, stats, random = Math.random, customRules = []) {
     for (const [teamIndex, team] of teamGroups) {
         const teamName = teamNames.get(teamIndex) ?? `Team ${teamIndex}`;
-        for (const rule of findRules(teamName)) applyRule(team, teamName, rule, stats, random);
+        for (const rule of findRules(teamName, customRules)) applyRule(team, teamName, rule, stats, random);
     }
 }
 
@@ -215,5 +217,4 @@ export function validateAppliedTeamRules(teamGroups, teamNames) {
 
     return violations;
 }
-
 

@@ -1,6 +1,6 @@
 # Ace's CFB Toolkit
 
-A Windows desktop toolkit for College Football 27 Dynasty and Road To Glory save utilities. This repository contains the complete maintained Electron application source for **v19.0**, its build resources, and regression tests, alongside the official release downloads.
+A Windows desktop toolkit for College Football 27 Dynasty and Road To Glory save utilities. This repository contains the complete maintained Electron application source for **v20.0**, its build resources, and regression tests, alongside the official release downloads.
 
 ## Download the app
 
@@ -32,7 +32,7 @@ npm run build
 npm run build:portable
 ```
 
-Build output is written to `dist/`. App display version **19.0** uses installer/update SemVer **19.0.0**. No installer is published by the build commands above.
+Build output is written to `dist/`. App display version **20.0** uses installer/update SemVer **20.0.0**. No installer is published by the build commands above.
 
 ## Project layout
 
@@ -55,7 +55,8 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for development and save-safety expectati
 
 Personal settings, uploaded team artwork, saves, backups, reports, credentials, installed dependencies, build outputs, and private diagnostic artifacts are excluded. Default bundled artwork is included so a fresh checkout can build the same interface.
 
-Current update: [v19.0 helmet settings and checks](docs/V19_0_UPDATE.md).
+Current update: [v20.0 release notes](docs/RELEASE_NOTES_20_0.md) and [configuration, usability, and safety refinements](docs/V20_0_REFINEMENT.md).
+Previous update: [v19.1 user schedules, position-specific facemasks, configurable mod pools and Unlocked socks](docs/V19_1_UPDATE.md).
 Earlier changes: [plain-English changes since v18.3](docs/PATCH_NOTES_18_4_TO_18_5.md).
 
 If you distribute a fork, configure your own app identity and update repository before packaging. Do not leave a modified fork pointed at Ace's official installer feed. See [installer release guidance](docs/INSTALLER_UPDATES.md).

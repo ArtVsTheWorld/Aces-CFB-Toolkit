@@ -11,7 +11,7 @@ test("equipment preview IPC detail is bounded while full plans remain in the mai
   assert.equal(preview[999].row, 999);
   assert.equal(rows.length, 2500);
   const runner = fs.readFileSync(new URL("../src/main/tools/equipment/runner.js", import.meta.url), "utf8");
-  assert.doesNotMatch(runner, /donorUses:/);
+  assert.match(runner, /donorUses: change\.donorUses/); // compact summaries only; raw donor visuals stay in the main process
   assert.match(runner, /totalPreviewRows:/);
 });
 

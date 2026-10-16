@@ -2,6 +2,7 @@ import RULES from "./rules.js";
 import { MINIMUM_PROMOTION_DISTANCE } from "./candidateGenerator.js";
 import { effectiveSchoolYear, TEAM_RULES } from "./teamRules.js";
 import { getRetiredNumbers } from "./retiredNumbers.js";
+import { matchesTraditionPersonality } from '../personalities.js';
 
 const OL = new Set(["LT", "LG", "C", "RG", "RT"]);
 const SPECIALISTS = new Set(["K", "P"]);
@@ -96,19 +97,21 @@ function hasCaptainPatch(player) {
   return normalized(player.CaptainsPatch ?? "none") !== "none";
 }
 
-function matchingTeamRules(teamName) {
+function matchingTeamRules(teamName, customRules = []) {
   const wanted = normalized(teamName);
-  return TEAM_RULES.filter(rule => rule.teamNames.some(alias => normalized(alias) === wanted));
+  return [...TEAM_RULES.filter(rule => !customRules.some(custom => custom.teamNames.includes(teamName) && custom.number === rule.number)), ...customRules].filter(rule => rule.teamNames.some(alias => normalized(alias) === wanted));
 }
 
-function chooseTeamRuleRecipients(roster, teamName, random) {
+function chooseTeamRuleRecipients(roster, teamName, random, customRules = []) {
   const locked = new Map();
   const alreadyChosen = new Set();
-  for (const rule of matchingTeamRules(teamName)) {
+  for (const rule of matchingTeamRules(teamName, customRules)) {
     let eligible = roster.filter(player =>
       !alreadyChosen.has(player) &&
+      (!rule.side || (rule.side === "offense" ? ["QB","HB","FB","WR","TE","LT","LG","C","RG","RT"].includes(player.Position) : !["QB","HB","FB","WR","TE","LT","LG","C","RG","RT","K","P"].includes(player.Position))) &&
       (!rule.upperclassmenOnly || isUpperclassman(player)) &&
-      (!rule.eligiblePositions || rule.eligiblePositions.includes(player.Position))
+      (!rule.eligiblePositions || rule.eligiblePositions.includes(player.Position)) &&
+      matchesTraditionPersonality(player, rule)
     );
     if (rule.preferCaptains && eligible.some(hasCaptainPatch)) eligible = eligible.filter(hasCaptainPatch);
     eligible = eligible
@@ -151,10 +154,11 @@ export function runNoDuplicatesRoster(roster, teamName, {
   enableTeamRules = true,
   enableRetiredNumbers = true,
   enablePromotions = true,
+  customRetired = {}, customTraditions = [],
   random = Math.random
 } = {}) {
   if (roster.length > 100) throw new Error(`${teamName} has ${roster.length} rostered players but only 100 jersey numbers exist.`);
-  const retired = enableRetiredNumbers ? getRetiredNumbers(teamName) : new Set();
+  const retired = enableRetiredNumbers ? getRetiredNumbers(teamName, customRetired) : new Set();
   const ordered = sortNoDuplicateRoster(roster);
   const claimed = new Set();
   const claimedBy = new Map();
@@ -162,9 +166,11 @@ export function runNoDuplicatesRoster(roster, teamName, {
   const changes = [];
   // Absolute-uniqueness mode can only award one copy of a tradition number,
   // even when standard mode permits LSU #7 on both sides of the ball.
-  const teamRuleRecipients = enableTeamRules ? chooseTeamRuleRecipients(roster, teamName, random) : new Map();
+  const teamRuleRecipients = enableTeamRules ? chooseTeamRuleRecipients(roster.filter(player => !player.userNumberLocked), teamName, random, customTraditions) : new Map();
 
+  for (const player of roster.filter(player => player.userNumberLocked)) { const jersey = number(player.JerseyNum); if (claimed.has(jersey)) throw new Error(`${teamName}: locked jersey conflict at #${jersey}.`); claimed.add(jersey); claimedBy.set(jersey, player); lockedPlayers.add(player); }
   for (const [jersey, { player, label }] of teamRuleRecipients) {
+    if (claimed.has(jersey)) throw new Error(`${teamName}: tradition #${jersey} conflicts with a player lock.`);
     const oldNumber = number(player.JerseyNum);
     player.JerseyNum = jersey;
     claimed.add(jersey);
@@ -244,5 +250,3 @@ export const NO_DUPLICATE_VALID_POSITIONS = Object.freeze(new Set([
   "QB", "HB", "FB", "WR", "TE", "LT", "LG", "C", "RG", "RT",
   "LE", "RE", "EDGE", "DT", "LOLB", "MLB", "ROLB", "CB", "FS", "SS", "K", "P"
 ]));
-
-

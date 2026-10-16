@@ -9,10 +9,10 @@ import { spawnSync } from "node:child_process";
 const source = fs.readFileSync(new URL("../src/renderer/configuration.js", import.meta.url), "utf8");
 function context() {
   const result = vm.createContext({ Event, multiSelectEmptyMeaning: id => /included|positions|classes/.test(id) ? "All" : "None" });
-  vm.runInContext(source, result); return result;
+  vm.runInContext(fs.readFileSync(new URL("../src/renderer/donor-mouthpiece-settings.js", import.meta.url), "utf8"), result); vm.runInContext(source, result); return result;
 }
 function root(controls = {}, numbers = [], groups = {}) {
-  return { querySelector: selector => controls[selector.match(/data-config-original="([^"]+)"/)?.[1] ?? selector.slice(1)] ?? null, querySelectorAll: selector => selector === 'input[type="number"]' ? numbers : groups[selector] ?? [] };
+  return { dataset: {}, querySelector: selector => controls[selector.match(/data-config-original="([^"]+)"/)?.[1] ?? selector.slice(1)] ?? null, querySelectorAll: selector => selector === 'input[type="number"]' ? numbers : groups[selector] ?? [] };
 }
 function input(id, value = "", options = {}) {
   return { id, value, type: "number", tagName: "INPUT", disabled: false, defaultValue: options.defaultValue ?? value, closest: () => null, hasAttribute: name => name === "value" && Boolean(options.required), checkValidity: () => value === "" || Number.isFinite(Number(value)) && Number(value) >= (options.min ?? 0) && Number(value) <= (options.max ?? 100) && (options.decimal || Number.isInteger(Number(value))), ...options };

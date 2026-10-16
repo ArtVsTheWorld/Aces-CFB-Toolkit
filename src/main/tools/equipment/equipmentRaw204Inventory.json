@@ -1,5 +1,6 @@
 {
-  "verification": "Exact ItemName and DisplayName pairs read on 2026-10-05 from structurally checked ItemInfo records in the user-confirmed RAW Accessories v2.0.4 / CFB27 Unlocked 0.96 session. Repeated ItemName fields and DisplayName at +56 agree. The user identifies the new white Nike/Battle skullcaps as RAW; existing black variants also occur in the RAW 2.0.2 manifest. GuardianCap is the previously confirmed skullcap slot. This does not pretend the older supplied RAW manifest is v2.0.4.",
+  "verification": "Exact ItemName and DisplayName pairs read on 2026-10-05 from structurally checked ItemInfo records in the user-confirmed RAW Accessories v2.0.4 / CFB27 Unlocked 0.96 session. Repeated ItemName fields and DisplayName at +56 agree. All four skullcaps are also present in the subsequently supplied RAW 2.0.4 manifest. GuardianCap is the previously confirmed skullcap slot. Manifest evidence corroborates provenance, not exact save casing or slots.",
+  "manifestEvidence": { "version": "2.0.4", "sha256": "ec1c7f4ad5b15d5a06b4061080eb66485a17245599bbf51e37bebb090a332e91", "formatVersion": 9, "encryptedPayloads": 7283 },
   "source": "outputs/v190-modded-labels-1.json",
   "items": [
     { "itemName": "GuardianCap_RawBattleSkullCap", "displayName": "Black Battle Skullcap", "category": "Guardian Cap", "slots": ["GuardianCap"], "tags": [], "origin": "raw", "themeColors": ["black"] },

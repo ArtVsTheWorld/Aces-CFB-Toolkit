@@ -7,7 +7,12 @@ export class ReviewSnapshots {
   file(id) { if (!/^[0-9a-f-]{36}$/i.test(String(id))) throw new Error("Invalid run ID."); return path.join(this.directory, `${id}.json.gz`); }
   save(id, result, rows) {
     fs.mkdirSync(this.directory, { recursive: true });
-    const snapshot = { result: { ...result, planId: null, details: { ...result.details, changes: (rows ?? result.details?.changes ?? []).slice(0, 1000), totalPreviewRows: (rows ?? result.details?.changes ?? []).length } }, rows: rows ?? result.details?.changes ?? [] };
+    let reviewRows = rows ?? result.details?.changes ?? [];
+    if (result.mode === 'apply' && result.resultKind === 'automatic-force-win' && result.details?.leaveUnchangedRows?.length) {
+      const omitted = new Set(result.details.leaveUnchangedRows.map(Number));
+      reviewRows = reviewRows.map(row => omitted.has(Number(row.row)) ? { ...row, affected: false, forcedWinner: 'Unchanged', proposedForceWin: row.existingForceWin, status: 'Left unchanged by user' } : row);
+    }
+    const snapshot = { result: { ...result, planId: null, details: { ...result.details, changes: reviewRows.slice(0, 1000), totalPreviewRows: reviewRows.length } }, rows: reviewRows };
     const destination = this.file(id), temporary = `${destination}.tmp`;
     fs.writeFileSync(temporary, zlib.gzipSync(JSON.stringify(snapshot)));
     fs.renameSync(temporary, destination);

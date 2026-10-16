@@ -4,8 +4,8 @@ param(
   [ValidateRange(1, 32)][int]$MaxGiB = 12,
   [ValidateRange(0, 34359738368)][long]$SkipBytes = 0,
   [string]$OutputPath,
-  [ValidateCount(1, 40)]
-  [ValidateSet('Gear', 'ArmSleeve_', 'Backplate_', 'Flakjacket_', 'KneePad_', 'OakleyPrizm', 'G_', 'NeckWear_', 'FaceMarks_', 'FaceGear_', 'GearMouthpiece_', 'GearFootwear_', 'GearArmSleeve_', 'GearNeckpad_', 'Neckwear_', 'ElbowGear_', 'GearLegBase_', 'GearLegsBase_', 'GuardianCap_', 'Towel_', 'Towel2_', 'ThighPad_', 'G_CompressionT_', 'GearWrist_', 'Gear_Socks_', 'Gear_JerseyStyle_', 'GearHand_', 'ArmTattoo_', 'LegTattoo_', 'CujoMatty_', 'CM_', 'Gear_Undershirt_', 'GearHelmet_', 'GearFaceMask_', 'Handwarmer_', 'Waist_', 'GearSpats_', 'GearBicep_', 'GearKneeBrace_', 'GearBackplate_')][string[]]$Prefix = @('FaceMarks_')
+  [ValidateCount(1, 41)]
+  [ValidateSet('Gear', 'ArmSleeve_', 'Backplate_', 'Flakjacket_', 'KneePad_', 'OakleyPrizm', 'G_', 'NeckWear_', 'FaceMarks_', 'FaceGear_', 'GearMouthpiece_', 'GearFootwear_', 'GearArmSleeve_', 'GearNeckpad_', 'Neckwear_', 'ElbowGear_', 'GearLegBase_', 'GearLegsBase_', 'GuardianCap_', 'Towel_', 'Towel2_', 'ThighPad_', 'G_CompressionT_', 'GearWrist_', 'Gear_Socks_', 'Socks_', 'Gear_JerseyStyle_', 'GearHand_', 'ArmTattoo_', 'LegTattoo_', 'CujoMatty_', 'CM_', 'Gear_Undershirt_', 'GearHelmet_', 'GearFaceMask_', 'Handwarmer_', 'Waist_', 'GearSpats_', 'GearBicep_', 'GearKneeBrace_', 'GearBackplate_')][string[]]$Prefix = @('FaceMarks_')
 )
 $ErrorActionPreference = 'Stop'
 if (-not [Environment]::Is64BitProcess) { throw 'Run this diagnostic in 64-bit PowerShell.' }

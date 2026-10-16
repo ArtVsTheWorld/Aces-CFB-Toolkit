@@ -1,0 +1,128 @@
+// Run through smoke-v190-configuration.cjs --refinements (isolated settings,
+// real preparation catalogs, mocked tool execution; no user saves are written).
+module.exports = async (window, root) => {
+  const result = await window.webContents.executeJavaScript(`(async () => {
+    const check = (value, message) => { if (!value) throw new Error(message); console.log('[v200] ' + message); };
+    const delay = ms => new Promise(resolve => setTimeout(resolve, ms ?? 70));
+    const wait = async (predicate, message) => { for (let i = 0; i < 400; i++) { if (predicate()) { await delay(); return; } await delay(); } throw new Error(message || 'Refinement wait timed out: ' + state.page); };
+    const change = (control, value) => { check(control, 'Control exists'); control.value = value; control.dispatchEvent(new Event('change', { bubbles: true })); };
+    const pick = (control, values) => { [...control.options].forEach(option => option.selected = values.includes(option.value)); control.dispatchEvent(new Event('change', { bubbles: true })); };
+    const open = title => { const entry = [...content.querySelectorAll('.configuration-entry')].find(node => node.querySelector('strong').textContent === title); check(entry && !entry.querySelector('button').disabled, 'Entry: ' + title); entry.querySelector('button').click(); return document.querySelector('dialog[open]'); };
+    const draft = id => configurationRead(document.querySelector('dialog .configuration-draft'), id);
+    const save = () => { const button = document.querySelector('dialog [data-config-save]'); check(!button.disabled, 'Draft valid: ' + document.querySelector('[data-config-error]')?.textContent); button.click(); };
+    const cancel = () => document.querySelector('dialog [data-config-cancel]').click();
+    navigate('equipment-patcher'); await wait(() => document.querySelector('#fix-clear-tattoos')); const previousClear = document.querySelector('#fix-clear-tattoos'); document.querySelector('#reset-tool-defaults').click(); await wait(() => document.querySelector('#fix-clear-tattoos') && document.querySelector('#fix-clear-tattoos') !== previousClear);
+    showEquipmentPreviewWorkspace(false); setEquipmentStep('equipment-patcher', 0);
+    check(!document.querySelector('#clear-passes,#recommended-passes'), 'Bulk pass buttons removed');
+    const tattooEntry = [...content.querySelectorAll('.configuration-entry')].find(node => node.querySelector('strong').textContent === 'Tattoo Settings');
+    check(tattooEntry.hidden && !document.querySelector('#fix-clear-tattoos').checked, 'Tattoo settings hidden; Clear Tattoos defaults off');
+    document.querySelector('#fix-unlocked-tattoos').click(); check(!tattooEntry.hidden, 'Tattoo settings appear only when enabled');
+    document.querySelector('#fix-clear-tattoos').click(); check(!document.querySelector('#fix-unlocked-tattoos').checked && tattooEntry.hidden && equipmentOptions('equipment-patcher').clearTattoos, 'Clear Tattoos disables Add and hides its editor');
+    document.querySelector('#fix-unlocked-tattoos').click(); check(!document.querySelector('#fix-clear-tattoos').checked, 'Add Tattoos disables Clear');
+    document.querySelector('#fix-unlocked-tattoos').click();
+    const helmetControl = document.querySelector('#fix-helmet'); helmetControl.click(); check(document.querySelector('.helmet-settings-summary').hidden, 'Disabled helmet editor is hidden'); helmetControl.click();
+    const teams = open('Teams'); change(draft('selection-mode-equipment-included'), 'selected'); pick(draft('equipment-included'), []);
+    check(document.querySelector('[data-config-save]').disabled, 'Empty Selected Teams cannot silently mean all');
+    change(draft('selection-mode-equipment-included'), 'all'); save(); await delay();
+    check(document.querySelector('#equipment-included').selectedOptions.length === document.querySelector('#equipment-included').options.length, 'All teams is explicit');
+    open('Player Filters'); pick(draft('equipment-positions'), ['QB','WR']); pick(draft('equipment-classes'), ['Freshman']); save(); await delay();
+    check(affectedScopeSummary().includes('QB') && affectedScopeSummary().includes('WR') && affectedScopeSummary().includes('Freshman') && affectedScopeSummary().includes('NIL Players Excluded'), 'Affected summary exposes hidden filters');
+    document.querySelector('#configure-helmet-mix').click(); change(document.querySelector('[data-helmet-mode]'), 'custom');
+    for (const input of document.querySelectorAll('[data-helmet-id]')) { input.value = String(({ GearHelmet_Speed_Flex:80, GearHelmet_Axiom:10, GearHelmet_SchuttF7Pro:10 })[input.dataset.helmetId] ?? 0); input.dispatchEvent(new Event('input', { bubbles: true })); }
+    document.querySelector('[data-copy-target="helmets"][value="QB"]').checked = true; document.querySelector('[data-copy-run="helmets"]').click();
+    document.querySelector('[data-copy-target="facemasks"][value="WR"]').checked = true; document.querySelector('[data-copy-run="facemasks"]').click();
+    await delay(); check(document.querySelector('.dialog-section-links'), 'Long windows have section links');
+    change(document.querySelector('[data-helmet-position]'), 'HB'); check(document.querySelector('[data-effective-mix]').textContent.includes('80%'), 'Effective inherited mix is visible');
+    save(); await delay(); check(equipmentOptions('equipment-patcher').helmetDistribution.positions.QB.GearHelmet_SchuttF7 === 0, 'Helmet copy commits exact mix');
+    check(equipmentOptions('equipment-patcher').facemaskPools.positions.WR.GearHelmet_Speed_Flex.length > 0, 'Facemask copy creates override');
+    check(document.querySelector('[data-config-departures]').textContent.includes('Schutt F7'), 'Excluded helmet visible before Preview');
+    if (!document.querySelector('#fix-visors').checked) document.querySelector('#fix-visors').click(); open('Visor Frequency'); await delay(); change(draft('visor-frequency-QB'), '22');
+    change(document.querySelector('[data-copy-source]'), 'QB'); document.querySelector('[data-copy-target="visor"][value="WR"]').checked = true; document.querySelector('[data-copy-run="visor"]').click(); save();
+    check(equipmentOptions('equipment-patcher').visorFrequencies.WR === 22, 'Visor copy');
+    document.querySelector('#fix-unlocked-mouthpieces').click(); open('Mouthpiece Settings'); await delay(); change(draft('mouthpiece-style-mode'), 'custom');
+    const enabled = draft('mouthpiece-enabled-QB'); enabled.checked = false; enabled.dispatchEvent(new Event('change', { bubbles: true }));
+    change(document.querySelector('[data-copy-source]'), 'QB'); document.querySelector('[data-copy-target="mouthpiece"][value="K/P"]').checked = true; document.querySelector('[data-copy-run="mouthpiece"]').click(); save();
+    check(!equipmentOptions('equipment-patcher').mouthpiecePositions['K/P'].enabled, 'Mouthpiece copy includes disabled group');
+    document.querySelector('#fix-unlocked-socks').click(); document.querySelector('#fix-socks').checked = true; document.querySelector('#fix-socks').dispatchEvent(new Event('change', { bubbles: true })); await delay();
+    check(document.querySelector('[data-overlap-note]').textContent.includes('takes priority'), 'Sock precedence shown before Preview');
+    const legacy = presetCompatibility({ version: 1, values: {}, teamSelections: { 'equipment-excluded': ['Alabama'] } });
+    check(!legacy.messages.length && legacy.values['equipment-included'].length < document.querySelector('#equipment-included').options.length, 'Legacy exclusion presets migrate without bypassing validation');
+    const confirmation = appConfirm('UI Test', 'Check styled confirmation'); check(document.activeElement.textContent === 'Cancel', 'Safe initial confirmation focus'); document.querySelector('dialog').dispatchEvent(new Event('cancel', { cancelable: true })); check(await confirmation === false, 'Escape cancels confirmation');
+    const accepted = appConfirm('UI Test', 'Accept test'); save(); check(await accepted === true, 'Confirm resolves once');
+    document.querySelector('.config-presets').open = true; document.querySelector('[data-preset-export]').click(); await delay(); document.querySelector('[data-preset-import]').click(); await wait(() => document.querySelector('dialog[open]')); save();
+    await wait(() => state.bootstrap.settings.toolPresets.some(preset => preset.name === 'Imported UI Test'));
+    check(state.bootstrap.settings.toolPresets.find(preset => preset.name === 'Imported UI Test').configuration.values['fix-unlocked-mouthpieces'], 'Preset round trip retains controls, not previews');
+    await wait(() => document.querySelector('[data-preset-default]')); document.querySelector('[data-preset-default]').click(); await wait(() => document.querySelector('dialog[open]')); save(); await wait(() => state.bootstrap.settings.toolDefaults?.['equipment-patcher']);
+    const expectedDefault = JSON.stringify(equipmentOptions('equipment-patcher'));
+    navigate('home'); state.toolSettings.delete('equipment-patcher'); defaultsVisited.delete('equipment-patcher'); state.equipmentWizard.delete('equipment-patcher'); navigate('equipment-patcher'); await wait(() => document.querySelector('#configure-helmet-mix')); await delay();
+    check(JSON.stringify(equipmentOptions('equipment-patcher')) === expectedDefault, 'Personal default restores on fresh visit without running');
+    navigate('commentary-id'); await wait(() => document.querySelector('#commentary-players'));
+    check(document.querySelector('#phonetic').closest('label').textContent.includes('Suggest Similar-Sounding'), 'Friendly Commentary label');
+    const commentaryDialog = open('Additional Player Filters'), first = draft('commentary-players').options[0].value; pick(draft('commentary-players'), [first]); pick(draft('commentary-positions'), ['WR']); save(); await delay();
+    check(commentaryOptionsFromForm().scope.playerRows[0] === first && affectedScopeSummary().includes('NIL Players Always Excluded'), 'Commentary scope and protection');
+    navigate('team-boost'); await wait(() => document.querySelector('#configure-boost-ranges')); open('Additional Player Filters'); pick(draft('boost-classes'), ['Freshman']); save();
+    document.querySelector('#configure-boost-ranges').click(); document.querySelector('[data-range-enabled="QB"]').checked = true; change(document.querySelector('[data-range-min="QB"]'), '5'); change(document.querySelector('[data-range-max="QB"]'), '2'); document.querySelector('[data-range-max="QB"]').dispatchEvent(new Event('input', { bubbles: true }));
+    check(document.querySelector('[data-config-save]').disabled, 'Invalid position range rejected'); change(document.querySelector('[data-range-max="QB"]'), '5'); document.querySelector('[data-range-max="QB"]').dispatchEvent(new Event('input', { bubbles: true })); save();
+    check(collectOptions('team-boost').classes[0] === 'Freshman' && collectOptions('team-boost').positionRanges.QB.minimum === 5, 'Team Boost additional options collected');
+    navigate('dealbreaker-fixer'); await wait(() => document.querySelector('#db-protected-values')); open('Protected Dealbreakers & Players'); pick(draft('db-protected-values'), ['Invalid']); save(); check(dealbreakerOptions().protectedValues[0] === 'Invalid', 'Dealbreaker protection commits');
+    navigate('jersey-renumber'); await wait(() => document.querySelector('#jersey-custom-open')); document.querySelector('#jersey-custom-open').click(); await delay();
+    const jerseyDialog = document.querySelector('dialog'), visiblePages = () => [...jerseyDialog.querySelectorAll('[data-jersey-page]')].filter(page=>!page.hidden);
+    check(visiblePages().length===1 && visiblePages()[0].dataset.jerseyPage==='locks' && !jerseyDialog.querySelector('.dialog-section-links'), 'Jersey editor opens one page without section-jump buttons');
+    const lock = document.querySelector('#jersey-lock-players').options[0].value; pick(document.querySelector('#jersey-lock-players'), [lock]);
+    document.querySelector('[data-jersey-page-tab="retired"]').click(); change(document.querySelector('[data-retired-team]'),'LSU');
+    check([...document.querySelectorAll('[data-retired-number]:checked')].map(control=>Number(control.value)).join(',')==='20,21,37', 'Toolkit retired defaults are preselected');
+    check(document.querySelectorAll('.jersey-number-art').length===100 && visiblePages().length===1, 'Numbers are jersey icons on their own page');
+    document.querySelector('[data-retired-number][value="9"]').click();
+    document.querySelector('[data-jersey-page-tab="traditions"]').click(); document.querySelector('[data-tradition-add]').click(); change(document.querySelector('[data-rule-side="0"]'), 'defense'); change(document.querySelector('[data-rule-personality="0"]'), 'Leader');
+    document.querySelector('[data-jersey-page-tab="locks"]').click(); check(document.querySelector('#jersey-lock-players').selectedOptions[0].value===lock, 'Draft locks survive page switches'); save();
+    check(jerseyOptions(state.jerseyMode === 'no-duplicates' ? 'jersey-no-duplicates' : 'jersey-renumber').lockedRows[0] === lock, 'Individual jersey lock commits');
+    check(jerseyOptions(state.jerseyMode === 'no-duplicates' ? 'jersey-no-duplicates' : 'jersey-renumber').customTraditions[0].side === 'defense', 'Friendly tradition choices retain canonical rule values');
+    check(jerseyOptions(state.jerseyMode === 'no-duplicates' ? 'jersey-no-duplicates' : 'jersey-renumber').customTraditions[0].personality === 'Leader' && jerseyOptions(state.jerseyMode === 'no-duplicates' ? 'jersey-no-duplicates' : 'jersey-renumber').customRetired.LSU.includes(9), 'Personality and retired edits commit with other pages');
+    check(!content.textContent.includes('Details & Exceptions'), 'Extra inline help dropdowns are removed');
+    document.querySelector('#jersey-custom-open').click(); await delay(); document.querySelector('[data-jersey-page-tab="retired"]').click(); change(document.querySelector('[data-retired-team]'),'LSU');
+    check(document.querySelector('[data-retired-number][value="9"]').checked, 'Saved custom retired list restores');
+    document.querySelector('[data-retired-number][value="8"]').click(); document.querySelector('[data-jersey-page-tab="traditions"]').click(); change(document.querySelector('[data-rule-personality="0"]'),'Intense'); cancel();
+    check(jerseyOptions(state.jerseyMode === 'no-duplicates' ? 'jersey-no-duplicates' : 'jersey-renumber').customTraditions[0].personality==='Leader' && !jerseyOptions(state.jerseyMode === 'no-duplicates' ? 'jersey-no-duplicates' : 'jersey-renumber').customRetired.LSU.includes(8), 'Cancel discards edits across every jersey page');
+    const numberDefault = presetConfiguration(); state.bootstrap.settings.toolDefaults['jersey-renumber'] = numberDefault; navigate('home'); state.toolSettings.delete('jersey-renumber'); defaultsVisited.delete('jersey-renumber'); state.jerseyMode = 'standard'; navigate('jersey-renumber'); await wait(() => document.querySelector('#jersey-custom-json'));
+    check(state.jerseyMode === numberDefault.jerseyMode, 'Personal jersey default restores its allocation mode');
+    check(document.querySelector('#jersey-custom-summary').textContent.includes('1 player numbers locked'), 'Restored jersey summary reflects saved locks');
+    navigate('nil-toggle'); await wait(() => document.querySelector('#nil-target')); await delay();
+    for(const id of ['nil-players','nil-positions','nil-classes','nil-redshirts'])pick(document.getElementById(id), []); change(document.getElementById('selection-mode-nil-teams'), 'all');
+    check(affectedScopeSummary().startsWith('ENTIRE DYNASTY'), 'Whole dynasty is unmistakable'); const nilRun = runTool('nil-toggle', 'preview'); await wait(() => document.querySelector('dialog[open]')); check(document.querySelector('.configuration-description').textContent.includes('equipment and commentary'), 'NIL warning explains protection impact'); cancel(); await nilRun;
+    navigate('settings'); await wait(() => document.querySelector('#text-size')); change(document.querySelector('#text-size'), 'extra'); await wait(() => document.documentElement.dataset.textSize === 'extra'); check(state.bootstrap.settings.textSize === 'extra', 'Reading size persists through settings');
+    navigate('help'); await wait(() => document.querySelector('#help-search')); change(document.querySelector('#help-tool'), 'Equipment Patcher'); const search = document.querySelector('#help-search'); search.value = 'why didn'; search.dispatchEvent(new Event('input')); check([...content.querySelectorAll('.help-tool')].filter(section => !section.hidden).length === 1, 'Searchable tool-specific help');
+    navigate('history'); await delay(); state.history = Array.from({ length: 250 }, (_, index) => ({ id: 'mock-' + index, toolId: 'equipment-patcher', toolName: 'Equipment Patcher', mode: index % 2 ? 'apply' : 'preview', status: 'completed', timestamp: new Date(2026, 9, 8, 12, index).toISOString(), inputPath: 'SAVE', summary: [{ label: 'Changes', value: index }] })); await historyPage();
+    check(document.querySelector('#history-count').textContent === '1–20 of 250', 'All 250 retained entries accessible'); document.querySelector('#history-next').click(); check(document.querySelector('#history-count').textContent.startsWith('21–40'), 'History pagination'); change(document.querySelector('#history-mode'), 'apply'); check(document.querySelector('#history-count').textContent === '1–20 of 125', 'History filters');
+    // Unsorted synthetic rows deliberately exercise the mapping between cards and decisions.
+    const output = document.createElement('div'); content.append(output); const fixtureResult = { resultKind: 'automatic-force-win', mode: 'preview', planId: 'ui-plan', summary: [], details: { changes: [{row:20,week:2,awayTeam:'Zulu',homeTeam:'Beta',favorite:'Beta',affected:true,forcedWinner:'Beta',reason:'Test',status:'Test'},{row:10,week:1,awayTeam:'Alpha',homeTeam:'Beta',favorite:'Alpha',affected:true,forcedWinner:'Alpha',reason:'Test',status:'Test'}] } };
+    renderResult(output, fixtureResult); check(output.querySelector('[data-leave-matchup]').value === 'on' && output.querySelector('[data-leave-matchup]').dataset.leaveMatchup === '10', 'First sorted matchup targets its own record');
+    const decision=output.querySelector('[data-leave-matchup="10"]'); decision.click(); check(fixtureResult.details.leaveUnchangedRows[0] === 10, 'Matchup decision maps to record, not display index');
+    change(output.querySelector('#force-week-filter'), '2'); output.querySelector('details')?.setAttribute('open', ''); renderResult(output, fixtureResult); check(output.querySelector('#force-week-filter').value === '2' && output.querySelector('[data-leave-matchup="10"]').checked, 'Preview rerender retains filters and decisions');
+    const pickerRows = Array.from({ length: 3000 }, (_, index) => ({ value: String(index), label: 'Player ' + index, position: index % 2 ? 'WR' : 'QB', overall: 75 })); const started = performance.now(); output.innerHTML = multiSelect('performance-players','Players',pickerRows,'All players unless restricted.'); bindMultiSelectEnhancements(output); check(performance.now() - started < 2500, 'Large player picker setup stays responsive');
+    // Leave the reusable screenshot harness with its optional editors enabled.
+    await window.cfbToolkit.updateReadingSize('standard'); state.bootstrap.settings.textSize = 'standard'; state.history = []; navigate('equipment-patcher'); await wait(() => document.querySelector('#configure-helmet-mix'));
+    showEquipmentPreviewWorkspace(false); setEquipmentStep('equipment-patcher', 0);
+    for (const id of ['fix-unlocked-recolor','fix-unlocked-mouthpieces','fix-unlocked-tattoos','fix-rolled','fix-visors']) if (!document.getElementById(id).checked) document.getElementById(id).click();
+    await delay();
+    return 'v20.0 refinements: selection modes, visible scopes, four position-copy editors, inheritance, precedence, friendly text, styled confirmations, import/export/defaults, player scopes/ranges/locks/protection, reading size, help, 250-entry history, sorted matchup decisions, preview persistence and 3,000-player selector passed.';
+  })()`);
+  const fs = require('node:fs'), path = require('node:path');
+  for (const [width, theme, page] of [[1480,'light','retired'],[1480,'dark','retired'],[1480,'light','traditions'],[760,'light','retired'],[520,'light','retired']]) {
+    window.setSize(width,width===1480?1000:760);
+    await window.webContents.executeJavaScript(`(async()=>{
+      closeConfigurationDialogs(); document.documentElement.dataset.theme=${JSON.stringify(theme)}; navigate('jersey-renumber');
+      for(let i=0;i<300&&!document.getElementById('jersey-custom-open');i++)await new Promise(resolve=>setTimeout(resolve,30));
+      document.getElementById('jersey-custom-open').click();
+      document.querySelector('[data-jersey-page-select]').value=${JSON.stringify(page)};document.querySelector('[data-jersey-page-select]').dispatchEvent(new Event('change'));
+      if(${JSON.stringify(page)}==='retired'){document.querySelector('[data-retired-team]').value='LSU';document.querySelector('[data-retired-team]').dispatchEvent(new Event('change'));}
+    })()`);
+    await new Promise(resolve=>setTimeout(resolve,150));
+    const measured = await window.webContents.executeJavaScript(`(()=>{const dialog=document.querySelector('dialog'),body=dialog.querySelector('.configuration-body'),page=dialog.querySelector('[data-jersey-page]:not([hidden])');return {left:dialog.getBoundingClientRect().left,right:dialog.getBoundingClientRect().right,width:innerWidth,bodyWidth:body.clientWidth,bodyScroll:body.scrollWidth,pageWidth:page.clientWidth,pageScroll:page.scrollWidth,jumpLinks:!!dialog.querySelector('.dialog-section-links')};})()`);
+    if(measured.left<0||measured.right>measured.width+1||measured.bodyScroll>measured.bodyWidth+1||measured.pageScroll>measured.pageWidth+1||measured.jumpLinks)throw new Error('Jersey page overflow/jump links: '+JSON.stringify(measured));
+    fs.writeFileSync(path.join(root,'outputs',`v200-jersey-${page}-${theme}-${width}.png`),(await window.webContents.capturePage()).toPNG());
+  }
+  await window.webContents.executeJavaScript(`closeConfigurationDialogs(); document.documentElement.dataset.theme='light'; navigate('equipment-patcher');`);
+  window.setSize(1480,1000);
+  console.log('Jersey pages: independent drafts/Cancel, preselected defaults, jersey icons, personality, and light/dark 1480/760/520px layouts passed.');
+  return result;
+};

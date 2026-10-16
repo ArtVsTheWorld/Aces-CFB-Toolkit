@@ -1,0 +1,14 @@
+{
+  "verification": "CFB27 Unlocked 0.96 SHA256 371e4ce2bbae9dd37bf5d2895abab6ac5720c5cd1543ec51d634e3ff19a9bc80; RAW Accessories 2.0.4 SHA256 ec1c7f4ad5b15d5a06b4061080eb66485a17245599bbf51e37bebb090a332e91. Exact ItemName / DisplayName pairs checked in live repeated-name ItemInfo records on 2026-10-05 (outputs/v191-backplate-labels-final.json and outputs/v191-backplate-xtech-records.json). Each new ID matches a resource in its respective mod manifest. InnerSocks follows the user's sock-height menu identification; BackPlate follows the established backplate slot. Live slot-vector extraction was inconclusive; an in-game output check is still required. No encrypted payload or guessed casing was used as an item ID.",
+  "items": [
+    { "itemName": "GearBackplate_RawBattle", "displayName": "Battle Backplate (RAW)", "menuDisplayName": "Battle", "category": "Back Plate", "slots": ["BackPlate"], "tags": [], "origin": "raw" },
+    { "itemName": "GearBackplate_RawGearProTec", "displayName": "Gear Pro-Tec Backplate (RAW)", "menuDisplayName": "Gear Pro-Tec", "category": "Back Plate", "slots": ["BackPlate"], "tags": [], "origin": "raw" },
+    { "itemName": "GearBackplate_RawGoldRush", "displayName": "Gold Rush Backplate (RAW)", "menuDisplayName": "Gold Rush", "category": "Back Plate", "slots": ["BackPlate"], "tags": [], "origin": "raw" },
+    { "itemName": "GearBackplate_RawXTech", "displayName": "X Tech Backplate (RAW)", "menuDisplayName": "X Tech", "category": "Back Plate", "slots": ["BackPlate"], "tags": [], "origin": "raw" },
+    { "itemName": "GearBackplate_RawXenith", "displayName": "Xenith Backplate (RAW)", "menuDisplayName": "Xenith", "category": "Back Plate", "slots": ["BackPlate"], "tags": [], "origin": "raw" },
+    { "itemName": "Socks_CrewCut", "displayName": "Crew Cut (CFB27 Unlocked)", "menuDisplayName": "Crew Cut", "category": "Socks", "slots": ["InnerSocks"], "tags": [], "origin": "unlocked" },
+    { "itemName": "Socks_High", "displayName": "High Socks (CFB27 Unlocked)", "menuDisplayName": "High Socks", "category": "Socks", "slots": ["InnerSocks"], "tags": [], "origin": "unlocked" },
+    { "itemName": "Gear_Socks_Mid", "displayName": "Mid Socks", "category": "Socks", "slots": ["InnerSocks"], "tags": [], "origin": "vanilla" },
+    { "itemName": "Gear_Socks_High", "displayName": "High Socks", "category": "Socks", "slots": ["InnerSocks"], "tags": [], "origin": "vanilla" }
+  ]
+}

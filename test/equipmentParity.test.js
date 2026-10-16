@@ -30,7 +30,7 @@ test("Randomizer retains legacy donor, universal gear, and safeguard parity apar
   const normalized = result => {
     const copy = structuredClone(result); delete copy.facePaintPools; delete copy.brandCorrections;
     for (const change of copy.changes) {
-      delete change.brandAssignments; delete change.brandCorrections; delete change.facePaint;
+      delete change.fallbackNotes; delete change.brandAssignments; delete change.brandCorrections; delete change.facePaint;
       change.newRawData = withoutPants(change.newRawData);
       // Legacy appended an empty, unchecked branded donor group even when no brand items existed.
       change.donorUses = change.donorUses.filter(use => use.group !== "gloves + cleats");

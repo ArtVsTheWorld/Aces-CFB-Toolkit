@@ -107,7 +107,8 @@ export const RETIRED_NUMBER_RULES = [
 
 const normalize = value => String(value ?? "").trim().toLowerCase();
 
-export function getRetiredNumbers(teamName) {
+export function getRetiredNumbers(teamName, customRetired = {}) {
+    if (Object.hasOwn(customRetired, teamName)) return new Set(customRetired[teamName]);
     const normalized = normalize(teamName);
     const rule = RETIRED_NUMBER_RULES.find(candidate =>
         candidate.teamNames.some(alias => normalize(alias) === normalized)
@@ -117,11 +118,9 @@ export function getRetiredNumbers(teamName) {
 
 // Attach the applicable set to every player so low-level number helpers can
 // enforce it without depending on team-table lookups.
-export function applyRetiredNumberRules(teamGroups, teamNames) {
+export function applyRetiredNumberRules(teamGroups, teamNames, customRetired = {}) {
     for (const [teamIndex, team] of teamGroups) {
-        const retiredNumbers = getRetiredNumbers(teamNames.get(teamIndex));
+        const retiredNumbers = getRetiredNumbers(teamNames.get(teamIndex), customRetired);
         for (const player of [...team.offense, ...team.defense, ...(team.specialists ?? [])]) player.retiredNumbers = retiredNumbers;
     }
 }
-
-

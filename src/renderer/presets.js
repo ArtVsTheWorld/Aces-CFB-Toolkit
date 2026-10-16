@@ -4,6 +4,7 @@ function presetConfiguration() {
   for (const id of Object.keys(values)) if (/^preset-|search|filter|^tape-team-color-/.test(id)) delete values[id];
   for (const select of content.querySelectorAll("select[id]")) {
     if (select.closest(".config-presets") || !saveSpecificSetting(select.id)) continue;
+    if (select.id === "equipment-donor-players" && document.getElementById("equipment-donor")?.value.trim()) continue; // A source fingerprint makes donor rows stable, without storing thousands of labels.
     teamSelections[select.id] = [...select.selectedOptions].map(option => option.textContent.trim());
     delete values[select.id];
   }
@@ -12,6 +13,11 @@ function presetConfiguration() {
 
 function presetValues(configuration) {
   const values = { ...configuration.values };
+  const external = values["equipment-donor"]?.trim(), donorRows = values["equipment-donor-players"];
+  if (external && Array.isArray(donorRows)) {
+    const catalog = equipmentDonorCatalogs.get(external), allowed = new Set(catalog?.donorPlayers.map(player => player.value) ?? []);
+    if (!catalog || donorRows.some(row => !allowed.has(String(row)))) throw new Error("Preset not loaded: selected donors are unavailable in this file. Reload donors and save a new preset.");
+  }
   const teamSelections = { ...configuration.teamSelections }, includedControl = document.getElementById("equipment-included");
   if (includedControl && teamSelections["equipment-excluded"] && !document.getElementById("equipment-excluded")) {
     const excluded = new Set(teamSelections["equipment-excluded"].map(label => label.toLowerCase()));
@@ -22,10 +28,10 @@ function presetValues(configuration) {
   for (const [id, labels] of Object.entries(teamSelections)) {
     const select = document.getElementById(id);
     if (!select) throw new Error("This preset's team settings are not available in this tool.");
-    const wanted = labels.map(label => label.toLowerCase()), options = [...select.options];
+    const wanted = labels.map(label => label === "Choose Specific Players from Active Dynasty" ? "choose specific players from donor source" : label.toLowerCase()), donorPath = configuration.values?.["equipment-donor"]?.trim(), catalog = id === "equipment-donor-players" && donorPath ? equipmentDonorCatalogs.get(donorPath) : null, options = catalog ? catalog.donorPlayers.map(player => ({ value: player.value, textContent: player.label })) : [...select.options];
     const missing = labels.filter((label, index) => !options.some(option => option.textContent.trim().toLowerCase() === wanted[index]));
     if (missing.length) throw new Error(`Preset not loaded: these ${id === "equipment-donor-players" ? "eligible donor players" : "teams"} are not in this save: ${missing.join(", ")}. Choose a matching save or save a new preset for this one.`);
-    if (id === "equipment-donor-players" && wanted.some(label => options.filter(option => option.textContent.trim().toLowerCase() === label).length !== 1)) throw new Error("Preset not loaded: a donor name matches multiple players. Choose those donors manually.");
+    if ((id === "equipment-donor-players" || /players$/.test(id)) && wanted.some(label => options.filter(option => option.textContent.trim().toLowerCase() === label).length !== 1)) throw new Error("Preset not loaded: a name matches multiple players. Choose these players manually.");
     const selected = wanted.map(label => options.find(option => option.textContent.trim().toLowerCase() === label).value);
     values[id] = select.multiple ? selected : selected[0] ?? "";
   }
@@ -63,7 +69,7 @@ function addPresetControls() {
   panel.querySelector("#preset-save").addEventListener("click", () => busy(async () => {
     const entered = name.value.trim(); if (!entered) throw new Error("Enter a name for your preset.");
     const existing = list().find(preset => preset.name.toLowerCase() === entered.toLowerCase());
-    if (existing && !confirm(`Replace the saved preset "${existing.name}" with your current settings?`)) return;
+    if (existing && !await appConfirm("Replace Preset?", `Replace the saved preset "${existing.name}" with your current settings?`)) return;
     const configuration = presetConfiguration();
     if (tool.id === "equipment-patcher" && configuration.values["fix-unlocked-recolor"] && configuration.values["tape-color-mode"] !== "accessory" && [...content.querySelectorAll("[data-tape-color]")].some(input => input.getAttribute("aria-invalid") === "true")) throw new Error("Balance each team's Tape Color to whole percentages totaling 100% before saving this preset.");
     const saved = await window.cfbToolkit.savePreset({ toolId: tool.id, name: entered, id: existing?.id, configuration });
@@ -72,15 +78,23 @@ function addPresetControls() {
   }));
   panel.querySelector("#preset-load").addEventListener("click", () => busy(async () => {
     const preset = list().find(item => item.id === choice.value); if (!preset) throw new Error("Choose a preset to load.");
-    const values = presetValues(preset.configuration);
-    if (!confirm(`Load "${preset.name}"? This replaces your current settings for ${tool.name} and clears its preview.`)) return;
+    const donorPath = preset.configuration.values?.["equipment-donor"]?.trim();
+    if (tool.id === "freshman-equipment" && donorPath) {
+      const catalog = await window.cfbToolkit.prepareEquipmentDonors({ savePath: donorPath });
+      const expected = preset.configuration.values?.["equipment-donor-fingerprint"];
+      if (expected && expected !== catalog.donorFingerprint) throw new Error("Preset not loaded: the donor file has changed. Reload the file and save a new preset.");
+      equipmentDonorCatalogs.set(donorPath, catalog);
+    }
+    if (state.page !== tool.id || !panel.isConnected) return;
+    const compatibility = presetCompatibility(preset.configuration); if (compatibility.messages.length) throw new Error(compatibility.messages.join("\n")); const values = compatibility.values;
+    if (!await appConfirm("Load Preset?", `Load "${preset.name}"? This replaces your current settings for ${tool.name} and clears its preview.`)) return;
     state.toolSettings.set(tool.id, values);
     if (tool.id === "jersey-renumber") { state.jerseyMode = preset.configuration.jerseyMode === "no-duplicates" ? "no-duplicates" : "standard"; state.jerseyPreviews.clear(); }
     state.equipmentPreviews.delete(tool.id); state.equipmentWizard.delete(tool.id); state.genericPreviews.delete(tool.id); state.forceWinPreviews.delete(tool.id); state.dealbreakerPreviews.delete(tool.id);
     render(); toast(`Loaded ${preset.name} — run a new Preview when ready`);
   }));
   panel.querySelector("#preset-delete").addEventListener("click", () => busy(async () => {
-    const preset = list().find(item => item.id === choice.value); if (!preset || !confirm(`Delete the saved preset "${preset.name}"?`)) return;
+    const preset = list().find(item => item.id === choice.value); if (!preset || !await appConfirm("Delete Preset?", `Delete the saved preset "${preset.name}"?`)) return;
     state.bootstrap.settings.toolPresets = await window.cfbToolkit.deletePreset({ toolId: tool.id, id: preset.id });
     name.value = ""; sync(); toast("Preset deleted");
   }));

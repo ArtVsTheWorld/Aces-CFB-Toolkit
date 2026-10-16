@@ -228,7 +228,7 @@ const csvCell = value => {
 
 const CSV_HEADERS = Object.freeze([
   "RowType", "GeneratedAt", "Save", "Mode", "Scope", "Season", "CurrentWeek", "RandomSource",
-  "Involvement", "ModelProfile", "Record", "Week", "AwayTeam", "HomeTeam", "Favorite",
+  "Involvement", "ModelProfile", "UserScheduleOnly", "UserControlledTeams", "Record", "Week", "AwayTeam", "HomeTeam", "Favorite",
   "FavoriteLocation", "Outcome", "SkipReason", "Mismatch", "Disparity", "ProbabilityPercent",
   "RollPercent", "Automatic", "AutomaticReason", "ForceWinValue", "FavoriteStarterComposite", "OpponentStarterComposite",
   "FavoriteRawStarterComposite", "OpponentRawStarterComposite", "FavoriteOFF", "OpponentOFF",
@@ -255,7 +255,9 @@ export function buildCsvReport(result, {
   dryRun = true,
   generatedAt = new Date(),
   modelProfile = result.summary.modelProfileLabel,
-  customModel = null
+  customModel = null,
+  userScheduleOnly = result.summary.userScheduleOnly ?? false,
+  userControlledTeams = []
 } = {}) {
   const generated = generatedAt.toISOString();
   const common = {
@@ -269,7 +271,9 @@ export function buildCsvReport(result, {
     Involvement: result.summary.involvement,
     CustomModelJSON: customModel ? JSON.stringify(customModel) : "",
     WeeklyLimitSuppressed: result.summary.weeklyLimitSuppressed ?? 0,
-    ModelProfile: modelProfile
+    ModelProfile: modelProfile,
+    UserScheduleOnly: userScheduleOnly,
+    UserControlledTeams: userControlledTeams.join(" | ")
   };
   const lines = [CSV_HEADERS.join(",")];
   for (const game of [...result.results].sort((a, b) => a.week - b.week || a.index - b.index)) {
@@ -349,6 +353,7 @@ export function buildCsvReport(result, {
     automaticDecisions: s.automaticDecisions,
     automaticDecisionPercent: s.gamesEligible > 0 ? percent(s.automaticDecisions / s.gamesEligible) : "n/a",
     gamesSkipped: s.gamesSkipped,
+    cpuGamesIgnored: s.cpuGamesIgnored ?? 0,
     forceWins: s.forceWinsApplied,
     forceWinPercent: s.gamesEligible > 0 ? percent(s.forceWinsApplied / s.gamesEligible) : "n/a",
     fcsGamesEligible: s.fcsGamesEligible,

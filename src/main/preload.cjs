@@ -1,6 +1,6 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
-const channels = Object.freeze({ bootstrap: "app:bootstrap", chooseSave: "dialog:choose-save", chooseFile: "dialog:choose-file", setActiveSave: "context:set-active-save", clearActiveSave: "context:clear-active-save", updateTheme: "settings:update-theme", homeContext: "home:context", homeLines: "home:lines", chooseTeamArtwork: "settings:choose-team-artwork", clearTeamArtwork: "settings:clear-team-artwork", runTool: "tools:run", prepareTool: "tools:prepare", searchPreview: "tools:search-preview", listReports: "reports:list", listHistory: "history:list", getHistory: "history:get", getReview: "history:get-review", listLogs: "logs:list", clearLogs: "logs:clear", openPath: "shell:open-path" });
+const channels = Object.freeze({ bootstrap: "app:bootstrap", chooseSave: "dialog:choose-save", chooseFile: "dialog:choose-file", setActiveSave: "context:set-active-save", clearActiveSave: "context:clear-active-save", updateTheme: "settings:update-theme", homeContext: "home:context", homeLines: "home:lines", chooseTeamArtwork: "settings:choose-team-artwork", clearTeamArtwork: "settings:clear-team-artwork", runTool: "tools:run", prepareTool: "tools:prepare", prepareEquipmentDonors: "equipment:prepare-donors", searchPreview: "tools:search-preview", listReports: "reports:list", listHistory: "history:list", getHistory: "history:get", getReview: "history:get-review", listLogs: "logs:list", clearLogs: "logs:clear", openPath: "shell:open-path" });
 contextBridge.exposeInMainWorld("cfbToolkit", Object.freeze({
   bootstrap: () => ipcRenderer.invoke(channels.bootstrap),
   getUpdateStatus: () => ipcRenderer.invoke("updates:status"),
@@ -13,10 +13,13 @@ contextBridge.exposeInMainWorld("cfbToolkit", Object.freeze({
     ipcRenderer.on("updates:status-changed", listener);
     return () => ipcRenderer.removeListener("updates:status-changed", listener);
   },
-  chooseSave: () => ipcRenderer.invoke(channels.chooseSave),
+  chooseSave: purpose => ipcRenderer.invoke(channels.chooseSave, purpose),
   chooseFile: () => ipcRenderer.invoke(channels.chooseFile),
   setActiveSave: value => ipcRenderer.invoke(channels.setActiveSave, value),
   clearActiveSave: () => ipcRenderer.invoke(channels.clearActiveSave),
+  updateReadingSize: value => ipcRenderer.invoke("settings:update-reading-size", value),
+  presetTransfer: request => ipcRenderer.invoke("settings:preset-transfer", request),
+  setToolDefault: request => ipcRenderer.invoke("settings:set-tool-default", request),
   updateTheme: theme => ipcRenderer.invoke(channels.updateTheme, theme),
   updateAccent: color => ipcRenderer.invoke("settings:update-accent", color),
   savePreset: request => ipcRenderer.invoke("settings:save-preset", request),
@@ -28,6 +31,7 @@ contextBridge.exposeInMainWorld("cfbToolkit", Object.freeze({
   clearTeamArtwork: request => ipcRenderer.invoke(channels.clearTeamArtwork, request),
   runTool: request => ipcRenderer.invoke(channels.runTool, request),
   prepareTool: request => ipcRenderer.invoke(channels.prepareTool, request),
+  prepareEquipmentDonors: request => ipcRenderer.invoke(channels.prepareEquipmentDonors, request),
   searchPreview: request => ipcRenderer.invoke(channels.searchPreview, request),
   listReports: () => ipcRenderer.invoke(channels.listReports),
   listHistory: () => ipcRenderer.invoke(channels.listHistory),

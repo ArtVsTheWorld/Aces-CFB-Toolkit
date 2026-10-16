@@ -1,3 +1,4 @@
+import { matchesPlayerScope } from "../playerScope.js";
 import { createCommentaryMatcher } from "./matcher.js";
 
 export function patchPlayerCommentary(records, commentaryMap, {
@@ -6,12 +7,14 @@ export function patchPlayerCommentary(records, commentaryMap, {
   allowPhonetic = false,
   allowFirstName = true,
   preserveUnmatched = false,
-  freshmenOnly = false
+  freshmenOnly = false,
+  scope = {}
 } = {}) {
   const matchPlayer = createCommentaryMatcher(commentaryMap, { allowPhonetic, allowFirstName });
-  const result = { changes: [], players: [], summary: { scanned: 0, skippedNil: 0, skippedNoTeam: 0, skippedPlaceholder: 0, skippedFreshmanFilter: 0, preservedUnmatched: 0, correct: 0, exact: 0, suffix: 0, phonetic: 0, first: 0, unmatched: 0 } };
+  const result = { changes: [], players: [], summary: { scanned: 0, skippedNil: 0, skippedNoTeam: 0, skippedPlaceholder: 0, skippedFreshmanFilter: 0, preservedUnmatched: 0, correct: 0, exact: 0, suffix: 0, hyphen: 0, phonetic: 0, first: 0, unmatched: 0 } };
   records.forEach((record, row) => {
     if (!record || record.isEmpty) return;
+    if (!matchesPlayerScope(record, row, scope, teamNames)) return;
     if (record.IsNIL === true || String(record.IsNIL).toLowerCase() === "true") {
       result.summary.skippedNil += 1;
       return;
@@ -54,5 +57,3 @@ export function patchPlayerCommentary(records, commentaryMap, {
 }
 
 const normalizePlayerName = value => String(value ?? "").trim().toLowerCase();
-
-

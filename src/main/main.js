@@ -7,10 +7,11 @@ import { UpdateService, updateAvailability } from "./services/updates.js";
 import { IPC, RUN_MODES } from "../shared/contracts.js";
 import { displayAppVersion } from "../shared/appVersion.js";
 import { getTool, registrySnapshot } from "../shared/toolRegistry.js";
+import { prepareEquipmentDonors } from './tools/equipment/donorSource.js';
 import { appPaths, commentaryMapPath, schemaDirectory, schemaPath } from "./services/paths.js";
 import { inspectSaveSchema, SUPPORTED_SCHEMAS } from "./services/save.js";
 import { SettingsStore, normalizeAccentColor } from "./services/settings.js";
-import { ToolPresets } from "./services/toolPresets.js";
+import { validatePresetConfiguration, ToolPresets } from "./services/toolPresets.js";
 import { AppLogger } from "./services/logger.js";
 import { ReportService } from "./services/reports.js";
 import { HistoryStore } from "./services/history.js";
@@ -100,10 +101,17 @@ function registerIpc() {
   ipcMain.handle(IPC.downloadUpdate, () => updates.download());
   ipcMain.handle(IPC.installUpdate, () => updates.install());
   const presets = new ToolPresets(settings);
+  ipcMain.handle(IPC.setToolDefault, (_event, request) => { if (!getTool(request?.toolId)) throw new Error("Unknown tool."); const values = { ...(settings.get().toolDefaults ?? {}) }; if (request.configuration === null) delete values[request.toolId]; else values[request.toolId] = validatePresetConfiguration(request.configuration); return settings.update({ toolDefaults: values }); });
+  ipcMain.handle(IPC.presetTransfer, async (_event, request) => {
+    if (!getTool(request?.toolId)) throw new Error("Unknown tool.");
+    if (request.action === "read") { const chosen = await dialog.showOpenDialog({ title: "Import Toolkit Preset", properties: ["openFile"], filters: [{ name: "Toolkit Preset", extensions: ["json"] }] }); if (chosen.canceled) return null; const file = chosen.filePaths[0]; if (fs.statSync(file).size > 260000) throw new Error("Preset file is too large."); const input = JSON.parse(fs.readFileSync(file, "utf8")); if (input.format !== "aces-cfb-toolkit-preset" || input.toolId !== request.toolId) throw new Error("This preset belongs to another tool or is not a Toolkit preset."); return { name: String(input.name ?? "Imported Preset").slice(0, 80), configuration: validatePresetConfiguration(input.configuration) }; }
+    if (request.action !== "export") throw new Error("Unknown preset action.");
+    const configuration = validatePresetConfiguration(request.configuration); const chosen = await dialog.showSaveDialog({ title: "Export Toolkit Preset", defaultPath: "Toolkit-Preset.json", filters: [{ name: "Toolkit Preset", extensions: ["json"] }] }); if (chosen.canceled) return null; fs.writeFileSync(chosen.filePath, JSON.stringify({ format: "aces-cfb-toolkit-preset", toolId: request.toolId, name: String(request.name ?? "Preset"), configuration }, null, 2)); return chosen.filePath;
+  });
   ipcMain.handle(IPC.savePreset, (_event, request) => { if (!getTool(request?.toolId)) throw new Error("Unknown tool."); return presets.save(request); });
   ipcMain.handle(IPC.deletePreset, (_event, request) => { if (!getTool(request?.toolId)) throw new Error("Unknown tool."); return presets.delete(request); });
   ipcMain.handle(IPC.bootstrap, () => ({ app: { name: "Ace's CFB Toolkit", version: displayAppVersion(app.getVersion()), schemas: SUPPORTED_SCHEMAS.map(schema => schema.version) }, registry: registrySnapshot(), settings: settings.get(), activeSave: saveInfo(sessionActiveSave), paths: { reports: paths.reports, logs: paths.logs } }));
-  ipcMain.handle(IPC.chooseSave, async () => { const result = await dialog.showOpenDialog({ title: "Select a CFB 27 Dynasty or Road To Glory save", properties: ["openFile"], filters: [{ name: "CFB 27 saves", extensions: ["*" ] }] }); return result.canceled ? null : result.filePaths[0]; });
+  ipcMain.handle(IPC.chooseSave, async (_event, purpose) => { const result = await dialog.showOpenDialog({ title: purpose === "equipment-donor" ? "Select a CFB 27 donor save or roster" : "Select a CFB 27 Dynasty or Road To Glory save", properties: ["openFile"], filters: [{ name: "CFB 27 Saves", extensions: ["*" ] }] }); return result.canceled ? null : result.filePaths[0]; });
   ipcMain.handle(IPC.chooseFile, async () => { const result = await dialog.showOpenDialog({ title: "Select a file", properties: ["openFile"], filters: [{ name: "All files", extensions: ["*"] }, { name: "Text files", extensions: ["txt"] }] }); return result.canceled ? null : result.filePaths[0]; });
   ipcMain.handle(IPC.setActiveSave, (_event, candidate) => {
     const activeSave = validateSavePath(candidate);
@@ -113,6 +121,7 @@ function registerIpc() {
     settings.update({ activeSave: null, recentSaves }); logger.write("info", "active-save-selected", { savePath: activeSave }); return saveInfo(activeSave);
   });
   ipcMain.handle(IPC.clearActiveSave, () => { sessionActiveSave = null; settings.update({ activeSave: null }); return null; });
+  ipcMain.handle(IPC.updateReadingSize, (_event, value) => { if (!["standard", "large", "extra"].includes(value)) throw new Error("Choose Standard, Large, or Extra Large text."); return settings.update({ textSize: value }); });
   ipcMain.handle(IPC.updateTheme, (_event, theme) => { if (!["light", "dark"].includes(theme)) throw new Error("Theme must be light or dark."); return settings.update({ theme }); });
   ipcMain.handle(IPC.updateAccent, (_event, color) => settings.update({ accentColor: normalizeAccentColor(color) }));
   ipcMain.handle(IPC.homeContext, async () => {
@@ -152,6 +161,7 @@ function registerIpc() {
     settings.update({ teamArtwork: artwork });
     return { teamName, kind, image: null };
   });
+  ipcMain.handle(IPC.prepareEquipmentDonors, async (_event, request) => toolOperation(() => prepareEquipmentDonors({ savePath: request?.savePath, schemaPath: schemaPath() })));
   ipcMain.handle(IPC.prepareTool, async (_event, request) => toolOperation(async () => {
     const tool = getTool(request?.toolId); const handler = getToolHandler(request?.toolId);
     if (!tool || tool.status !== "available" || !handler?.prepare) return {};

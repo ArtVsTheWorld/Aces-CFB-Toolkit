@@ -40,7 +40,7 @@ test("manual pool replaces the cutoff, uses only selected eligible donors, and p
   assert.equal(visuals[2].RawData, original[2]); assert.equal(visuals[3].RawData, original[3]);
   assert.equal(result.skipped.filter(row => /selected donor pool/.test(row.reason)).length, 2);
   const options = normalizeEquipmentOptions({ donorMode: "selected", donorRows: ["2", "3", "2"], top: "invalid", donorSave: "not-used" }, true);
-  assert.deepEqual(options.donorRows, [2, 3]); assert.equal(options.donorSave, "");
+  assert.deepEqual(options.donorRows, [2, 3]); assert.equal(options.donorSave, "not-used", "selected donors now retain their independent donor source");
 });
 
 test("manual donors retain active-roster, upperclassman, placeholder, FCS, and valid visuals checks", () => {

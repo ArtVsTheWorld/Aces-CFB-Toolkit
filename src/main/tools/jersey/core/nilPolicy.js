@@ -1,5 +1,4 @@
 export function isProtectedNil(player) {
-    return Boolean(player?.IsNIL) && !player?.nilRenumberAllowed;
+    return Boolean(player?.userNumberLocked) || Boolean(player?.IsNIL) && !player?.nilRenumberAllowed;
 }
-
 

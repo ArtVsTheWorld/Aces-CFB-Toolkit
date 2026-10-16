@@ -13,6 +13,12 @@ const coverage = asset => {
 export function generatedItemConflict(elements, item, slots = item.slots, position = "") {
   if (!canGenerateItem(item)) return "Item is not eligible for pool generation";
   const semantic = item.semantic;
+  if (semantic.actualType === "raw-backplate") {
+    const flak = get(elements, "FlakJacket");
+    // Missing or the catalogued None means no jacket. Unknown active values
+    // are not proof that the area is free; leave the donor's outfit alone.
+    if (flak && flak !== "Flakjacket_None") return "RAW backplates cannot be added with a flak jacket";
+  }
   if (semantic.excludedPositions.includes(String(position).toUpperCase())) return "Item is not generated for this position";
   for (const slot of slots.filter(slot => /^(Left|Right)ElbowWear$/.test(slot))) {
     const side = slot.startsWith("Left") ? "Left" : "Right";

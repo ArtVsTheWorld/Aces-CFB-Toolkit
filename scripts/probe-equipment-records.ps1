@@ -35,7 +35,7 @@ public static class CfbRecordProbe {
     int end=0;while(end<b.Length&&b[end]>=32&&b[end]<=126)end++;
     if(end<4||end==b.Length||b[end]!=0)return null;
     string s=Encoding.ASCII.GetString(b,0,end);
-    return Regex.IsMatch(s,"turtleneck|balaclava|balaclave|ski ?mask|mouthpiece|pacifier|mouthguard|rubber ?band|tattoo|CujoMatty|ArmTats|double sleeve|sleeve|collar|neck roll|NXTRND|BATTLE|LoadoutSlot|LoadoutAuthenticity|CharacterRoleType|band|brace|logo|shell|towel|beast|chosen|joker|lion|cheat|glove|adizero|under ?armour|nike|jordan|adidas|cleat|shoe|coach|football|mercurial|socks|undershirt|new balance|skullcap|necklace|facepaint|eye ?black|paint|tape|helmet|facemask|speedflex|axiom|schutt|vicis|riddell|light|handwarmer|waist|playcall|2 ?bar|3 ?bar|robot|^CM Generic|Japanese|Polynesian|^No |^None$",RegexOptions.IgnoreCase)?s:null;
+    return Regex.IsMatch(s,"turtleneck|balaclava|balaclave|ski ?mask|mouthpiece|pacifier|mouthguard|rubber ?band|tattoo|CujoMatty|ArmTats|double sleeve|sleeve|collar|neck roll|NXTRND|BATTLE|LoadoutSlot|LoadoutAuthenticity|CharacterRoleType|band|brace|logo|shell|towel|beast|chosen|joker|lion|cheat|glove|adizero|under ?armour|nike|jordan|adidas|cleat|shoe|coach|football|mercurial|socks|crew.?cut|back.?plate|gear ?pro.?tec|gold ?rush|x.?tech|xenith|flak|undershirt|new balance|skullcap|necklace|facepaint|eye ?black|paint|tape|helmet|facemask|speedflex|axiom|schutt|vicis|riddell|light|handwarmer|waist|playcall|2 ?bar|3 ?bar|robot|^CM Generic|Japanese|Polynesian|^No |^None$",RegexOptions.IgnoreCase)?s:null;
   }
   static string FieldText(IntPtr p,ulong field) {
     byte[] b=Read(p,field,8);if(b==null)return null;

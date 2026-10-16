@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const defaults = Object.freeze({ activeSave: null, recentSaves: [], selectedPage: "home", theme: "light", accentColor: null, teamArtwork: {}, customMatchupModel: null, toolPresets: [], window: { width: 1380, height: 860 } });
+const defaults = Object.freeze({ textSize: "standard", toolDefaults: {}, activeSave: null, recentSaves: [], selectedPage: "home", theme: "light", accentColor: null, teamArtwork: {}, customMatchupModel: null, toolPresets: [], window: { width: 1380, height: 860 } });
 export function normalizeAccentColor(value) { if (value === null) return null; if (typeof value !== "string" || !/^#[0-9a-f]{6}$/i.test(value)) throw new Error("Choose a valid app color."); return value.toLowerCase(); }
 
 export class SettingsStore {

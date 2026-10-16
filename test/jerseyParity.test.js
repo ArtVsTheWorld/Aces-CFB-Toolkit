@@ -16,7 +16,7 @@ const player = (Position, JerseyNum, name, extra = {}) => ({ Position, JerseyNum
 const clone = value => value.map(item => ({ ...item, teamReservedNumbers: new Set(item.teamReservedNumbers), retiredNumbers: new Set(item.retiredNumbers) }));
 const snapshot = roster => roster.map(item => ({ name: item.FirstName, number: item.JerseyNum })).sort((a, b) => a.name.localeCompare(b.name));
 
-test("unchanged Jersey core remains standalone-identical except the requested LEDG display localization", () => { const text = file => fs.readFileSync(file, "utf8").replaceAll("\r\n", "\n").trimEnd(); for (const name of coreFiles) { const expected = text(path.join(originalLib, name)).replaceAll('LE: "LEDGE"', 'LE: "LEDG"'); assert.equal(text(path.join(desktopCore, name)), expected, name); } });
+test("unextended Jersey helpers remain standalone-identical; configurable rule extensions retain functional parity below", () => { const text = file => fs.readFileSync(file, "utf8").replaceAll("\r\n", "\n").trimEnd(); for (const name of coreFiles.filter(name => !["nilPolicy.js", "noDuplicatesEngine.js", "retiredNumbers.js", "teamRules.js"].includes(name))) { const expected = text(path.join(originalLib, name)).replaceAll('LE: "LEDGE"', 'LE: "LEDG"'); assert.equal(text(path.join(desktopCore, name)), expected, name); } });
 
 test("standard mode matches CLI for collisions, NIL protection, promotions, and fallback pressure", () => {
   const fixture = [player("QB", 7, "Quarterback", { OverallRating: 92 }), player("WR", 7, "Receiver", { OverallRating: 88 }), player("WR", 80, "Veteran", { OverallRating: 95, SchoolYear: "Senior", RedshirtStatus: "Previous" }), player("TE", 99, "Illegal", { OverallRating: 84 }), player("WR", 1, "Protected", { IsNIL: true, OverallRating: 99 })];

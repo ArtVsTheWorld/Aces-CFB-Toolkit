@@ -65,6 +65,12 @@ export function enforceEquipmentCompatibility(elements, { usingUnlockedMod = fal
     const wrist = elements.find(element => slotOf(element) === `${side}WristWear`)?.itemAssetName;
     clearArmAccessories(elements, side, sleeve || undershirt, corrections, armAccessoryRestrictions(sleeve, wrist, undershirt));
   }
+  corrections.push(...enforceMouthpieceCompatibility(elements, { usingUnlockedMod }));
+  return corrections;
+}
+
+export function enforceMouthpieceCompatibility(elements, { usingUnlockedMod = false } = {}) {
+  const corrections = [];
   const neckwear = equippedMask(elements, usingUnlockedMod);
   const mouthpiece = elements.find(element => slotOf(element) === "MouthWear")?.itemAssetName;
   if (isMaskOrBalaclava(neckwear, usingUnlockedMod) && mouthpiece && !/(?:^|_)None$/i.test(mouthpiece) && !isHangingMouthpiece(mouthpiece)) {

@@ -9,9 +9,10 @@ const modInventory = JSON.parse(fs.readFileSync(new URL("./equipmentModInventory
 const colorInventory = JSON.parse(fs.readFileSync(new URL("./equipmentColorInventory.json", import.meta.url), "utf8"));
 const sourcedInventory = JSON.parse(fs.readFileSync(new URL("./equipmentSourcedInventory.json", import.meta.url), "utf8"));
 const raw204Inventory = JSON.parse(fs.readFileSync(new URL("./equipmentRaw204Inventory.json", import.meta.url), "utf8"));
+const mod191Inventory = JSON.parse(fs.readFileSync(new URL("./equipmentMod191Inventory.json", import.meta.url), "utf8"));
 const liveFacemasks = JSON.parse(fs.readFileSync(new URL("./equipmentLiveFacemasks.json", import.meta.url), "utf8"));
 const modItems = Object.entries(modInventory.mods).flatMap(([origin, mod]) => (mod.equipmentItems ?? []).map(item => ({ ...item, origin })));
-const mergedItems = new Map([...catalog.items, ...modItems, ...colorInventory.items, ...sourcedInventory.items, ...liveFacemasks.items, ...raw204Inventory.items].map(item => [item.itemName, item]));
+const mergedItems = new Map([...catalog.items, ...modItems, ...colorInventory.items, ...sourcedInventory.items, ...liveFacemasks.items, ...raw204Inventory.items, ...mod191Inventory.items].map(item => [item.itemName, item]));
 export const EQUIPMENT_ITEMS = Object.freeze([...mergedItems.values()].map(item => {
   const resolved = { ...item, displayName: sourcedInventory.displayNames[item.itemName] ?? item.displayName, ...GENERATION_METADATA.itemOverrides[item.itemName] };
   return Object.freeze({ ...resolved, semantic: describeEquipment(resolved) });
@@ -216,6 +217,7 @@ export function brandedEquipmentItems(category, teamBrand) {
 }
 
 export const UNLOCKED_POOLS = Object.freeze({
+  socks: equipmentItemsFor("Socks", item => item.origin === "unlocked" && canGenerateItem(item)),
   baggyArmSleeves: equipmentItemsFor("Arm Wear", item => /^GearArmSleeve_Baggy_/i.test(item.itemName)),
   armSleeves: equipmentItemsFor("Arm Wear", item => /^GearArmSleeve_(?:Baggy_|Elbow_armTape_normal_|NikeProDriFitSleeve2)/i.test(item.itemName)),
   bicepBands: equipmentItemsFor("Elbow Wear", item => /^GearBicepBand_/i.test(item.itemName)),
@@ -239,6 +241,7 @@ export const UNLOCKED_POOLS = Object.freeze({
 });
 
 export const RAW_ACCESSORIES_POOLS = Object.freeze({
+  backplates: equipmentItemsFor("Back Plate", item => item.origin === "raw" && canGenerateItem(item)),
   neckwear: EQUIPMENT_ITEMS.filter(item => item.origin === "raw" && ["Neckwear", "Neck Pad"].includes(item.category)),
   skullcaps: EQUIPMENT_ITEMS.filter(item => item.origin === "raw" && item.category === "Guardian Cap")
 });
