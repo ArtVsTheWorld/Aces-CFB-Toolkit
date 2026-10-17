@@ -43,5 +43,5 @@ test("hyphen matches apply the commentary ID and retain a finite audit counter",
 });
 
 test("requested tool versions increment independently of the app version", () => {
-  for (const [id, version] of [["freshman-equipment", "5.5"], ["equipment-patcher", "5.6"], ["commentary-id", "2.1"]]) assert.equal(tools.find(tool => tool.id === id).version, version);
+  for (const [id, version] of [["freshman-equipment", "5.6"], ["equipment-patcher", "6.0"], ["commentary-id", "2.1"]]) assert.equal(tools.find(tool => tool.id === id).version, version);
 });

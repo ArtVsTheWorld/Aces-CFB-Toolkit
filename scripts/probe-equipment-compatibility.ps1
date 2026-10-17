@@ -12,7 +12,7 @@ public static class CfbCompatProbe {
  public class Evidence { public string ItemName; public List<string> Tags=new List<string>(); public List<string> Locations=new List<string>(); public List<string> EnumVectors=new List<string>(); }
  static byte[] Read(IntPtr p,ulong a,int n) { if(a<65536||a>=0x800000000000UL)return null;var b=new byte[n];UIntPtr got;return ReadProcessMemory(p,new IntPtr((long)a),b,new UIntPtr((uint)n),out got)&&got.ToUInt64()==(ulong)n?b:null; }
  static string Text(IntPtr p,ulong a) {var b=Read(p,a,128);if(b==null)return null;int n=0;while(n<b.Length&&b[n]>=32&&b[n]<127)n++; if(n<3||n==b.Length||b[n]!=0)return null;return Encoding.ASCII.GetString(b,0,n);}
- static void Check(IntPtr p,ulong a,string where,Evidence e) {var s=Text(p,a);if(s!=null&&Regex.IsMatch(s,"Facemasks$|^AirXP$|^LightGladiatorFacemasks$|^GuardianCap$|^HangingMouthpiece$|^LoadoutSlot_|^CharacterRoleType_")){if(!e.Tags.Contains(s)){e.Tags.Add(s);e.Locations.Add(where);}}}
+ static void Check(IntPtr p,ulong a,string where,Evidence e) {var s=Text(p,a);if(s!=null&&Regex.IsMatch(s,"^Nike$|^Adidas$|^Jordan$|^Generic$|^LoadoutAuthenticity_|Facemasks$|^AirXP$|^LightGladiatorFacemasks$|^GuardianCap$|^HangingMouthpiece$|^LoadoutSlot_|^CharacterRoleType_")){if(!e.Tags.Contains(s)){e.Tags.Add(s);e.Locations.Add(where);}}}
  public static List<Evidence> Run(uint id,string[] names,ulong[] addresses) {
  var p=OpenProcess(0x0410,false,id);if(p==IntPtr.Zero)throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());var output=new List<Evidence>();
  try { for(int i=0;i<names.Length;i++){var e=new Evidence{ItemName=names[i]};output.Add(e);var field=addresses[i];

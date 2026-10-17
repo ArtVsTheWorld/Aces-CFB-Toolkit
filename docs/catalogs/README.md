@@ -1,5 +1,7 @@
 # Equipment catalog — October 5, 2026
 
+[October 17: Unlocked 0.97 uniform styles, cleats, Jamo observations, and manual-review notes](gear-catalog-v20.1-unlocked097.md)
+
 [Searchable human-readable catalog and manual-review checklist](gear-catalog-readable.html)
 
 [Markdown reference for reading/sharing](gear-catalog-readable.md)

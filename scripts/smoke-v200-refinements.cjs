@@ -20,7 +20,7 @@ module.exports = async (window, root) => {
     document.querySelector('#fix-clear-tattoos').click(); check(!document.querySelector('#fix-unlocked-tattoos').checked && tattooEntry.hidden && equipmentOptions('equipment-patcher').clearTattoos, 'Clear Tattoos disables Add and hides its editor');
     document.querySelector('#fix-unlocked-tattoos').click(); check(!document.querySelector('#fix-clear-tattoos').checked, 'Add Tattoos disables Clear');
     document.querySelector('#fix-unlocked-tattoos').click();
-    const helmetControl = document.querySelector('#fix-helmet'); helmetControl.click(); check(document.querySelector('.helmet-settings-summary').hidden, 'Disabled helmet editor is hidden'); helmetControl.click();
+    const helmetControl = document.querySelector('#fix-helmet'); if (!helmetControl.checked) helmetControl.click(); helmetControl.click(); check(document.querySelector('.helmet-settings-summary').hidden, 'Disabled helmet editor is hidden'); helmetControl.click();
     const teams = open('Teams'); change(draft('selection-mode-equipment-included'), 'selected'); pick(draft('equipment-included'), []);
     check(document.querySelector('[data-config-save]').disabled, 'Empty Selected Teams cannot silently mean all');
     change(draft('selection-mode-equipment-included'), 'all'); save(); await delay();

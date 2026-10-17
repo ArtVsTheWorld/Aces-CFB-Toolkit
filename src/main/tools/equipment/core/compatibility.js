@@ -1,4 +1,5 @@
 import { equipmentTags, equipmentSemantics } from "../catalog.js";
+import { enforceCutoffPantsCompatibility } from "./uniformCompatibility.js";
 
 const INCOMPATIBLE_ARM_SLEEVE_PATTERNS = Object.freeze([
   /GearArmSleeve_Baggy_/i,
@@ -66,6 +67,7 @@ export function enforceEquipmentCompatibility(elements, { usingUnlockedMod = fal
     clearArmAccessories(elements, side, sleeve || undershirt, corrections, armAccessoryRestrictions(sleeve, wrist, undershirt));
   }
   corrections.push(...enforceMouthpieceCompatibility(elements, { usingUnlockedMod }));
+  corrections.push(...enforceCutoffPantsCompatibility(elements));
   return corrections;
 }
 

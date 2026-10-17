@@ -1,3 +1,4 @@
+import { CUTOFF_PANTS, cutoffPantsConflict, uniformItem } from "./uniformCompatibility.js";
 import { canGenerateItem, equipmentItem, equipmentSemantics } from "../catalog.js";
 import { armAccessoryRestrictions, isElbowLengthUndershirt, isRolledArmSleeve } from "./compatibility.js";
 
@@ -13,6 +14,10 @@ const coverage = asset => {
 export function generatedItemConflict(elements, item, slots = item.slots, position = "") {
   if (!canGenerateItem(item)) return "Item is not eligible for pool generation";
   const semantic = item.semantic;
+  if (slots.includes("InnerPants") && uniformItem(elements, "OuterPants") === CUTOFF_PANTS) {
+    const proposed = elements.filter(element => element.slotType !== "InnerPants").concat({ slotType: "InnerPants", itemAssetName: item.itemName });
+    if (cutoffPantsConflict(proposed)) return "Leg base layers cannot be added with cutoff pants";
+  }
   if (semantic.actualType === "raw-backplate") {
     const flak = get(elements, "FlakJacket");
     // Missing or the catalogued None means no jacket. Unknown active values

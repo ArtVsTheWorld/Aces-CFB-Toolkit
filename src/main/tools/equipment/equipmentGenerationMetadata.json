@@ -8,6 +8,7 @@
     "GearMouthpiece_PacifierDualHanging_Black4": { "displayName": "Nike Hanging Mouthpiece — Light Blue / Pink", "menuDisplayName": "Nike Hanging Mouthpiece Pacifier Black", "themeColors": ["lightblue", "pink"], "randomColorOnly": true, "labelSource": "CRASHTEST Trae'Shawn Brown exact saved ID and user artwork validation; loaded menu label still says Black" }
   },
   "footballFootwearPatterns": [
+    "^GearFootwear_shoe_(?:low_NikeKobeVenom|mid_NikeFoamposite)$",
     "^GearFootwear_shoe_(?:low|mid|high)_Nike(?:AlphaMenace|DiamondTurf|FieldGeneral|ForceSavage|LebronIV|LunarBeast|Vapor|Equinox|EdgeSpeed|ZoomVapor|AlphaPro34TD|CodeEliteProShark)",
     "^GearFootwear_shoeLowVintage_nike$",
     "^GearFootwear_shoe_(?:low|mid|high)_(?:Adidas_?(?:Adizero|Adizone|Freak|Nasty)|Adizero)",

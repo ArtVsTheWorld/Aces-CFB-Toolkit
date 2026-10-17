@@ -132,7 +132,7 @@ test("handwarmer removal targets both known models only; every verified playcall
   assert.equal(recolorEquipmentItem(assets[4], "secondary"), assets[4], "No nonexistent Secondary value is fabricated");
 });
 test("release versions, new map pairs, checkbox defaults, and compact helmet editor are wired", () => {
-  assert.equal(tools.find(t => t.id === "freshman-equipment").version, "5.5"); assert.equal(tools.find(t => t.id === "equipment-patcher").version, "5.6"); assert.equal(tools.find(t => t.id === "commentary-id").version, "2.1");
+  assert.equal(tools.find(t => t.id === "freshman-equipment").version, "5.6"); assert.equal(tools.find(t => t.id === "equipment-patcher").version, "6.0"); assert.equal(tools.find(t => t.id === "commentary-id").version, "2.1");
   const map = loadCommentaryMap(new URL("../resources/commentary-data/PlayerCommentaryidMap.txt", import.meta.url));
   assert.equal(map.size, 7032); assert.equal(map.get("Moseley"), 7008); assert.equal(map.get("Chadwick Jr."), 7598); assert.equal(map.get("Williamson Jr."), 5347);
   const observed = JSON.parse(fs.readFileSync(new URL("../src/main/tools/equipment/equipmentVanillaObservation.json", import.meta.url), "utf8"));

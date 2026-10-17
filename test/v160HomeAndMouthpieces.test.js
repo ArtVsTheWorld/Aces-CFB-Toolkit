@@ -69,7 +69,7 @@ test("Patcher color option preserves the safe default and adds Battle and NXTRND
   }
   assert.ok((colors.get("Blue") ?? 0) > (colors.get("Pink") ?? 0) * 4);
   assert.ok((brands.get("branded") ?? 0) > (brands.get("generic") ?? 0) * 2);
-  assert.equal(tools.find(tool => tool.id === "equipment-patcher").version, "5.6");
+  assert.equal(tools.find(tool => tool.id === "equipment-patcher").version, "6.0");
 });
 
 test("colorful Patcher preview proposes branded colors while the default does not write or use them", { timeout: 30000 }, async t => {

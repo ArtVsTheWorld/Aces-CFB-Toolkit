@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { normalizeTeamAccessoryColors } from "../tools/equipment/core/recolor.js";
 
 export function validatePresetConfiguration(configuration) {
   if (!configuration || typeof configuration !== 'object' || Array.isArray(configuration) || configuration.version !== 1 || !configuration.values || typeof configuration.values !== 'object' || Array.isArray(configuration.values)) throw new Error('Invalid preset settings.');
@@ -6,6 +7,7 @@ export function validatePresetConfiguration(configuration) {
   if (Object.values(configuration.values).some(value => !scalar(value) && !(Array.isArray(value) && value.every(scalar)))) throw new Error('Invalid preset control values.');
   if (configuration.teamSelections != null && (typeof configuration.teamSelections !== 'object' || Array.isArray(configuration.teamSelections) || Object.values(configuration.teamSelections).some(value => !Array.isArray(value) || value.some(label => typeof label !== 'string')))) throw new Error('Invalid preset selections.');
   if (configuration.tapeColors != null && (typeof configuration.tapeColors !== 'object' || Array.isArray(configuration.tapeColors) || Object.values(configuration.tapeColors).some(value => typeof value !== 'string' && (!value || typeof value !== 'object' || Array.isArray(value) || Object.values(value).some(percent => !Number.isFinite(Number(percent))))))) throw new Error('Invalid preset tape settings.');
+  if (configuration.accessoryColors != null) normalizeTeamAccessoryColors(configuration.accessoryColors);
   const serialized = JSON.stringify(configuration);
   if (serialized.length > 250000 || /"(?:__proto__|prototype|constructor)"\s*:/.test(serialized)) throw new Error('Invalid or oversized preset settings.');
   return JSON.parse(serialized);

@@ -19,6 +19,7 @@ function balanceWholeInputs(inputs) {
   inputs.forEach((input, index) => input.value = String(whole[index]));
 }
 function bindAdvancedPassWindows() {
+  bindUniformPassWindows();
   const field = document.getElementById("undershirt-field");
   if (field) condenseConfiguration(field, { title: "Undershirt Settings", description: "Choose an existing preset or edit whole-number percentages for each body group. Only the Rolled-Jersey Undershirts pass uses these settings.", dependencies: ["fix-rolled"], enabled: () => document.getElementById("fix-rolled").checked, summary: root => configurationLabel(root, "undershirt-color") });
   const visors = document.getElementById("visor-settings-field");

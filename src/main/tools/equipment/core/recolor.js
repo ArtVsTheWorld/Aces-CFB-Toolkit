@@ -37,6 +37,14 @@ export function normalizeTeamTapeColors(value = {}) {
     } catch (error) { throw new Error(`Tape color for ${team}: ${error.message.replaceAll("Accessory color", "Tape color")}`); }
   }));
 }
+export function normalizeTeamAccessoryColors(value = {}) {
+  try { return normalizeTeamTapeColors(value); }
+  catch (error) { throw new Error(error.message.replaceAll("Tape color", "Accessory color").replaceAll("Tape Color", "Accessory Color")); }
+}
+export function teamAccessoryWeights(name, overrides = {}) {
+  const team = String(name ?? "").trim().toLowerCase();
+  return Object.hasOwn(overrides, team) ? normalizeTeamAccessoryColors({ [team]: overrides[team] })[team] : defaultTeamTapeWeights(name);
+}
 export function teamTapeWeights(name, overrides = {}) { const team = String(name ?? "").trim().toLowerCase(); return Object.hasOwn(overrides, team) ? normalizeTeamTapeColors({ [team]: overrides[team] })[team] : defaultTeamTapeWeights(name); }
 export function teamTapeColor(name, overrides = {}) { return Object.entries(teamTapeWeights(name, overrides)).sort((a, b) => b[1] - a[1])[0][0]; }
 export function rollAccessoryColorTheme(rng, weights = DEFAULT_ACCESSORY_COLOR_WEIGHTS) {

@@ -10,11 +10,13 @@ const colorInventory = JSON.parse(fs.readFileSync(new URL("./equipmentColorInven
 const sourcedInventory = JSON.parse(fs.readFileSync(new URL("./equipmentSourcedInventory.json", import.meta.url), "utf8"));
 const raw204Inventory = JSON.parse(fs.readFileSync(new URL("./equipmentRaw204Inventory.json", import.meta.url), "utf8"));
 const mod191Inventory = JSON.parse(fs.readFileSync(new URL("./equipmentMod191Inventory.json", import.meta.url), "utf8"));
+const unlocked097 = JSON.parse(fs.readFileSync(new URL("./equipmentUnlocked097Inventory.json", import.meta.url), "utf8"));
 const liveFacemasks = JSON.parse(fs.readFileSync(new URL("./equipmentLiveFacemasks.json", import.meta.url), "utf8"));
 const modItems = Object.entries(modInventory.mods).flatMap(([origin, mod]) => (mod.equipmentItems ?? []).map(item => ({ ...item, origin })));
-const mergedItems = new Map([...catalog.items, ...modItems, ...colorInventory.items, ...sourcedInventory.items, ...liveFacemasks.items, ...raw204Inventory.items, ...mod191Inventory.items].map(item => [item.itemName, item]));
+const mergedItems = new Map([...catalog.items, ...modItems, ...colorInventory.items, ...sourcedInventory.items, ...liveFacemasks.items, ...raw204Inventory.items, ...mod191Inventory.items, ...unlocked097.items].map(item => [item.itemName, item]));
 export const EQUIPMENT_ITEMS = Object.freeze([...mergedItems.values()].map(item => {
   const resolved = { ...item, displayName: sourcedInventory.displayNames[item.itemName] ?? item.displayName, ...GENERATION_METADATA.itemOverrides[item.itemName] };
+  if (unlocked097.cleatDisplayNames[item.itemName]) resolved.displayName = unlocked097.cleatDisplayNames[item.itemName];
   return Object.freeze({ ...resolved, semantic: describeEquipment(resolved) });
 }));
 const BY_ITEM_NAME = new Map(EQUIPMENT_ITEMS.map(item => [item.itemName, item]));
@@ -30,7 +32,7 @@ export const canGenerateItem = item => item?.semantic.poolEligible === true;
 
 export function equipmentDisplayName(itemName) {
   const value = String(itemName ?? "");
-  return TATTOO_DISPLAY_NAMES.get(value) || BY_ITEM_NAME.get(value)?.displayName || FACEPAINT_DISPLAY_NAMES.get(value) || value;
+  return TATTOO_DISPLAY_NAMES.get(value) || BY_ITEM_NAME.get(value)?.displayName || unlocked097.observedDisplayNames[value] || FACEPAINT_DISPLAY_NAMES.get(value) || value;
 }
 
 const FACEPAINT_DISPLAY_NAMES = new Map([

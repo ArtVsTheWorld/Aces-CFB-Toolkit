@@ -46,6 +46,8 @@ app.whenReady().then(async () => {
     check([...document.querySelectorAll("[data-equipment-panel]")].filter(node => !node.hidden).length === 3, "One equipment control center exposes all primary sections");
     check(document.querySelectorAll("[data-equipment-step]").length === 2, "Only Configure and Review stages");
     check(document.querySelector("#equipment-skip-nil").checked, "NIL protection defaults preserved");
+    check([...document.querySelectorAll('input[id^="fix-"]')].every(control=>!control.checked), "Every Patcher pass starts off");
+    for(const id of ["fix-helmet","fix-rolled","fix-socks","fix-sleeves","fix-nike","fix-visors"])document.getElementById(id).click();
     const teamEntry=document.querySelector(".team-scope-group .configuration-entry"), filterEntry=[...document.querySelectorAll(".player-pool-layout .configuration-entry")].find(node=>node.querySelector("strong").textContent==="Player Filters");
     check(Math.abs(teamEntry.getBoundingClientRect().top-filterEntry.getBoundingClientRect().top)<2,"Player Pool columns align");
     check(document.querySelector("#equipment-skip-nil").closest(".configuration-source"),"Skip NIL is inside hidden Player Filters source, not inline");
@@ -254,6 +256,8 @@ app.whenReady().then(async () => {
     return "All nine tool pages, Settings, draft Save/Cancel/Escape, defaults, unique IDs, validation, selectors/search/donor shift-click, scope semantics, previews, sessions, presets, and no-save guards passed.";
   })()`);
   if (process.argv.includes('--refinements')) console.log(await require('./smoke-v200-refinements.cjs')(window, root));
+  if (process.argv.includes('--uniforms')) console.log(await require('./smoke-v201-uniforms.cjs')(window, root));
+  if (process.argv.includes('--colors')) console.log(await require('./smoke-v201-team-colors.cjs')(window, root));
   fs.mkdirSync(path.join(root, "outputs"), { recursive: true });
   for (const theme of ["light", "dark"]) {
     await window.webContents.executeJavaScript(`document.documentElement.dataset.theme = "${theme}"; navigate("equipment-patcher");`);

@@ -27,7 +27,7 @@ test("separate facepaint and tattoo pools are not misreported as unsupported gen
 
 test("manual review flags distinguish blockers, optional freshness and intentional exclusions", () => {
   const entries = buildEntries(catalog), groups = buildReviewGroups(entries);
-  assert.deepEqual(Object.fromEntries(groups.map(group => [group.kind, group.entries.length])), { slot: 7, caps: 4, combo: 30, refresh: 78, artwork: 26, unresolved: 3 });
+  assert.deepEqual(Object.fromEntries(groups.map(group => [group.kind, group.entries.length])), { slot: 5, caps: 4, combo: 30, refresh: 78, artwork: 26, unresolved: 3 });
   for (const entry of entries.filter(entry => /^FaceGear_BalaclavaUnderLip/.test(entry.itemName) || entry.itemName === "FaceGear_BalaclavaNone")) {
     assert.equal(entry.toolkit, "Intentionally excluded");
     assert.equal(entry.reviewKinds.length, 0);

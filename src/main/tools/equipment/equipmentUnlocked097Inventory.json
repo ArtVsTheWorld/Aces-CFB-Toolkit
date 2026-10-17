@@ -1,0 +1,41 @@
+{
+  "verification": "CFB27 Unlocked 0.97 by Orckestra; SHA256 0d2c7ba8f1a8237e6ffd2cf67cbfda92e1e079c5ac7277fee5990404c085d2b2. Exact names/labels checked in the user-confirmed Unlocked-only process on 2026-10-17. Repeated ItemName fields and DisplayName at +56 agree; corresponding mod resource names cross-checked. No addresses, raw memory, encrypted payloads or guessed save IDs are distributed. Uniform slots reuse the existing OuterShirt/OuterPants schema. New cleats use the established LeftShoe/RightShoe footwear slots; Nike classification requires agreement between exact ItemName and verified Nike display label. These six additions were absent from the earlier vanilla observation, but loaded presence alone does not prove historical mod exclusivity. They are enabled only in the optional Unlocked additions pool; in-game validation remains required. Existing cleat tags are retained independently of corrected display labels.",
+  "items": [
+    { "itemName": "GearFootwear_shoe_low_NikeDiamondTurf93", "displayName": "Nike Diamond Turf 93", "category": "Cleats", "slots": ["LeftShoe", "RightShoe"], "tags": ["Nike"], "origin": "unlocked" },
+    { "itemName": "GearFootwear_shoe_low_NikeKobeVenom", "displayName": "Nike Vapor Edge Kobe 6", "category": "Cleats", "slots": ["LeftShoe", "RightShoe"], "tags": ["Nike"], "origin": "unlocked" },
+    { "itemName": "GearFootwear_shoe_mid_NikeFoamposite", "displayName": "Nike Foamposite Pro", "category": "Cleats", "slots": ["LeftShoe", "RightShoe"], "tags": ["Nike"], "origin": "unlocked" },
+    { "itemName": "GearFootwear_shoe_mid_NikeDiamondTURF2", "displayName": "Nike Diamond Turf 2", "category": "Cleats", "slots": ["LeftShoe", "RightShoe"], "tags": ["Nike"], "origin": "unlocked" },
+    { "itemName": "GearFootwear_shoe_mid_NikeAlphaMenaceElite5", "displayName": "Nike Alpha Menace Elite 5", "category": "Cleats", "slots": ["LeftShoe", "RightShoe"], "tags": ["Nike"], "origin": "unlocked" },
+    { "itemName": "GearFootwear_shoe_mid_NikeAlphaMenacePro5", "displayName": "Nike Alpha Menace Pro 5", "category": "Cleats", "slots": ["LeftShoe", "RightShoe"], "tags": ["Nike"], "origin": "unlocked" },
+    { "itemName": "Gear_Low_TuckedUndershirt", "displayName": "Jersey Rolled Low Tucked Undershirt", "category": "Jersey Style", "slots": ["OuterShirt"], "tags": [], "origin": "unlocked" },
+    { "itemName": "Gear_JerseyStyle_RolledLowest", "displayName": "Jersey Rolled Lowest", "category": "Jersey Style", "slots": ["OuterShirt"], "tags": [], "origin": "unlocked" },
+    { "itemName": "Gear_JerseyStyle_RolledLowest_Untucked", "displayName": "Jersey Rolled Lowest Untucked", "category": "Jersey Style", "slots": ["OuterShirt"], "tags": [], "origin": "unlocked" },
+    { "itemName": "Gear_JerseyStyle_SleeveTight_Untucked", "displayName": "Tight Sleeves Untucked", "category": "Jersey Style", "slots": ["OuterShirt"], "tags": [], "origin": "unlocked" },
+    { "itemName": "Gear_JerseyStyle_RolledLow", "displayName": "Rolled Jersey Low", "category": "Jersey Style", "slots": ["OuterShirt"], "tags": [], "origin": "vanilla" },
+    { "itemName": "Gear_JerseyStyle_Rolled", "displayName": "Rolled Jersey", "category": "Jersey Style", "slots": ["OuterShirt"], "tags": [], "origin": "vanilla" },
+    { "itemName": "GearPants_Cutoff", "displayName": "Pants Cutoff", "menuDisplayName": "Pants Cuttoff", "category": "Pants", "slots": ["OuterPants"], "tags": [], "origin": "unlocked" },
+    { "itemName": "GearPants_AboveKnee", "displayName": "Pants Above Knee", "category": "Pants", "slots": ["OuterPants"], "tags": [], "origin": "vanilla" },
+    { "itemName": "GearPants_Standard", "displayName": "Pants Standard", "category": "Pants", "slots": ["OuterPants"], "tags": [], "origin": "vanilla" }
+  ],
+  "observedDisplayNames": {
+    "G_CompressionT_Crew_ShortSleeve_BasicJ_WHI": "Irish Jamo Sleeves White",
+    "G_CompressionT_Crew_ShortSleeve_BasicJ_BLA": "Irish Jamo Sleeves Black",
+    "G_CompressionT_Crew_ShortSleeve_BasicJ_PRI": "Irish Jamo Sleeves Primary",
+    "G_CompressionT_Crew_ShortSleeve_BasicJ_SEC": "Irish Jamo Sleeves Secondary"
+  },
+  "cleatDisplayNames": {
+    "GearFootwear_shoe_High_NikeForceSavageEliteTDW": "Nike Force Savage Elite",
+    "GearFootwear_shoe_low_AirJordanXI": "Jordan XI Low",
+    "GearFootwear_shoe_low_Jordan5_99Club": "Jordan Low 5",
+    "GearFootwear_shoe_low_NikeVaporEdge": "Nike Vapor Edge",
+    "GearFootwear_shoe_low_NikeVaporEdge_zebra": "Nike Vapor Edge Speed FOTF PE",
+    "GearFootwear_shoe_low_NikeVaporEdgePro3602": "Nike Vapor Edge Pro 360 2",
+    "GearFootwear_shoe_Low_NikeVaporUntouchable": "Nike Vapor Untouchable",
+    "GearFootwear_shoe_low_NikeVaporUntouchablePro_v3": "Nike Vapor Untouchable Pro Customs",
+    "GearFootwear_shoe_mid_NikeAlphaMenacePro": "Nike Vapor Edge Pro 360 VC",
+    "GearFootwear_shoe_mid_NikeAlphaMenacePro299Club": "Nike Vapor Edge Pro 360 2 Spat",
+    "GearFootwear_shoe_Mid_NikeAlphaPro34TD": "Nike Vapor Speed Kobe 5",
+    "GearFootwear_shoe_Mid_NikeVaporEdge360Untouchable": "Nike Vapor Edge 360 Untouchable",
+    "GearFootwear_shoeLowVintage_nike": "Nike Foamposite Pro - School PE"
+  }
+}

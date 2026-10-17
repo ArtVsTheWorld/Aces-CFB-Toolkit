@@ -12,7 +12,7 @@ test("the stable shell and packaging no longer show experimental release labels"
   assert.doesNotMatch(index, /Experimental UI|EXPERIMENTAL UI|UI REDESIGN|\(Experimental\)/);
   assert.doesNotMatch(renderer, /\(Experimental\)|This experimental build/);
   assert.doesNotMatch(pkg.build.artifactName, /Experimental/);
-  assert.equal(pkg.version, "20.0.0");
+  assert.equal(pkg.version, "20.1.0");
 });
 
 test("sports operations navigation retains every registered primary tool", () => {
@@ -185,8 +185,8 @@ test("every remaining preview opens as a dedicated second-stage page", () => {
 });
 
 test("Unlocked-only options clearly display their requirement", () => {
-  assert.match(renderer, /<strong class=\\"requirement\\">Requires CFB27 Unlocked by Orckestra\. Latest version recommended: 0\.96\.<\/strong>/);
+  assert.match(renderer, /<strong class=\\"requirement\\">Requires CFB27 Unlocked by Orckestra\. Latest version recommended: 0\.97\.<\/strong>/);
   assert.match(renderer, /Requires RAW Accessories by Delonte RAW\. Latest version recommended: v2\.0\.4\./);
-  assert.match(renderer, /unlocked-warning/);
+  assert.doesNotMatch(renderer, /Requires the mod named by each option/);
   assert.match(css, /\.requirement/);
 });

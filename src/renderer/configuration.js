@@ -103,7 +103,7 @@ function openConfigurationEditor(source, defaults, specification, refresh) {
     dialog.querySelector("[data-config-dirty]").textContent = dirty ? "Unsaved settings · Save to keep them, or Cancel to discard." : "Settings stay unchanged until you save. Cancel discards this draft.";
   };
   draft.addEventListener("input", update); draft.addEventListener("change", update);
-  draft.querySelectorAll("[data-balance-tape]").forEach(button => button.addEventListener("click", () => { balanceTeamTapeWeights(button.closest("[data-tape-team-row]")); update(); }));
+  draft.querySelectorAll("[data-balance-tape],[data-balance-accessory-team]").forEach(button => button.addEventListener("click", () => { balanceTeamTapeWeights(button.closest("[data-tape-team-row],[data-accessory-team-row]")); update(); }));
   const loadDonor = async value => {
     dialog.querySelector('[data-config-save]').disabled = true;
     try { await loadDonorSelection(draft, value); }
@@ -118,6 +118,8 @@ function openConfigurationEditor(source, defaults, specification, refresh) {
     const query = tapeSearch.value.trim().toLowerCase(); draft.querySelectorAll("[data-tape-team-row]").forEach(row => row.hidden = !row.dataset.tapeTeamRow.includes(query));
     configurationRead(draft, "tape-team-empty").hidden = [...draft.querySelectorAll("[data-tape-team-row]")].some(row => !row.hidden);
   });
+  const accessorySearch = configurationRead(draft, "accessory-team-search");
+  accessorySearch?.addEventListener("input", () => filterTeamColorRows(draft, "accessory", accessorySearch.value));
   dialog.querySelector("[data-config-reset]").addEventListener("click", () => {
     for (const [id, value] of Object.entries(defaults)) setConfigurationValue(configurationRead(draft, id), value);
     if (configurationRead(draft, 'equipment-donor')) {
@@ -157,12 +159,14 @@ function syncConfigurationDraft(root) {
   }
   if (control("unlocked-color-theme")) {
     show("accessory-color-weights", control("unlocked-color-theme").value === "weighted");
+    show("accessory-team-distribution-settings", control("unlocked-color-theme").value === "team");
+    control("accessory-team-distribution-settings").open = true;
     show("tape-distribution-settings", control("tape-color-mode").value !== "accessory");
     control("tape-distribution-settings").open = true;
     const total = [...root.querySelectorAll("[data-accessory-color]")].reduce((sum, input) => sum + Number(input.value), 0);
     control("accessory-color-total").textContent = `Total: ${total}% — must equal 100%.`;
     control("accessory-color-total").classList.toggle("invalid", total !== 100);
-    root.querySelectorAll("[data-tape-team-row]").forEach(syncTeamTapeWeights);
+    root.querySelectorAll("[data-tape-team-row],[data-accessory-team-row]").forEach(syncTeamTapeWeights);
   }
   if (control("db-total")) {
     const total = [...root.querySelectorAll(".db-percent")].reduce((sum, input) => sum + Number(input.value), 0);
@@ -181,6 +185,10 @@ function validateConfigurationDraft(root, specification) {
   if (control("equipment-cross-percent") && configurationNumber(root, "equipment-cross-percent") + configurationNumber(root, "equipment-multiple-percent") > 100) return "Cross-position and multiple-donor chances must total no more than 100%.";
   if (control("equipment-donor-mode")?.value === "selected" && !control("equipment-donor-players").selectedOptions.length) return "Choose at least one donor player.";
   if (control("unlocked-color-theme")?.value === "weighted" && [...root.querySelectorAll("[data-accessory-color]")].reduce((sum, input) => sum + Number(input.value), 0) !== 100) return "Accessory percentages must total 100%.";
+  if (control("unlocked-color-theme")?.value === "team") {
+    const invalid = [...root.querySelectorAll("[data-accessory-team-row]")].find(row => [...row.querySelectorAll("[data-accessory-team-color]")].some(input => !Number.isInteger(Number(input.value)) || input.value === "" || !input.checkValidity()) || [...row.querySelectorAll("[data-accessory-team-color]")].reduce((sum, input) => sum + Number(input.value), 0) !== 100);
+    if (invalid) return `${invalid.querySelector(".tape-team-name strong").textContent}: Accessory Color must use whole percentages totaling 100%. Find this team or use Balance to 100%.`;
+  }
   if (control("tape-color-mode")?.value === "distribution") {
     const invalid = [...root.querySelectorAll("[data-tape-team-row]")].find(row => [...row.querySelectorAll("[data-tape-color]")].some(input => !Number.isInteger(Number(input.value)) || input.value === "" || !input.checkValidity()) || [...row.querySelectorAll("[data-tape-color]")].reduce((sum, input) => sum + Number(input.value), 0) !== 100);
     if (invalid) return `${invalid.querySelector(".tape-team-name strong").textContent}: Tape Color must use whole percentages totaling 100%. Find this team or use Balance to 100%.`;
@@ -203,7 +211,7 @@ function bindConfigurationWindows() {
     }
     feature("#equipment-no-drip-chances", { title: "No Drip Chances", description: "Chance to remove selected accessories for each position group.", dependencies: ["equipment-no-drip"], enabled: () => get("#equipment-no-drip").checked, summary: root => ["skill", "balanced", "heavy"].map(key => `${configurationRead(root, "equipment-no-drip-" + key).value}%`).join(" / ") });
     feature("#unlocked-mouthpiece-color-field", { title: "Mouthpiece Settings", description: "Choose allowed positions and style mixes, colors, rerolls, and branded frequency together. QB and K/P start disabled but can be enabled.", dependencies: ["fix-unlocked-mouthpieces"], enabled: () => get("#fix-unlocked-mouthpieces").checked, summary: root => `${configurationLabel(root, "unlocked-mouthpiece-colors")} · ${configurationRead(root, "mouthpiece-branded-frequency").value}% branded · ${configurationRead(root, "randomize-existing-mouthpieces").checked ? "Reroll existing" : "Keep existing"}` });
-    feature("#unlocked-color-field", { title: "Colors & Tape", description: "Choose one accessory theme per player, then decide whether tape matches it or uses your team-by-team percentages. Tape is recolored, not added.", dependencies: ["fix-unlocked-recolor"], enabled: () => get("#fix-unlocked-recolor").checked, summary: root => `${configurationLabel(root, "unlocked-color-theme")} · ${configurationLabel(root, "tape-color-mode")}` });
+    feature("#unlocked-color-field", { title: "Colors & Tape", description: "Choose accessory colors from a shared mix, fixed color, or team-by-team percentages. Tape can use that same result or its own team mix. Existing items are recolored, not added.", dependencies: ["fix-unlocked-recolor"], enabled: () => get("#fix-unlocked-recolor").checked, summary: root => `${configurationLabel(root, "unlocked-color-theme")} · ${configurationLabel(root, "tape-color-mode")}` });
     feature("#unlocked-tattoo-field", { title: "Tattoo Settings", description: "Choose a population cap and the designs that may be added. Existing tattoos are kept. Japanese and Polynesian styles start unchecked.", dependencies: ["fix-unlocked-tattoos"], enabled: () => get("#fix-unlocked-tattoos").checked, summary: root => `${configurationRead(root, "unlocked-tattoo-cap").value}% population cap · ${configurationRead(root, "unlocked-tattoo-pool").selectedOptions.length} designs selected` });
   }
   if (state.page === "nil-toggle") feature('.standard-config-workspace .ops-section:nth-of-type(2) .ops-section-body', { title: "Player Scope", description: "All filters work together. Leave every selection empty for the entire active dynasty roster. The preview lists every match before any flags change.", summary: root => ["nil-teams", "nil-players", "nil-positions", "nil-classes", "nil-redshirts"].map(id => `${configurationRead(root, id).selectedOptions.length || "All"} ${id.slice(4)}`).join(" · ") });

@@ -1,14 +1,14 @@
 function presetConfiguration() {
   captureToolSettings();
   const values = { ...(state.toolSettings.get(state.page) ?? {}) }, teamSelections = {};
-  for (const id of Object.keys(values)) if (/^preset-|search|filter|^tape-team-color-/.test(id)) delete values[id];
+  for (const id of Object.keys(values)) if (/^preset-|search|filter|^tape-team-color-|^accessory-team-color-/.test(id)) delete values[id];
   for (const select of content.querySelectorAll("select[id]")) {
     if (select.closest(".config-presets") || !saveSpecificSetting(select.id)) continue;
     if (select.id === "equipment-donor-players" && document.getElementById("equipment-donor")?.value.trim()) continue; // A source fingerprint makes donor rows stable, without storing thousands of labels.
     teamSelections[select.id] = [...select.selectedOptions].map(option => option.textContent.trim());
     delete values[select.id];
   }
-  return { version: 1, values, teamSelections, tapeColors: teamTapeOptions(), jerseyMode: state.page === "jersey-renumber" ? state.jerseyMode : undefined };
+  return { version: 1, values, teamSelections, tapeColors: teamTapeOptions(), accessoryColors: teamAccessoryOptions(), jerseyMode: state.page === "jersey-renumber" ? state.jerseyMode : undefined };
 }
 
 function presetValues(configuration) {
@@ -41,6 +41,10 @@ function presetValues(configuration) {
     if (mix === undefined) continue;
     values[input.id] = typeof mix === "string" ? (mix === input.dataset.tapeColor ? "100" : "0") : String(mix[input.dataset.tapeColor]);
   }
+  for (const input of content.querySelectorAll("[data-accessory-team][data-accessory-team-color]")) {
+    const mix = configuration.accessoryColors?.[input.dataset.accessoryTeam]; if (mix === undefined) continue;
+    values[input.id] = typeof mix === "string" ? (mix === input.dataset.accessoryTeamColor ? "100" : "0") : String(mix[input.dataset.accessoryTeamColor]);
+  }
   return values;
 }
 
@@ -72,6 +76,7 @@ function addPresetControls() {
     if (existing && !await appConfirm("Replace Preset?", `Replace the saved preset "${existing.name}" with your current settings?`)) return;
     const configuration = presetConfiguration();
     if (tool.id === "equipment-patcher" && configuration.values["fix-unlocked-recolor"] && configuration.values["tape-color-mode"] !== "accessory" && [...content.querySelectorAll("[data-tape-color]")].some(input => input.getAttribute("aria-invalid") === "true")) throw new Error("Balance each team's Tape Color to whole percentages totaling 100% before saving this preset.");
+    if (tool.id === "equipment-patcher" && configuration.values["fix-unlocked-recolor"] && configuration.values["unlocked-color-theme"] === "team" && [...content.querySelectorAll("[data-accessory-team-color]")].some(input => input.getAttribute("aria-invalid") === "true")) throw new Error("Balance each team\'s Accessory Color to whole percentages totaling 100% before saving this preset.");
     const saved = await window.cfbToolkit.savePreset({ toolId: tool.id, name: entered, id: existing?.id, configuration });
     state.bootstrap.settings.toolPresets = [...(state.bootstrap.settings.toolPresets ?? []).filter(preset => preset.id !== saved.id), saved];
     sync(saved.id); toast("Preset saved");
