@@ -1,6 +1,6 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
-const channels = Object.freeze({ bootstrap: "app:bootstrap", chooseSave: "dialog:choose-save", chooseFile: "dialog:choose-file", setActiveSave: "context:set-active-save", clearActiveSave: "context:clear-active-save", updateTheme: "settings:update-theme", homeContext: "home:context", homeLines: "home:lines", chooseTeamArtwork: "settings:choose-team-artwork", clearTeamArtwork: "settings:clear-team-artwork", runTool: "tools:run", prepareTool: "tools:prepare", prepareEquipmentDonors: "equipment:prepare-donors", searchPreview: "tools:search-preview", listReports: "reports:list", listHistory: "history:list", getHistory: "history:get", getReview: "history:get-review", listLogs: "logs:list", clearLogs: "logs:clear", openPath: "shell:open-path" });
+const channels = Object.freeze({ bootstrap: "app:bootstrap", chooseSave: "dialog:choose-save", chooseFile: "dialog:choose-file", setActiveSave: "context:set-active-save", clearActiveSave: "context:clear-active-save", updateTheme: "settings:update-theme", homeContext: "home:context", homeLines: "home:lines", chooseTeamArtwork: "settings:choose-team-artwork", clearTeamArtwork: "settings:clear-team-artwork", runTool: "tools:run", prepareTool: "tools:prepare", prepareEquipmentDonors: "equipment:prepare-donors", searchPreview: "tools:search-preview", listReports: "reports:list", listHistory: "history:list", getHistory: "history:get", getReview: "history:get-review", listLogs: "logs:list", clearLogs: "logs:clear", revealReport: "shell:reveal-report", openPath: "shell:open-path" });
 contextBridge.exposeInMainWorld("cfbToolkit", Object.freeze({
   bootstrap: () => ipcRenderer.invoke(channels.bootstrap),
   getUpdateStatus: () => ipcRenderer.invoke("updates:status"),
@@ -39,5 +39,6 @@ contextBridge.exposeInMainWorld("cfbToolkit", Object.freeze({
   getReview: id => ipcRenderer.invoke(channels.getReview, id),
   listLogs: () => ipcRenderer.invoke(channels.listLogs),
   clearLogs: () => ipcRenderer.invoke(channels.clearLogs),
+  revealReport: target => ipcRenderer.invoke(channels.revealReport, target),
   openPath: target => ipcRenderer.invoke(channels.openPath, target)
 }));

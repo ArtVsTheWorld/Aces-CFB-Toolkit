@@ -60,7 +60,7 @@ function condenseConfiguration(element, specification) {
   entry.innerHTML = `<div><strong>${escapeHtml(specification.title)}</strong><p data-config-summary></p></div><button type="button" class="button secondary" data-config-open>${escapeHtml(specification.action ?? "Configure")}</button>`;
   element.before(entry, source); source.append(element);
   if (specification.dependencies?.length === 1) document.getElementById(specification.dependencies[0])?.closest(".toggle-card")?.after(entry);
-  const defaults = configurationDefaults(source);
+  const defaults = { ...configurationDefaults(source), ...specification.defaults };
   const refresh = () => {
     entry.querySelector("[data-config-summary]").textContent = specification.summary?.(source) ?? "Customize these settings.";
     const enabled = specification.enabled ? Boolean(specification.enabled()) : true;
@@ -147,6 +147,7 @@ function openConfigurationEditor(source, defaults, specification, refresh) {
 }
 
 function syncConfigurationDraft(root) {
+  if (typeof syncRosterGeneratorDraft === "function") syncRosterGeneratorDraft(root);
   syncAdvancedDraft(root); syncDonorMouthpieceDraft(root);
   const control = id => configurationRead(root, id), show = (id, visible) => { const node = control(id); if (node) node.hidden = !visible; };
   if (control("equipment-donor-mode")) {
@@ -224,7 +225,7 @@ function bindConfigurationWindows() {
     if (!select) continue;
     if (picker.hasAttribute("data-option-picker") && select.options.length <= 7) { picker.classList.add("compact-choice-picker"); continue; }
     const label = picker.querySelector("[data-base-label]").dataset.baseLabel;
-    condenseConfiguration(picker, { title: label, action: "Select", description: picker.querySelector("p.muted")?.textContent ?? "Search and check the options you want.", summary: () => configurationSelectionSummary(select, select.id === "team-search" ? "No teams selected — choose at least one" : undefined), validate: root => select.id === "team-search" && !configurationRead(root, select.id).selectedOptions.length ? "Choose at least one team." : select.id === "boost-attributes" && !configurationRead(root, select.id).selectedOptions.length ? "Choose at least one attribute." : "" });
+    condenseConfiguration(picker, { title: label, action: "Select", description: picker.querySelector("p.muted")?.textContent ?? "Search and check the options you want.", summary: () => configurationSelectionSummary(select, select.id === "team-search" ? "No teams selected — choose at least one" : undefined), validate: root => ["team-search", "roster-teams"].includes(select.id) && !configurationRead(root, select.id).selectedOptions.length ? "Choose at least one team." : select.id === "boost-attributes" && !configurationRead(root, select.id).selectedOptions.length ? "Choose at least one attribute." : "" });
   }
   bindAdvancedPassWindows();
   bindModPoolWindows();

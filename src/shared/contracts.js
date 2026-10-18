@@ -31,6 +31,7 @@ export const IPC = Object.freeze({
   saveCustomMatchupModel: "settings:save-custom-matchup-model",
   listLogs: "logs:list",
   clearLogs: "logs:clear",
+  revealReport: "shell:reveal-report",
   openPath: "shell:open-path"
 });
 

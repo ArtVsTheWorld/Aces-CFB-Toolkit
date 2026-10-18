@@ -1,0 +1,274 @@
+{
+  "sources": [
+    {
+      "file": "DYNASTY-2032EXAMPLEROSTER",
+      "sha256": "b44c94ad2afba039849379f7922f17b3ec031728a98f1be41eb9c41f2150236d",
+      "players": 11730
+    },
+    {
+      "file": "DYNASTY-2038EXAMPLE",
+      "sha256": "b9d6cc60dd678775daa6854740df4715044134b2e13f22f42cc74d1bd8fb4db5",
+      "players": 11730
+    }
+  ],
+  "additions": [
+    {
+      "name": "Badet",
+      "id": 7107,
+      "observations": 2,
+      "distinctFirstNames": 2,
+      "ids": [
+        7107
+      ],
+      "existingIDNames": [],
+      "rejection": null
+    },
+    {
+      "name": "Breeland",
+      "id": 5701,
+      "observations": 2,
+      "distinctFirstNames": 2,
+      "ids": [
+        5701
+      ],
+      "existingIDNames": [],
+      "rejection": null
+    },
+    {
+      "name": "Coe",
+      "id": 975,
+      "observations": 2,
+      "distinctFirstNames": 2,
+      "ids": [
+        975
+      ],
+      "existingIDNames": [],
+      "rejection": null
+    },
+    {
+      "name": "Crosswell",
+      "id": 8329,
+      "observations": 2,
+      "distinctFirstNames": 2,
+      "ids": [
+        8329
+      ],
+      "existingIDNames": [],
+      "rejection": null
+    },
+    {
+      "name": "Eifert",
+      "id": 5530,
+      "observations": 3,
+      "distinctFirstNames": 3,
+      "ids": [
+        5530
+      ],
+      "existingIDNames": [],
+      "rejection": null
+    },
+    {
+      "name": "Fay",
+      "id": 7891,
+      "observations": 2,
+      "distinctFirstNames": 2,
+      "ids": [
+        7891
+      ],
+      "existingIDNames": [],
+      "rejection": null
+    },
+    {
+      "name": "Goldson",
+      "id": 1907,
+      "observations": 2,
+      "distinctFirstNames": 2,
+      "ids": [
+        1907
+      ],
+      "existingIDNames": [],
+      "rejection": null
+    },
+    {
+      "name": "Josiah",
+      "id": 2519,
+      "observations": 2,
+      "distinctFirstNames": 2,
+      "ids": [
+        2519
+      ],
+      "existingIDNames": [],
+      "rejection": null
+    },
+    {
+      "name": "Kilian",
+      "id": 2625,
+      "observations": 2,
+      "distinctFirstNames": 2,
+      "ids": [
+        2625
+      ],
+      "existingIDNames": [],
+      "rejection": null
+    },
+    {
+      "name": "Knighton",
+      "id": 2679,
+      "observations": 2,
+      "distinctFirstNames": 2,
+      "ids": [
+        2679
+      ],
+      "existingIDNames": [],
+      "rejection": null
+    },
+    {
+      "name": "Lasike",
+      "id": 6175,
+      "observations": 2,
+      "distinctFirstNames": 2,
+      "ids": [
+        6175
+      ],
+      "existingIDNames": [],
+      "rejection": null
+    },
+    {
+      "name": "Leisle",
+      "id": 2863,
+      "observations": 2,
+      "distinctFirstNames": 2,
+      "ids": [
+        2863
+      ],
+      "existingIDNames": [],
+      "rejection": null
+    },
+    {
+      "name": "Lestage",
+      "id": 8374,
+      "observations": 2,
+      "distinctFirstNames": 2,
+      "ids": [
+        8374
+      ],
+      "existingIDNames": [],
+      "rejection": null
+    },
+    {
+      "name": "Luketa",
+      "id": 8530,
+      "observations": 2,
+      "distinctFirstNames": 2,
+      "ids": [
+        8530
+      ],
+      "existingIDNames": [],
+      "rejection": null
+    },
+    {
+      "name": "Madrigal",
+      "id": 7409,
+      "observations": 2,
+      "distinctFirstNames": 2,
+      "ids": [
+        7409
+      ],
+      "existingIDNames": [],
+      "rejection": null
+    },
+    {
+      "name": "McCurdy",
+      "id": 8122,
+      "observations": 3,
+      "distinctFirstNames": 3,
+      "ids": [
+        8122
+      ],
+      "existingIDNames": [],
+      "rejection": null
+    },
+    {
+      "name": "Mosher",
+      "id": 7712,
+      "observations": 2,
+      "distinctFirstNames": 2,
+      "ids": [
+        7712
+      ],
+      "existingIDNames": [],
+      "rejection": null
+    },
+    {
+      "name": "Oplinger",
+      "id": 7053,
+      "observations": 3,
+      "distinctFirstNames": 3,
+      "ids": [
+        7053
+      ],
+      "existingIDNames": [],
+      "rejection": null
+    },
+    {
+      "name": "Rabach",
+      "id": 4046,
+      "observations": 2,
+      "distinctFirstNames": 2,
+      "ids": [
+        4046
+      ],
+      "existingIDNames": [],
+      "rejection": null
+    },
+    {
+      "name": "Ricketts",
+      "id": 8084,
+      "observations": 2,
+      "distinctFirstNames": 2,
+      "ids": [
+        8084
+      ],
+      "existingIDNames": [],
+      "rejection": null
+    },
+    {
+      "name": "Strojny",
+      "id": 4782,
+      "observations": 2,
+      "distinctFirstNames": 2,
+      "ids": [
+        4782
+      ],
+      "existingIDNames": [],
+      "rejection": null
+    },
+    {
+      "name": "Ventrone",
+      "id": 5153,
+      "observations": 2,
+      "distinctFirstNames": 2,
+      "ids": [
+        5153
+      ],
+      "existingIDNames": [],
+      "rejection": null
+    },
+    {
+      "name": "Watton",
+      "id": 5243,
+      "observations": 2,
+      "distinctFirstNames": 2,
+      "ids": [
+        5243
+      ],
+      "existingIDNames": [],
+      "rejection": null
+    }
+  ],
+  "excluded": {
+    "needsReview": 203,
+    "knownNameMismatches": 38
+  },
+  "policy": "At least two distinct observed first names for one consistent positive surname ID; no known-ID collision, first-name fallback, or cross-surname ambiguity. Existing mappings are retained."
+}

@@ -36,6 +36,7 @@ function selectSummary(id, empty = 'All') {
 function affectedScopeSummary() {
   const page = state.page;
   if (page.includes('equipment')) return [selectSummary('equipment-included', 'All Teams'), selectSummary('equipment-positions', 'All Positions'), selectSummary('equipment-classes', 'All Class Years'), selectSummary('equipment-redshirt-group'), document.getElementById('equipment-skip-nil')?.checked ? 'NIL Players Excluded' : 'NIL Players Included', `OVR ${document.getElementById('equipment-min')?.value || 'Any'}–${document.getElementById('equipment-max')?.value || 'Any'}`].filter(Boolean).join(' · ');
+  if (page === 'roster-generator') return `${selectSummary('roster-teams', 'No Teams Selected')} · Every rostered player, including NIL identities · ${document.getElementById('roster-caliber')?.selectedOptions[0]?.textContent ?? ''} · ${document.getElementById('roster-age')?.selectedOptions[0]?.textContent ?? 'Standard'} age · ${document.getElementById('roster-potential')?.selectedOptions[0]?.textContent ?? 'Standard'} potential`;
   if (page === 'team-boost') return [selectSummary('team-search', 'No Teams Selected'), selectSummary('boost-positions', 'All Positions'), selectSummary('boost-classes', 'All Class Years'), selectSummary('boost-redshirt', 'All Redshirt Statuses'), selectSummary('boost-players', 'All Players'), document.getElementById('player-scope')?.selectedOptions[0]?.textContent].filter(Boolean).join(' · ');
   if (page === 'nil-toggle') return ['nil-teams', 'nil-players', 'nil-positions', 'nil-classes', 'nil-redshirts'].every(id => { const select = document.getElementById(id); return !select?.selectedOptions.length || select.selectedOptions.length === select.options.length; }) ? 'ENTIRE DYNASTY · All rostered players · Check the target NIL value carefully' : ['nil-teams', 'nil-players', 'nil-positions', 'nil-classes', 'nil-redshirts'].map(id => selectSummary(id)).join(' · ');
   if (page === 'commentary-id') return [selectSummary('commentary-teams', 'All Teams'), selectSummary('commentary-positions', 'All Positions'), selectSummary('commentary-classes', 'All Class Years'), selectSummary('commentary-players', 'All Players'), document.getElementById('freshmen-only')?.checked ? 'True Freshmen Only' : '', selectSummary('commentary-redshirt', 'All Redshirt Statuses'), 'NIL Players Always Excluded'].filter(Boolean).join(' · ');
@@ -57,7 +58,7 @@ function addExplicitSelectionModes(root = content) {
     if (control.dataset.refinementBound) continue;
     control.dataset.refinementBound = 'true';
     control.dataset.explicitSelection = 'true';
-    const shell = control.closest('[data-team-picker]'), skip = /skipped|excluded/.test(control.id), required = (control.dataset.configOriginal ?? control.id) === 'team-search';
+    const shell = control.closest('[data-team-picker]'), skip = /skipped|excluded/.test(control.id), required = (control.dataset.configOriginal ?? control.id) === 'team-search' || (control.dataset.configOriginal ?? control.id) === 'roster-teams';
     const originalId = control.dataset.configOriginal ?? control.id;
     const existingMode = configurationRead(root, 'selection-mode-' + originalId);
     const mode = existingMode ?? document.createElement('select');
@@ -313,6 +314,7 @@ function addConfigurationDepartures() {
 }
 const historyFilters = { query: '', tool: '', mode: '', page: 0 };
 function presetCompatibility(configuration) {
+  if(state.page==='roster-generator'){configuration={...configuration,values:{...configuration.values}};delete configuration.values['roster-seed'];if(typeof rosterMigrateTalentValues==='function')rosterMigrateTalentValues(configuration.values,configuration.teamSelections?.['roster-teams']);}
   const messages = [], values = {};
   if (configuration.values?.['fix-clear-tattoos'] && configuration.values?.['fix-unlocked-tattoos']) messages.push('Clear Tattoos and Add Tattoos cannot both be enabled. Choose one tattoo pass before loading this preset.');
   try { const custom = JSON.parse(configuration.values?.['jersey-custom-json'] ?? '{}'); if (custom.lockedRows?.length && custom.lockSourcePath !== state.activeSave?.path) messages.push('Individual jersey locks belong to another save. Re-select those players before loading these settings.'); }

@@ -4,7 +4,7 @@
 
 Use Node.js 24 and Windows. Run `npm ci`, `npm run test:source`, and `npm start` from the repository root. The lockfile pins the dependency graph; do not commit `node_modules`, `dist`, or local caches.
 
-The published v18.3 application passed 456 tests in the maintainer's full-fixture environment, plus development/packaged smoke tests and in-game checks. A public checkout does not include those private dynasty saves. The source-only test count is therefore lower and is reported honestly by `npm run test:source`.
+The v20.5 source passes 610 portable source tests. The maintainer also ran five copied-save integration checks and packaged Roster Generator UI, installer-resource and updater checks. A public checkout does not include private dynasty fixtures; this does not claim that the full `npm test` suite runs without them. In-game validation of newly generated rosters is still recommended.
 
 ## Full-save checks
 

@@ -13,6 +13,8 @@ function presetConfiguration() {
 
 function presetValues(configuration) {
   const values = { ...configuration.values };
+  delete values['roster-seed']; // Older Roster Generator presets cannot pin a new run's seed.
+  if(typeof rosterMigrateTalentValues==='function')rosterMigrateTalentValues(values,configuration.teamSelections?.['roster-teams']);
   const external = values["equipment-donor"]?.trim(), donorRows = values["equipment-donor-players"];
   if (external && Array.isArray(donorRows)) {
     const catalog = equipmentDonorCatalogs.get(external), allowed = new Set(catalog?.donorPlayers.map(player => player.value) ?? []);

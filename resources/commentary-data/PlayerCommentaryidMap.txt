@@ -1,5 +1,5 @@
 CFB 27 Commentary Name List
-Total names | 7032
+Total names | 7055
 
 Aaitui | 5657
 Abanikanda | 8677
@@ -7033,3 +7033,27 @@ Warren Jr. | 5231
 Waters Jr. | 5238
 Webb III | 5257
 Williamson Jr. | 5347
+
+Badet | 7107
+Breeland | 5701
+Coe | 975
+Crosswell | 8329
+Eifert | 5530
+Fay | 7891
+Goldson | 1907
+Josiah | 2519
+Kilian | 2625
+Knighton | 2679
+Lasike | 6175
+Leisle | 2863
+Lestage | 8374
+Luketa | 8530
+Madrigal | 7409
+McCurdy | 8122
+Mosher | 7712
+Oplinger | 7053
+Rabach | 4046
+Ricketts | 8084
+Strojny | 4782
+Ventrone | 5153
+Watton | 5243

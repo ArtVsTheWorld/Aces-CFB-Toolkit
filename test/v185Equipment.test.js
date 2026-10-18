@@ -134,7 +134,7 @@ test("handwarmer removal targets both known models only; every verified playcall
 test("release versions, new map pairs, checkbox defaults, and compact helmet editor are wired", () => {
   assert.equal(tools.find(t => t.id === "freshman-equipment").version, "5.6"); assert.equal(tools.find(t => t.id === "equipment-patcher").version, "6.0"); assert.equal(tools.find(t => t.id === "commentary-id").version, "2.1");
   const map = loadCommentaryMap(new URL("../resources/commentary-data/PlayerCommentaryidMap.txt", import.meta.url));
-  assert.equal(map.size, 7032); assert.equal(map.get("Moseley"), 7008); assert.equal(map.get("Chadwick Jr."), 7598); assert.equal(map.get("Williamson Jr."), 5347);
+  assert.equal(map.size, 7055); assert.equal(map.get("Moseley"), 7008); assert.equal(map.get("Chadwick Jr."), 7598); assert.equal(map.get("Williamson Jr."), 5347);
   const observed = JSON.parse(fs.readFileSync(new URL("../src/main/tools/equipment/equipmentVanillaObservation.json", import.meta.url), "utf8"));
   assert.ok(observed.items.length >= 231);
   for (const model of HELMET_MODELS) assert.ok(observed.items.some(item => item.itemName === model.id), `${model.label} has verified ItemInfo evidence`);

@@ -68,7 +68,7 @@ test("all active tools have a card-based preview and deprecated White Helmet is 
   assert.equal(tools.some(tool => tool.id === "white-helmet-fix"), false);
   for (const name of ["jerseyResults", "equipmentResults", "teamBoostResults", "genericPlayerResults", "commentaryResults"]) assert.match(rendererFunction(name), /card-list|change-card|player-card/);
   assert.match(rendererFunction("forceScheduleTable"), /force-game/);
-  assert.match(rendererFunction("renderResult"), /"commentary-id", "nil-toggle"\].includes\(result.resultKind\)\) bindGenericResultView/);
+  assert.match(rendererFunction("renderResult"), /"commentary-id", "nil-toggle", "roster-generator"\].includes\(result.resultKind\)\) bindGenericResultView/);
 });
 
 test("Commentary Analyze opens final Preview directly when no decisions are needed", async () => {

@@ -8,6 +8,7 @@ import { IPC, RUN_MODES } from "../shared/contracts.js";
 import { displayAppVersion } from "../shared/appVersion.js";
 import { getTool, registrySnapshot } from "../shared/toolRegistry.js";
 import { prepareEquipmentDonors } from './tools/equipment/donorSource.js';
+import { validateReportLocation } from "./services/reportLocations.js";
 import { appPaths, commentaryMapPath, schemaDirectory, schemaPath } from "./services/paths.js";
 import { inspectSaveSchema, SUPPORTED_SCHEMAS } from "./services/save.js";
 import { SettingsStore, normalizeAccentColor } from "./services/settings.js";
@@ -203,13 +204,14 @@ function registerIpc() {
   ipcMain.handle(IPC.getReview, (_event, id) => history.get(id)?.reviewAvailable ? reviews.get(id) : null);
   ipcMain.handle(IPC.listLogs, () => logger.list());
   ipcMain.handle(IPC.clearLogs, () => { logger.clear(); return []; });
+  ipcMain.handle(IPC.revealReport, (_event, target) => { const report = validateReportLocation(target, paths.reports); shell.showItemInFolder(report); return true; });
   ipcMain.handle(IPC.openPath, async (_event, target) => { if (typeof target !== "string" || !path.isAbsolute(target)) throw new Error("Invalid path."); const backupDirectory = sessionActiveSave ? path.join(path.dirname(sessionActiveSave), "Ace's CFB Toolkit Backups") : null; const allowed = [paths.logs, paths.reports, sessionActiveSave, backupDirectory].filter(Boolean).some(base => target === base || target.startsWith(`${base}${path.sep}`) || path.dirname(target) === path.dirname(base)); if (!allowed) throw new Error("That path is outside Ace's CFB Toolkit's approved locations."); const result = await shell.openPath(target); if (result) throw new Error(result); return true; });
 }
 
 app.whenReady().then(() => {
   if (!ownsInstance) return;
   paths = appPaths(); settings = new SettingsStore(paths.settings); settings.load(); if (settings.get().activeSave) settings.update({ activeSave: null }); logger = new AppLogger(paths.logs); reports = new ReportService(paths.reports); history = new HistoryStore(paths.history); history.load(); reviews = new ReviewSnapshots(path.join(paths.data, "review-snapshots")); initializeUpdates(); registerIpc();
-  if (process.argv.includes("--smoke-test")) { const snapshot = registrySnapshot(); const available = snapshot.tools.filter(tool => tool.status === "available").map(tool => tool.id).sort(), schemasPresent = SUPPORTED_SCHEMAS.every(schema => fs.existsSync(schemaPath(schema.version))); if (snapshot.tools.length !== 10 || JSON.stringify(available) !== JSON.stringify(executableToolIds().sort()) || !schemasPresent || !fs.existsSync(commentaryMapPath())) process.exitCode = 1; app.quit(); return; }
+  if (process.argv.includes("--smoke-test")) { const snapshot = registrySnapshot(); const available = snapshot.tools.filter(tool => tool.status === "available").map(tool => tool.id).sort(), schemasPresent = SUPPORTED_SCHEMAS.every(schema => fs.existsSync(schemaPath(schema.version))); if (snapshot.tools.length !== 11 || JSON.stringify(available) !== JSON.stringify(executableToolIds().sort()) || !schemasPresent || !fs.existsSync(commentaryMapPath())) process.exitCode = 1; app.quit(); return; }
   createWindow(); app.on("activate", () => { if (BrowserWindow.getAllWindows().length === 0) createWindow(); });
 });
 app.on("window-all-closed", () => { if (process.platform !== "darwin") app.quit(); });

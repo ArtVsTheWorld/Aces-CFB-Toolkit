@@ -7,8 +7,10 @@ import { prepareEquipmentTool, runEquipmentPatcher, runFreshmanEquipment } from 
 import { prepareForceWin, runForceWin } from "./forceWin/runner.js";
 import { prepareDealbreaker, runDealbreaker } from "./dealbreaker/runner.js";
 import { prepareNilToggle, runNilToggle } from "./nilToggle/runner.js";
+import { prepareRosterGenerator, runRosterGenerator } from "./rosterGenerator/runner.js";
 
 const handlers = new Map([
+  ["roster-generator", { prepare: prepareRosterGenerator, run: runRosterGenerator }],
   ["long-snap", { run: runLongSnap }],
   ["nil-toggle", { prepare: prepareNilToggle, run: runNilToggle }],
   ["team-boost", { prepare: prepareTeamBoost, run: runTeamBoost }]

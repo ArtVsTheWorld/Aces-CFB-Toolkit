@@ -337,7 +337,7 @@ export function patchFreshmanEquipment(playerRecords, visualsRecords, visualsTab
     if (ref?.tableId === visualsTableId) referenceCounts.set(ref.row, (referenceCounts.get(ref.row) ?? 0) + 1);
   }
 
-  const availableDonors = collectEquipmentDonors(donorPlayerRecords, donorVisualRecords, donorVisualsTableId, { rosterRows: donorRosterRows, fcsTeamIndexes: options.donorFcsTeamIndexes ?? fcsTeamIndexes, teamNames: donorTeamNames, teamApparel: donorTeamApparel, playerApparel: donorPlayerApparel });
+  const availableDonors = options.preparedDonors ?? collectEquipmentDonors(donorPlayerRecords, donorVisualRecords, donorVisualsTableId, { rosterRows: donorRosterRows, fcsTeamIndexes: options.donorFcsTeamIndexes ?? fcsTeamIndexes, teamNames: donorTeamNames, teamApparel: donorTeamApparel, playerApparel: donorPlayerApparel });
   if (selectedRows && [...selectedRows].some(row => !availableDonors.some(donor => donor.row === row))) throw new Error("A selected donor is no longer eligible in this save. Choose donors again.");
   for (const donor of availableDonors) {
     if (selectedRows && !selectedRows.has(donor.row)) continue;
