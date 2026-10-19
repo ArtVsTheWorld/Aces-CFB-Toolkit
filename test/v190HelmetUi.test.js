@@ -16,7 +16,7 @@ function ui(settings = {}) {
 const custom = { mode: "custom", global: { ...DEFAULT_HELMET_WEIGHTS, GearHelmet_SchuttF7: 0, GearHelmet_SchuttF7Pro: 20 }, positions: {} };
 
 test("v19.0 integrates the two helmet actions without changing tool versions or saved control IDs", () => {
-  assert.equal(JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url))).version, "20.5.0");
+  assert.equal(JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url))).version, "20.6.0");
   const { context } = ui();
   const markup = context.helmetEditorControls();
   for (const id of ["helmet-distribution-json", "helmet-balance", "helmet-allow-vicis"]) assert.ok(markup.includes(`id="${id}"`));

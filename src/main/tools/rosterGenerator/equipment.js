@@ -1,3 +1,5 @@
+import {coordinateHandedEquipment} from './handedEquipment.js';
+import {sf} from '../equipment/openSave.js';
 import {collectEquipmentDonors,patchFreshmanEquipment} from '../equipment/core/patcher.js';
 import {buildRosterPlayerRows,buildFcsTeamIndexes,buildTeamNames,buildTeamApparel,buildRosterPlayerApparel} from '../equipment/shared.js';
 
@@ -13,7 +15,7 @@ export function makeRosterEquipmentGenerator(loaded){
     const visuals=players.map(player=>({isEmpty:false,RawData:player.rawData}));
     const result=patchFreshmanEquipment(receivers,visuals,1,{...ROSTER_EQUIPMENT_OPTIONS,teamNames,teamApparel:new Map([[team.teamIndex,team.branding]]),donorPlayerRecords:loaded.players.records,donorVisualRecords:loaded.visuals.records,donorVisualsTableId:loaded.visuals.header.tableId,donorTeamNames:teamNames,donorTeamApparel:teamApparel,preparedDonors,eligiblePlayer:()=>true,seed:(seed^0x47454152)>>>0,apply:true});
     if(result.skipped.length||result.changes.length!==players.length)throw new Error(`Roster equipment could not be generated for every player: ${result.skipped.map(item=>`${item.position}: ${item.reason}`).join('; ')||'incomplete donor result'}. The save has not been written.`);
-    const byRow=new Map(result.changes.map(change=>{const player=players[change.target.row];return[player.row,{rawData:change.newRawData,audit:{source:'active-save',...ROSTER_EQUIPMENT_OPTIONS,donorUses:change.donorUses,mixed:change.mixed,crossPositionMixed:change.crossPositionMixed,brandAssignments:change.brandAssignments,brandCorrections:change.brandCorrections,generatedCorrections:change.generatedCorrections??[],facePaint:change.facePaint,fallbackNotes:change.fallbackNotes}}];}));
+    const byRow=new Map(result.changes.map(change=>{const player=players[change.target.row],handed=coordinateHandedEquipment(change.newRawData,player,change.donorUses,row=>sf(loaded.players.records[row],'PLYR_HANDEDNESS'));return[player.row,{rawData:handed.rawData,audit:{handedness:handed.changes,handednessCompatibility:handed.compatibility??[],receiverHandedness:player.fields.PLYR_HANDEDNESS,source:'active-save',...ROSTER_EQUIPMENT_OPTIONS,donorUses:change.donorUses,mixed:change.mixed,crossPositionMixed:change.crossPositionMixed,brandAssignments:change.brandAssignments,brandCorrections:change.brandCorrections,generatedCorrections:change.generatedCorrections??[],facePaint:change.facePaint,fallbackNotes:change.fallbackNotes}}];}));
     return {byRow,summary:{source:'active-save',...ROSTER_EQUIPMENT_OPTIONS,players:players.length,donorPositions:result.donorPositions,compatibilityCorrections:result.sleeveCompatibilityCorrections}};
   };
 }

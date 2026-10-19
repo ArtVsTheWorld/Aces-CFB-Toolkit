@@ -1,0 +1,92 @@
+{
+  "sources": [
+    {
+      "id": "generated-2032",
+      "sha256": "b44c94ad2afba039849379f7922f17b3ec031728a98f1be41eb9c41f2150236d"
+    },
+    {
+      "id": "generated-2038",
+      "sha256": "b9d6cc60dd678775daa6854740df4715044134b2e13f22f42cc74d1bd8fb4db5"
+    }
+  ],
+  "counts": {
+    "PlayingTime": {
+      "TheClutch": 1257,
+      "CampusPersonality": 761,
+      "TimeToGetToWork": 612,
+      "FootballInfluencer": 254,
+      "HometownHero": 7,
+      "SundayBound": 5,
+      "TVTime": 200,
+      "Starter": 297,
+      "CoachsFavorite": 2,
+      "ItsGameTime": 2,
+      "ToTheHouse": 1,
+      "Aspirational": 3,
+      "WorkHorse": 3,
+      "ConferenceSpotlight": 2,
+      "ProveYourself": 3,
+      "StudentOfTheGame": 1,
+      "Prestigious": 1
+    },
+    "Invalid": {
+      "CollegeExperience": 251
+    },
+    "ProximityToHome": {
+      "StudentOfTheGame": 560,
+      "TeamPlayer": 374,
+      "Grassroots": 1356,
+      "HometownHero": 1264,
+      "CoachsFavorite": 706,
+      "Starter": 187,
+      "ConferenceSpotlight": 566
+    },
+    "PlayingStyle": {
+      "TheClutch": 1047,
+      "Prestigious": 735,
+      "TeamPlayer": 400,
+      "TimeToGetToWork": 538,
+      "CampusPersonality": 648,
+      "ItsGameTime": 454
+    },
+    "ConferencePrestige": {
+      "Prestigious": 833,
+      "ConferenceSpotlight": 573,
+      "Aspirational": 428,
+      "ItsGameTime": 497,
+      "SundayBound": 187,
+      "ProveYourself": 131
+    },
+    "CoachPrestige": {
+      "StudentOfTheGame": 386,
+      "CoachsFavorite": 509,
+      "Prestigious": 676,
+      "Aspirational": 433,
+      "ToTheHouse": 235,
+      "ProveYourself": 160
+    },
+    "ProPotential": {
+      "TimeToGetToWork": 479,
+      "WorkHorse": 909,
+      "ItsGameTime": 397,
+      "FootballInfluencer": 226,
+      "SundayBound": 177
+    },
+    "BrandExposure": {
+      "WorkHorse": 830,
+      "FootballInfluencer": 157,
+      "ToTheHouse": 230,
+      "Starter": 187,
+      "TVTime": 91,
+      "ProveYourself": 120
+    },
+    "ChampionshipContender": {
+      "HometownHero": 816,
+      "Aspirational": 338,
+      "SundayBound": 171,
+      "ToTheHouse": 264,
+      "ConferenceSpotlight": 389,
+      "TVTime": 134
+    }
+  }
+}

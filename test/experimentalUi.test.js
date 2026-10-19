@@ -12,7 +12,7 @@ test("the stable shell and packaging no longer show experimental release labels"
   assert.doesNotMatch(index, /Experimental UI|EXPERIMENTAL UI|UI REDESIGN|\(Experimental\)/);
   assert.doesNotMatch(renderer, /\(Experimental\)|This experimental build/);
   assert.doesNotMatch(pkg.build.artifactName, /Experimental/);
-  assert.equal(pkg.version, "20.5.0");
+  assert.equal(pkg.version, "20.6.0");
 });
 
 test("sports operations navigation retains every registered primary tool", () => {

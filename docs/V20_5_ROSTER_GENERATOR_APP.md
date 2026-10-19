@@ -6,7 +6,7 @@ Roster Generator 1.0 is integrated into the Team Management sidebar of the devel
 
 The earlier standalone HTML prototype remains available for research. Its preview-only API still cannot write a save; the registered application handler provides the separate confirmed Apply path.
 
-For the current revised targets, sampling, name/head pairing and report controls, see [the follow-up changes](V20_5_GENERATOR_REFINEMENTS.md). The earlier target table and generation description below record the first implementation and are superseded where that follow-up differs.
+For current identity, health, eligibility, captains, geography and pitch handling, see [player-state changes](V20_5_PLAYER_STATE.md). For revised targets, sampling, name/head pairing and report controls, see [the follow-up changes](V20_5_GENERATOR_REFINEMENTS.md). The earlier target table and generation description below record the first implementation and are superseded where those follow-ups differ.
 
 ## Workflow
 
@@ -39,7 +39,7 @@ Building Blocks retains complete observed rating/ability/eligibility/development
 
 Appearance uses generic head/body/physique/portrait packages, reconciles stale skin/build/name overrides, and uses existing field-level brand and equipment compatibility guards. Harmless empty Base-category placeholders are preserved. Unknown populated/non-on-field appearance layers and shared character-visual owners block Apply with explicit reasons; this implementation does not silently modify or skip their other owners.
 
-Age and birth-date fields are never read for generation or written. Raw protected-bit verification checks preservation without decoding those legacy fields. PresentationId and other identity bindings remain untouched. Historical statistics, career records, depth charts and eligibility history outside the explicit allowlist are **not reset**.
+Age and birth-date fields are never read for generation or written. Raw protected-bit verification checks preservation without decoding those legacy fields. Fresh presentation IDs/asset names clear the old full-name broadcast identity. Class/redshirt and consecutive years with the team use the same observed football package. Historical statistics, awards, career records and depth charts are **not reset**. Reorder the depth chart in-game after regeneration.
 
 ## Save safety
 

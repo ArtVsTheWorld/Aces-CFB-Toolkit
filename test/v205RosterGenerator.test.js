@@ -19,10 +19,18 @@ function targets(n=10,position='QB'){
 }
 const make=(model=catalog(),teamTargets=targets(),seed=205)=>generateRosterPreview({team:{name:'Test Team',teamIndex:1,branding:'nike'},targets:teamTargets,model,seed,unavailableNames:['Alex North']});
 
+test('player-state, captain, pitch and broadcast-identity edits invalidate an exact generated preview',()=>{
+  const model=catalog(),input=targets(),preview=make(model,input);
+  for(const [field,value]of Object.entries({WearAndTear_LArm:0,Fatigue:50,InjuryStatus:'Injured',PLYR_CONSECYEARSWITHTEAM:7,PLYR_HANDEDNESS:'Left',PLYR_HOME_TOWN:'Changed',HomePipeline:'Changed',PLYR_ISCAPTAIN:!preview.players[0].fields.PLYR_ISCAPTAIN,CaptainsPatch:'FiveYearGold',IdealRecruitingPitch:'Changed',PresentationId:1,PLYR_ASSETNAME:'OLD'})){
+    const edited=structuredClone(preview);edited.players[0].fields[field]=value;
+    assert.throws(()=>validateRosterPreview(edited,input,model),undefined,field);
+  }
+});
+
 test('v20.5 prototype is deterministic, immutable, bounded and keeps exact positions without reading Age',()=>{
   const model=catalog(),input=targets(),before=JSON.stringify(input),source=JSON.stringify(model.catalog),a=make(model,input),b=make(model,[...input].reverse());
   assert.deepEqual(a,b);assert.equal(JSON.stringify(input),before);assert.equal(JSON.stringify(model.catalog),source);assert.equal(a.canApply,false);assert.equal(a.summary.players,10);assert.deepEqual(a.summary.positionCounts,{QB:10});assert.ok(a.summary.newAverage>=68&&a.summary.newAverage<=70);
-  for(const player of a.players){assert.equal(Object.hasOwn(player.fields,'Age'),false);assert.equal(Object.hasOwn(player.fields,'PLYR_BIRTHDATE'),false);assert.equal(Object.hasOwn(player.fields,'PresentationId'),false);assert.notEqual(`${player.fields.FirstName} ${player.fields.LastName}`,'Alex North');assert.ok(player.provenance.football);assert.equal(player.fields.IsNIL,false);}
+  for(const player of a.players){assert.equal(Object.hasOwn(player.fields,'Age'),false);assert.equal(Object.hasOwn(player.fields,'PLYR_BIRTHDATE'),false);assert.ok(player.fields.PresentationId>=500000);assert.notEqual(`${player.fields.FirstName} ${player.fields.LastName}`,'Alex North');assert.ok(player.provenance.football);assert.equal(player.fields.IsNIL,false);}
   assert.notDeepEqual(make(model,input,206).players,a.players);
 });
 test('caps, ability ranks, class/redshirt, duplicates and progression are validated as packages',()=>{

@@ -8,6 +8,8 @@ import { fileURLToPath } from "node:url";
 import { ReportService } from "../src/main/services/reports.js";
 import { openCfb27Save, readTables, PLAYER_TABLE_UID, TEAM_TABLE_UID } from "../src/main/services/save.js";
 import { DEFAULT_DISTRIBUTION } from "../src/main/tools/dealbreaker/core.js";
+import {pitchMatches} from '../src/main/tools/dealbreaker/pitches.js';
+import {snapshotProtectedPlayers,verifyProtectedPlayers} from '../src/main/tools/rosterGenerator/safety.js';
 import { runDealbreaker } from "../src/main/tools/dealbreaker/runner.js";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -19,7 +21,7 @@ const options = { seed: 707070, fixInvalidPlayingStyle: true, distribution: DEFA
 async function loadPlayers(savePath) {
   const opened = await openCfb27Save(savePath, schemaPath); const tables = await readTables(opened.franchise, { players: PLAYER_TABLE_UID, teams: TEAM_TABLE_UID }); const names = new Map();
   tables.teams.records.forEach((record, row) => { if (!record || record.isEmpty) return; const name = String(record.DisplayName || record.LongName || record.ShortName || `Team ${row}`), index = Number(record.TeamIndex); if (Number.isInteger(index)) names.set(index, name); if (!names.has(row)) names.set(row, name); });
-  return { players: tables.players.records, names };
+  return { players: tables.players.records, table:tables.players, names };
 }
 
 test("Dealbreaker Preview is read-only and Apply persists the complete cached plan after backing up", { timeout: 30000 }, async () => {
@@ -36,5 +38,9 @@ test("Dealbreaker Preview is read-only and Apply persists the complete cached pl
     const source = await loadPlayers(applied.backupPath), persisted = await loadPlayers(savePath);
     const changedRows = source.players.reduce((rows, record, row) => record?.RecruitingDealbreaker !== persisted.players[row]?.RecruitingDealbreaker ? [...rows, row] : rows, []);
     assert.equal(changedRows.length, preview.summary.find(item => item.label === "Changes proposed").value);
+    verifyProtectedPlayers(snapshotProtectedPlayers(source.table,new Set(changedRows),['RecruitingDealbreaker','IdealRecruitingPitch']),persisted.table);
+    for(const row of changedRows)assert.ok(pitchMatches(persisted.players[row].RecruitingDealbreaker,persisted.players[row].IdealRecruitingPitch));
+    for(const row of preview.details.changes)assert.equal(persisted.players[row.row].IdealRecruitingPitch,row.newPitch);
+    const csv=fs.readFileSync(applied.reportPath,'utf8');assert.ok(csv.includes('OldIdealRecruitingPitch'));assert.ok(csv.includes('NewIdealRecruitingPitch'));
   } finally { fs.rmSync(directory, { recursive: true, force: true }); }
 });

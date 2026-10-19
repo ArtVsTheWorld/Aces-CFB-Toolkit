@@ -1,3 +1,4 @@
+import {matchingPitch} from './pitches.js';
 import { mulberry32 } from "../longSnap/core.js";
 
 export const DEALBREAKER_FIELD = "RecruitingDealbreaker";
@@ -91,8 +92,9 @@ export function patchDealbreakers(records, { teamNames, distribution = DEFAULT_D
     if (invalid && newValue !== "Invalid") projectedNone -= 1;
     else if (invalidStyle && newValue === "Invalid") projectedNone += 1;
     if (!ALLOWED_DEALBREAKERS.includes(newValue)) throw new Error(`Generated unsupported dealbreaker value: ${newValue}.`);
-    const outcome = { row, record, oldValue, newValue, reasons, scope: invalidStyle ? "Invalid Playing Style" : "Invalid" }; outcomes.push(outcome);
-    if (newValue !== oldValue) { changes.push(outcome); if (apply) record[DEALBREAKER_FIELD] = newValue; }
+    const oldPitch=read(record,'IdealRecruitingPitch'),newPitch=oldPitch===undefined||newValue===oldValue?oldPitch:matchingPitch(newValue,oldPitch,seed,row);
+    const outcome = { row, record, oldValue, newValue, oldPitch, newPitch, pitchReason:newPitch!==oldPitch?'Matched to new dealbreaker':'Existing pitch retained', reasons, scope: invalidStyle ? "Invalid Playing Style" : "Invalid" }; outcomes.push(outcome);
+    if (newValue !== oldValue) { changes.push(outcome); if (apply) {record[DEALBREAKER_FIELD] = newValue;if(newPitch!==undefined)record.IdealRecruitingPitch=newPitch;} }
   });
   return { outcomes, changes, population: { total: legitimate.length, startingNone, startingNonePercentage: legitimate.length ? startingNone / legitimate.length : 0, configuredFloorPercentage: base.Invalid / 100, noneFloorCount, projectedNone, projectedNonePercentage: legitimate.length ? projectedNone / legitimate.length : 0, floorLimited } };
 }

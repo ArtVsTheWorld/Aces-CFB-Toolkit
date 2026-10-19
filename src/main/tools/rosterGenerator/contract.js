@@ -1,5 +1,6 @@
 // Explicit generation/write contract. Age, identity bindings and references
 // outside this allowlist must never be changed by Roster Generator.
+import {STATE_FIELDS} from './playerState.js';
 import {RATING_LABELS} from '../teamBoost/ratingWeights.js';
 
 export const CATALOG_VERSION = 1;
@@ -13,11 +14,10 @@ export const TIERS = Object.freeze(['None','Bronze','Silver','Gold','Platinum'])
 export const DEVELOPMENT = Object.freeze(['Normal','College_Impact','College_Star','College_Elite']);
 export const CLASS_PAIRS = Object.freeze(['Freshman|Eligible','Freshman|Previous',...['Sophomore','Junior','Senior'].flatMap(year=>['Eligible','Ineligible','Previous'].map(status=>`${year}|${status}`))]);
 export const STYLE_FIELDS = Object.freeze(['PLYR_QBSTYLE','PLYR_STYLE','RunningStyleRating']);
-// PresentationId may be an identity binding, not a transferable portrait value.
-// It is deliberately absent until its semantics are independently established.
+// PresentationId is separately allocated; never copy a source player's ID.
 export const PORTRAIT_FIELDS = Object.freeze(['PLYR_PORTRAIT','PortraitForceSilhouette','PortraitSwappableLibraryPath']);
 export const APPEARANCE_FIELDS = Object.freeze(['GenericHeadAssetName','PLYR_GENERICHEAD','CharacterBodyType','Height','Weight',...PORTRAIT_FIELDS]);
-export const WRITE_FIELDS = Object.freeze(['FirstName','LastName','JerseyNum','IsNIL','PLYR_ASSETNAME','PLYR_COMMENT','PlayerType','SchoolYear','RedshirtStatus','TraitDevelopment','OverallRating','ExperiencePoints','SkillPoints','Personality','RecruitingDealbreaker',...RATING_FIELDS,...CAP_FIELDS,...PHYSICAL_FIELDS,...MENTAL_FIELDS,...MENTAL_RANK_FIELDS,...STYLE_FIELDS,...APPEARANCE_FIELDS]);
+export const WRITE_FIELDS = Object.freeze(['FirstName','LastName','JerseyNum','IsNIL','PLYR_ASSETNAME','PLYR_COMMENT','PlayerType','SchoolYear','RedshirtStatus','TraitDevelopment','OverallRating','ExperiencePoints','SkillPoints','Personality','RecruitingDealbreaker',...STATE_FIELDS,...RATING_FIELDS,...CAP_FIELDS,...PHYSICAL_FIELDS,...MENTAL_FIELDS,...MENTAL_RANK_FIELDS,...STYLE_FIELDS,...APPEARANCE_FIELDS]);
 export const BUILDING_BLOCKS = Object.freeze({id:'building-blocks',name:'Building Blocks',minimumAverage:68,maximumAverage:70,targetAverage:69,spread:8});
 
 export function validateFootballProfile(profile) {
@@ -30,6 +30,9 @@ export function validateFootballProfile(profile) {
   if(!Array.isArray(profile.mental)||profile.mental.length!==3||profile.mental.some(pair=>!Array.isArray(pair)||pair.length!==2||typeof pair[0]!=='string'||!TIERS.includes(pair[1])||((pair[0]==='None')!==(pair[1]==='None'))))throw new Error(`Invalid mental ability package in ${profile.id}.`);
   const active=profile.mental.map(pair=>pair[0]).filter(name=>name!=='None');
   if(new Set(active).size!==active.length)throw new Error(`Duplicate mental abilities in ${profile.id}.`);
+  if(profile.handedness!==undefined&&!['Left','Right'].includes(profile.handedness))throw new Error(`Invalid observed handedness in ${profile.id}.`);
+  if(profile.consecutiveYears!==undefined&&(!Number.isInteger(profile.consecutiveYears)||profile.consecutiveYears<0||profile.consecutiveYears>31))throw new Error(`Invalid observed eligibility history in ${profile.id}.`);
+  if(profile.home!==undefined&&(!profile.home||['town','state','pipeline'].some(key=>typeof profile.home[key]!=='string')||Buffer.byteLength(profile.home.town,'utf8')>26))throw new Error(`Invalid observed hometown package in ${profile.id}.`);
   if(!Array.isArray(profile.progression)||profile.progression.length!==2||profile.progression.some(value=>!Number.isInteger(value)||value<0))throw new Error(`Invalid progression package in ${profile.id}.`);
   return profile;
 }

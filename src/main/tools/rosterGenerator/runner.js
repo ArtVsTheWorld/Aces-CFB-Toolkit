@@ -23,6 +23,7 @@ import {equipmentDisplayName,equipmentItem} from '../equipment/catalog.js';
 import {snapshotProtectedPlayers,verifyProtectedPlayers} from './safety.js';
 import {playerMeasurements} from '../../../shared/playerMeasurements.js';
 
+const allPresentationIds=loaded=>new Set(loaded.players.records.filter(record=>record&&!record.isEmpty).map(record=>sf(record,'PresentationId')));
 const TOOL_ID='roster-generator',TOOL_NAME='Roster Generator';
 function teamModelFactory(base,preset,settings){
   let previousKey,previousModel;
@@ -30,10 +31,12 @@ function teamModelFactory(base,preset,settings){
 }
 function teamsWithRosters(loaded) {
   return loaded.teams.records.filter(team=>team&&!team.isEmpty&&!isDirectionalFcsTeam(team)&&parseRef(sf(team,'Roster'))?.tableId===loaded.rosters.header.tableId)
-    .map(team=>({record:team,name:String(sf(team,'DisplayName')??''),teamIndex:Number(sf(team,'TeamIndex')),branding:String(sf(team,'TeamApparel')??'').trim().toLowerCase()}))
+    .map(team=>({record:team,name:String(sf(team,'DisplayName')??''),teamIndex:Number(sf(team,'TeamIndex')),branding:String(sf(team,'TeamApparel')??'').trim().toLowerCase(),captainCount:Number(sf(team,'DesiredTeamCaptains')??6)}))
     .filter(team=>team.name&&Number.isSafeInteger(team.teamIndex)).sort((a,b)=>a.name.localeCompare(b.name));
 }
 function extractTargets(loaded,team,owners) {
+  const missing=WRITE_FIELDS.filter(field=>!loaded.players.offsetTable.some(column=>column.name===field));
+  if(missing.length)throw new Error(`Player schema is missing generation fields: ${missing.join(', ')}. No save was written.`);
   const ref=parseRef(sf(team.record,'Roster')),roster=loaded.rosters.records[ref.row],targets=[];
   if(!roster||roster.isEmpty||!Number.isInteger(Number(roster.arraySize)))throw new Error(`${team.name} has no valid roster.`);
   for(let i=0;i<Number(roster.arraySize);i++) {
@@ -80,7 +83,7 @@ export async function runRosterGenerator(context) {
   const fingerprint=saveFingerprint(context.savePath),loaded=await loadEquipmentTables(context.savePath,context.schemaPath,true,false),available=teamsWithRosters(loaded);
   const teams=selected.map(name=>{const matches=available.filter(team=>team.name===name);if(matches.length!==1)throw new Error(`Team selection is unavailable or ambiguous: ${name}.`);return matches[0];}).sort((a,b)=>a.teamIndex-b.teamIndex);
   await rosterGeneratorSeason(loaded);
-  const equipmentGenerator=makeRosterEquipmentGenerator(loaded),baseModel=loadObservedCatalog(),modelForTeam=teamModelFactory(baseModel,preset,settings),owners=visualOwners(loaded),rosters=[],used=new Set();
+  const equipmentGenerator=makeRosterEquipmentGenerator(loaded),baseModel=loadObservedCatalog(),modelForTeam=teamModelFactory(baseModel,preset,settings),owners=visualOwners(loaded),rosters=[],used=new Set(),reservedPresentationIds=allPresentationIds(loaded);
   const names=loaded.players.records.filter(record=>record&&!record.isEmpty).map(record=>`${sf(record,'FirstName')??''} ${sf(record,'LastName')??''}`);
   const mapFile=context.defaultMapPath??path.resolve(path.dirname(context.schemaPath),'../commentary-data/PlayerCommentaryidMap.txt');
   const matchCommentary=createCommentaryMatcher(loadCommentaryMap(mapFile),{allowPhonetic:false,allowFirstName:true});
@@ -88,7 +91,8 @@ export async function runRosterGenerator(context) {
     const targets=extractTargets(loaded,team,owners);for(const target of targets){if(used.has(target.row))throw new Error('Two selected teams share a roster player. No write is permitted.');used.add(target.row);}
     const teamSeed=(seed^Math.imul(team.teamIndex+1,2654435761))>>>0;
     const model=modelForTeam(targets);
-    const roster=generateRosterPreview({team:{name:team.name,teamIndex:team.teamIndex,branding:team.branding},targets,model,seed:teamSeed,preset,unavailableNames:names,matchCommentary,equipmentGenerator});
+    const roster=generateRosterPreview({team:{name:team.name,teamIndex:team.teamIndex,branding:team.branding,captainCount:team.captainCount},targets,model,seed:teamSeed,preset,unavailableNames:names,matchCommentary,equipmentGenerator,reservedPresentationIds});
+    for(const player of roster.players)reservedPresentationIds.add(player.fields.PresentationId);
     roster.source={file:path.basename(context.savePath),sha256:fingerprint,unchanged:true};
     roster.applicationCanApply=!roster.blocking.length;
         roster.warnings.push('Long-snap and dealbreaker fixes run before final jersey numbering. Team traditions and retired-number protection are off.');
@@ -108,12 +112,13 @@ async function applyRosterGenerator(context) {
   if(context.options?.confirmRegeneration!==true)throw new Error('Confirm that the selected rosters and NIL identities will be replaced before Apply.');
   if(!plan.result.details.canApply)throw new Error('Resolve the appearance/roster blockers before Apply. No save was written.');
   if(saveFingerprint(context.savePath)!==plan.saveFingerprint)throw new Error('The save changed after Preview. Run Preview again.');
-  const loaded=await loadEquipmentTables(context.savePath,context.schemaPath,true,false),baseModel=loadObservedCatalog(),preset=rosterPreset(plan.presetId),owners=visualOwners(loaded),available=teamsWithRosters(loaded),assignments=[];
+  const loaded=await loadEquipmentTables(context.savePath,context.schemaPath,true,false),baseModel=loadObservedCatalog(),preset=rosterPreset(plan.presetId),owners=visualOwners(loaded),available=teamsWithRosters(loaded),assignments=[],reservedPresentationIds=allPresentationIds(loaded);
   await rosterGeneratorSeason(loaded);
   const modelForTeam=teamModelFactory(baseModel,preset,plan.settings),equipmentGenerator=makeRosterEquipmentGenerator(loaded);
   for(const roster of plan.rosters) {
     const team=available.find(team=>team.teamIndex===roster.team.teamIndex&&team.name===roster.team.name);if(!team)throw new Error('A selected team changed after Preview.');
-    const targets=extractTargets(loaded,team,owners),model=modelForTeam(targets);validateRosterPreview(roster,targets,model,equipmentGenerator);
+    const targets=extractTargets(loaded,team,owners),model=modelForTeam(targets);validateRosterPreview(roster,targets,model,equipmentGenerator,reservedPresentationIds);
+    for(const player of roster.players)reservedPresentationIds.add(player.fields.PresentationId);
     for(const player of roster.players) {
       for(const [field,newValue]of Object.entries(player.fields))assignments.push({table:'players',row:player.row,field,oldValue:player.before[field],newValue});
       assignments.push({table:'visuals',row:player.visualRow,field:'RawData',oldValue:player.beforeRawData,newValue:player.rawData});

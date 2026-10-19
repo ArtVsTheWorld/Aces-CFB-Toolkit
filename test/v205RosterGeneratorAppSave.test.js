@@ -9,6 +9,8 @@ import {saveFingerprint,searchPlanRows} from '../src/main/tools/jersey/planStore
 import {loadEquipmentTables,snapshotVisualRawData} from '../src/main/tools/equipment/shared.js';
 import {snapshotVisualsForVerification,saveEquipmentCandidate} from '../src/main/tools/equipment/visualsSafety.js';
 import {snapshotProtectedPlayers,verifyProtectedPlayers} from '../src/main/tools/rosterGenerator/safety.js';
+import {HEALTHY_FIELDS} from '../src/main/tools/rosterGenerator/playerState.js';
+import {pitchMatches} from '../src/main/tools/dealbreaker/pitches.js';
 import {WRITE_FIELDS} from '../src/main/tools/rosterGenerator/contract.js';
 import {writeCsv} from '../src/main/services/files.js';
 import {parseCsv} from '../src/main/services/reportAudit.js';
@@ -29,8 +31,12 @@ test('multi-team app Preview/Apply/reload preserves protected fields, exact prev
   await assert.rejects(()=>runRosterGenerator({...context,mode:'apply',options:{planId:a.planId}}),/Confirm/);assert.equal(saveFingerprint(savePath),original);
   const applied=await runRosterGenerator({...context,mode:'apply',options:{planId:a.planId,confirmRegeneration:true}});assert.equal(applied.status,'completed');assert.equal(saveFingerprint(applied.backupPath),original);assert.equal(saveFingerprint(fixture),sourceHash);assert.equal(fs.statSync(savePath).size,fs.statSync(applied.backupPath).size);
   const reopened=await loadEquipmentTables(savePath,schemaPath,true,false);verifyProtectedPlayers(protectedPlayers,reopened.players);
+  const oldIds=new Set(before.players.records.filter(p=>!p.isEmpty).map(p=>p.PresentationId)),newIds=new Set(),historyFields=before.players.offsetTable.filter(f=>/Stats|Award/.test(f.name)).map(f=>f.name);
+  assert.ok(WRITE_FIELDS.every(name=>before.players.offsetTable.some(f=>f.name===name)));
+  for(const row of rows){const p=reopened.players.records[row.row];assert.ok(!oldIds.has(p.PresentationId));assert.ok(!newIds.has(p.PresentationId));newIds.add(p.PresentationId);assert.ok(p.PLYR_ASSETNAME.endsWith('_'+p.PresentationId));assert.ok(pitchMatches(p.RecruitingDealbreaker,p.IdealRecruitingPitch));for(const [field,value]of Object.entries(HEALTHY_FIELDS))assert.equal(p[field],value,field);for(const field of historyFields)assert.equal(p[field],before.players.records[row.row][field],field);}
+  for(const name of ['LSU','Navy']){const team=before.teams.records.find(t=>!t.isEmpty&&t.DisplayName===name),generated=rows.filter(r=>r.team===name);assert.equal(generated.filter(r=>r.fields.PLYR_ISCAPTAIN).length,Math.min(team.DesiredTeamCaptains,generated.length));assert.ok(generated.every(r=>r.fields.CaptainsPatch===(r.fields.PLYR_ISCAPTAIN?'OneYear':'None')));}
   for(const row of rows){for(const field of WRITE_FIELDS)assert.equal(reopened.players.records[row.row][field],row.fields[field],`${row.row}/${field}`);assert.deepEqual(JSON.parse(reopened.visuals.records[row.visualRow].RawData),JSON.parse(row.rawData));assert.equal(row.fields.SchoolYear,'Senior');assert.equal(row.fields.RedshirtStatus,'Previous');}
-  const [headings,...csv]=parseCsv(fs.readFileSync(applied.reportPath,'utf8'));assert.equal(csv.length,170);assert.ok(headings.includes('CalibrationJSON'));assert.ok(headings.includes('BeforeRawData'));assert.ok(headings.includes('AfterRawData'));
+  const [headings,...csv]=parseCsv(fs.readFileSync(applied.reportPath,'utf8'));assert.equal(csv.length,170);assert.ok(headings.includes('CalibrationJSON'));assert.ok(headings.includes('BeforeRawData'));assert.ok(headings.includes('AfterRawData'));assert.ok(headings.includes('PlayerStateJSON'));
   await assert.rejects(()=>runRosterGenerator({...context,mode:'apply',options:{planId:a.planId,confirmRegeneration:true}}),/already been applied/);
   await assert.rejects(()=>runRosterGenerator({...context,mode:'apply',options:{planId:b.planId,confirmRegeneration:true}}),/save changed/);
 });

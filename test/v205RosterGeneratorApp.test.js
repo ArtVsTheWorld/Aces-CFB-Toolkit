@@ -9,7 +9,7 @@ import {getToolHandler,executableToolIds} from '../src/main/tools/handlers.js';
 import {getTool} from '../src/shared/toolRegistry.js';
 
 test('Roster Generator is registered with normal prepare/run integration and dynasty-only input',()=>{
-  assert.equal(getTool('roster-generator').version,'1.0');assert.deepEqual(getTool('roster-generator').input.accepted,['dynasty']);
+  assert.equal(getTool('roster-generator').version,'1.2');assert.deepEqual(getTool('roster-generator').input.accepted,['dynasty']);
   assert.equal(typeof getToolHandler('roster-generator').prepare,'function');assert.equal(typeof getToolHandler('roster-generator').run,'function');assert.ok(executableToolIds().includes('roster-generator'));
 });
 test('all seven calibers reach their target with observed eligibility/ability/cap packages and exact position counts',()=>{

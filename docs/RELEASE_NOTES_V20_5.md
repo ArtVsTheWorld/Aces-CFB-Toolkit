@@ -13,12 +13,18 @@
 - Most players use a Balanced athleticism profile, with smaller chances for specialized athletes and rare size Outliers. New Field Savants favor reading the game over execution; Drill Specialists favor practiced skills over awareness. From Nothing and FCS Call-Up favor smaller builds.
 - Equipment uses the Equipment Randomizer's normal generation from the active save's top 20 eligible donors per position, without enabling optional mod additions.
 - Long-snap and dealbreaker fixes run automatically; Standard jersey numbering runs last without team traditions or retired-number protection.
+- New players receive fresh broadcast identities, healthy injury/wear-and-tear state, coherent hometown/pipeline and eligibility histories, and observed handedness with matching QB equipment orientation.
+- Captains are reassigned automatically. Existing statistics, awards and depth charts stay untouched; reorder your depth chart in-game afterward.
 - Added 565 fictional player backstories, including campus life, relationships, hobbies and 15 college-football easter eggs. Stories with specific details match the finished player’s class, ability, build, personality or position. Stories are retained in Toolkit reviews, History and CSV reports, not written into an in-game biography field.
 - Review complete player cards or tables before applying. Apply creates a backup and verifies the exact preview before replacing the save.
 
 ### Commentary IDs
 
 - Added 23 verified surname/commentary-ID pairs from the generated-player samples.
+
+### Dealbreaker Fixer
+
+- Ideal recruiting pitches now stay in sync when a player's dealbreaker changes, including the fixes run during roster generation.
 
 ### General
 

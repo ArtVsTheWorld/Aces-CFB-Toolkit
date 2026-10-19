@@ -1,6 +1,6 @@
 # v20.5 — body distributions, backstories and release build
 
-Latest data refresh: [2038 observation expansion](V20_5_2038_OBSERVATIONS.md), packaged in `dist/v20.5-2038-expanded-release`. The details below describe the earlier expanded-story build, which is retained unchanged.
+Latest local build: [player identity/state cleanup](V20_5_PLAYER_STATE.md), packaged in `dist/v20.5-player-state-release`. The earlier [2038 observation expansion](V20_5_2038_OBSERVATIONS.md) remains in `dist/v20.5-2038-expanded-release`. The details below describe the earlier expanded-story build, which is retained unchanged.
 
 ## Generation changes
 

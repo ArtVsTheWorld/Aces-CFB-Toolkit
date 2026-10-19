@@ -12,7 +12,7 @@ import {CATALOG_VERSION,RATING_FIELDS,CAP_FIELDS,PHYSICAL_FIELDS,MENTAL_FIELDS,M
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),[eaFile,...generatedFiles]=process.argv.slice(2);
 if(!eaFile||!generatedFiles.length)throw new Error('Usage: node scripts/compile-roster-generator-bank.mjs <2026 base dynasty> <2032 generated dynasty> [additional generated dynasty ...]');
-const digest=bytes=>createHash('sha256').update(bytes).digest('hex'),sources=[],profiles=[],appearances=[],styles=[],firstNames=new Set(),lastNames=new Set(),capValues=CAP_FIELDS.map(()=>[]),dropped=[];
+const digest=bytes=>createHash('sha256').update(bytes).digest('hex'),sources=[],profiles=[],appearances=[],styles=[],firstNames=new Set(),lastNames=new Set(),capValues=CAP_FIELDS.map(()=>[]),dropped=[],pitchObservations={};
 for(const [sourceIndex,file]of [eaFile,...generatedFiles].entries()){
   const before=digest(fs.readFileSync(file)),opened=await openCfb27Save(file,path.join(root,'resources/engine-data/C27_486_6.gz'));
   const {players,teams,rosters,visuals,season}=await readTables(opened.franchise,{players:PLAYER_TABLE_UID,teams:TEAM_TABLE_UID,rosters:ROSTER_TABLE_UID,visuals:VISUALS_TABLE_UID,season:SEASON_INFO_TABLE_UID});
@@ -30,10 +30,12 @@ for(const [sourceIndex,file]of [eaFile,...generatedFiles].entries()){
       source.rosterPlayers++;
       CAP_FIELDS.forEach((field,i)=>capValues[i].push(sf(player,field)));
       if(directional)continue;
-      const id=`${source.id}:${ref.row}`,profile={id,source:sourceIndex,position:sf(player,'Position'),archetype:sf(player,'PlayerType'),classYear:sf(player,'SchoolYear'),redshirt:sf(player,'RedshirtStatus'),development:sf(player,'TraitDevelopment'),storedOverall:sf(player,'OverallRating'),ratings:RATING_FIELDS.map(field=>sf(player,field)),caps:CAP_FIELDS.map(field=>sf(player,field)),physical:PHYSICAL_FIELDS.map(field=>sf(player,field)),mental:MENTAL_FIELDS.map((field,i)=>[sf(player,field),sf(player,MENTAL_RANK_FIELDS[i])]),progression:[sf(player,'ExperiencePoints'),sf(player,'SkillPoints')],personality:sf(player,'Personality')};
+      const id=`${source.id}:${ref.row}`,profile={id,source:sourceIndex,position:sf(player,'Position'),archetype:sf(player,'PlayerType'),classYear:sf(player,'SchoolYear'),redshirt:sf(player,'RedshirtStatus'),development:sf(player,'TraitDevelopment'),storedOverall:sf(player,'OverallRating'),ratings:RATING_FIELDS.map(field=>sf(player,field)),caps:CAP_FIELDS.map(field=>sf(player,field)),physical:PHYSICAL_FIELDS.map(field=>sf(player,field)),mental:MENTAL_FIELDS.map((field,i)=>[sf(player,field),sf(player,MENTAL_RANK_FIELDS[i])]),progression:[sf(player,'ExperiencePoints'),sf(player,'SkillPoints')],personality:sf(player,'Personality'),consecutiveYears:sf(player,'PLYR_CONSECYEARSWITHTEAM'),handedness:sf(player,'PLYR_HANDEDNESS'),idealPitch:sf(player,'IdealRecruitingPitch'),home:{town:sf(player,'PLYR_HOME_TOWN'),state:sf(player,'PLYR_HOME_STATE'),pipeline:sf(player,'HomePipeline')}};
       validateFootballProfile(profile);profiles.push(profile);source.mainProfiles++;
       styles.push({id,source:sourceIndex,position:profile.position,archetype:profile.archetype,values:STYLE_FIELDS.map(field=>sf(player,field))});
       if(sourceIndex===0)continue;
+      const dealbreaker=sf(player,'RecruitingDealbreaker'),pitch=profile.idealPitch;
+      if(pitch&&pitch!=='Invalid'){pitchObservations[dealbreaker]??={};pitchObservations[dealbreaker][pitch]=(pitchObservations[dealbreaker][pitch]??0)+1;}
       if(sf(player,'IsNIL')!==false||sf(player,'PLYR_ASSETNAME')||!/^Generic_/.test(sf(player,'GenericHeadAssetName')??''))throw new Error('Generated FBS cohort contains an original-player identity; review the source before compiling.');
       firstNames.add(String(sf(player,'FirstName')).trim());lastNames.add(String(sf(player,'LastName')).trim());
       const vr=parseRef(sf(player,'CharacterVisuals'));if(vr?.tableId!==visuals.header.tableId||!visuals.records[vr.row]||visuals.records[vr.row].isEmpty)throw new Error('Missing generated appearance row.');
@@ -51,5 +53,6 @@ if(JSON.stringify(actualBounds)!==JSON.stringify(CAP_BOUNDS))throw new Error('Ob
 const sourceFormulas=JSON.parse(fs.readFileSync(path.join(root,'docs/reference/CFB27_OVR_Formulas.json'),'utf8')).formulas;
 const catalog={version:CATALOG_VERSION,sources,capBounds:actualBounds,ratingFields:RATING_FIELDS,profiles,appearances,styles,names:{first:[...firstNames].sort(),last:[...lastNames].sort()},formulas:sourceFormulas.map(({position,playerType,intercept,coefficients,minimumOverall,maximumOverall})=>({position,playerType,intercept,coefficients,minimumOverall,maximumOverall})),evidence:{generatedAppearance:'Generic head/body/portrait and on-field equipment packages observed in the user-confirmed default simulated cohort. No source save blobs or original real-player identities are distributed.',weights:'All audited generated cohorts supply football, potential, appearance and same-head name variety. The 2032 cohort remains the development-distribution reference; EA observations retain the class/redshirt baseline and animation variety.',dropped}};
 const bytes=Buffer.from(JSON.stringify(catalog)),destination=path.join(root,'src/main/tools/rosterGenerator/data/observed-v1.json.gz');
+fs.writeFileSync(path.join(root,'src/main/tools/dealbreaker/pitchObservations.json'),JSON.stringify({sources:sources.filter(source=>source.kind==='generated').map(source=>({id:source.id,sha256:source.sha256})),counts:pitchObservations},null,2)+'\n');
 fs.mkdirSync(path.dirname(destination),{recursive:true});fs.writeFileSync(destination,zlib.gzipSync(bytes,{level:9}));
 console.log(JSON.stringify({destination,sha256:digest(fs.readFileSync(destination)),sources,profiles:profiles.length,appearances:appearances.length,styles:styles.length,firstNames:firstNames.size,lastNames:lastNames.size,dropped,bytes:fs.statSync(destination).size,inputSavesUnchanged:true},null,2));

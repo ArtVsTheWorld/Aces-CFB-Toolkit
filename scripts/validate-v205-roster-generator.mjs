@@ -17,5 +17,5 @@ for(const [preset,teams,extra]of[['startup',['LSU'],{rosterPotential:'low',roste
   assert.equal(saveFingerprint(applied.backupPath),original);assert.equal(fs.statSync(savePath).size,fs.statSync(source).size);assert.equal(saveFingerprint(source),original);
   const result={preset,teams,savePath,backupPath:applied.backupPath,sha256:saveFingerprint(savePath),teamSummaries:applied.details.teams};results.push(result);console.log(JSON.stringify(result));
 }
-fs.writeFileSync(path.join(directory,'validation.json'),JSON.stringify({version:'20.5.0',sourceFingerprint:original,originalUnchanged:saveFingerprint(source)===original,results},null,2));
+fs.writeFileSync(path.join(directory,'validation.json'),JSON.stringify({version:JSON.parse(fs.readFileSync('package.json','utf8')).version,sourceFingerprint:original,originalUnchanged:saveFingerprint(source)===original,results},null,2));
 console.log(`In-game validation copies: ${directory}`);
