@@ -11,6 +11,7 @@ module.exports=async function(window,output){
       showStandardPreviewStage(false);
       const buttons=[...content.querySelectorAll('.option-info')].filter(b=>!b.closest('[hidden]'));
       counts[page]=buttons.length;check(buttons.length>0,'Inline help on '+page);
+      for(const size of ['standard','large','extra']){document.documentElement.dataset.textSize=size;for(const button of buttons){if(!button.getClientRects().length)continue;const r=button.getBoundingClientRect();check(Math.abs(r.width-16)<.1&&Math.abs(r.height-16)<.1,'Info stays square at '+page+'/'+size+': '+r.width+'x'+r.height);check(button.querySelector('svg[aria-hidden="true"]'),'Info uses a font-independent SVG');}}document.documentElement.dataset.textSize='standard';
       check(!content.textContent.includes('TOOL v'),'No separate tool badge on '+page);
       const b=buttons[0];b.focus();b.dispatchEvent(new FocusEvent('focusin',{bubbles:true}));
       const tip=document.getElementById(b.getAttribute('aria-describedby'));check(tip&&!tip.hidden&&tip.textContent.trim(),'Focus-accessible help on '+page);

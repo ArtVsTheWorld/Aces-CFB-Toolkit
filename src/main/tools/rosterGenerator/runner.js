@@ -23,6 +23,7 @@ import {displayPosition} from '../../../shared/localization.js';
 import {equipmentDisplayName,equipmentItem} from '../equipment/catalog.js';
 import {snapshotProtectedPlayers,verifyProtectedPlayers} from './safety.js';
 import {playerMeasurements} from '../../../shared/playerMeasurements.js';
+import {readTeamGeography} from './geography.js';
 
 const allPresentationIds=loaded=>new Set(loaded.players.records.filter(record=>record&&!record.isEmpty).map(record=>sf(record,'PresentationId')));
 const TOOL_ID='roster-generator',TOOL_NAME='Roster Generator';
@@ -99,7 +100,8 @@ export async function runRosterGenerator(context) {
     const targets=extractTargets(loaded,team,owners);for(const target of targets){if(used.has(target.row))throw new Error('Two selected teams share a roster player. No write is permitted.');used.add(target.row);}
     const teamSeed=(seed^Math.imul(team.teamIndex+1,2654435761))>>>0;
     const configuration=configurations[team.name],teamPreset=rosterPreset(configuration.preset),model=teamModelFactory(baseModel,teamPreset,configuration.settings)(targets);
-    const roster=generateRosterPreview({team:{name:team.name,teamIndex:team.teamIndex,branding:team.branding,captainCount:team.captainCount},targets,model,seed:teamSeed,preset:teamPreset,unavailableNames:names,matchCommentary,equipmentGenerator,reservedPresentationIds});
+    const geography=await readTeamGeography(loaded,team,baseModel.catalog);
+    const roster=generateRosterPreview({team:{name:team.name,teamIndex:team.teamIndex,branding:team.branding,captainCount:team.captainCount,geography},targets,model,seed:teamSeed,preset:teamPreset,unavailableNames:names,matchCommentary,equipmentGenerator,reservedPresentationIds});
     for(const player of roster.players)reservedPresentationIds.add(player.fields.PresentationId);
     roster.summary.caliber=teamPreset.name;
     roster.source={file:path.basename(context.savePath),sha256:fingerprint,unchanged:true};
@@ -128,6 +130,7 @@ async function applyRosterGenerator(context) {
   const modelForTeam=teamModelFactory(baseModel,preset,plan.settings),equipmentGenerator=makeRosterEquipmentGenerator(loaded);
   for(const roster of plan.rosters) {
     const team=available.find(team=>team.teamIndex===roster.team.teamIndex&&team.name===roster.team.name);if(!team)throw new Error('A selected team changed after Preview.');
+    if(!isDeepStrictEqual(roster.team.geography,await readTeamGeography(loaded,team,baseModel.catalog)))throw new Error('School location or pipeline evidence changed after Preview. Run Preview again.');
     const configuration=plan.configurations[team.name],teamPreset=rosterPreset(configuration.preset),targets=extractTargets(loaded,team,owners),model=teamModelFactory(baseModel,teamPreset,configuration.settings)(targets);if(!isDeepStrictEqual(roster.preset,teamPreset)||!isDeepStrictEqual(roster.summary.settings,configuration.settings))throw new Error('Team settings changed after Preview.');validateRosterPreview(roster,targets,model,equipmentGenerator,reservedPresentationIds);
     for(const player of roster.players)reservedPresentationIds.add(player.fields.PresentationId);
     for(const player of roster.players) {

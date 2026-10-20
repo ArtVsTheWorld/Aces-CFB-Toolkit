@@ -34,7 +34,7 @@ test('verified cross wrist tape stays in Unlocked, uses wrist slots and never in
   assert.ok(!canGenerateEquipment(loadouts([{slotType:'LeftElbowWear',itemAssetName:'ElbowGear_RubberBands1'}]),item,item.slots,'WR'));
 });
 test('app-only release version is captured by new audits and history; legacy entries remain readable',()=>{
-  const pkg=JSON.parse(fs.readFileSync(new URL('../package.json',import.meta.url)));assert.equal(pkg.version,'21.0.0');assert.ok(tools.every(tool=>!Object.hasOwn(tool,'version')));
+  const pkg=JSON.parse(fs.readFileSync(new URL('../package.json',import.meta.url)));assert.match(pkg.version,/^\d+\.\d+\.\d+$/);assert.ok(tools.every(tool=>!Object.hasOwn(tool,'version')));
   const report=auditReport({headings:['Change'],rows:[['One']]},{runId:'run',appVersion:pkg.version,mode:'apply',options:{}});assert.ok(report.headings.includes('AuditAppVersion'));assert.ok(!report.headings.includes('AuditToolVersion'));assert.equal(report.rows[0][2],pkg.version);
   assert.ok(auditReport({headings:[],rows:[[]]},{toolVersion:'6.0'}).headings.includes('AuditToolVersion'));
   const directory=fs.mkdtempSync(path.join(os.tmpdir(),'cfb-version-history-'));

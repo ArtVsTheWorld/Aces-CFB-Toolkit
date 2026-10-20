@@ -6,8 +6,8 @@ export const HEALTHY_FIELDS=Object.freeze({InjuryStatus:'Uninjured',InjuryType:'
 export const BIO_FIELDS=Object.freeze(['PLYR_CONSECYEARSWITHTEAM','PLYR_HANDEDNESS','PLYR_HOME_TOWN','PLYR_HOME_STATE','HomePipeline']);
 export const CAPTAIN_FIELDS=Object.freeze(['PLYR_ISCAPTAIN','CaptainsPatch']);
 export const STATE_FIELDS=Object.freeze([...Object.keys(HEALTHY_FIELDS),...BIO_FIELDS,...CAPTAIN_FIELDS,'IdealRecruitingPitch','PresentationId']);
-export function observedPlayerState(profile){
-  const home=profile.home??{town:'',state:'NonUS',pipeline:'International'};
+export function observedPlayerState(profile,selectedHome){
+  const home=selectedHome??profile.home??{town:'',state:'NonUS',pipeline:'International'};
   return {...HEALTHY_FIELDS,PLYR_CONSECYEARSWITHTEAM:profile.consecutiveYears??0,PLYR_HANDEDNESS:profile.handedness??'Right',PLYR_HOME_TOWN:home.town,PLYR_HOME_STATE:home.state,HomePipeline:home.pipeline,PLYR_ISCAPTAIN:false,CaptainsPatch:'None',IdealRecruitingPitch:profile.idealPitch??'Invalid'};
 }
 export function assignRosterCaptains(players,team){

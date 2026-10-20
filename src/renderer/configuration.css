@@ -77,18 +77,20 @@
 .model-slider-caption { display:inline-flex; align-items:center; gap:7px; min-width:0; }
 .model-slider output { flex-shrink:0; }
 .model-slider-caption > label { margin:0; color:inherit; font:inherit; }
-.model-help-button { display:inline-flex; justify-content:center; align-items:center; width:18px; height:18px; flex:0 0 18px; padding:0; border:1px solid var(--muted); border-radius:50%; background:transparent; color:var(--muted); font-family:inherit; font-size:11px; font-weight:700; line-height:1; cursor:help; }
+.experimental-ui .model-help-button { display:inline-grid; place-items:center; width:16px; min-width:16px; max-width:16px; height:16px; min-height:16px; max-height:16px; flex:0 0 16px; padding:0; margin:0; border:0; border-radius:50%; background:transparent; color:var(--muted); font-size:0; line-height:0; letter-spacing:0; cursor:help; vertical-align:middle; align-self:center; box-sizing:border-box; }
+.model-help-button > svg { display:block; width:16px; height:16px; flex:none; pointer-events:none; }
 .model-help-button:hover,.model-help-button:focus-visible { border-color:var(--action); color:var(--action); background:var(--action-soft); }
 .model-help-button:focus-visible { outline:2px solid var(--action); outline-offset:2px; }
 .model-help-tooltip { position:fixed; z-index:100; width:min(330px,calc(100vw - 48px)); box-sizing:border-box; padding:12px 14px; border:1px solid var(--action); border-radius:6px; background:var(--surface); color:var(--text); box-shadow:0 8px 28px #0004; font-size:12px; line-height:1.5; }
 .model-help-tooltip { max-height:min(360px,calc(100vh - 32px)); overflow:auto; white-space:normal; overflow-wrap:anywhere; text-align:left; font-weight:400; }
 .option-info { margin-inline-start:7px; vertical-align:middle; letter-spacing:normal; text-transform:none; }
-.model-help-button::before { content:"i"; }
-.team-picker > [data-multi-label-for]:has(+ .option-info) { display:inline-block; }
+.model-help-button::before,.model-help-button::after { content:none; }
+.team-picker > [data-multi-label-for]:has(+ .option-info) { display:inline; margin-block:0; vertical-align:baseline; }
 [data-option-help-moved][hidden] { display:none !important; }
 .toggle-card strong:has(.option-info),.pass-row strong:has(.option-info),
 strong:has(> .model-help-button),h2:has(> .model-help-button),h3:has(> .model-help-button),
 label:has(> .model-help-button):not(:has(> input,> select,> textarea)) { display:inline-flex; align-items:center; gap:7px; vertical-align:middle; }
 strong > .option-info,h2 > .option-info,h3 > .option-info,label > .option-info { margin-inline-start:0; }
-.model-help-button { vertical-align:middle; margin-block:0; align-self:center; }
+.experimental-ui .option-info { margin-inline-start:6px; }
+.experimental-ui strong > .option-info,.experimental-ui h2 > .option-info,.experimental-ui h3 > .option-info,.experimental-ui label > .option-info { margin-inline-start:0; }
 .roster-strength-toolbar-actions { display:flex; flex-wrap:wrap; gap:8px; flex-shrink:0; }

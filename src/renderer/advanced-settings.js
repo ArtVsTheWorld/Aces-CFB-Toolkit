@@ -113,7 +113,7 @@ function undershirtWeightsSummary(weights) {
   return Object.entries(weights).map(([group, values]) => `${group === "large" ? "Muscular / Standard Builds" : "Other Builds"}: ${Object.entries(values).filter(([, value]) => value > 0).map(([key, value]) => `${labels[key] ?? key} ${value}%`).join(" · ")}`).join("; ");
 }
 function modelHelpButton(label, description) {
-  return `<button type="button" class="model-help-button" data-model-help="${escapeHtml(description)}" aria-label="About ${escapeHtml(label)}"></button>`;
+  return `<button type="button" class="model-help-button" data-model-help="${escapeHtml(description)}" aria-label="About ${escapeHtml(label)}"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.25"/><circle cx="8" cy="4.7" r=".85" fill="currentColor"/><path d="M8 7v4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>`;
 }
 const boundHelpRoots = new WeakSet();
 function bindModelHelp(dialog) {
