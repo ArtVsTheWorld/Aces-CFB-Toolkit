@@ -10,6 +10,8 @@ export function modPoolDefinitions() {
   const teamGloveBrands = new Set(gloves.filter(item => /_(?:TeamColor|SecondaryColor)$/i.test(item.itemName)).map(itemBrand));
   const definitions = {
     unlocked: [
+      category("undershirts", "Irish Jamo Sleeves", UNLOCKED_POOLS.undershirts, { defaultChance: 0 }),
+      category("wristTape", "Taped Wrist with Cross", UNLOCKED_POOLS.wristTape),
       category("armSleeves", "Arm Sleeves", UNLOCKED_POOLS.armSleeves),
       category("elbowGear", "Elbow Gear & Bands", [...UNLOCKED_POOLS.elbowSweatbands, ...UNLOCKED_POOLS.bicepBands, ...UNLOCKED_POOLS.elbowPadsAndBraces, ...UNLOCKED_POOLS.shoulderStabilizers]),
       category("cleats", "Additional Cleats", EQUIPMENT_ITEMS.filter(item => item.category === "Cleats" && item.itemName.startsWith("Gear"))),

@@ -3,15 +3,15 @@
 const block=(id,category,text)=>({id,category,stories:text.trim().split('\n').map(line=>{const [heading,...body]=line.split('|'),parts=heading.split('~');return {rule:parts.length===2?parts[0]:'any',title:parts.at(-1),text:body.join('|')};})});
 export const EXPANSION_GROUPS=Object.freeze([
 block('off-field','Off the Field',`
-performer~The Last Song|He plans to leave every party after one more song. His friends have learned that this estimate restarts whenever the music gets better.
-The Open Door|He props his room door open when he wants company and closes it when he needs quiet. The system works better than his roommate's habit of shouting down the hallway.
-The Couch Reservation|His ideal free evening involves a familiar couch, takeout and absolutely no complicated plans. He will still dress properly if someone explains that the invitation is not optional.
-performer~Campus Nightlife Correspondent|He always seems to know which student event will be worth the walk. Nobody remembers appointing him to the role, but the group still asks for his recommendations.
-The Sunrise Walker|He likes being outside before the campus gets crowded. It is the one stretch of the day when nobody asks what he has planned next.
-The Dining Hall Regular|He has a preferred dining-hall route and gets annoyed when the stations change. Friends treat watching him find a new lunch plan as a minor campus event.
-The People Watcher|He can spend a whole break sitting outside with a drink and watching campus go by. He insists it counts as doing something even when he has no intention of moving.
-performer~One More Invitation|He accepts invitations before checking whether they overlap. His calendar looks impressive until somebody asks how he intends to attend three events at once.
-The Homebody's Excuse|He once invented an elaborate reason to miss a gathering when he really wanted to stay home. Now he simply tells friends he has a reservation with his couch.
+performer~The Last Song|He keeps volunteering to control the locker-room music and then ignoring requests. Teammates have begun pretending the speaker is broken when he arrives.
+The Open Door|He props his football locker open during conversations and complains when people borrow things. He has rejected every suggestion linking those two habits.
+The Couch Reservation|He likes watching football from the same battered couch at a teammate's apartment. He claims the good cushion despite contributing nothing toward the couch.
+performer~Team Nightlife Correspondent|He knows which teammate will get a laugh at a team gathering and introduces them like a ring announcer. The introductions are becoming more insulting than the actual jokes.
+The Sunrise Walker|He enjoys the empty walk to early football commitments less than the silence it gives him. He takes a longer route if he spots someone unusually talkative.
+The Dining-Hall Table|He has a preferred dining-hall seat beside teammates who will argue football with him. He becomes mysteriously quiet when someone remembers his worst prediction.
+The Practice Spectator|He people-watches during gaps in football activities and invents private nicknames. His closest friend has demanded a written guarantee that he is exempt.
+performer~One More Invitation|He volunteers the football group for events before checking whether anyone wants to go. Teammates now require a second signature on his social plans.
+The Homebody's Excuse|He blamed football commitments for missing a gathering when he really wanted to stay on the couch. The excuse failed when three teammates appeared in the same photograph from the gathering.
 The Laundry Window|He tries to find the least crowded time to do laundry. This has turned him into an unlikely authority on when everyone else in the building wakes up.
 The Campus Shortcut|He is convinced he knows a shortcut between every important place on campus. The confidence is strongest on routes nobody has timed.
 performer~The Dance-Floor Volunteer|He is usually the first friend willing to start dancing when a room feels awkward. Whether the dancing is good has never been central to his decision.
@@ -45,46 +45,46 @@ The Saturday Bookshop|He likes browsing a bookshop without arriving with a parti
 The Recovery of Sunday|He likes keeping one part of Sunday deliberately unplanned. After a crowded week, choosing to do very little feels like making a decision rather than avoiding one.
 `),
 block('character','Personality & Character',`
-performer~The Best-Dressed Claim|He calls himself the best-dressed person in any room before checking the competition. His friends keep photographic evidence for occasions when the claim needs challenging.
-performer~The Self-Appointed Expert|He has a confident opinion about subjects he has only recently discovered. Admitting he is learning would ruin the presentation, so friends ask increasingly specific questions.
-performer~The Entrance|He has a talent for entering a room as though somebody announced him. Even a trip to collect a forgotten charger can look like an appearance.
-performer~The Victory Speech|He prepares victory speeches for games that have not started. Friends enjoy beating him mostly to hear how he revises the ending.
-performer~The Friendly Rivalry|He turns choosing dinner into a competition over who has the better suggestion. He loses surprisingly often for someone who campaigns so confidently.
-performer~The Outfit Consultation|He claims not to need anyone's fashion advice, then sends three mirror pictures. His group chat has agreed to pretend this is a quality-control procedure.
-performer~The Main Character|He narrates minor inconveniences as if they belong in a documentary about his life. Friends are not always willing to play the supporting roles he assigns them.
-performer~The Loud Prediction|He makes bold predictions about ordinary things, including which elevator will arrive first. Being wrong rarely seems to reduce his enthusiasm for the next prediction.
-unpredictable~The Bad Idea Committee|He can spot a harmless bad idea and become its strongest advocate in seconds. His friends have learned that laughing is not the same as agreeing to participate.
-unpredictable~The Dramatic Apology|He once delivered an unnecessarily formal apology for eating somebody else's leftovers. The speech is now quoted whenever food disappears from the shared refrigerator.
-team-first~The Credit Redirect|He gets uncomfortable when a simple favor becomes a big public compliment. His usual response is to point out somebody else who helped.
-team-first~The Quiet Favor|He remembers small problems friends mention in passing. People sometimes realize he solved one before they remember asking for help.
-team-first~The Extra Seat|He notices when someone is standing outside a conversation and moves to make room. It is a habit he picked up from a relative who hated seeing anybody left out.
-team-first~The Last Slice|He asks whether anyone wants the last slice before taking it. Friends have occasionally made him regret being so considerate.
-team-first~The Good Listener|He lets people finish an explanation even when he thinks he understands the problem. That patience has made him a popular person to find after a difficult day.
-team-first~The Small Thank-You|He believes people doing routine work deserve to hear thanks. He has no dramatic explanation for it beyond remembering how different a simple acknowledgment can feel.
-team-first~The Borrowed Charger|He lends things out without making a ceremony of it. His only complaint is that his best charger now seems to live in several different rooms.
-team-first~The Cleanup Crew|He tends to stay behind when a group activity needs cleaning up. Friends sometimes remain too, partly to help and partly to avoid looking bad next to him.
-team-first~The Shared Win|He is more likely to ask how everyone did than begin with his own result. People trust that interest because he asks the same question when nobody is keeping score.
-team-first~The Unrequested Backup|He quietly makes a second plan when a friend is nervous about something. Usually the friend never needs it, but he likes having a useful answer ready.
-reserved~The Warm-Up Conversation|He takes a little time to settle into an unfamiliar group. Friends who know him well enjoy watching strangers discover he has jokes too.
-reserved~The Soft Voice|He dislikes repeating himself across a noisy room. Rather than compete with the volume, he usually waits until someone comes close enough to hear him.
-reserved~The Written Reply|He writes clearer messages than he gives spontaneous speeches. Given a few minutes to think, he can explain himself much more comfortably.
-reserved~The Small Circle|He prefers a few dependable friendships to knowing every person at an event. That does not stop his more outgoing friends from introducing him to everyone anyway.
-reserved~The Observation First|He likes getting a feel for a room before contributing much. People sometimes mistake the pause for disinterest until he mentions a detail they missed.
-reserved~The Surprise Joke|He may be quiet for an entire conversation before delivering its best joke. He seems to enjoy the surprise as much as the punch line.
-reserved~The Practice Introduction|He has been known to rehearse an introduction before meeting someone important. It helps until the person opens with a question he did not prepare for.
-reserved~The Quiet Celebration|He celebrates good news with a small call or a favorite meal. Friends who expect a big announcement sometimes learn about it much later.
-reserved~The Thoughtful Pause|He is comfortable letting a conversation have a pause. He would rather think about an answer than provide one simply to fill the silence.
-reserved~The Familiar Faces|He becomes much more talkative once a place feels familiar. Close friends describe a different version of him from the one most new acquaintances meet.
-driven~The Five-Minute Rule|He likes arriving with five minutes to spare. Waiting outside a closed door feels preferable to explaining why he rushed in late.
-driven~The Serious Planner|He enjoys plans that tell him what needs doing and when it should be finished. Friends enjoy reminding him that lunch does not always need that level of organization.
-driven~The Unfinished Task|He finds it difficult to relax while a manageable task remains unfinished. His idea of treating himself often begins with clearing the last item off a list.
-driven~The Direct Answer|He prefers a clear answer to a comforting guess. Friends know he is trying to be useful, even when the first version comes out a little too blunt.
-driven~The Personal Deadline|He sets himself deadlines earlier than the official ones. The habit gives him time to fix problems without turning every assignment into an emergency.
-driven~The Competitive Board Game|He reads the rules before a board game instead of learning as he goes. His friends accuse him of preparing for a championship that does not exist.
-unpredictable~The Goofy Voice|He has a different voice for reading almost every message aloud. Friends sometimes send him ordinary notices just to hear the interpretation.
-unpredictable~The Impulse Hobby|He occasionally becomes fascinated with a new hobby over a single weekend. The enthusiasm is genuine, even when the equipment collection outlasts the interest.
-unpredictable~The Unnecessary Costume|He once brought a costume to an event where nobody else dressed up. Explaining that it was optional did not make him regret the decision.
-unpredictable~The Running Bit|He is willing to keep a harmless joke alive far longer than anyone expects. The group has learned that asking him to stop may become part of the joke.
+performer~The Best-Dressed Claim|He rates his teammates' football-arrival outfits without being asked. He considers his own wardrobe exempt because the judge cannot enter the competition.
+performer~The Self-Appointed Expert|He calls himself a football historian after watching a handful of old highlights. Teammates keep asking him about games they made up.
+performer~The Entrance|He walks into football meetings with the timing of somebody expecting applause. His position coach has begun welcoming him with deliberately awkward silence.
+performer~The Victory Speech|He delivers mock victory speeches after winning minor football-room arguments. Teammates deliver equally elaborate corrections when his evidence turns out to be wrong.
+performer~The Friendly Rivalry|He turns a walk to football activities into a competition without warning anybody. He then complains that nobody is giving him proper credit for winning.
+performer~The Outfit Consultation|He makes teammates vote on his team-travel outfit and ignores the result. His friends call the process a survey of people he intends to disappoint.
+performer~The Main Character|He describes routine football meetings as scenes from a documentary about himself. Teammates object mainly to the quality of the roles he assigns them.
+performer~The Loud Prediction|He predicts the result of every informal football challenge with complete confidence. A teammate has started keeping score of the predictions rather than the contests.
+unpredictable~The Bad Idea Committee|He persuaded teammates to conduct a mock press conference about a missing football glove. The owner was not amused to discover he was the leading suspect.
+unpredictable~The Dramatic Apology|He apologized for eating a teammate's post-practice meal with a handwritten statement. The statement blamed poor refrigerator communication and made everything worse.
+team-first~The Credit Redirect|He thanked a football teammate publicly for a favor and accidentally revealed an embarrassing detail. He still owes that teammate a second, much quieter thank-you.
+team-first~The Quiet Favor|He leaves spare football supplies for teammates who run out but hates being called the team parent. A package of cartoon reward stickers tested his patience.
+team-first~The Extra Seat|He makes room for newcomers at football dinners even when the table is already crowded. He is less welcoming about sharing the fries he ordered.
+team-first~The Last Slice|He asks teammates whether they want the last slice after football activities and hopes everyone says no. His face has become a reliable clue to the real question.
+team-first~The Good Listener|Teammates bring him football complaints because he usually lets them finish. He has had to establish that listening does not include taking sides.
+team-first~The Small Thank-You|He thanks the football support staff by name and occasionally gets a name wrong. The staff have begun returning the favor with increasingly creative versions of his.
+team-first~The Borrowed Charger|He lends teammates a charger during football meetings and never knows where it ends up. He recently attached a label large enough to count as a flag.
+team-first~The Cleanup Crew|He stays to help clean after team gatherings but complains the entire time. Teammates recognize the difference between the performance and the actual willingness to help.
+team-first~The Shared Win|He celebrates teammates' small football successes with genuine enthusiasm. He still gets irritated when somebody else receives more attention for the same thing.
+team-first~The Unrequested Backup|He brings extra football supplies for nervous newcomers without making a big announcement. He is much less prepared when the forgotten item belongs to him.
+reserved~The Warm-Up Conversation|He needs a few minutes before joining locker-room banter. His teammates have learned that the quiet opening usually precedes a devastating imitation.
+reserved~The Soft Voice|He speaks quietly enough that football teammates regularly miss his punch lines. He dislikes repeating them and has started charging imaginary replay fees.
+reserved~The Written Reply|He can describe a football disagreement clearly by text and stumble over the same words in person. He has considered sending messages while standing beside the intended recipient.
+reserved~The Small Circle|He prefers sitting with the same two teammates at football gatherings. One of them is far more outgoing, which keeps ruining his plan for a quiet evening.
+reserved~The Observation First|He can sit through a noisy football-room argument without saying anything. His eventual contribution usually reveals that both sides forgot an embarrassing detail.
+reserved~The Surprise Joke|He rarely joins the loudest locker-room conversation until he has something good. Teammates have learned not to mistake a long silence for innocence.
+reserved~The Practice Introduction|He rehearses greetings before meeting people through football. He recently prepared for a formal introduction to someone who opened by asking about his shoes.
+reserved~The Quiet Celebration|He celebrates good football news with a private meal rather than a post. His closest teammates are offended that learning about it requires detective work.
+reserved~The Thoughtful Pause|He takes long enough to answer football questions that teammates sometimes answer for him. He has asked them to stop helping quite so efficiently.
+reserved~The Familiar Faces|He is quiet around unfamiliar football staff and completely different around his teammates. A coach once overheard the louder version and asked whether he had a twin.
+driven~The Five-Minute Rule|He arrives early for football commitments and judges teammates who cut it close. He was late once and has spent considerable effort defining the exception.
+driven~The Serious Planner|He schedules informal football work with the precision of a military operation. Teammates keep asking where the nap break appears on the chart.
+driven~The Unfinished Task|He cannot stop discussing a disputed football rep until someone agrees with him. Friends now announce agreement before he finishes the explanation.
+driven~The Direct Answer|He gives blunt football feedback when teammates ask and dislikes receiving equally blunt feedback about himself. A coach has pointed this out without softening the wording.
+driven~The Personal Deadline|He sets early deadlines for football preparation and gets annoyed when others do not adopt them. His roommate has explained that private deadlines do not create public emergencies.
+driven~The Competitive Board Game|He reads board-game rules like a football call sheet and studies loopholes. Teammates now require a rules meeting before allowing him to host.
+unpredictable~The Goofy Voice|He reads football reminders aloud in a different voice for every coach. He once forgot to change back when the real coach entered.
+unpredictable~The Impulse Hobby|He briefly decided every football teammate needed a homemade pregame bracelet. The group received three bracelets and a long explanation about supply costs.
+unpredictable~The Unnecessary Costume|He arrived at an informal team gathering in an outfit nobody else interpreted as casual. His defense involved a football metaphor that clarified nothing.
+unpredictable~The Running Bit|He repeats a harmless locker-room joke until it becomes funny through sheer persistence. Teammates fear the day a coach accidentally encourages a sequel.
 `),
 block('dating','Relationships & Dating',`
 The Shared Playlist|He and his girlfriend keep adding songs to the same playlist. Neither will admit that skipping the other's choice has become a minor relationship negotiation.
@@ -119,31 +119,31 @@ The Better Question|He is learning to ask what someone wants instead of assuming
 The Roommate's Introduction|His roommate introduced him to someone, then became much too interested in the outcome. He has requested that future updates not be discussed like a weekly television episode.
 `),
 block('social-circle','Friendships & Social Circles',`
-The Unlikely Roommates|He and his roommate have almost nothing in common in music, food or sleep schedules. They became friends anyway after discovering a shared dislike of the same broken laundry machine.
-The Friend from Home|His closest friend has known him since long before college. Their calls usually begin with football and move quickly to news he would never hear anywhere else.
-The Study-Table Group|He found a dependable group of friends by sitting at the same study table repeatedly. Eventually someone asked whether he intended to introduce himself or simply claim the chair forever.
-The Different Major|One of his closest friends knows very little about football. He enjoys conversations in which his athletic schedule is the least interesting thing to discuss.
-The Reliable Pickup|He is the friend people call when a harmless plan falls apart and they need a ride. He does ask that the explanation wait until everyone has found their seat belt.
-The Group Chat Archivist|He remembers old group-chat jokes at inconveniently precise moments. Friends are less impressed by this skill when their own messages are the evidence.
-The Roommate Treaty|He and his roommate wrote informal rules for food, guests and quiet hours. The snack clause has required more renegotiation than all the others combined.
-The Adopted Friend|An outgoing friend started inviting him to things without waiting for a polished answer. He was initially suspicious and is now grateful someone persisted.
-The Lunch Table|He met a friend by asking whether a dining-hall seat was taken. They still argue about which of them was actually the one who started talking.
-The Airport Favor|He once agreed to help a friend with an inconvenient early trip. The favor became the standard against which every future request for a ride has been measured.
-The Opposite Taste|He and a close friend almost never agree on entertainment. Recommending something the other person might dislike has become a hobby of its own.
-The Apartment Cook|Within his friend group, he is usually the person who offers to make something simple to eat. This has won him considerable popularity and very little help with the dishes.
-The Quiet Check-In|He notices when a friend has gone quiet and sends an ordinary message rather than a dramatic one. Asking about dinner often opens a better conversation than demanding to know what is wrong.
-The Card-Game Circle|A casual card game became a regular gathering among his friends. The rules have stayed mostly consistent, while the accusations of cheating remain entirely flexible.
-The Newcomer's Seat|He remembers how awkward it felt to join an unfamiliar group. When someone new appears, he tries to offer a place before they have to ask.
-The Shared Headphones|He and a friend once traded headphones to argue about a song. They now send each other music with increasingly detailed instructions about what deserves attention.
-The Friendly Debate Club|His friends can turn almost any harmless preference into a debate. They have discussed everything from breakfast food to the proper temperature of a room with unreasonable seriousness.
-The Roommate's Alarm|His roommate owns an alarm that appears to wake everyone except its owner. Their friendship has survived several attempts to negotiate a better system.
-The No-Sports Friend|He values a friend who will ask about classes, family or a television show before mentioning football. It gives him somewhere to go when he wants to stop discussing the same subject.
-The Road-Trip Seat|His friend group has unwritten rules about who sits where on a drive. He has opinions about the system but is not willing to volunteer for navigation to change it.
-The Good-News Call|He has one friend he contacts first when something goes well. The reaction is so reliably enthusiastic that even small updates feel worth sharing.
-The Peacekeeper's Snack|When a group disagreement becomes pointless, he sometimes suggests getting food. The method does not solve every problem, but it does improve the tone of the next conversation.
-The Shared Collection|He and a friend exchange small souvenirs from places they visit. Most have little monetary value and extremely detailed explanations.
-The Honest Friend|He has a friend who will tell him when an idea needs more thought. He does not always enjoy the answer immediately, which is part of why he trusts it.
-The Standing Invitation|A friend's family has made it clear he is welcome at their table. He is still learning to accept the invitation without feeling he should arrive carrying something useful.
+The Unlikely Roommates|He and a football teammate disagree about food, music and acceptable alarm volume. Their friendship survives because both dislike the same cafeteria soup.
+The Friend from Home|His oldest friend still calls him by a ridiculous youth-football nickname. He answers immediately and then threatens to stop answering.
+The Study-Table Group|A teammate invited him to a football-group study session that became an argument over snacks. They now bring separate snacks and still argue.
+The Different Major|He has a friend outside football who cannot remember his position. He likes the arrangement until the friend introduces him as some sort of goalkeeper.
+The Reliable Pickup|He gives teammates rides after football commitments and bans criticism of his music. The ban has not reduced the criticism, only increased its creativity.
+The Group-Chat Archivist|He saves locker-room group-chat messages for future arguments. Teammates consider him trustworthy with real secrets and dangerous with minor football predictions.
+The Roommate Treaty|He and a teammate wrote rules about sharing post-practice food. A handwritten amendment defining leftovers has become the apartment's most contested document.
+The Adopted Friend|An outgoing teammate kept inviting him to football dinners despite receiving vague answers. He finally attended to ask why the invitations had become so persistent.
+The Lunch Table|He befriended a teammate after arguing about an empty dining-hall seat. They still introduce each other as the person who cannot recognize a reserved chair.
+The Airport Favor|He drove a football teammate to an absurdly early flight and has never stopped mentioning it. The teammate considers paying for breakfast a completed transaction.
+The Opposite Taste|He and his closest football friend disagree on almost every film and album. They recommend things mainly to annoy each other.
+The Apartment Cook|He cooks for football teammates and pretends not to mind doing the dishes. The growing list taped above the sink suggests otherwise.
+The Quiet Check-In|He asks quiet teammates to get food instead of demanding an explanation in the locker room. He is better at starting that conversation than knowing how to end it.
+The Card-Game Circle|Teammates meet for cards after football work and accuse him of cheating whenever he wins. He considers the accusations a compliment until he actually loses.
+The Newcomer's Seat|He invites new football players into conversations before they have to hover awkwardly nearby. He still remembers which teammates let him hover.
+The Shared Headphones|He traded warmup playlists with a football teammate and hated almost every song. They now send each other increasingly hostile music recommendations.
+The Friendly Debate Club|His football friends hold serious debates over deeply unimportant subjects. He remains furious about losing their vote on the best gas-station snack.
+The Roommate's Alarm|A teammate's early football alarm wakes everyone in their apartment except its owner. He has begun placing the phone beside the owner's pillow with theatrical care.
+The No-Football Friend|He has one friend who refuses to discuss football until they have talked about something else. He pretends to resent this and keeps making the calls.
+The Road-Trip Seat|His football friend group has elaborate rules about car seats and navigation duties. He argues for the passenger seat while demonstrating no navigational ability.
+The Good-News Call|He calls an old football teammate first whenever something goes well. He sometimes has to interrupt several minutes of unrelated complaints before giving the actual news.
+The Peacekeeper's Snack|He interrupts pointless locker-room arguments by suggesting food. Teammates have noticed he usually makes the suggestion when somebody else offers to pay.
+The Shared Collection|He and an old football friend exchange the ugliest souvenirs they can find. Their collection is now too sentimental to throw away and too embarrassing to display.
+The Honest Friend|He trusts one teammate to tell him when his football confidence becomes obnoxious. He trusts that teammate somewhat less during the conversation itself.
+The Standing Invitation|A football teammate's family keeps a seat for him at dinner. He brings something to contribute and regularly chooses a dessert nobody wants.
 `),
 block('academics-career','Academics & Career Goals',`
 The Architecture Notebook|He is interested in architecture and keeps sketches of buildings he likes. His family now sends him pictures of unusually shaped houses as if they are homework.
@@ -259,26 +259,26 @@ The Repair Bench|He enjoys figuring out why a small household item stopped worki
 The Unusual Collection|He collects souvenir magnets and can explain the story behind nearly every one. People who want to give him something easy have learned that this information is very useful.
 `),
 block('growth','Personal Struggles & Growth',`
-The Homesick Meal|He sometimes misses a meal from home more than any particular place. Learning to make a rough version of it has helped unfamiliar surroundings feel less distant.
-The Better Apology|He is learning that explaining why he made a mistake is not the same as apologizing for it. A difficult conversation with a friend gave that lesson a practical meaning.
-The Comparison Trap|He catches himself comparing his whole life with the best moments other people share. Remembering how carefully those moments are selected has helped him step back.
-The Quiet Request|Asking for help used to feel like admitting he had failed at something. He is learning that getting useful support early usually leaves more options open.
-The New Responsibility|Being away from home has made ordinary responsibilities feel more immediate. There is no mystery person who replaces the laundry detergent or remembers every appointment.
-The Difficult Goodbye|Leaving a familiar routine was harder than he expected. Regular calls and a few dependable habits have helped him build a new one without pretending the adjustment was effortless.
-The Kept Promise|He made a small promise to a friend and had to reorganize his day to keep it. Following through felt better than the convenient excuse he almost used.
-The Confidence Practice|He is trying to stop dismissing a compliment before the person finishes giving it. Saying thanks has become a small confidence exercise of its own.
-The Unsent Reaction|He once wrote an angry reply and waited before sending it. Reading it later convinced him that waiting can be a useful part of making a decision.
-The Smaller Circle of Worry|He has started distinguishing a problem he can work on from a possibility he can only worry about. The difference does not solve everything, but it gives him a better starting point.
-The New Routine at Home|A change in his family's routine made visits feel different for a while. He is learning that feeling at home can involve making new habits as well as keeping old ones.
-The Honest Answer|He used to say he was fine whenever a conversation became uncomfortable. He is getting better at giving an honest answer to the people he trusts.
-The Missed Reminder|Forgetting something important made him realize that good intentions were not a complete system. He has become much more willing to use reminders instead of relying on memory and apologies.
-The Pause before Yes|He is learning to stop agreeing to every request immediately. A clear answer about what he can manage has proved kinder than an enthusiastic promise he cannot keep.
-The Borrowed Perspective|A friend pointed out how harshly he described his own mistakes. He is trying to use the same patience for himself that he would offer somebody else.
-The Fresh Start on a Tuesday|He stopped waiting for a new month or a perfect Monday to change a habit. An ordinary day turned out to be a perfectly reasonable time to begin.
-The Less Dramatic Setback|A disappointing personal project once felt like proof that the whole idea was foolish. Looking at it later helped him separate a failed attempt from a permanent conclusion.
-The Useful Conversation|He has a trusted person he calls when he needs to talk something through. The conversation works best when he stops pretending he already knows the answer.
-The Better Boundary|He is learning that keeping a personal boundary does not require starting an argument. Sometimes a calm no is the clearest answer he can give.
-The Homecoming Difference|Returning home after time away showed him that he had changed in small ways. He is still working out which changes he wants to keep and which were simply part of adjusting.
+The Homesick Meal|He called home to ask for a recipe and discovered nobody had ever measured the ingredients. His first attempt tasted wrong enough to make him miss home more.
+The Better Apology|He apologized to a friend and spent most of the conversation defending himself. The friend made him start again without the speech.
+The Comparison Trap|He scrolls through other people's good weekends while sitting in an untidy room. He has not yet decided whether deleting the app would be growth or surrender.
+The Quiet Request|He let a small personal problem become expensive because asking for help embarrassed him. He is still paying it off and still dislikes telling the story.
+The New Responsibility|He ran out of clean clothes and learned that detergent does not appear through family magic. He bought the largest bottle in the store out of irritation.
+The Difficult Goodbye|He was louder than everyone else about being ready to leave home. He called back before the first evening was over.
+The Kept Promise|He nearly canceled helping a friend move because the day looked unpleasant. He went anyway and complained enough to make the friend question the benefit.
+The Confidence Practice|He deflects compliments with jokes until people stop trying. He is beginning to suspect that this is not the confidence he thinks it is.
+The Unsent Reaction|He wrote a furious message and sent a screenshot to a friend for approval. The friend replied with a picture of a trash can.
+The Circle of Worry|He can turn one uncertain plan into an entire evening of imagined disasters. His roommate sometimes interrupts by asking him to identify the problem that has actually happened.
+The New Routine at Home|His old bedroom became a storage room after he left for college. He acts offended but mostly wants his family to stop stacking boxes on the bed.
+The Honest Answer|He tells people he is fine with a tone that makes the opposite obvious. One friend has stopped accepting that answer without ordering food first.
+The Missed Reminder|He forgot an important birthday despite having three reminders on his phone. His eventual apology required listening to the explanation of how reminders work.
+The Pause Before Yes|He agrees to favors because saying no feels awkward, then resents the entire afternoon. He is practicing shorter answers that do not require invented emergencies.
+The Borrowed Perspective|He repeated a harsh judgment about himself and watched a friend become genuinely angry. He had not realized how often he said it out loud.
+The Tuesday Start|He announced an elaborate fresh start for the following Monday. His roommate asked why cleaning the desk required another five days.
+The Failed Project|He quit a hobby after the first result looked bad and kept the unfinished work in a drawer. He occasionally takes it out to argue with his own decision.
+The Useful Conversation|He has a trusted relative who can tell when a phone call is really about something else. He usually spends ten minutes discussing the weather first.
+The Better Boundary|He told a friend he needed space and then checked his phone constantly. He is learning that setting a boundary does not make waiting comfortable.
+The Homecoming Difference|He returned home expecting everything to feel exactly the same. His younger sibling had claimed his favorite chair and showed no interest in symbolism.
 `),
 block('campus-antics','Campus Stories & Antics',`
 The Wrong Lecture|He once sat through the beginning of the wrong campus talk because leaving felt more embarrassing than staying. Friends argue that his commitment to the mistake was the most impressive part.
@@ -308,21 +308,21 @@ The Picnic Forecast|He proposed eating outside just before a brief shower arrive
 The Accidental Wave|He enthusiastically returned a wave intended for somebody behind him. Carrying on as if he had meant to greet everyone seemed like the least awkward option available.
 `),
 block('values','Beliefs, Values & Motivations',`
-The Kept Word|He takes a promise seriously even when the task attached to it seems small. He would rather give a realistic answer at the beginning than make somebody chase an explanation later.
-The Independent Answer|He likes hearing advice but wants the final decision to feel like his own. Taking responsibility for a choice seems easier than blaming someone else's recommendation afterward.
-The Loyalty Test|He values friends who remain consistent when there is nothing interesting happening. Ordinary days tell him more about a friendship than a public declaration does.
-The Family Principle|A family member taught him to leave a place a little better than he found it. He tries to apply the idea in practical ways rather than turn it into a slogan.
-The Quiet Ambition|He has goals he does not feel obliged to announce to everyone. Keeping some plans private lets him concentrate on making them real instead of defending them early.
-The Fair Deal|He dislikes an arrangement that works only because somebody did not understand the terms. Being clear about expectations matters to him even when a vague agreement would be more convenient.
-The Credit Where Due|He believes people should hear when their work helped someone else. Giving credit feels like basic accuracy rather than an elaborate gesture.
-The Room to Change|He wants people to be allowed to learn from an ordinary mistake. He tries to remember that principle when deciding how long to keep teasing a friend about one.
-The Community Connection|He likes the idea of eventually doing something useful for the place that helped raise him. The plan is still broad, but the people behind it are very specific to him.
-The Earned Confidence|He trusts confidence more when it comes with preparation. It is a principle he finds easier to admire in others than consistently practice himself.
-The Honest Limit|He would rather admit what he cannot do than let someone plan around an empty promise. Knowing his limits has become part of how he tries to be dependable.
-The Curiosity Rule|He tries to ask one genuine question before deciding he understands a person. The habit has led to better conversations than his first impressions sometimes deserved.
-The Shared Opportunity|He remembers people who made an opportunity easier for him to reach. When he can return a practical favor, he prefers doing that to making a speech about gratitude.
-The Personal Definition|He is working out what a successful life would look like if nobody else were grading it. The answer includes more ordinary things than he expected when he first asked himself.
-The Long Memory for Kindness|He remembers a small kindness from years ago in remarkable detail. It makes him suspect that ordinary help can matter longer than the person offering it realizes.
+The Kept Word|He remembers broken promises longer than he admits. Friends are careful about saying definitely when making plans with him.
+The Independent Answer|He asks five people for advice and usually does what he planned anyway. He calls this research; his friends have a less generous name.
+The Loyalty Test|He is loyal enough to defend a friend publicly even when the friend is plainly wrong. The private conversation afterward is considerably less supportive.
+The Family Principle|His grandmother insists that visitors leave a house cleaner than they found it. He follows that rule at her house with an enthusiasm that disappears in his own room.
+The Quiet Ambition|He has a specific long-term goal he refuses to share. His friends have stopped guessing because he enjoys saying no too much.
+The Fair Deal|He hates being taken advantage of over small amounts of money. He will spend an hour recovering a sum smaller than the lunch he forgot to buy.
+The Credit Where Due|He remembers who helped with a project and gets irritated when louder people take the credit. He is not always subtle about correcting them.
+The Room to Change|He wants people to forget his old mistakes and keeps excellent records of theirs. A friend has asked him to pick one consistent policy.
+The Community Connection|He wants to go home someday with enough money to improve something practical. His current plan begins with fixing the basketball hoop nobody in the neighborhood will replace.
+The Earned Confidence|He mistrusts people who announce their own importance. His friends enjoy quoting this opinion whenever he begins doing exactly that.
+The Honest Limit|He will admit he cannot do a job but hates admitting he never tried. This has led him into several household repairs of questionable quality.
+The Curiosity Rule|He asks strangers unusually specific questions about their work. He recently learned far more about commercial refrigeration than the conversation required.
+The Shared Opportunity|He remembers the person who helped him find his first useful summer job. He still answers that person's requests before reading the rest of the message.
+The Personal Definition|His idea of success includes a quiet house, a reliable car and nobody telling him when to wake up. Friends point out that he already sleeps through instructions.
+The Long Memory|He remembers an embarrassing favor someone did for him years ago. He repays it whenever he can and refuses to explain the details.
 `)
 ]);
 export const EXTRA_BACKSTORIES=Object.freeze(EXPANSION_GROUPS.flatMap(group=>group.stories.map((story,index)=>Object.freeze({id:`${group.id}-${String(index+1).padStart(2,'0')}`,category:group.category,...story}))));

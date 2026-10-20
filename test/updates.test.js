@@ -120,7 +120,8 @@ test("installer metadata preserves persistence IDs and publishes only Windows re
   const main = fs.readFileSync(new URL("../src/main/main.js", import.meta.url), "utf8");
   assert.match(main, /IPC.prepareTool, async \(_event, request\) => toolOperation/);
   assert.match(main, /IPC.runTool, async \(_event, request\) => toolOperation/);
-  assert.match(main, /Unapplied previews and review decisions will be discarded/);
+  assert.match(fs.readFileSync(new URL('../src/renderer/updates.js',import.meta.url),'utf8'), /Unapplied previews and review decisions will be discarded/);
+  assert.doesNotMatch(main,/dialog\.showMessageBox/);
   const preload = fs.readFileSync(new URL("../src/main/preload.cjs", import.meta.url), "utf8");
   assert.match(preload, /const listener = \(_event, status\) => callback\(status\)/);
   assert.match(preload, /removeListener\("updates:status-changed", listener\)/);

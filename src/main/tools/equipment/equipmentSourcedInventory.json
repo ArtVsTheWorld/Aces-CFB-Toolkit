@@ -1,6 +1,10 @@
 {
   "verification": "Display labels recovered from structurally checked live ItemInfo records on 2026-10-02; evidence: outputs/equipment-displaynames-sourced-2026-10-02.json. Slots follow the established Player equipment families. The supplied Unlocked manifest identifies the branded mouthpieces, rubber bands, thigh pads and towel. The user identifies non-Raw turtlenecks and normal balaclavas as Unlocked. Under-lip/removal entries are display-only. No missing color variants are synthesized.",
   "displayNames": {
+    "G_CompressionT_Crew_LongSleeve_99Club_B_GOL": "Relaxed Tee Primary",
+    "G_CompressionT_Crew_LongSleeve_99Club_B_WHI": "Relaxed Tee Secondary",
+    "G_CompressionT_Crew_ShortSleeve_99Club_B_GOL": "Relaxed Tee White",
+    "G_CompressionT_Crew_ShortSleeve_99Club_B_WHI": "Relaxed Tee Black",
     "NeckWear_Turtleneck_Tight2": "Battle Turtleneck Primary / White Logo",
     "NeckWear_Turtleneck_Tight3": "Battle Turtleneck Primary / Black Logo",
     "NeckWear_Turtleneck_Tight4": "NXTRND Turtleneck Primary / White Logo",

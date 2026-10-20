@@ -97,7 +97,7 @@ app.whenReady().then(async () => {
     document.querySelector("#fix-unlocked-tattoos").click(); open("Tattoo Settings");
     const pool = draft("unlocked-tattoo-pool"), defaults = [...pool.selectedOptions].map(option => option.value);
     change(draft("unlocked-tattoo-cap"), "34"); pick(pool, []); save(); check(equipmentOptions("equipment-patcher").unlockedTattooSelection.length === 0, "Empty tattoo pool remains no new tattoos");
-    open("Tattoo Settings"); document.querySelector("[data-config-reset]").click(); check(draft("unlocked-tattoo-cap").value === "33" && draft("unlocked-tattoo-pool").selectedOptions.length === defaults.length, "Tattoo scoped defaults preserve default exclusions"); cancel();
+    open("Tattoo Settings"); document.querySelector("[data-config-reset]").click(); check(draft("unlocked-tattoo-cap").value === "40" && draft("unlocked-tattoo-pool").selectedOptions.length === defaults.length, "Tattoo scoped defaults preserve default exclusions"); cancel();
     check(equipmentOptions("equipment-patcher").unlockedTattooCap === "34", "Cancel after Reset retains previous settings");
 
     const priorHelmet=JSON.stringify(equipmentOptions("equipment-patcher"));
@@ -167,6 +167,7 @@ app.whenReady().then(async () => {
     const savedPoolOptions = JSON.stringify(equipmentOptions("freshman-equipment").modPools);
     navigate("home"); await delay(); navigate("freshman-equipment"); await wait(() => document.querySelector("#equipment-mod-pools"));
     check(JSON.stringify(equipmentOptions("freshman-equipment").modPools) === savedPoolOptions, "Pool selections persist through navigation");
+    await wait(() => Object.keys(poolPreset.teamSelections).every(id => document.getElementById(id)));
     const restored = presetValues(JSON.parse(JSON.stringify(poolPreset))); check(restored["equipment-mod-pools"] === poolPreset.values["equipment-mod-pools"], "Pool preset serialization round trip");
     check(Object.keys(presetConfiguration().values).every(id => !id.startsWith("draft-")), "Draft IDs never enter presets");
     navigate("equipment-patcher"); await wait(() => document.querySelector("#fix-unlocked-tattoos")); check(JSON.stringify(equipmentOptions("equipment-patcher")) === savedPatcher, "Window settings survive tool switching");
@@ -206,15 +207,15 @@ app.whenReady().then(async () => {
     const slider=document.querySelector('[data-model-path="homeField.home"]');slider.value="2";slider.dispatchEvent(new Event("input",{bubbles:true}));
     check(document.querySelector("#force-custom-model-json").value===customBaseline,"Model draft isolated");
     document.querySelector("[data-week-limit]").value="2";document.querySelector("[data-week-limit]").dispatchEvent(new Event("input",{bubbles:true}));
-    check(document.querySelectorAll("[data-model-help]").length===document.querySelectorAll('input[type="range"]').length,"Every model slider has help");
+    check([...document.querySelectorAll('input[type="range"]')].every(input => input.closest('.model-slider').querySelector('[data-model-help]')),"Every model slider has help");
     const help=slider.closest(".model-slider").querySelector("[data-model-help]"); help.focus();
     // Hidden BrowserWindows update activeElement without activating native focus events.
     help.dispatchEvent(new FocusEvent("focusin",{bubbles:true}));
-    check(!document.querySelector('[role="tooltip"]').hidden && document.querySelector('[role="tooltip"]').textContent.includes("Base advantage"),"Keyboard focus shows slider explanation: "+JSON.stringify({active:document.activeElement.outerHTML,help:help.outerHTML,hidden:document.querySelector('[role="tooltip"]').hidden,text:document.querySelector('[role="tooltip"]').textContent}));
-    const tipBounds=document.querySelector('[role="tooltip"]').getBoundingClientRect();
+    check(!document.getElementById(help.getAttribute('aria-describedby')).hidden && document.getElementById(help.getAttribute('aria-describedby')).textContent.includes("Base advantage"),"Keyboard focus shows slider explanation: "+JSON.stringify({active:document.activeElement.outerHTML,help:help.outerHTML,hidden:document.getElementById(help.getAttribute('aria-describedby')).hidden,text:document.getElementById(help.getAttribute('aria-describedby')).textContent}));
+    const tipBounds=document.getElementById(help.getAttribute('aria-describedby')).getBoundingClientRect();
     check(tipBounds.left>=0 && tipBounds.right<=innerWidth && tipBounds.top>=0 && tipBounds.bottom<=innerHeight,"Tooltip remains inside window");
     help.blur();help.dispatchEvent(new FocusEvent("focusout",{bubbles:true}));help.dispatchEvent(new MouseEvent("mouseover",{bubbles:true}));
-    check(!document.querySelector('[role="tooltip"]').hidden,"Mouse hover shows slider explanation");
+    check(!document.getElementById(help.getAttribute('aria-describedby')).hidden,"Mouse hover shows slider explanation");
     document.querySelector("dialog [data-config-save]").click();await wait(()=>!document.querySelector("dialog.configuration-dialog[open]"));check(forceWinOptions().customModel.values["homeField.home"]===2 && forceWinOptions().customModel.maxForceWinsPerWeek===2,"Custom sliders and weekly limit commit");
     check(state.bootstrap.settings.customMatchupModel.values["homeField.home"]===2,"Saved model is stored in personal settings");
     const savedModelJson=document.querySelector("#force-custom-model-json").value;
@@ -239,8 +240,8 @@ app.whenReady().then(async () => {
       const options=()=>["equipment-patcher","freshman-equipment"].includes(tool)?equipmentOptions(tool):tool==="automatic-force-win"?forceWinOptions():tool==="jersey-renumber"?jerseyOptions(state.jerseyMode==="no-duplicates"?"jersey-no-duplicates":tool):tool==="commentary-id"?commentaryOptionsFromForm():tool==="dealbreaker-fixer"?dealbreakerOptions():collectOptions(tool);
       const before=JSON.stringify(options()), config=presetConfiguration();
       check(Object.keys(config.values).every(id=>!id.startsWith("draft-")),"No draft preset values: "+tool);
-      state.toolSettings.set(tool,presetValues(config)); state.equipmentPreviews.delete(tool); state.equipmentWizard.delete(tool); state.forceWinPreviews.delete(tool); state.genericPreviews.delete(tool); state.dealbreakerPreviews.delete(tool);
-      render(); await wait(()=>document.querySelector(selector));
+      try { state.toolSettings.set(tool,presetValues(config)); } catch (error) { throw new Error(tool + ': ' + error.message + ' selections=' + JSON.stringify(Object.keys(config.teamSelections))); } state.equipmentPreviews.delete(tool); state.equipmentWizard.delete(tool); state.forceWinPreviews.delete(tool); state.genericPreviews.delete(tool); state.dealbreakerPreviews.delete(tool);
+      render(); await wait(()=>document.querySelector(selector)); await wait(()=>Object.keys(config.teamSelections).every(id=>document.getElementById(id)));
       check(JSON.stringify(options())===before,"Preset load preserves complete options: "+tool);
     }
     navigate("settings"); document.querySelector("#configure-team-artwork").click(); unique();
@@ -251,7 +252,7 @@ app.whenReady().then(async () => {
     document.querySelector("[data-config-save]").click(); check(!document.querySelector("dialog"), "Artwork Done closes without nesting");
     for (const page of ["history", "reports", "help", "about", "long-snap", "season-lines"]) { navigate(page); await delay(); check(!document.querySelector("dialog"), "Read-only/simple page unchanged: " + page); }
     const active = state.activeSave; state.activeSave = null;
-    for (const tool of state.bootstrap.registry.tools.filter(tool => !tool.hidden)) { navigate(tool.id); await delay(); check(document.querySelector("#select-save"), "No-save guard retained for " + tool.id); check(!content.querySelector(".configuration-entry"), "No configuration before a save: " + tool.id); }
+    for (const tool of state.bootstrap.registry.tools.filter(tool => !tool.hidden)) { navigate(tool.id); await delay(); check(document.querySelector("#select-save"), "No-save guard retained for " + tool.id + " actual=" + state.page + " save=" + Boolean(state.activeSave) + " content=" + content.textContent.slice(0, 250)); check(!content.querySelector(".configuration-entry"), "No configuration before a save: " + tool.id); }
     state.activeSave = active; navigate("equipment-patcher"); await wait(() => document.querySelector("#configure-helmet-mix"));
     return "All nine tool pages, Settings, draft Save/Cancel/Escape, defaults, unique IDs, validation, selectors/search/donor shift-click, scope semantics, previews, sessions, presets, and no-save guards passed.";
   })()`);
@@ -259,6 +260,8 @@ app.whenReady().then(async () => {
   if (process.argv.includes('--uniforms')) console.log(await require('./smoke-v201-uniforms.cjs')(window, root));
   if (process.argv.includes('--colors')) console.log(await require('./smoke-v201-team-colors.cjs')(window, root));
   fs.mkdirSync(path.join(root, "outputs"), { recursive: true });
+  if (process.argv.includes('--v210-followup')) await require('./lib/v210-followup-ui.cjs')(window, path.join(root, 'outputs'));
+  if (process.argv.includes('--v210')) await require('./lib/v210-options-ui.cjs')(window, path.join(root, 'outputs'));
   for (const theme of ["light", "dark"]) {
     await window.webContents.executeJavaScript(`document.documentElement.dataset.theme = "${theme}"; navigate("equipment-patcher");`);
     await new Promise(resolve => setTimeout(resolve, 400));

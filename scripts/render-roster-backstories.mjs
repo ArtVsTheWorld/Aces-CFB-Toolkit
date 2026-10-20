@@ -1,0 +1,6 @@
+// Regenerate the readable reference from the exact shipped story bank.
+import fs from 'node:fs';
+import {BACKSTORIES,BACKSTORY_VERSION} from '../src/main/tools/rosterGenerator/backstories.js';
+const content=`# Roster Generator — 565 Fictional Backstories\n\nStory revision ${BACKSTORY_VERSION}: 339 football/team-life stories and 226 personal-life stories. All have two sentences. Eligibility rules are applied to the finished player's position, class, build, ability and personality. These fictional biographies appear in Toolkit reviews, History and reports, not an in-game biography field.\n\nThe library was reviewed in full; 359 weaker entries were rewritten while retaining their IDs and eligibility rules. The other 206 entries, including the 15 history/modding easter eggs, retain their distinct existing stories. Generation prefers a roughly 60/40 football/personal mix without overriding eligibility.\n\n`+BACKSTORIES.map(story=>`## ${story.title}\n\n${story.text}\n\n*${story.id} · ${story.topic} · Eligibility: ${story.rule}*\n`).join('\n');
+fs.writeFileSync(new URL('../docs/catalogs/roster-backstories.md',import.meta.url),content);
+console.log(`Rendered ${BACKSTORIES.length} stories.`);

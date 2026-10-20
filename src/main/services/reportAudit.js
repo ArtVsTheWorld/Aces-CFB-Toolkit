@@ -15,7 +15,8 @@ export function parseCsv(content) {
 }
 export function auditReport(report, audit) {
   if (!audit) return report;
-  const headings = ["AuditRunID", "AuditToolVersion", "AuditRunMode", "AuditSavePath", "AuditInputOptionsJSON"];
-  const values = [audit.runId, audit.toolVersion, audit.mode, audit.savePath, JSON.stringify(audit.options ?? {})];
+  // Keep old saved run plans readable, but new reports identify the app release.
+  const headings = ["AuditRunID", audit.appVersion ? "AuditAppVersion" : "AuditToolVersion", "AuditRunMode", "AuditSavePath", "AuditInputOptionsJSON"];
+  const values = [audit.runId, audit.appVersion ?? audit.toolVersion, audit.mode, audit.savePath, JSON.stringify(audit.options ?? {})];
   return { ...report, headings: [...report.headings, ...headings], rows: report.rows.map((row, index) => [...row, ...values.slice(0, 4), index === 0 ? values[4] : ""]) };
 }

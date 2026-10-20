@@ -81,3 +81,14 @@
 .model-help-button:hover,.model-help-button:focus-visible { border-color:var(--action); color:var(--action); background:var(--action-soft); }
 .model-help-button:focus-visible { outline:2px solid var(--action); outline-offset:2px; }
 .model-help-tooltip { position:fixed; z-index:100; width:min(330px,calc(100vw - 48px)); box-sizing:border-box; padding:12px 14px; border:1px solid var(--action); border-radius:6px; background:var(--surface); color:var(--text); box-shadow:0 8px 28px #0004; font-size:12px; line-height:1.5; }
+.model-help-tooltip { max-height:min(360px,calc(100vh - 32px)); overflow:auto; white-space:normal; overflow-wrap:anywhere; text-align:left; font-weight:400; }
+.option-info { margin-inline-start:7px; vertical-align:middle; letter-spacing:normal; text-transform:none; }
+.model-help-button::before { content:"i"; }
+.team-picker > [data-multi-label-for]:has(+ .option-info) { display:inline-block; }
+[data-option-help-moved][hidden] { display:none !important; }
+.toggle-card strong:has(.option-info),.pass-row strong:has(.option-info),
+strong:has(> .model-help-button),h2:has(> .model-help-button),h3:has(> .model-help-button),
+label:has(> .model-help-button):not(:has(> input,> select,> textarea)) { display:inline-flex; align-items:center; gap:7px; vertical-align:middle; }
+strong > .option-info,h2 > .option-info,h3 > .option-info,label > .option-info { margin-inline-start:0; }
+.model-help-button { vertical-align:middle; margin-block:0; align-self:center; }
+.roster-strength-toolbar-actions { display:flex; flex-wrap:wrap; gap:8px; flex-shrink:0; }

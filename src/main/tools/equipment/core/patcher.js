@@ -167,7 +167,7 @@ export function applyAsymmetricElbowGear(loadouts, pool, rng, changes, state, po
 export function applyUnlockedRandomizerEquipment(loadouts, target, rng, perCategoryChance = 0.10, state = createGeneratedEquipmentState(loadouts), configuration) {
   const changes = [];
   const selected = (key, pool) => configuredModItems(pool, configuration, key);
-  const chance = key => modCategoryChance(configuration, key, perCategoryChance);
+  const chance = key => modCategoryChance(configuration, key, key === "undershirts" ? 0 : perCategoryChance);
   const rollItem = (key, label, pool, slots) => {
     pool = selected(key, pool);
     pool = pool.filter(item => canGenerateEquipment(loadouts, item, slots ?? item.slots, target.position));
@@ -193,6 +193,8 @@ export function applyUnlockedRandomizerEquipment(loadouts, target, rng, perCateg
   rollItem("gloves", "Gloves", configuration ? brandedGloves : teamColorGloves.length ? teamColorGloves : brandedGloves, ["LeftHandWear", "RightHandWear"]);
   rollItem("mouthpieces", "Mouthpiece", configuration ? [...UNLOCKED_POOLS.unlockedMouthpieces, ...UNLOCKED_POOLS.colorfulHangingMouthpieces] : UNLOCKED_POOLS.unlockedMouthpieces, ["MouthWear"]);
   rollItem("neckwear", "Neckwear", UNLOCKED_POOLS.neckwear, null);
+  rollItem("undershirts", "Undershirt", UNLOCKED_POOLS.undershirts, ["InnerShirt"]);
+  rollItem("wristTape", "Wrist tape", UNLOCKED_POOLS.wristTape, ["LeftWristWear", "RightWristWear"]);
   rollItem("legSleeves", "Leg sleeve", UNLOCKED_POOLS.legSleeves, ["InnerPants"]);
   rollItem("balaclavas", "Balaclava", UNLOCKED_POOLS.balaclavas, ["FaceWear"]);
   rollItem("thighPads", "Thigh pads", UNLOCKED_POOLS.thighPads, ["LeftThighWear", "RightThighWear"]);

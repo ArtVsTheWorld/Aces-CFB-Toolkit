@@ -11,9 +11,10 @@ const sourcedInventory = JSON.parse(fs.readFileSync(new URL("./equipmentSourcedI
 const raw204Inventory = JSON.parse(fs.readFileSync(new URL("./equipmentRaw204Inventory.json", import.meta.url), "utf8"));
 const mod191Inventory = JSON.parse(fs.readFileSync(new URL("./equipmentMod191Inventory.json", import.meta.url), "utf8"));
 const unlocked097 = JSON.parse(fs.readFileSync(new URL("./equipmentUnlocked097Inventory.json", import.meta.url), "utf8"));
+const unlockedLive210 = JSON.parse(fs.readFileSync(new URL("./equipmentUnlockedLive210Inventory.json", import.meta.url), "utf8"));
 const liveFacemasks = JSON.parse(fs.readFileSync(new URL("./equipmentLiveFacemasks.json", import.meta.url), "utf8"));
 const modItems = Object.entries(modInventory.mods).flatMap(([origin, mod]) => (mod.equipmentItems ?? []).map(item => ({ ...item, origin })));
-const mergedItems = new Map([...catalog.items, ...modItems, ...colorInventory.items, ...sourcedInventory.items, ...liveFacemasks.items, ...raw204Inventory.items, ...mod191Inventory.items, ...unlocked097.items].map(item => [item.itemName, item]));
+const mergedItems = new Map([...catalog.items, ...modItems, ...colorInventory.items, ...sourcedInventory.items, ...liveFacemasks.items, ...raw204Inventory.items, ...mod191Inventory.items, ...unlocked097.items, ...unlockedLive210.items].map(item => [item.itemName, item]));
 export const EQUIPMENT_ITEMS = Object.freeze([...mergedItems.values()].map(item => {
   const resolved = { ...item, displayName: sourcedInventory.displayNames[item.itemName] ?? item.displayName, ...GENERATION_METADATA.itemOverrides[item.itemName] };
   if (unlocked097.cleatDisplayNames[item.itemName]) resolved.displayName = unlocked097.cleatDisplayNames[item.itemName];
@@ -32,7 +33,7 @@ export const canGenerateItem = item => item?.semantic.poolEligible === true;
 
 export function equipmentDisplayName(itemName) {
   const value = String(itemName ?? "");
-  return TATTOO_DISPLAY_NAMES.get(value) || BY_ITEM_NAME.get(value)?.displayName || unlocked097.observedDisplayNames[value] || FACEPAINT_DISPLAY_NAMES.get(value) || value;
+  return TATTOO_DISPLAY_NAMES.get(value) || BY_ITEM_NAME.get(value)?.displayName || sourcedInventory.displayNames[value] || unlocked097.observedDisplayNames[value] || FACEPAINT_DISPLAY_NAMES.get(value) || value;
 }
 
 const FACEPAINT_DISPLAY_NAMES = new Map([
@@ -41,7 +42,7 @@ const FACEPAINT_DISPLAY_NAMES = new Map([
   ["FaceMarks_EyeTapeLeft", "Left Eye Tape"], ["FaceMarks_EyeTapeRight", "Right Eye Tape"], ["FaceMarks_NoseEyeTape", "Nose and Eye Tape"],
   ["FaceMarks_NoseTape", "Nose Tape"], ["FaceMarks_NoseTapeEyePaint", "Nose Tape and Eye Black"],
   ...Array.from({ length: 10 }, (_, index) => [`FaceMarks_NoseTape_C${index + 1}`, `Nose Tape Custom ${index + 1}`]),
-  ["FaceMarks_NoseTape_G", "Nose Tape — G"], ["FaceMarks_NoseTape_KE", "Nose Tape — KE"], ["FaceMarks_NoseTape_T", "Nose Tape — T"],
+  ["FaceMarks_NoseTape_G", "Nose Tape GABOS"], ["FaceMarks_NoseTape_KE", "Nose Tape Kill Everybody"], ["FaceMarks_NoseTape_T", "Nose Tape Trust God"],
   ["FaceMarks_NoseTape_DP", "Nose Tape — DP"], ["FaceMarks_RawNoseEyeTape", "Raw Nose and Eye Tape"],
   ...Object.entries({ dontblink: "Don't Blink", imfnopen: "I'm F'n Open", "1hitta": "1 Hitta", "540baby": "540 Baby", builtdiff: "Built Different", fearnone: "Fear None", john316: "John 3:16", killall: "Kill All", luke137: "Luke 1:37", nolove: "No Love", notsorry: "Not Sorry", sickem: "Sick 'Em", talkcrazy: "Talk Crazy", theproblem: "The Problem", watchme: "Watch Me" }).map(([key, label]) => [`FaceMarks_RawNoseTape_${key}`, `Nose and Eye Tape — ${label}`])
 ]);
@@ -79,6 +80,9 @@ const registerExplicitFamily = family => {
   for (const itemName of new Set(Object.values(family))) EXPLICIT_COLOR_LOOKUP.set(itemName, targets);
 };
 raw204Inventory.colorFamilies.forEach(registerExplicitFamily);
+// All four ItemInfo labels rechecked in the user's live Unlocked session on
+// 2026-10-20 (repeated ItemName fields and DisplayName +56 agree).
+registerExplicitFamily({white:'G_CompressionT_Crew_ShortSleeve_BasicJ_WHI',black:'G_CompressionT_Crew_ShortSleeve_BasicJ_BLA',primary:'G_CompressionT_Crew_ShortSleeve_BasicJ_PRI',secondary:'G_CompressionT_Crew_ShortSleeve_BasicJ_SEC'});
 registerExplicitFamily({
   white: "G_CompressionT_Crew_ShortSleeve_Basic_WHI",
   black: "G_CompressionT_Crew_ShortSleeve_Basic_BLA",
@@ -219,6 +223,8 @@ export function brandedEquipmentItems(category, teamBrand) {
 }
 
 export const UNLOCKED_POOLS = Object.freeze({
+  wristTape: equipmentItemsFor("Wrist Wear", item => item.origin === "unlocked" && canGenerateItem(item)),
+  undershirts: EQUIPMENT_ITEMS.filter(item=>item.origin==='unlocked'&&item.category==='Undershirt'&&canGenerateItem(item)),
   socks: equipmentItemsFor("Socks", item => item.origin === "unlocked" && canGenerateItem(item)),
   baggyArmSleeves: equipmentItemsFor("Arm Wear", item => /^GearArmSleeve_Baggy_/i.test(item.itemName)),
   armSleeves: equipmentItemsFor("Arm Wear", item => /^GearArmSleeve_(?:Baggy_|Elbow_armTape_normal_|NikeProDriFitSleeve2)/i.test(item.itemName)),

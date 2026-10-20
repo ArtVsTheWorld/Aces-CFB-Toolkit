@@ -8,6 +8,6 @@ test("registry contains eleven registered tools in valid categories", () => {
   assert.deepEqual(tools.filter(tool => tool.status === "available").map(tool => tool.id), ["roster-generator", "nil-toggle", "jersey-renumber", "jersey-no-duplicates", "commentary-id", "freshman-equipment", "equipment-patcher", "long-snap", "team-boost", "dealbreaker-fixer", "automatic-force-win"]);
 });
 
-test("every registered tool declares active-save compatibility and version", () => {
-  assert.ok(tools.every(tool => tool.input?.mode && typeof tool.input.required === "boolean" && tool.version));
+test("every registered tool declares active-save compatibility without separate versioning", () => {
+  assert.ok(tools.every(tool => tool.input?.mode && typeof tool.input.required === "boolean" && !Object.hasOwn(tool, "version")));
 });

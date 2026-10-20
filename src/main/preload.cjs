@@ -1,4 +1,5 @@
 const { contextBridge, ipcRenderer } = require("electron");
+const applyListeners = new Set();
 
 const channels = Object.freeze({ bootstrap: "app:bootstrap", chooseSave: "dialog:choose-save", chooseFile: "dialog:choose-file", setActiveSave: "context:set-active-save", clearActiveSave: "context:clear-active-save", updateTheme: "settings:update-theme", homeContext: "home:context", homeLines: "home:lines", chooseTeamArtwork: "settings:choose-team-artwork", clearTeamArtwork: "settings:clear-team-artwork", runTool: "tools:run", prepareTool: "tools:prepare", prepareEquipmentDonors: "equipment:prepare-donors", searchPreview: "tools:search-preview", listReports: "reports:list", listHistory: "history:list", getHistory: "history:get", getReview: "history:get-review", listLogs: "logs:list", clearLogs: "logs:clear", revealReport: "shell:reveal-report", openPath: "shell:open-path" });
 contextBridge.exposeInMainWorld("cfbToolkit", Object.freeze({
@@ -13,6 +14,12 @@ contextBridge.exposeInMainWorld("cfbToolkit", Object.freeze({
     ipcRenderer.on("updates:status-changed", listener);
     return () => ipcRenderer.removeListener("updates:status-changed", listener);
   },
+  onUpdatePrompt: callback => {
+    if(typeof callback!=="function")throw new TypeError("Update prompt listener must be a function.");
+    const listener=(_event,request)=>callback(request);ipcRenderer.on("updates:prompt-request",listener);
+    return ()=>ipcRenderer.removeListener("updates:prompt-request",listener);
+  },
+  respondUpdatePrompt: request=>ipcRenderer.invoke("updates:prompt-response",request),
   chooseSave: purpose => ipcRenderer.invoke(channels.chooseSave, purpose),
   chooseFile: () => ipcRenderer.invoke(channels.chooseFile),
   setActiveSave: value => ipcRenderer.invoke(channels.setActiveSave, value),
@@ -29,7 +36,12 @@ contextBridge.exposeInMainWorld("cfbToolkit", Object.freeze({
   saveCustomMatchupModel: model => ipcRenderer.invoke("settings:save-custom-matchup-model", model),
   chooseTeamArtwork: request => ipcRenderer.invoke(channels.chooseTeamArtwork, request),
   clearTeamArtwork: request => ipcRenderer.invoke(channels.clearTeamArtwork, request),
-  runTool: request => ipcRenderer.invoke(channels.runTool, request),
+  runTool: async request => {
+    const result = await ipcRenderer.invoke(channels.runTool, request);
+    if (request?.mode === 'apply' && result?.status === 'completed') for (const callback of applyListeners) { try { callback(); } catch {} }
+    return result;
+  },
+  onToolApplied: callback => { if (typeof callback !== 'function') throw new TypeError('Apply listener must be a function.'); applyListeners.add(callback); return () => applyListeners.delete(callback); },
   prepareTool: request => ipcRenderer.invoke(channels.prepareTool, request),
   prepareEquipmentDonors: request => ipcRenderer.invoke(channels.prepareEquipmentDonors, request),
   searchPreview: request => ipcRenderer.invoke(channels.searchPreview, request),

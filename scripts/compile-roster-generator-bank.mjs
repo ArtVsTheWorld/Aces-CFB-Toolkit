@@ -12,7 +12,7 @@ import {CATALOG_VERSION,RATING_FIELDS,CAP_FIELDS,PHYSICAL_FIELDS,MENTAL_FIELDS,M
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),[eaFile,...generatedFiles]=process.argv.slice(2);
 if(!eaFile||!generatedFiles.length)throw new Error('Usage: node scripts/compile-roster-generator-bank.mjs <2026 base dynasty> <2032 generated dynasty> [additional generated dynasty ...]');
-const digest=bytes=>createHash('sha256').update(bytes).digest('hex'),sources=[],profiles=[],appearances=[],styles=[],firstNames=new Set(),lastNames=new Set(),capValues=CAP_FIELDS.map(()=>[]),dropped=[],pitchObservations={};
+const digest=bytes=>createHash('sha256').update(bytes).digest('hex'),sources=[],profiles=[],appearances=[],styles=[],firstNames=new Set(),lastNames=new Set(),capValues=CAP_FIELDS.map(()=>[]),dropped=[],pitchObservations={},lastByTone={light:{},medium:{},dark:{}};
 for(const [sourceIndex,file]of [eaFile,...generatedFiles].entries()){
   const before=digest(fs.readFileSync(file)),opened=await openCfb27Save(file,path.join(root,'resources/engine-data/C27_486_6.gz'));
   const {players,teams,rosters,visuals,season}=await readTables(opened.franchise,{players:PLAYER_TABLE_UID,teams:TEAM_TABLE_UID,rosters:ROSTER_TABLE_UID,visuals:VISUALS_TABLE_UID,season:SEASON_INFO_TABLE_UID});
@@ -43,6 +43,7 @@ for(const [sourceIndex,file]of [eaFile,...generatedFiles].entries()){
       if(Object.hasOwn(raw,'skinTone')||Object.hasOwn(raw,'bodyType')||!loadouts?.length||loadouts.some(loadout=>!Array.isArray(loadout.loadoutElements))){dropped.push({id,reason:'Unexpected generic appearance representation'});continue;}
       const fields=Object.fromEntries(APPEARANCE_FIELDS.map(field=>[field,sf(player,field)]));
       if(Object.values(fields).some(value=>value===undefined))throw new Error('Generated portrait/body fields are not present in this schema.');
+      const tone=Number(/_(\d+)_\d+$/.exec(fields.GenericHeadAssetName)?.[1]),surname=String(sf(player,'LastName')).trim(),bucket=tone<=3?'light':tone===4?'medium':'dark';lastByTone[bucket][surname]=(lastByTone[bucket][surname]??0)+1;
       appearances.push({id,source:sourceIndex,firstToken:String(sf(player,'FirstName')).trim(),skinTone:Number(/_(\d+)_\d+$/.exec(fields.GenericHeadAssetName)?.[1])||null,position:profile.position,branding:String(sf(team,'TeamApparel')??'').trim().toLowerCase(),fields,loadouts});
     }
   }
@@ -51,7 +52,7 @@ for(const [sourceIndex,file]of [eaFile,...generatedFiles].entries()){
 const actualBounds=capValues.map(values=>[Math.min(...values),Math.max(...values)]);
 if(JSON.stringify(actualBounds)!==JSON.stringify(CAP_BOUNDS))throw new Error('Observed cap bounds changed; review rather than silently expanding generation limits.');
 const sourceFormulas=JSON.parse(fs.readFileSync(path.join(root,'docs/reference/CFB27_OVR_Formulas.json'),'utf8')).formulas;
-const catalog={version:CATALOG_VERSION,sources,capBounds:actualBounds,ratingFields:RATING_FIELDS,profiles,appearances,styles,names:{first:[...firstNames].sort(),last:[...lastNames].sort()},formulas:sourceFormulas.map(({position,playerType,intercept,coefficients,minimumOverall,maximumOverall})=>({position,playerType,intercept,coefficients,minimumOverall,maximumOverall})),evidence:{generatedAppearance:'Generic head/body/portrait and on-field equipment packages observed in the user-confirmed default simulated cohort. No source save blobs or original real-player identities are distributed.',weights:'All audited generated cohorts supply football, potential, appearance and same-head name variety. The 2032 cohort remains the development-distribution reference; EA observations retain the class/redshirt baseline and animation variety.',dropped}};
+const catalog={version:CATALOG_VERSION,sources,capBounds:actualBounds,ratingFields:RATING_FIELDS,profiles,appearances,styles,names:{first:[...firstNames].sort(),last:[...lastNames].sort(),lastByTone},formulas:sourceFormulas.map(({position,playerType,intercept,coefficients,minimumOverall,maximumOverall})=>({position,playerType,intercept,coefficients,minimumOverall,maximumOverall})),evidence:{generatedAppearance:'Generic head/body/portrait and on-field equipment packages observed in the user-confirmed default simulated cohort. No source save blobs or original real-player identities are distributed.',weights:'All audited generated cohorts supply football, potential, appearance and same-head name variety. The 2032 cohort remains the development-distribution reference; EA observations retain the class/redshirt baseline and animation variety.',dropped}};
 const bytes=Buffer.from(JSON.stringify(catalog)),destination=path.join(root,'src/main/tools/rosterGenerator/data/observed-v1.json.gz');
 fs.writeFileSync(path.join(root,'src/main/tools/dealbreaker/pitchObservations.json'),JSON.stringify({sources:sources.filter(source=>source.kind==='generated').map(source=>({id:source.id,sha256:source.sha256})),counts:pitchObservations},null,2)+'\n');
 fs.mkdirSync(path.dirname(destination),{recursive:true});fs.writeFileSync(destination,zlib.gzipSync(bytes,{level:9}));

@@ -29,7 +29,8 @@ test("v0.8 user-facing copy, themes, versions, review scope, and report schemas 
   assert.match(renderer, /Dynasty Operations Center/); assert.doesNotMatch(renderer, /Because the little details matter\./);
   assert.doesNotMatch(renderer, /\bCLI\b|command line|terminal|original script behavior/i);
   assert.match(settings, /theme: "light"/); assert.match(renderer, /theme-select/); assert.match(renderer, /On-screen previews display up to 1,000 rows/);
-  for (const version of ['id: "jersey-renumber"[^\n]+version: "4.0"', 'id: "freshman-equipment"[^\n]+version: "5.6"', 'id: "equipment-patcher"[^\n]+version: "6.0"', 'id: "automatic-force-win"[^\n]+version: "4.5"', 'id: "team-boost"[^\n]+version: "2.0"']) assert.match(registry, new RegExp(version));
+  for (const id of ["jersey-renumber", "freshman-equipment", "equipment-patcher", "automatic-force-win", "team-boost"]) assert.match(registry, new RegExp(`id: "${id}"`));
+  assert.doesNotMatch(registry, /version:/);
   assert.match(registry, /icon: "long-snap"/); assert.match(registry, /icon: "shield-check"/); assert.match(registry, /icon: "trophy"/);
   assert.match(renderer, /trophy: `<path/);
   assert.match(renderer, /"shield-check": `<path/);

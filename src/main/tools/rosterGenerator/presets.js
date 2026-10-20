@@ -25,18 +25,20 @@ export function rosterPreset(id='building-blocks') {
 // Downward calibration uses ability-free physical packages: unknown ability
 // thresholds must never be invented for a newly weakened rating vector.
 export function calibrateProfile(source,desired,formulas,{minimumRatings=null,maximumRatings=null}={}) {
+  const constrained=minimumRatings!==null,speedFloor=({WR:74,FS:74,SS:74,HB:75,CB:75,TE:68,FB:68,LOLB:70,MLB:70,ROLB:70,SAM:70,MIKE:70,WILL:70})[source.position]??1;
+  minimumRatings=RATING_FIELDS.map((field,i)=>Math.max(minimumRatings?.[i]??1,field==='SpeedRating'?speedFloor:1));
   const formula=formulas.get(`${source.position}|${source.archetype}`);
   const fields=new Set(Object.entries(formula.coefficients).filter(([,weight])=>weight>0).map(([field])=>field));
-  let best=null,low=minimumRatings?-99:source.physical.some(tier=>tier!=='None')?0:-99,high=99;
+  let best=null,low=constrained?-99:source.physical.some(tier=>tier!=='None')?0:-99,high=99;
   const evaluate=offset=>{
-    const ratings=source.ratings.map((value,i)=>fields.has(RATING_FIELDS[i])?Math.max(minimumRatings?.[i]??1,Math.min(maximumRatings?.[i]??99,value+offset)):value);
+    const ratings=source.ratings.map((value,i)=>Math.max(minimumRatings[i],Math.min(maximumRatings?.[i]??99,value+(fields.has(RATING_FIELDS[i])?offset:0))));
     const overall=calculateOverall({...source,ratings},formulas),distance=Math.abs(overall-desired);
     if(!best||distance<best.distance||distance===best.distance&&Math.abs(offset)<Math.abs(best.offset))best={ratings,overall,offset,distance};
     return overall;
   };
   // All tuned coefficients are positive, so this is monotonic and bounded.
   while(low<=high){const middle=Math.floor((low+high)/2);if(evaluate(middle)<desired)low=middle+1;else high=middle-1;}
-  evaluate(Math.max(minimumRatings?-99:source.physical.some(tier=>tier!=='None')?0:-99,Math.min(99,low)));
+  evaluate(Math.max(constrained?-99:source.physical.some(tier=>tier!=='None')?0:-99,Math.min(99,low)));
   return {...source,ratings:best.ratings,overall:best.overall,calibration:{offset:best.offset,observedOverall:source.overall,observedId:source.id}};
 }
 

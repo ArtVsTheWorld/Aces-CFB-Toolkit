@@ -12,8 +12,10 @@ import {RATING_FIELDS,CAP_FIELDS,PHYSICAL_FIELDS,MENTAL_FIELDS,MENTAL_RANK_FIELD
 import {calculateOverall} from './ratings.js';
 import {createRosterStrata} from './sampling.js';
 import {ATHLETICISM_PROFILES,athleticVariant,athleticProfilePool,appearancePoolForAthletics,appearancePoolForCaliber,potentialCandidates} from './athletics.js';
-import {surnameVariant,makeSurname,validSurname} from './names.js';
+import {surnameVariant,makeSurname,validSurname,observedSurnamePool} from './names.js';
 import {assignBackstories} from './backstories.js';
+import {roomRatingTargets} from './roomTargets.js';
+import {generatedRecruitStars} from './recruiting.js';
 
 const originalDealbreaker=target=>ALLOWED_DEALBREAKERS.includes(target.original.RecruitingDealbreaker)?target.original.RecruitingDealbreaker:'Invalid';
 const count=items=>{const out={};for(const item of items)out[item]=(out[item]??0)+1;return out;};
@@ -37,10 +39,11 @@ function selectAppearance(model,position,branding,rng,athleticProfile='balanced'
 function sampleNear(pool,target,rng){const nearby=pool.filter(profile=>Math.abs(profile.overall-target)<=2);if(nearby.length)return choose(nearby,rng);const distance=Math.min(...pool.map(profile=>Math.abs(profile.overall-target)));return choose(pool.filter(profile=>Math.abs(profile.overall-target)===distance),rng);}
 function solveFootballProfiles(targets,model,seed,preset) {
   const strata=createRosterStrata(targets,model,seed);
+  const roomTargets=new Map();for(const position of new Set(targets.map(t=>t.position))){const room=targets.filter(t=>t.position===position),average=model.talentTargets?.[positionGroup(position)]??preset.targetAverage;for(const [row,target]of roomRatingTargets(room,average,preset.spread,stream(seed,`room:${position}`)))roomTargets.set(row,target);}
   const selected=targets.map(target=>{
     const pool=model.byPosition.get(target.position)??[],generated=pool.filter(isGeneratedProfile),base=generated.length?generated:pool,stratum=strata?.byRow.get(target.row),effectiveBase=stratum?base.filter(profile=>profile.classYear===stratum.classYear&&profile.redshirt===stratum.redshirt):base,athleticProfile=model.observedById?weightedChoice(ATHLETICISM_PROFILES,profile=>profile.weight,stream(seed,`athletic:${target.row}`)).id:'balanced',effective=athleticProfilePool(effectiveBase,athleticProfile).map(profile=>athleticVariant(model,profile,athleticProfile));
     if(!effective.length)throw new Error(`No observed football profiles for ${target.position}.`);
-    const rng=stream(seed,`football:${target.row}`),desired=boundedNormal(model.talentTargets?.[positionGroup(target.position)]??preset.targetAverage,preset.spread,30,99,rng);
+    const rng=stream(seed,`football:${target.row}`),desired=roomTargets.get(target.row);
     const settings=model.settings??normalizeGenerationSettings(),scheme=['QB','HB','FB','WR','TE','OL'].includes(positionGroup(target.position))?settings.offensiveScheme:settings.defensiveScheme;
     const archetypes=[...new Set(effective.map(profile=>profile.archetype))],archetype=scheme==='random'?null:weightedChoice(archetypes,type=>effective.filter(profile=>profile.archetype===type).length*archetypeWeight(target.position,type,settings),rng);
     const profile=sampleNear(archetype?effective.filter(profile=>profile.archetype===archetype):effective,desired,rng);
@@ -67,10 +70,10 @@ function solveFootballProfiles(targets,model,seed,preset) {
   return {selected,strata,iterations,targetSum,actualSum:sum,reachableMinimum:mean(selected.map(item=>Math.min(...item.pool.map(profile=>profile.overall)))),reachableMaximum:mean(selected.map(item=>Math.max(...item.pool.map(profile=>profile.overall))))};
 }
 
-function generateName(names,unavailable,rng,preferredFirst){
-  const first=(preferredFirst?.length?(Array.isArray(preferredFirst)?preferredFirst:[preferredFirst]):names.first).filter(name=>name&&Buffer.byteLength(name,'utf8')<=17),last=names.last.filter(name=>name&&Buffer.byteLength(name,'utf8')<=21),variant=surnameVariant(last,rng);
+function generateName(names,unavailable,rng,preferredFirst,surnamePool){
+  const first=(preferredFirst?.length?(Array.isArray(preferredFirst)?preferredFirst:[preferredFirst]):names.first).filter(name=>name&&Buffer.byteLength(name,'utf8')<=17),last=surnamePool?.counts?surnamePool.names:(surnamePool?.names??names.last).filter(name=>name&&Buffer.byteLength(name,'utf8')<=21),variant=surnameVariant(last,rng);
   if(!first.length||!last.length)throw new Error('No names fit the supported schema lengths.');
-  for(let attempt=0;attempt<500;attempt++){const surname=makeSurname(last,rng,variant);if(!surname)break;const f=choose(first,rng),key=normalizedName(f+' '+surname.value);if(!unavailable.has(key)){unavailable.add(key);return[f,surname.value,{parts:surname.parts,suffix:surname.suffix}];}}
+  for(let attempt=0;attempt<500;attempt++){const surname=makeSurname(last,rng,variant,surnamePool?.counts);if(!surname)break;const f=choose(first,rng),key=normalizedName(f+' '+surname.value);if(!unavailable.has(key)){unavailable.add(key);return[f,surname.value,{parts:surname.parts,suffix:surname.suffix,pool:surnamePool?.bucket??'legacy'}];}}
   for(const f of first)for(const l of last){const value=l+(variant.suffix?' '+variant.suffix:'');if(variant.hyphen||Buffer.byteLength(value,'utf8')>21)continue;const key=normalizedName(f+' '+value);if(!unavailable.has(key)){unavailable.add(key);return[f,value,{parts:[l],suffix:variant.suffix}];}}
   throw new Error('The available name combinations are exhausted.');
 }
@@ -78,7 +81,9 @@ function generateName(names,unavailable,rng,preferredFirst){
 export function buildAppearancePreview(originalRaw,appearance,branding) {
   const parsed=typeof originalRaw==='string'?JSON.parse(originalRaw):structuredClone(originalRaw);
   if(!parsed||!Array.isArray(parsed.loadouts))throw new Error('Target has no valid appearance loadouts.');
-  const unknownLayers=parsed.loadouts.filter(loadout=>loadout.loadoutType!=='PlayerOnField'&&!(loadout.loadoutCategory==='Base'&&Object.keys(loadout).length===1)).map(loadout=>loadout.loadoutType??'[missing type]');
+  const tattooSlots=new Map([['LeftArmTattoo','ArmTattoo_None'],['RightArmTattoo','ArmTattoo_None'],['LeftLegTattoo','LegTattoo_None'],['RightLegTattoo','LegTattoo_None']]);
+  const knownBase=loadout=>loadout.loadoutCategory==='Base'&&Object.keys(loadout).every(key=>['loadoutCategory','loadoutElements'].includes(key))&&(!loadout.loadoutElements||Array.isArray(loadout.loadoutElements)&&loadout.loadoutElements.every(item=>tattooSlots.has(item.slotType)&&typeof item.itemAssetName==='string'&&/^(ArmTattoo|LegTattoo)_/.test(item.itemAssetName)&&Object.keys(item).every(key=>['itemAssetName','slotType'].includes(key))));
+  const unknownLayers=parsed.loadouts.filter(loadout=>loadout.loadoutType!=='PlayerOnField'&&!knownBase(loadout)).map(loadout=>loadout.loadoutType??loadout.loadoutCategory??'[missing type]');
   const source=structuredClone(appearance.loadouts),brandCorrections=guardBrandEquipment(source,{branding},[]).filter(change=>change.oldItem!==change.newItem),compatibility=[];
   for(const loadout of source)compatibility.push(...enforceEquipmentCompatibility(loadout.loadoutElements));
   for(const loadout of source)for(const element of loadout.loadoutElements){if(BRAND_SLOTS.has(element.slotType)&&!/(?:^|_)None$/.test(element.itemAssetName)&&!isBrandCompatibleItem(element.slotType,element.itemAssetName,branding))throw new Error(`Unverified brand-sensitive generated item ${element.itemAssetName}.`);}
@@ -86,7 +91,7 @@ export function buildAppearancePreview(originalRaw,appearance,branding) {
   // build here would conflict with the newly selected generic appearance.
   const removedOverrides=['skinTone','bodyType','jerseyName'].filter(key=>Object.hasOwn(parsed,key));for(const key of removedOverrides)delete parsed[key];
   const loadouts=[];let inserted=false;
-  for(const loadout of parsed.loadouts){if(loadout.loadoutType==='PlayerOnField'){if(!inserted){loadouts.push(...source);inserted=true;}}else loadouts.push(loadout);}
+  for(const loadout of parsed.loadouts){if(loadout.loadoutType==='PlayerOnField'){if(!inserted){loadouts.push(...source);inserted=true;}}else loadouts.push(knownBase(loadout)&&loadout.loadoutElements?{...loadout,loadoutElements:loadout.loadoutElements.map(item=>({...item,itemAssetName:tattooSlots.get(item.slotType)}))}:loadout);}
   if(!inserted)throw new Error('Target has no PlayerOnField loadout.');parsed.loadouts=loadouts;
   return {raw:JSON.stringify(parsed),removedOverrides,unknownLayers,brandCorrections,compatibility};
 }
@@ -99,10 +104,11 @@ export function generateRosterPreview({team,targets,model,seed=1,preset=BUILDING
   const presentations=rosterPresentations(ordered,seed,reservedPresentationIds);
   const players=solved.selected.map(item=>{
     const {target,profile}=item,rng=stream(seed,`appearance:${target.row}`),selectedAppearance=selectAppearance(model,target.position,team.branding,rng,item.athleticProfile,preset.id),{appearance,sameBrand,tone,outlierSize}=selectedAppearance;
-    const [firstName,lastName,surname]=generateName(model.catalog.names,names,stream(seed,`name:${target.row}`),observedFirstNames(model.catalog,appearance));
+    const [firstName,lastName,surname]=generateName(model.catalog.names,names,stream(seed,`name:${target.row}`),observedFirstNames(model.catalog,appearance),observedSurnamePool(model.catalog,appearance));
     const potential=model.potentialByPosition?choose(potentialCandidates(model,target.position,profile.archetype,item.development),stream(seed,`potential:${target.row}`)):profile;
     const matched=matchCommentary(firstName,lastName),sameTypeStyles=model.catalog.styles.filter(candidate=>candidate.source===0&&candidate.position===target.position&&candidate.archetype===profile.archetype),samePositionStyles=model.catalog.styles.filter(candidate=>candidate.position===target.position),style=choose(sameTypeStyles.length?sameTypeStyles:samePositionStyles,stream(seed,`style:${target.row}`));
     const fields={...observedPlayerState(profile),PresentationId:presentations.get(target.row),FirstName:firstName,LastName:lastName,IsNIL:false,PLYR_ASSETNAME:presentationAssetName(firstName,lastName,presentations.get(target.row)),PLYR_COMMENT:matched.id,PlayerType:profile.archetype,SchoolYear:profile.classYear,RedshirtStatus:profile.redshirt,TraitDevelopment:potential.development,OverallRating:profile.overall,ExperiencePoints:profile.progression[0],SkillPoints:profile.progression[1],Personality:profile.personality,RecruitingDealbreaker:originalDealbreaker(target),...Object.fromEntries(RATING_FIELDS.map((field,i)=>[field,profile.ratings[i]])),...Object.fromEntries(CAP_FIELDS.map((field,i)=>[field,potential.caps[i]])),...Object.fromEntries(PHYSICAL_FIELDS.map((field,i)=>[field,profile.physical[i]])),...Object.fromEntries(MENTAL_FIELDS.map((field,i)=>[field,profile.mental[i][0]])),...Object.fromEntries(MENTAL_RANK_FIELDS.map((field,i)=>[field,profile.mental[i][1]])),...Object.fromEntries(STYLE_FIELDS.map((field,i)=>[field,style.values[i]])),...Object.fromEntries(APPEARANCE_FIELDS.map(field=>[field,appearance.fields[field]]))};
+    fields.ProspectStarRating=generatedRecruitStars(fields,seed,target.row);
     validateProposedFields(fields);
     if(Object.values(fields).some(value=>value===undefined))throw new Error('Generated profile is missing a required field.');
     const visual=buildAppearancePreview(target.rawData,appearance,team.branding),fallbacks=[...item.fallbacks];
@@ -120,7 +126,7 @@ export function generateRosterPreview({team,targets,model,seed=1,preset=BUILDING
   for(const player of players){validateProposedFields(player.fields);player.changes=Object.entries(player.fields).filter(([field,value])=>JSON.stringify(value)!==JSON.stringify(player.before[field])).map(([field,newValue])=>({field,oldValue:player.before[field],newValue}));}
   const oldAverage=mean(players.map(player=>player.before.OverallRating)),newAverage=mean(players.map(player=>player.fields.OverallRating)),targetAchieved=newAverage>=preset.minimumAverage&&newAverage<=preset.maximumAverage;
   if(!targetAchieved)blocking.push({reason:'This mix could not reach the target average using valid player profiles. Reduce extreme position-strength settings or generate another preview.',reachableMinimum:solved.reachableMinimum,reachableMaximum:solved.reachableMaximum});
-  warnings.push('The OVR target is the average across your roster, not the game’s team rating.','Existing statistics, awards, depth charts and roster links are kept. Reorder your depth chart in-game after applying the new roster. Test a copied save in-game before continuing.');
+  warnings.push('The OVR target is the average across your roster, not the game’s team rating.','Existing statistics, awards and roster links are kept. Review the depth-chart summary before Apply. Test a copied save in-game before continuing.');
   const deviations=Object.entries(model.talentTargets??{}).filter(([group,target])=>Math.abs(mean(players.filter(player=>positionGroup(player.position)===group).map(player=>player.fields.OverallRating))-target)>1);
   if(deviations.length)warnings.push(`Some position targets could not be reached exactly using valid player profiles: ${deviations.map(([group])=>group).join(', ')}. The team-average target still applies.`);
   const nilReplacements=players.filter(player=>player.before.IsNIL===true).length;if(nilReplacements)warnings.push(`${nilReplacements} NIL players will be replaced. Apply asks you to confirm first.`);
@@ -140,6 +146,7 @@ export function validateRosterPreview(preview,targets,model,equipmentGenerator=n
     const target=byRow.get(player.row),base=model.byId.get(player.provenance.football),source=base?athleticVariant(model,base,player.provenance.athleticProfile??'balanced'):null,potential=(model.potentialById??model.byId).get(player.provenance.potential??player.provenance.football);if(!target||target.position!==player.position||!source||source.position!==player.position)throw new Error('Roster position or source evidence changed.');
     if(player.visualRow!==target.visualRow||player.beforeRawData!==target.rawData||WRITE_FIELDS.some(field=>player.before[field]!==target.original[field]))throw new Error('Original player/appearance evidence changed.');
     validateProposedFields(player.fields);validateFootballProfile(source);
+    if(player.fields.ProspectStarRating!==generatedRecruitStars(player.fields,preview.seed,player.row))throw new Error('Recruiting stars differ from the validated generation plan.');
     const stratum=strata?.byRow.get(player.row);if(stratum&&(player.fields.SchoolYear!==stratum.classYear||player.fields.RedshirtStatus!==stratum.redshirt||player.fields.TraitDevelopment!==stratum.development))throw new Error('Generated class/development differs from its planned distribution.');
     if(WRITE_FIELDS.some(field=>!Object.hasOwn(player.fields,field)))throw new Error('Generated profile has missing fields.');
     const vector=RATING_FIELDS.map(field=>player.fields[field]);if(JSON.stringify(vector)!==JSON.stringify(source.ratings.map((value,i)=>RATING_FIELDS[i]==='LongSnapRating'?finished.get(player.row).LongSnapRating:value))||player.fields.PlayerType!==source.archetype||calculateOverall(source,model.formulas)!==player.fields.OverallRating)throw new Error('Rating/archetype profile no longer matches its observed package.');
@@ -155,6 +162,7 @@ export function validateRosterPreview(preview,targets,model,equipmentGenerator=n
     if(!style||style.position!==player.position||STYLE_FIELDS.some((field,i)=>player.fields[field]!==style.values[i]))throw new Error('Animation package differs from its observed position.');
     if(player.fields.Personality!==source.personality||player.fields.IsNIL!==false||player.fields.PresentationId!==presentations.get(player.row)||player.fields.PLYR_ASSETNAME!==presentationAssetName(player.fields.FirstName,player.fields.LastName,presentations.get(player.row))||!Number.isSafeInteger(player.fields.PLYR_COMMENT)||player.fields.PLYR_COMMENT<0)throw new Error('Invalid generated identity/personality fields.');
     if(!observedFirstNames(model.catalog,appearance).includes(player.fields.FirstName)&&appearance.firstToken)throw new Error('First name differs from its observed same-head name pool.');
+    const surnamePool=observedSurnamePool(model.catalog,appearance);if(!player.provenance.surname.parts.every(name=>surnamePool.names.includes(name)))throw new Error('Surname differs from the observed appearance name pool.');
     if(!model.catalog.names.first.includes(player.fields.FirstName)||!validSurname(player.fields.LastName,player.provenance.surname,model.catalog.names.last)||Buffer.byteLength(player.fields.FirstName,'utf8')>17||Buffer.byteLength(player.fields.LastName,'utf8')>21)throw new Error('Generated name is not supported by the observed dictionary/schema.');
     if([...Object.keys(observedPlayerState(source)),'LongSnapRating','RecruitingDealbreaker','JerseyNum'].some(field=>player.fields[field]!==finished.get(player.row)[field]))throw new Error('Generated finishing passes do not match the validated Standard jersey/long-snap/dealbreaker plan.');
     const name=normalizedName(`${player.fields.FirstName} ${player.fields.LastName}`);if(names.has(name))throw new Error('Duplicate generated name.');names.add(name);

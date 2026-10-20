@@ -35,10 +35,10 @@ const player = (row, position = "WR", visualRow = row, teamIndex = 1) => ({
 const tattooedCount = visuals => visuals.filter(item => hasUnlockedBodyTattoo(JSON.parse(item.RawData))).length;
 const activeRows = count => new Set(Array.from({ length: count }, (_, row) => row));
 
-test("CFB27 Unlocked tattoos are disabled by default with a validated 33% cap", () => {
+test("CFB27 Unlocked tattoos are disabled by default with a validated 40% cap", () => {
   const defaults = normalizeEquipmentOptions({}, false);
   assert.equal(defaults.unlockedTattooFix, false);
-  assert.equal(defaults.unlockedTattooCap, 33);
+  assert.equal(defaults.unlockedTattooCap, 40);
   assert.equal(normalizeEquipmentOptions({ unlockedTattooFix: true, unlockedTattooCap: 25 }, false).unlockedTattooCap, 25);
   assert.throws(() => normalizeEquipmentOptions({ unlockedTattooCap: 15.5 }, false), /whole percentage/);
   assert.throws(() => normalizeEquipmentOptions({ unlockedTattooCap: 101 }, false), /whole percentage/);
@@ -208,19 +208,21 @@ test("arm tattoos dominate, combined arm-and-leg tattoos occur, and both arms ca
   assert.ok(counts.asymmetrical > 200);
 });
 
-test("tattoos preserve sleeve colors and avoid fully covered arms", () => {
+test("tattoos can be assigned under full sleeves without changing either sleeve", () => {
   const parsed = { loadouts: [onField()] };
   const gear = parsed.loadouts[0].loadoutElements;
   gear.find(element => element.slotType === "LeftArmWear").itemAssetName = "GearArmSleeve_NikeProDriFitSleeve_TeamColor";
-  gear.find(element => element.slotType === "RightArmWear").itemAssetName = "ArmSleeve_None";
+  gear.find(element => element.slotType === "RightArmWear").itemAssetName = "GearArmSleeve_Full_Black";
   const before = structuredClone(gear);
   let state = 2;
   const rng = () => { state = (Math.imul(state, 1664525) + 1013904223) >>> 0; return state / 0x100000000; };
+  let left=0,both=0;
   for (let index = 0; index < 100; index += 1) {
     const plan = rollUnlockedTattoo(rng, parsed);
-    assert.equal(plan.arms.left, undefined);
-    assert.ok(plan.kind === "leg" || plan.arms.right);
+    if(plan.arms.left)left++;if(plan.arms.left&&plan.arms.right)both++;
+    assert.ok(plan.kind === "leg" || plan.arms.left || plan.arms.right);
   }
+  assert.ok(left>0&&both>0);
   applyUnlockedTattooPlan(parsed, { kind: "arm", arms: { right: { asset: "CujoMatty_ArmTats_35", label: "Arm Tattoo 35" } }, legs: null });
   assert.deepEqual(parsed.loadouts.find(loadout => loadout.loadoutType === "PlayerOnField").loadoutElements, before);
 });
@@ -260,8 +262,8 @@ test("leg tattoos use both tattoo slots, preserve socks, and retain bare legs", 
 test("tattoo option is user-visible, off by default, and included in review/help text", () => {
   const renderer = fs.readFileSync(new URL("../src/renderer/renderer.js", import.meta.url), "utf8");
   assert.match(renderer, /optionalPass\("fix-unlocked-tattoos", "Add Tattoos"/);
-  assert.match(renderer, /id="unlocked-tattoo-cap"[^>]+value="33"/);
+  assert.match(renderer, /id="unlocked-tattoo-cap"[^>]+value="40"/);
   assert.match(renderer, /Existing sleeves and tattoos are preserved/);
-  assert.match(renderer, /FBS and directional FCS populations are capped separately/);
+  assert.match(renderer, /Each team is capped separately/);
   assert.match(renderer, /Requires CFB27 Unlocked/);
 });

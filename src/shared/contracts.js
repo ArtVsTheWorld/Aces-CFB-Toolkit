@@ -5,6 +5,7 @@ export const IPC = Object.freeze({
   downloadUpdate: "updates:download",
   installUpdate: "updates:install",
   updateStatus: "updates:status-changed",
+  respondUpdatePrompt: "updates:prompt-response",
   chooseSave: "dialog:choose-save",
   chooseFile: "dialog:choose-file",
   setActiveSave: "context:set-active-save",

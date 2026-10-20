@@ -40,7 +40,8 @@ test("the expanded randomizer uses an exact 10% roll and prefers branded team-co
   const loadouts = [loadout([])];
   const changes = applyUnlockedRandomizerEquipment(loadouts, { position: "DT", branding: "nike" }, () => 0, 0.10);
   const slots = new Map(loadouts[0].loadoutElements.map(element => [element.slotType, element.itemAssetName]));
-  assert.equal(changes.length, 11, "the new Unlocked sock category adds one correction alongside the existing categories");
+  assert.equal(changes.length, 11, "Irish Jamo undershirts are opt-in, even for legacy callers");
+  assert.equal(slots.has("InnerShirt"), false);
   assert.equal(slots.get("InnerSocks"), "Socks_CrewCut");
   assert.equal(slots.get("FaceWear"), undefined, "the generated turtleneck excludes a second neck/head layer");
   assert.ok(slots.has("NeckWear"));
@@ -105,5 +106,5 @@ test("Unlocked Equipment Pool and No Drip options are separate and disabled by d
   assert.match(renderer, /optionalPass\("equipment-unlocked", "Unlocked Equipment Pool"/);
   assert.match(renderer, /Adds extra accessories, additional cleats, rubber bands, double\/elbow sleeves, compression-leg layers, branded turtlenecks and mouthpieces, normal balaclavas, thigh pads, a string towel, and 13 custom facepaint styles from CFB27 Unlocked/);
   assert.match(renderer, /optionalPass\("fix-unlocked-mouthpieces"/); assert.match(renderer, /optionalPass\("fix-unlocked-recolor"/);
-  assert.equal(tools.find(tool => tool.id === "freshman-equipment").version, "5.6"); assert.equal(tools.find(tool => tool.id === "equipment-patcher").version, "6.0");
+  assert.equal(tools.find(tool => tool.id === "freshman-equipment").version, undefined); assert.equal(tools.find(tool => tool.id === "equipment-patcher").version, undefined);
 });

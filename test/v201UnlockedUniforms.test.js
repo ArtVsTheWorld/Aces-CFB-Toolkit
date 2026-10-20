@@ -39,6 +39,13 @@ test("lower jersey replaces exactly the two requested styles and only OuterShirt
   assert.equal(visuals[2].RawData, before[2].RawData); assert.equal(result.lowerJerseyChanges.length, 2);
   for (const index of [0, 1]) { const expected = JSON.parse(before[index].RawData); expected.loadouts[0].loadoutElements[0].itemAssetName = get(visuals[index], "OuterShirt"); assert.deepEqual(JSON.parse(visuals[index].RawData), expected); }
 });
+
+test("rolled undershirts precede lower jerseys, then cutoff pants, then recolor",()=>{
+  const players=[{...player(0),CharacterBodyType:'Thin'}],visuals=[visual(outfit('Gear_JerseyStyle_RolledLow','GearPants_AboveKnee','BottomBase_None','Undershirt_None'))];
+  const result=run(players,visuals,{rolledJerseyFix:true,undershirtColor:'black',lowerRolledJerseyFix:true,cutoffPantsFix:true,cutoffPantsCaps:caps(100),unlockedRecolorFix:true,unlockedColorTheme:'white',teamNames:new Map([[1,'San Jose State']])});
+  assert.equal(get(visuals[0],'OuterShirt'),'Gear_JerseyStyle_RolledLowest_Untucked');assert.equal(get(visuals[0],'OuterPants'),CUTOFF_PANTS);assert.equal(get(visuals[0],'InnerShirt'),'Gear_Undershirt_CompressionTCrewSleeveless_White');assert.equal(result.rolledJerseyChanges.length,1);assert.equal(result.lowerJerseyChanges.length,1);assert.equal(result.cutoffPantsChanges.length,1);assert.ok(result.unlockedRecolorChanges.length);
+  const source=fs.readFileSync(new URL('../src/main/tools/equipment/core/globalFixes.js',import.meta.url),'utf8');assert.ok(source.indexOf('if (rolledJerseyFix)')<source.indexOf('const uniformChanges ='));assert.ok(source.indexOf('const uniformChanges =')<source.indexOf('const recolorTeams ='));assert.ok(source.indexOf('const recolorTeams =')<source.indexOf('// Tattoos are the last correction'));
+});
 test("caps count existing items, protect players, separate cohorts, and select deterministically", () => {
   const entries = Array.from({ length: 200 }, (_, index) => ({ visualsRow: index, position: index % 2 ? "WR" : "CB", cohort: index < 100 ? "fbs" : "fcs", editable: index % 9 !== 0, raw: raw(outfit(index % 10 === 1 ? "Gear_JerseyStyle_RolledLowest_Untucked" : "Gear_JerseyStyle_RolledLow")) }));
   const options = { lowerRolledJerseyFix: true, lowerJerseyCaps: caps(30), cutoffPantsFix: true, cutoffPantsCaps: caps(10) };

@@ -14,6 +14,13 @@ const coverage = asset => {
 export function generatedItemConflict(elements, item, slots = item.slots, position = "") {
   if (!canGenerateItem(item)) return "Item is not eligible for pool generation";
   const semantic = item.semantic;
+  if (semantic.actualType === "wrist-tape") {
+    for (const slot of slots) {
+      const side = slot.startsWith("Left") ? "Left" : "Right";
+      if (armAccessoryRestrictions(get(elements, `${side}ArmWear`), item.itemName, get(elements, "InnerShirt")).wrist || coverage(get(elements, "InnerShirt")).includes("wrist") || coverage(get(elements, "OuterShirt")).includes("wrist")) return "Sleeve covers the wrist tape";
+      if (equipmentSemantics(get(elements, `${side}ElbowWear`))?.bodyRegion === "wrist") return "Existing elbow-slot wrist accessory occupies this region";
+    }
+  }
   if (slots.includes("InnerPants") && uniformItem(elements, "OuterPants") === CUTOFF_PANTS) {
     const proposed = elements.filter(element => element.slotType !== "InnerPants").concat({ slotType: "InnerPants", itemAssetName: item.itemName });
     if (cutoffPantsConflict(proposed)) return "Leg base layers cannot be added with cutoff pants";

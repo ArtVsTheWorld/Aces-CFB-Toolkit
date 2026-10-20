@@ -1,12 +1,27 @@
 function checkboxPicker(id, label, values, helper, defaults = []) {
+  const labelOf=value=>String(value.label??value.name??value);
+  if(/classes|class-year/i.test(id))values=[...values].sort((a,b)=>classYearCompare(labelOf(a),labelOf(b)));
+  else if(/positions/i.test(id))values=[...values].sort((a,b)=>positionCompare(a.value??a,b.value??b));
   const selectedValues = new Set(defaults.map(String)), grouped = id === "equipment-donor-players" || values.length > 200 && values.some(value => value.position);
   const options = values.map((value, order) => ({ value: String(value.value ?? value.name ?? value), label: String(value.label ?? value.name ?? value), group: grouped ? localizedPosition(value.position ?? "Unknown") : "", section: id === "unlocked-tattoo-pool" ? String(value.group ?? "") : "", order, overall: grouped && value.overall !== null && Number.isFinite(Number(value.overall)) ? Number(value.overall) : null }));
   const groups = [...new Set(options.map(option => option.group).filter(Boolean))].sort(positionCompare);
   const sorting = grouped ? `<label class="donor-sort-control" for="equipment-player-sort">Sort<select id="equipment-player-sort" data-option-sort><option value="default">Default Order</option><option value="overall">Overall (Highest First)</option></select></label>` : "";
-  const rows = options.map((option, index) => `${option.section && options[index - 1]?.section !== option.section ? `<strong class="tattoo-pool-heading" data-option-section="${escapeHtml(option.section)}">${escapeHtml(option.section)}</strong>` : ""}<label class="team-picker-row option-picker-row" data-option-row data-position="${escapeHtml(option.group)}" data-option-order="${option.order}" data-overall="${option.overall ?? ""}" data-section="${escapeHtml(option.section)}" data-search="${escapeHtml(`${option.label} ${option.value}`.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""))}"><input type="checkbox" data-option-choice value="${escapeHtml(option.value)}" ${selectedValues.has(option.value) ? "checked" : ""}><span>${escapeHtml(option.label)}</span></label>`).join("");
-  return `<div class="team-picker option-picker${grouped ? " donor-player-picker" : ""}" data-option-picker="${id}" data-option-group="${escapeHtml(groups[0] ?? "")}"><label data-multi-label-for="${id}" data-base-label="${escapeHtml(label)}" data-empty-meaning="${multiSelectEmptyMeaning(id)}">${escapeHtml(label)}</label>${grouped ? `<div class="option-position-tabs" role="group" aria-label="Player Position">${groups.map(group => `<button type="button" class="button secondary tiny" data-option-position="${escapeHtml(group)}"><strong>${escapeHtml(group)}</strong><span></span></button>`).join("")}</div><p class="muted">Switch position groups to choose players. Checked players stay selected across positions.</p>` : ""}<div class="team-picker-toolbar"><input class="input" data-option-search placeholder="Search ${grouped ? "this position" : escapeHtml(label.toLowerCase())}…" aria-label="Search ${escapeHtml(label)}">${sorting}<button type="button" class="button secondary tiny" data-option-all>${grouped ? "Select position" : "All"}</button><button type="button" class="button secondary tiny" data-option-clear>${grouped ? "Clear position" : "Clear"}</button></div><div class="team-picker-summary" data-option-summary></div><div class="team-picker-list option-picker-list" role="group" aria-label="${escapeHtml(label)}">${rows}</div><div class="empty option-picker-empty" hidden>No options match this search.</div><select id="${id}" class="team-picker-source" multiple hidden aria-hidden="true" tabindex="-1">${options.map(option => `<option value="${escapeHtml(option.value)}" ${selectedValues.has(option.value) ? "selected" : ""}>${escapeHtml(option.label)}</option>`).join("")}</select><p class="muted">${helper} Click a checkbox to select or deselect. ${grouped ? "Shift-click another player to select or deselect the players in between. Search and bulk buttons apply to the current position." : ""}</p></div>`;
+  const lazy = /^(?:commentary|boost)-players$/.test(id) && options.length > 200;
+  const rows = (lazy ? [] : options).map((option, index) => `${option.section && options[index - 1]?.section !== option.section ? `<strong class="tattoo-pool-heading" data-option-section="${escapeHtml(option.section)}">${escapeHtml(option.section)}</strong>` : ""}<label class="team-picker-row option-picker-row" data-option-row data-position="${escapeHtml(option.group)}" data-option-order="${option.order}" data-overall="${option.overall ?? ""}" data-section="${escapeHtml(option.section)}" data-search="${escapeHtml(`${option.label} ${option.value}`.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""))}"><input type="checkbox" data-option-choice value="${escapeHtml(option.value)}" ${selectedValues.has(option.value) ? "checked" : ""}><span>${escapeHtml(option.label)}</span></label>`).join("");
+  return `<div class="team-picker option-picker${grouped ? " donor-player-picker" : ""}" data-option-picker="${id}"${lazy ? ' data-lazy-options="true"' : ''} data-option-group="${escapeHtml(groups[0] ?? "")}"><label data-multi-label-for="${id}" data-base-label="${escapeHtml(label)}" data-empty-meaning="${multiSelectEmptyMeaning(id)}">${escapeHtml(label)}</label>${grouped ? `<div class="option-position-tabs" role="group" aria-label="Player Position">${groups.map(group => `<button type="button" class="button secondary tiny" data-option-position="${escapeHtml(group)}"><strong>${escapeHtml(group)}</strong><span></span></button>`).join("")}</div><p class="muted">Switch position groups to choose players. Checked players stay selected across positions.</p>` : ""}<div class="team-picker-toolbar"><input class="input" data-option-search placeholder="Search ${grouped ? "this position" : escapeHtml(label.toLowerCase())}…" aria-label="Search ${escapeHtml(label)}">${sorting}<button type="button" class="button secondary tiny" data-option-all>${grouped ? "Select position" : "All"}</button><button type="button" class="button secondary tiny" data-option-clear>${grouped ? "Clear position" : "Clear"}</button></div><div class="team-picker-summary" data-option-summary></div><div class="team-picker-list option-picker-list" role="group" aria-label="${escapeHtml(label)}">${rows}</div>${lazy ? `<input type="hidden" data-lazy-option-catalog value="${escapeHtml(JSON.stringify(options))}">` : ""}<div class="empty option-picker-empty" hidden>No options match this search.</div><select id="${id}" class="team-picker-source" multiple hidden aria-hidden="true" tabindex="-1">${options.map(option => `<option value="${escapeHtml(option.value)}" ${selectedValues.has(option.value) ? "selected" : ""}>${escapeHtml(option.label)}</option>`).join("")}</select><p class="muted">${helper} Click a checkbox to select or deselect. ${grouped ? "Shift-click another player to select or deselect the players in between. Search and bulk buttons apply to the current position." : ""}</p></div>`;
 }
 
+const lazyOptionCatalogs = new WeakMap();
+function lazyOptionCatalog(shell) {
+  if (!lazyOptionCatalogs.has(shell)) lazyOptionCatalogs.set(shell, JSON.parse(shell.querySelector('[data-lazy-option-catalog]').value));
+  return lazyOptionCatalogs.get(shell);
+}
+function renderLazyOptions(shell) {
+  if (shell.dataset.lazyOptions !== 'true') return;
+  const selected = new Set([...shell.querySelector('select[multiple]').selectedOptions].map(option => option.value));
+  const rows = lazyOptionCatalog(shell).filter(option => option.group === shell.dataset.optionGroup);
+  shell.querySelector('.option-picker-list').innerHTML = rows.map(option => `<label class="team-picker-row option-picker-row" data-option-row data-position="${escapeHtml(option.group)}" data-option-order="${option.order}" data-overall="${option.overall ?? ''}" data-section="" data-search="${escapeHtml((option.label+' '+option.value).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''))}"><input type="checkbox" data-option-choice value="${escapeHtml(option.value)}" ${selected.has(option.value)?'checked':''}><span>${escapeHtml(option.label)}</span></label>`).join('');
+}
 function donorRowCompare(left, right, mode) {
   const overall = row => row.dataset.overall !== "" && Number.isFinite(Number(row.dataset.overall)) ? Number(row.dataset.overall) : -Infinity;
   if (mode === "overall" && overall(left) !== overall(right)) return overall(left) > overall(right) ? -1 : 1;
@@ -31,7 +46,7 @@ function syncCheckboxPicker(shell) {
   const select = shell.querySelector("select[multiple]"), chosen = new Set([...select.selectedOptions].map(option => option.value));
   shell.querySelectorAll("[data-option-choice]").forEach(input => input.checked = chosen.has(input.value));
   shell.querySelectorAll("[data-option-position]").forEach(button => {
-    const group = button.dataset.optionPosition, inputs = [...shell.querySelectorAll("[data-option-row]")].filter(row => row.dataset.position === group).map(row => row.querySelector("input"));
+    const group = button.dataset.optionPosition, inputs = shell.dataset.lazyOptions === 'true' ? lazyOptionCatalog(shell).filter(option => option.group === group).map(option => ({ checked: chosen.has(option.value) })) : [...shell.querySelectorAll("[data-option-row]")].filter(row => row.dataset.position === group).map(row => row.querySelector("input"));
     button.setAttribute("aria-pressed", String(shell.dataset.optionGroup === group));
     button.querySelector("span").textContent = `${inputs.filter(input => input.checked).length}/${inputs.length}`;
   });
@@ -52,6 +67,10 @@ function filterCheckboxPicker(shell) {
 function bindCheckboxPickers(root = content) {
   root.querySelectorAll("[data-option-picker]").forEach(shell => {
     if (shell.dataset.bound === "true") return;
+    // Main pages retain only native selection state. Materialize checkbox rows
+    // on demand inside the filter editor, one position group at a time.
+    if (shell.dataset.lazyOptions === 'true' && !shell.closest('dialog')) return;
+    renderLazyOptions(shell);
     shell.dataset.bound = "true";
     const select = shell.querySelector("select[multiple]"), grouped = shell.classList.contains("donor-player-picker");
     let anchor = null, pendingRange = [];
@@ -70,7 +89,7 @@ function bindCheckboxPickers(root = content) {
     });
     shell.querySelector("[data-option-search]").addEventListener("input", () => { anchor = null; filterCheckboxPicker(shell); });
     shell.querySelector("[data-option-sort]")?.addEventListener("change", () => { anchor = null; sortDonorPicker(shell); });
-    shell.querySelectorAll("[data-option-position]").forEach(button => button.addEventListener("click", () => { anchor = null; shell.dataset.optionGroup = button.dataset.optionPosition; shell.querySelector("[data-option-search]").value = ""; filterCheckboxPicker(shell); syncCheckboxPicker(shell); }));
+    shell.querySelectorAll("[data-option-position]").forEach(button => button.addEventListener("click", () => { anchor = null; shell.dataset.optionGroup = button.dataset.optionPosition; shell.querySelector("[data-option-search]").value = ""; renderLazyOptions(shell); sortDonorPicker(shell); filterCheckboxPicker(shell); syncCheckboxPicker(shell); }));
     for (const [attribute, checked] of [["data-option-all", true], ["data-option-clear", false]]) shell.querySelector(`[${attribute}]`).addEventListener("click", () => {
       const group = shell.dataset.optionGroup;
       anchor = null;

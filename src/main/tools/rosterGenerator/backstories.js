@@ -3,7 +3,7 @@ import {positionGroup} from '../../../shared/positionGroups.js';
 import {weightPounds} from '../../../shared/playerMeasurements.js';
 import {BACKSTORIES} from './backstoryBank.js';
 export {BACKSTORIES};
-export const BACKSTORY_VERSION=2;
+export const BACKSTORY_VERSION=3;
 const references=new WeakMap();
 const quantile=(items,q)=>[...items].sort((a,b)=>a-b)[Math.floor((items.length-1)*q)];
 function reference(model,position){
@@ -52,7 +52,9 @@ export function storyEligible(story,context){
 }
 function randomFor(seed,row){let hash=2166136261^seed;for(const ch of `backstory:${row}`)hash=Math.imul(hash^ch.charCodeAt(0),16777619);return mulberry32(hash>>>0);}
 export function assignBackstories(players,model,seed){
+  const topicOrder=[...players].sort((a,b)=>a.row-b.row),topicRng=randomFor(seed,0x51b0);for(let i=topicOrder.length-1;i>0;i--){const j=Math.floor(topicRng()*(i+1));[topicOrder[i],topicOrder[j]]=[topicOrder[j],topicOrder[i]];}const footballRows=new Set(topicOrder.slice(0,Math.round(players.length*.6)).map(p=>p.row));
   const candidates=new Map(players.map(player=>{const context=backstoryContext(player,model),choices=BACKSTORIES.filter(story=>storyEligible(story,context)),rng=randomFor(seed,player.row);for(let i=choices.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[choices[i],choices[j]]=[choices[j],choices[i]];}return [player.row,choices];})),owners=new Map(),chosen=new Map();
+  for(const player of players){const preferred=footballRows.has(player.row)?'football':'personal';candidates.get(player.row).sort((a,b)=>Number(b.topic===preferred)-Number(a.topic===preferred));}
   // A matching pass reserves scarce position/age stories before falling back to
   // general stories. It maximizes variety without relaxing any eligibility rule.
   function place(row,visited){for(const story of candidates.get(row)){if(visited.has(story.id))continue;visited.add(story.id);const previous=owners.get(story.id);if(previous===undefined||place(previous,visited)){owners.set(story.id,row);chosen.set(row,story);return true;}}return false;}

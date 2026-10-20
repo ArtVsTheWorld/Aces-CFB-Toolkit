@@ -3,6 +3,7 @@ import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 import { app, BrowserWindow, dialog, ipcMain, nativeImage, shell } from "electron";
 import electronUpdater from "electron-updater";
+import {UpdatePrompts} from './services/updatePrompts.js';
 import { UpdateService, updateAvailability } from "./services/updates.js";
 import { IPC, RUN_MODES } from "../shared/contracts.js";
 import { displayAppVersion } from "../shared/appVersion.js";
@@ -40,6 +41,7 @@ let history;
 let reviews;
 let sessionActiveSave = null;
 let updates;
+const updatePrompts=new UpdatePrompts();
 let activeToolOperations = 0;
 let updateCheckStarted = false;
 
@@ -57,15 +59,7 @@ function initializeUpdates() {
     emit: status => { for (const window of BrowserWindow.getAllWindows()) if (!window.isDestroyed()) window.webContents.send(IPC.updateStatus, status); },
     log: (level, event, details) => logger.write(level, event, details),
     busy: () => activeToolOperations > 0,
-    prompt: async (kind, status) => {
-      const options = kind === "download"
-        ? { title: "Toolkit Update Available", message: `Ace's CFB Toolkit ${displayAppVersion(status.version)} is available.`, detail: "Download it now? You can keep using the app during the download. It will only install when you approve a restart.", buttons: ["Download Update", "Later"] }
-        : { title: "Restart to Update", message: `Install Ace's CFB Toolkit ${displayAppVersion(status.version)}?`, detail: "The Toolkit will close and reopen. Unapplied previews and review decisions will be discarded. Unsaved tool settings also reset on restart. Your saves, backups, saved settings, presets, reports, and history are not removed.", buttons: ["Restart and Install", "Later"] };
-      const parent = BrowserWindow.getAllWindows().find(window => !window.isDestroyed());
-      const config = { ...options, type: "info", defaultId: 1, cancelId: 1, noLink: true };
-      const answer = parent ? await dialog.showMessageBox(parent, config) : await dialog.showMessageBox(config);
-      return answer.response === 0;
-    }
+    prompt: (kind,status)=>updatePrompts.request(BrowserWindow.getAllWindows().find(window=>!window.isDestroyed()),kind,status)
   });
 }
 
@@ -97,6 +91,7 @@ function createWindow() {
 }
 
 function registerIpc() {
+  ipcMain.handle(IPC.respondUpdatePrompt,(event,request)=>updatePrompts.respond(event.sender,request));
   ipcMain.handle(IPC.getUpdateStatus, () => updates.snapshot());
   ipcMain.handle(IPC.checkUpdates, () => updates.check());
   ipcMain.handle(IPC.downloadUpdate, () => updates.download());
@@ -182,17 +177,17 @@ function registerIpc() {
     const savePath = validateSavePath(request.savePath || sessionActiveSave);
     const schema = assertToolSaveCompatibility(tool.id, savePath);
     const runId = crypto.randomUUID();
-    logger.write("info", "tool-started", { runId, toolId: tool.id, toolVersion: tool.version, mode: request.mode, savePath });
+    logger.write("info", "tool-started", { runId, toolId: tool.id, appVersion: app.getVersion(), mode: request.mode, savePath });
     try {
       const previousAudit = request.mode === "apply" && request.options?.planId ? planAudit(request.options.planId) : null;
-      const audit = { runId, toolVersion: tool.version, mode: request.mode, savePath, schemaVersion: schema.version, options: previousAudit?.options ?? request.options ?? {}, previewRunId: previousAudit?.runId ?? null };
+      const audit = { runId, appVersion: app.getVersion(), mode: request.mode, savePath, schemaVersion: schema.version, options: previousAudit?.options ?? request.options ?? {}, previewRunId: previousAudit?.runId ?? null };
       const result = await handler.run({ savePath, mode: request.mode, options: request.options ?? {}, schemaPath: schema.path, defaultMapPath: commentaryMapPath(), reports: reports.forRun(audit) });
       if (request.mode === "preview" && result.planId) setPlanAudit(result.planId, audit);
       logger.write("info", "tool-completed", { runId, toolId: tool.id, status: result.status, outputPath: result.savePath, reportPath: result.reportPath, backupPath: result.backupPath, summary: result.historySummary });
       let reviewAvailable = false;
       try { reviewAvailable = reviews.save(runId, result, result.planId ? snapshotPlanRows(result.planId) : null); }
       catch (error) { logger.write("error", "review-snapshot-failed", { runId, toolId: tool.id, message: error.message }); }
-      const historyEntry = history.add({ id: runId, timestamp: new Date().toISOString(), toolId: tool.id, toolName: tool.name, toolVersion: tool.version, inputPath: result.savePath, mode: request.mode, status: result.status, summary: result.historySummary, backupPath: result.backupPath, reportPath: result.reportPath, reviewAvailable, logReference: runId });
+      const historyEntry = history.add({ id: runId, timestamp: new Date().toISOString(), toolId: tool.id, toolName: tool.name, appVersion: app.getVersion(), inputPath: result.savePath, mode: request.mode, status: result.status, summary: result.historySummary, backupPath: result.backupPath, reportPath: result.reportPath, reviewAvailable, logReference: runId });
       try { reviews.prune(history.entries.map(entry => entry.id)); }
       catch (error) { logger.write("error", "review-snapshot-prune-failed", { runId, message: error.message }); }
       return { ...result, executionId: historyEntry.id };

@@ -1,3518 +1,3395 @@
 # Roster Generator — 565 Fictional Backstories
 
-Includes the original 250 stories, 300 new campus-life stories, and 15 college-football easter eggs. All stories have two sentences. Specific claims are checked against the finished player; personal interests and relationships are fictional background, not game statistics.
+Story revision 3: 339 football/team-life stories and 226 personal-life stories. All have two sentences. Eligibility rules are applied to the finished player's position, class, build, ability and personality. These fictional biographies appear in Toolkit reviews, History and reports, not an in-game biography field.
 
-Stories appear in Toolkit reviews, History and CSV reports. They are not written into an in-game biography field. A team gets distinct eligible stories whenever enough choices are available.
+The library was reviewed in full; 359 weaker entries were rewritten while retaining their IDs and eligibility rules. The other 206 entries, including the 15 history/modding easter eggs, retain their distinct existing stories. Generation prefers a roughly 60/40 football/personal mix without overriding eligibility.
 
-## New Story Categories
+## Kitchen Arguments
 
-| Category | New stories |
-| --- | ---: |
-| Off the Field | 40 |
-| Personality & Character | 40 |
-| Relationships & Dating | 30 |
-| Friendships & Social Circles | 25 |
-| Academics & Career Goals | 30 |
-| Money & Lifestyle | 25 |
-| Social Media & Reputation | 25 |
-| Hobbies & Hidden Talents | 25 |
-| Personal Struggles & Growth | 20 |
-| Campus Stories & Antics | 25 |
-| Beliefs, Values & Motivations | 15 |
-| College-Football Easter Eggs | 15 |
+His mother can identify a blown assignment but still calls every penalty offside. He argues with her anyway, usually while she is packing leftovers for his trip back.
 
-## Original 250 Stories
+*family-01 · football · Eligibility: any*
 
-## Family
+## The Old Ball
 
-### 1. Saturday Kitchen
+His childhood football has a bite mark from a neighbor's dog and absolutely no grip left. He refuses to let his family throw it out, despite owning far better ones.
 
-Audience: Any player.
+*family-02 · football · Eligibility: any*
 
-His family always argued about football around the kitchen table. He still calls home after practice, ready to defend whichever play caught his attention that day.
+## Grandfather's Radio
 
-### 2. The Old Ball
+His grandfather used to turn down the television and call games himself. He still phones with unsolicited commentary, including when his grandson only called to ask about dinner.
 
-Audience: Any player.
+*family-03 · football · Eligibility: any*
 
-He keeps a worn football from childhood at home rather than replacing it. It reminds him of evenings when a patch of grass and a willing receiver were enough.
+## The Long Drive
 
-### 3. Grandfather's Radio
+His aunt drove him to youth practices in a car with one working speaker. He still associates defensive drills with the same scratched country CD.
 
-Audience: Any player.
+*family-04 · football · Eligibility: any*
 
-His grandfather followed games on a small radio while working in the garage. Hearing a broadcast still brings back the sound of tools and their running commentary.
+## Backyard Boundaries
 
-### 4. The Long Drive
+His brothers ruled that catches against the garage door counted as touchdowns. Their father abolished the rule after the second broken window, but the record book remains disputed.
 
-Audience: Any player.
+*family-05 · football · Eligibility: any*
 
-Family members took turns driving him to youth practices when their schedules rarely lined up. He remembers those rides as clearly as any game from that period.
+## Older Cousins
 
-### 5. Backyard Boundaries
+His cousins made him play center in backyard games because he was the youngest. He now refuses to start family games until somebody else volunteers to snap.
 
-Audience: Any player.
+*family-06 · football · Eligibility: any*
 
-His first field had a fence for one sideline and a driveway for the other. The arguments over catches taught him that football could be serious without a scoreboard.
+## The Living-Room Scout
 
-### 6. Older Cousins
+His dad critiques his football stance while watching television from a recliner. He recently sent back a photograph of that recliner labeled questionable lower-body technique.
 
-Audience: Any player.
+*family-07 · football · Eligibility: any*
 
-He learned the game by tagging along with older cousins. Getting included mattered more than winning, although he rarely admitted that at the time.
+## The Handwritten Note
 
-### 7. A Seat at Home
+His sister hid a note in his football bag telling him not to become unbearable. He keeps it in his locker and claims she meant somebody else.
 
-Audience: Any player.
+*family-08 · football · Eligibility: any*
 
-His family has a regular spot for watching games together. He likes knowing the same familiar faces will be there, whether he is nearby or calling from campus.
+## Sibling Rivalry
 
-### 8. The Handwritten Note
+He and his brother still count backyard touchdowns dating back to elementary school. Neither trusts the other's total, and their mother refuses to officiate another appeal.
 
-Audience: Any player.
+*family-09 · football · Eligibility: any*
 
-A family member slipped a short encouragement note into his bag before he left for college. He has kept it through every round of unpacking.
+## Sunday Call
 
-### 9. Sibling Rivalry
+He calls home after the team schedule clears and usually reaches a family argument already in progress. He likes being asked about broken appliances instead of his football future.
 
-Audience: Any player.
+*family-10 · football · Eligibility: any*
 
-An ongoing competition with a sibling turns even simple backyard drills into contests. They still keep a running argument about which one had the better hands as kids.
+## The Corner Store
 
-### 10. Sunday Call
+The man at his neighborhood store still calls him by his youth-football nickname. He has offered money for that nickname to stop appearing in front of teammates.
 
-Audience: Any player.
+*community-01 · football · Eligibility: any*
 
-He sets aside time for a family call each Sunday. Football usually comes up, but he likes hearing the ordinary news that makes campus feel a little closer to home.
+## Park Lights
 
-## Community
+His childhood park shut its lights off at a fixed hour, whether their game was finished or not. He still argues that the touchdown scored in complete darkness should count.
 
-### 11. The Corner Store
+*community-02 · football · Eligibility: any*
 
-Audience: Any player.
+## The Equipment Room
 
-The owner of his neighborhood store used to ask about every youth game. He still stops in when he is home, knowing the conversation will start in exactly the same place.
+His first shoulder pads came from a donated bin with another kid's name written inside. He remembers that name better than the score of his first game.
 
-### 12. Park Lights
+*community-03 · football · Eligibility: any*
 
-Audience: Any player.
+## Youth League Reunion
 
-He first learned to love football beneath the lights of a public park. Even now, an empty field at dusk can make him want to grab a ball.
+His old youth team keeps a group chat devoted to embarrassing photographs. He tried muting it until somebody threatened to mail the photographs to his position coach.
 
-### 13. The Equipment Room
+*community-04 · football · Eligibility: any*
 
-Audience: Any player.
+## Town Barber
 
-A local volunteer once helped him find gear that fit before a season began. He remembers how much a practical kindness can mean to a kid trying to play.
+His barber refuses to discuss football until he admits his latest haircut was worth the price. Both believe they are the more important talent in the relationship.
 
-### 14. Youth League Reunion
+*community-05 · football · Eligibility: any*
 
-Audience: Any player.
+## The Local Field
 
-Several friends from his first youth team still trade messages about football. Their conversations include far more old jokes than serious scouting advice.
+He visited his old practice field and discovered the intimidating hill was barely a slope. He immediately accused his youth coach of exaggerating its elevation for years.
 
-### 15. Town Barber
+*community-06 · football · Eligibility: any*
 
-Audience: Any player.
+## Coach's Whistle
 
-His hometown barber has an opinion about every team and never charges extra for sharing it. He enjoys the routine, even when his own football choices become the debate.
+His youth coach used a whistle with a sound the whole neighborhood hated. He bought the same model as a joke, and his family made him leave it outside.
 
-### 16. The Local Field
+*community-07 · football · Eligibility: any*
 
-Audience: Any player.
+## The Little Kids' Drill
 
-He returns to the field where his youth team practiced whenever he can. The place seems smaller now, but the memories have not shrunk with it.
+He agreed to help at a youth football session and lost control during a water break. The children remember him as the coach who got hit by every sponge.
 
-### 17. Coach's Whistle
+*community-08 · football · Eligibility: any*
 
-Audience: Any player.
+## Friday Night Route
 
-A youth coach's whistle was the signal that everyone in his neighborhood knew. He still associates that sound with finishing homework quickly enough to make practice.
+His high school bus passed the same house with a homemade football sign every Friday. He still checks whether the owner has updated the player's name.
 
-### 18. Little League Helper
+*community-09 · football · Eligibility: any*
 
-Audience: Any player.
+## The Fence Committee
 
-He enjoys helping younger kids learn the basics when he is back home. Explaining a simple drill reminds him how much patience someone once showed him.
+Retired neighbors used to debate penalties through the fence during his pickup games. Their arguments regularly lasted longer than the games they were supposedly supervising.
 
-### 19. Friday Night Route
+*community-10 · football · Eligibility: any*
 
-Audience: Any player.
+## Playlist Curator
 
-He can describe the route to his old high school field without thinking about a single turn. Taking it again brings back the small routines that made game nights special.
+He edits his warmup playlist as if a bad transition could cost the team points. Teammates sneak novelty songs into it whenever he leaves his phone unlocked.
 
-### 20. A Familiar Fence
+*interests-01 · football · Eligibility: any*
 
-Audience: Any player.
+## Kitchen Experiments
 
-Neighbors used to watch pickup games from behind the same fence. He likes the idea that a game does not need a big crowd to matter to the people playing it.
+He tried cooking a pre-practice meal from a professional athlete's video. The smoke alarm provided the only part of the routine his roommate wants repeated.
 
-## Interests
+*interests-02 · football · Eligibility: any*
 
-### 21. Playlist Curator
+## Fishing Mornings
 
-Audience: Any player.
+A youth coach once promised a fishing trip if everyone stopped arguing at practice. He remembers catching nothing and complaining all the way home anyway.
 
-He treats a pre-practice playlist like a project with room for endless revisions. Teammates know that asking for one song recommendation may lead to an entire album discussion.
+*interests-03 · football · Eligibility: any*
 
-### 22. Kitchen Experiments
+## Camera Roll
 
-Audience: Any player.
+He photographs teammates when they think nobody is watching, especially their terrible travel outfits. His camera roll has become the reason several people are unusually polite to him.
 
-He likes trying recipes that look easy until the cooking starts. A few dependable meals have survived the experiments, along with plenty of stories about the failures.
+*interests-04 · football · Eligibility: any*
 
-### 23. Fishing Mornings
+## Board Game Night
 
-Audience: Any player.
+He runs board-game nights with teammates and refuses to explain a rule twice. This policy lasted until his own position coach joined and asked the same question six times.
 
-He enjoys the quiet of an early fishing trip when his schedule allows it. Waiting for a bite is a welcome change from a day measured in whistles and deadlines.
+*interests-05 · football · Eligibility: any*
 
-### 24. Camera Roll
+## Sneaker Notebook
 
-Audience: Any player.
+He sketches cleat colorways during long rides and rates the team's footwear without permission. His harshest review is reserved for the pair he bought himself.
 
-He takes pictures of ordinary campus scenes rather than only big occasions. Looking through them gives him a record of college life beyond football.
+*interests-06 · football · Eligibility: any*
 
-### 25. Board Game Night
+## The Stadium Walk
 
-Audience: Any player.
+He likes walking around empty stadium concourses when the building is quiet. He once got so absorbed in the old photographs that a custodian accidentally locked him in.
 
-He is usually willing to join a board game if someone explains the rules. The easygoing invitation tends to become less easygoing once the score gets close.
+*interests-07 · football · Eligibility: any*
 
-### 26. Sneaker Notebook
+## Sketchbook
 
-Audience: Any player.
+He draws cartoons of football coaches in the margins of his notebook. One coach asked for a copy, which frightened him more than getting caught.
 
-He keeps track of shoe designs he likes, including pairs he has no plans to buy. Comparing small details has become a relaxing hobby rather than a shopping mission.
+*interests-08 · football · Eligibility: any*
 
-### 27. The Long Walk
+## Movie Debates
 
-Audience: Any player.
+He thinks the best football movies have the worst blocking scenes. Teammates have banned him from pausing the screen to point out another impossible protection.
 
-He likes taking an unhurried walk after a crowded day. It gives him a chance to think about something that is not the next item on a schedule.
+*interests-09 · football · Eligibility: any*
 
-### 28. Sketchbook
+## Weekend Grill
 
-Audience: Any player.
+He volunteered to grill at a football cookout and dropped the first batch through the grate. His teammates still ask whether dinner will be served above or below ground.
 
-He occasionally sketches ideas in the margins of a notebook. Most never become finished drawings, but he enjoys having something to work on without a score attached.
+*interests-10 · football · Eligibility: any*
 
-### 29. Movie Debates
+## Bag Check
 
-Audience: Any player.
+He once reached youth practice with two left cleats and blamed his brother. His brother still sends him a photograph of matching shoes before important trips.
 
-He has strong opinions about which sports movies hold up on a second viewing. Friends have learned that asking for his favorite is easier than asking him to rank them.
+*routines-01 · football · Eligibility: any*
 
-### 30. Weekend Grill
+## The Spare Pen
 
-Audience: Any player.
+He lends teammates pens during meetings and writes their names on a debt list. The list now includes a coach who insists that public employees should be exempt.
 
-He enjoys the social side of a cookout as much as the food. Offering to help at the grill is his usual way of avoiding an awkward introduction.
+*routines-02 · football · Eligibility: any*
 
-## Routines
+## The Early Bus
 
-### 31. Bag Check
+He likes being first on the team bus so he can avoid sitting beside the bathroom. He considers this a practical achievement, not a sign of good character.
 
-Audience: Any player.
+*routines-03 · football · Eligibility: any*
 
-He checks his practice bag in the same order before leaving. It is a small routine that makes a busy morning feel less scattered.
+## The Locker List
 
-### 32. The Spare Pen
+He wrote a list of personal football goals and hid it inside his locker. A teammate added become less annoying, and he has refused to cross it off.
 
-Audience: Any player.
+*routines-04 · football · Eligibility: any*
 
-He carries a spare pen because someone always seems to need one. The habit began in school and followed him into meeting rooms.
+## Locker Archaeology
 
-### 33. Early Bus Habit
+He claims to know where everything in his football locker is. The discovery of an unopened sandwich has made that explanation harder to defend.
 
-Audience: Any player.
+*routines-05 · football · Eligibility: any*
 
-Catching an early school bus taught him to get ready before the last possible minute. He still prefers a little waiting time to a rushed arrival.
+## Question in the Margin
 
-### 34. One Clear Goal
+He writes down questions during meetings but gets embarrassed about asking them. He usually corners a teammate afterward and starts with this is probably obvious.
 
-Audience: Any player.
+*routines-06 · football · Eligibility: any*
 
-He writes down one manageable goal before a practice week. Crossing it off matters more to him than making a long list he cannot remember.
+## The Window Seat
 
-### 35. Post-Practice Reset
+He insists on a window seat for team travel, then sleeps through the scenery. Teammates now require him to name one landmark before honoring the request.
 
-Audience: Any player.
+*routines-07 · football · Eligibility: any*
 
-He takes a few minutes to put his things in order after practice. A tidy locker is one part of the day he can control without needing a coach's permission.
+## The Wrong Calendar
 
-### 36. Question in the Margin
+He copied a football meeting time into the wrong week on his phone. He arrived extremely prepared for a meeting nobody else knew existed.
 
-Audience: Any player.
+*routines-08 · football · Eligibility: any*
 
-He marks questions in the margin instead of trying to remember them later. Bringing one clear question to a meeting feels more useful than pretending everything made sense.
+## Shoelace Ritual
 
-### 37. Travel Window
+He reties his cleats until the loops feel identical. His youth coach timed the routine once and asked whether they needed to schedule a separate practice.
 
-Audience: Any player.
+*routines-09 · football · Eligibility: any*
 
-He likes watching the scenery on bus rides. The quiet stretch between departure and arrival gives him a break from the usual campus pace.
+## The Missing Glove
 
-### 38. The Calendar
+He searches for lost equipment loudly enough to recruit the whole locker room. His least successful investigation ended when somebody pointed at the glove already on his hand.
 
-Audience: Any player.
+*routines-10 · football · Eligibility: any*
 
-He keeps a plain calendar rather than relying on memory. Seeing the week in one place helps him make room for responsibilities outside football.
+## The Campus Map
 
-### 39. Shoelace Ritual
+He got lost on the way to his first college football meeting and followed someone carrying a helmet. Unfortunately, that person was also a freshman who was lost.
 
-Audience: Any player.
+*arrival-01 · football · Eligibility: true-freshman*
 
-He reties his shoes if the first attempt does not feel right. He knows it is a habit rather than a competitive advantage, but it is one he has no interest in changing.
+## The First Notebook
 
-### 40. One More Look
+He brought a new notebook to his first team meeting and misspelled the coach's name on its cover. He now keeps that side against the desk.
 
-Audience: Any player.
+*arrival-02 · football · Eligibility: true-freshman*
 
-He makes one final check for forgotten equipment before leaving a room. Friends may tease him about it, but they also ask whether he has seen their missing things.
+## The Move-In Box
 
-## Arrival
+His family packed his first college room while he was reporting for football activities. He returned to find his childhood team blanket displayed like a museum exhibit.
 
-### 41. New Campus Map
+*arrival-03 · football · Eligibility: true-freshman*
 
-Audience: True freshmen.
+## The Vocabulary Problem
 
-He arrived with a campus map saved on his phone and more confidence than sense of direction. Learning the route from class to practice is part of his first college adjustment.
+He nodded through an unfamiliar term in his first college meeting. He has since asked three other freshmen what it means, and received three confident answers.
 
-### 42. First College Notebook
+*arrival-04 · football · Eligibility: true-freshman*
 
-Audience: True freshmen.
+## The First Alarm
 
-He began his first college notebook with a carefully organized index. The pages are filling quickly as he learns how much information can fit into one football meeting.
+He set several alarms for his first early football commitment. His roommate woke up to all of them while he slept through the first two.
 
-### 43. The Move-In Box
+*arrival-05 · football · Eligibility: true-freshman*
 
-Audience: True freshmen.
+## The First Introduction
 
-The last box he unpacked contained reminders of home rather than football gear. Keeping those things nearby has made his first college room feel less temporary.
+He introduced himself to the same older teammate twice during his first week in the program. The teammate now introduces himself back every time they meet.
 
-### 44. New Vocabulary
+*arrival-06 · football · Eligibility: true-freshman*
 
-Audience: True freshmen.
+## The High School Bag
 
-He is learning that familiar football ideas can have unfamiliar names in a new system. Asking questions is becoming a regular part of his first season on campus.
+He brought his old high school football bag to campus rather than buying a new one. He is already tired of explaining the rival school's sticker his brother added.
 
-### 45. Finding a Routine
+*arrival-07 · football · Eligibility: true-freshman*
 
-Audience: True freshmen.
+## The Practice Pace
 
-He is working out how to balance college classes, meals and practice for the first time. A predictable daily routine is starting to matter more than the excitement of move-in day.
+He was so nervous at his first college practice that he jogged through the water break. An equipment assistant finally told him that drinking was allowed.
 
-### 46. The First Team Meeting
+*arrival-08 · football · Eligibility: true-freshman*
 
-Audience: True freshmen.
+## The Home Report
 
-He spent his first college team meeting trying to learn faces as well as terminology. There is plenty to absorb before any of it begins to feel ordinary.
+He told his family his first college football week was completely under control. He made the call while standing outside the building he had locked himself out of.
 
-### 47. High School Keepsake
+*arrival-09 · football · Eligibility: true-freshman*
 
-Audience: True freshmen.
+## First Fall Checklist
 
-He brought one small keepsake from his high school team to campus. It is a reminder of where he started rather than a claim about what comes next.
+He arrived with a carefully planned list for his first fall of college football. Finding somewhere to wash his clothes was not on it, which quickly became a problem.
 
-### 48. Learning the Pace
+*arrival-10 · football · Eligibility: true-freshman*
 
-Audience: True freshmen.
+## Second First Impression
 
-The pace of a college practice is still new to him. He is concentrating on understanding the next instruction instead of getting overwhelmed by the whole afternoon.
+He spent his redshirt year being called the new guy. He is irritated that another freshman class has arrived without anyone officially retiring the nickname.
 
-### 49. Home on the Phone
+*redshirt-freshman-01 · football · Eligibility: rs-freshman*
 
-Audience: True freshmen.
+## The Redshirt Notebook
 
-His first stretch away at college has made short calls home part of the routine. He has discovered that describing an ordinary day can be more reassuring than trying to sound impressive.
+His redshirt-season notebook contains football notes and rankings of every dining-hall dinner. Teammates borrow it for reasons that have little to do with the playbook.
 
-### 50. First Fall Checklist
+*redshirt-freshman-02 · football · Eligibility: rs-freshman*
 
-Audience: True freshmen.
+## The Known Shortcut
 
-He made a checklist for his first college fall and keeps finding things to add. Football is a big part of it, but learning how to live on campus takes work too.
+During his redshirt year he discovered a shortcut to the football building. He now refuses to share it with anyone who mocked his first campus map.
 
-## Redshirt Freshman
+*redshirt-freshman-03 · football · Eligibility: rs-freshman*
 
-### 51. Second First Impression
+## The Question Year
 
-Audience: Redshirt freshmen.
+He spent his redshirt season asking older teammates questions he would not ask coaches. He is now receiving those same questions and realizing how many answers were invented.
 
-He has already spent a redshirt year learning what college football asks of him. Being a freshman on the roster no longer means that every part of campus life is new.
+*redshirt-freshman-04 · football · Eligibility: rs-freshman*
 
-### 52. The Practice Notebook
+## The Waiting Problem
 
-Audience: Redshirt freshmen.
+He disliked redshirting and was not especially subtle about it. A coach finally told him that glaring at a practice schedule would not change it.
 
-His redshirt year left him with a notebook full of reminders. He is looking for ways to turn those notes into better habits rather than simply collecting more pages.
+*redshirt-freshman-05 · football · Eligibility: rs-freshman*
 
-### 53. More Familiar Hallways
+## The Borrowed Routine
 
-Audience: Redshirt freshmen.
+He copied an older player's warmup during his redshirt season without understanding half of it. He quietly abandoned the part that required carrying a tennis ball everywhere.
 
-A redshirt season gave him time to stop feeling lost between classes and meetings. He enters this year with fewer everyday distractions and a clearer idea of the routine.
+*redshirt-freshman-06 · football · Eligibility: rs-freshman*
 
-### 54. The Year of Questions
+## The Wrong Call
 
-Audience: Redshirt freshmen.
+He learned enough football terminology while redshirting to correct someone at dinner. The corrected person was a coach, and the correction was wrong.
 
-He used his redshirt year to ask the questions he had been afraid would sound obvious. The answers gave him a more useful starting point for the work ahead.
+*redshirt-freshman-07 · football · Eligibility: rs-freshman*
 
-### 55. Patient Beginning
+## Beyond Move-In
 
-Audience: Redshirt freshmen.
+His redshirt year taught him which team facilities had the best phone reception. Newcomers assume this knowledge required considerably more athletic achievement than it did.
 
-His college start included a redshirt season rather than a quick rush into expectations. He is trying to treat that extra time as preparation, not a guarantee of what comes next.
+*redshirt-freshman-08 · football · Eligibility: rs-freshman*
 
-### 56. Watching the Details
+## The Old Photo
 
-Audience: Redshirt freshmen.
+His family still shares the photograph from his redshirt year in which he looks furious on the sideline. He insists he was only trying to read the scoreboard.
 
-A year in the program taught him to notice how older teammates prepare. He is borrowing the routines that suit him without trying to copy someone else's whole personality.
+*redshirt-freshman-09 · football · Eligibility: rs-freshman*
 
-### 57. Familiar Terminology
+## The Freshman Argument
 
-Audience: Redshirt freshmen.
+He has already redshirted but still gets included in every announcement addressed to freshmen. He accepts the eligibility label and disputes every cleaning assignment attached to it.
 
-The language of the playbook is less intimidating after a redshirt year. He can spend more attention on the instruction itself instead of decoding every phrase.
+*redshirt-freshman-10 · football · Eligibility: rs-freshman*
 
-### 58. Beyond Move-In Day
+## The Younger Voice
 
-Audience: Redshirt freshmen.
+He is still young enough that older teammates introduce him as their little cousin. He has started returning the favor by calling them uncle in front of visitors.
 
-He has already been through the awkward first year of finding his way around campus. Now he wants his daily football work to feel just as settled.
+*early-years-01 · football · Eligibility: young*
 
-### 59. Redshirt Reflection
+## The First Fine
 
-Audience: Redshirt freshmen.
+He tried introducing a joke fine system for teammates who arrived late to informal throwing sessions. Nobody paid, and someone fined him for inventing the system.
 
-He looks back on his redshirt season as a year of small lessons rather than one defining moment. Keeping track of those lessons helps him see the time as useful.
+*early-years-02 · football · Eligibility: young*
 
-### 60. The Next Chapter
+## The Group Dinner
 
-Audience: Redshirt freshmen.
+He is still figuring out whether the older players are joking when they give him instructions. Ordering dinner for twelve people was how he discovered that sometimes they are not.
 
-His redshirt year is behind him, even though his listed class still says freshman. He knows the next step will depend on what he does now, not merely on having waited.
+*early-years-03 · football · Eligibility: young*
 
-## Early Years
+## The Wrong Shoes
 
-### 61. Learning to Ask
+He wore his nicest shoes to a team gathering that turned out to involve muddy grass. He has demanded more specific invitations ever since.
 
-Audience: Freshmen or sophomores.
+*early-years-04 · football · Eligibility: young*
 
-He is early enough in his college career to encounter something unfamiliar almost every week. He would rather ask a useful question than hide a misunderstanding.
+## The Shared Table
 
-### 62. Building a Foundation
+Early in his college football experience, he sat at a table nobody had claimed. He now defends that table as if it has generations of program history.
 
-Audience: Freshmen or sophomores.
+*early-years-05 · football · Eligibility: young*
 
-He is concentrating on habits that will last beyond a single practice. There is still plenty of college football ahead of him, and he wants a dependable starting point.
+## The Week's Schedule
 
-### 63. The Younger Voice
+He thought a quiet afternoon on the football schedule meant he was completely free. Discovering the academic appointment he had forgotten spoiled a very confident nap.
 
-Audience: Freshmen or sophomores.
+*early-years-06 · football · Eligibility: young*
 
-He sometimes listens before speaking in a room full of older players. When he does ask a question, it is usually one he has thought about for a while.
+## The Bad Comparison
 
-### 64. Small Milestones
+He compared himself to a famous player in front of older teammates. They still use the famous player's name whenever he drops his keys.
 
-Audience: Freshmen or sophomores.
+*early-years-07 · football · Eligibility: young*
 
-He keeps track of little milestones as he settles into college football. A clearer assignment or a better-organized week can matter even without anyone else noticing.
+## The Borrowed Playlist
 
-### 65. Finding His People
+He copied an older teammate's practice playlist to feel more settled in the program. He did not expect the older teammate's mother to appear on three voice recordings.
 
-Audience: Freshmen or sophomores.
+*early-years-08 · football · Eligibility: young*
 
-He is still building the friendships that make a team feel like a familiar place. Shared meals have been as useful for that as conversations about the playbook.
+## The Young Negotiator
 
-### 66. Learning the Week
+He is trying to convince older teammates that freshman snack runs should include reimbursement. His campaign has produced a spreadsheet and almost no money.
 
-Audience: Freshmen or sophomores.
+*early-years-09 · football · Eligibility: young*
 
-He is getting used to how much preparation happens before a college football weekend. Understanding the rhythm of the week has become a goal of its own.
+## The First Team Photo
 
-### 67. More Than One Lesson
+He rehearsed a serious expression for a team photograph and blinked anyway. His family ordered that version, which he considers deliberate sabotage.
 
-Audience: Freshmen or sophomores.
+*early-years-10 · football · Eligibility: young*
 
-He is discovering that a difficult practice can teach several things at once. Sorting out those lessons is part of learning to handle college football without taking every setback personally.
+## The Established Seat
 
-### 68. A Borrowed Routine
+He has occupied the same football meeting seat long enough to resent finding someone in it. He denies this while standing beside that person's chair.
 
-Audience: Freshmen or sophomores.
+*veterans-01 · football · Eligibility: veteran*
 
-He borrowed part of an older teammate's preparation routine and adapted it. Finding a version he can repeat matters more than making it look elaborate.
+## The Younger Questions
 
-### 69. Room to Settle
+Younger teammates ask him which coaches tolerate jokes and which do not. He gives careful answers because some of his examples remain embarrassing.
 
-Audience: Freshmen or sophomores.
+*veterans-02 · football · Eligibility: veteran*
 
-He is giving himself time to become comfortable with the demands of college life. That patience does not stop him from wanting a better practice the next day.
+## The Old Nickname
 
-### 70. The Next Useful Step
+He earned a ridiculous football nickname early in college and assumed it would disappear with time. Younger teammates now use it without knowing where it came from.
 
-Audience: Freshmen or sophomores.
+*veterans-03 · football · Eligibility: veteran*
 
-He prefers thinking about the next useful step rather than his whole college career at once. It keeps a long list of possibilities from becoming a distraction.
+## The Campus Expert
 
-## Veterans
+He gives new players confident directions around campus. He omits the fact that one of his favorite routes has been closed since construction began.
 
-### 71. The Familiar Routine
+*veterans-04 · football · Eligibility: veteran*
 
-Audience: Juniors or seniors.
+## The Short Memory
 
-By this point in college, the weekly routine feels familiar to him. He still looks for small adjustments instead of assuming familiarity means there is nothing left to learn.
+He still remembers an ordinary practice mistake from early in college because teammates named it after him. He has not found the advice to forget mistakes especially useful.
 
-### 72. Perspective in the Room
+*veterans-05 · football · Eligibility: veteran*
 
-Audience: Juniors or seniors.
+## The Class Photo
 
-Having reached the upper classes gives him a longer view of everyday setbacks. A rough afternoon no longer has to become a verdict on an entire season.
+He recognizes fewer faces in old football photographs each year. He mostly uses the photos to mock everyone's former haircuts, including his own.
 
-### 73. Knowing the Questions
+*veterans-06 · football · Eligibility: veteran*
 
-Audience: Juniors or seniors.
+## The Meeting Thermostat
 
-He has learned which questions are worth asking before a meeting ends. That experience helps him make better use of the time everyone spends preparing.
+He has spent enough college football meetings freezing that he brings a sweatshirt regardless of the weather. Younger teammates mock the habit until they start borrowing it.
 
-### 74. Campus Landmarks
+*veterans-07 · football · Eligibility: veteran*
 
-Audience: Juniors or seniors.
+## The Veteran Advice
 
-He can point out the quiet study spots and reliable meal stops that younger players are still finding. Those ordinary recommendations are one way he stays connected to teammates.
+His most requested advice from younger players concerns cheap dinners, not football. He finds that assessment of his college experience both insulting and accurate.
 
-### 75. The Short Memory
+*veterans-08 · football · Eligibility: veteran*
 
-Audience: Juniors or seniors.
+## The Replaced Routine
 
-He has had enough college routines to know that dwelling on one mistake rarely fixes it. He tries to carry the lesson forward without carrying every frustration with it.
+His early college routine included an elaborate pre-practice superstition. He dropped it after realizing he was mainly doing it because teammates enjoyed watching.
 
-### 76. An Older Perspective
+*veterans-09 · football · Eligibility: veteran*
 
-Audience: Juniors or seniors.
+## The Equipment Drawer
 
-He notices how quickly a college year can pass now. The thought makes him more deliberate about the everyday moments he once hurried through.
+He has accumulated enough spare football gear to supply a small youth team. He loans it out selectively and remembers exactly who owes him a towel.
 
-### 77. The Meeting Seat
+*veterans-10 · football · Eligibility: veteran*
 
-Audience: Juniors or seniors.
+## One Last Fall
 
-He has a favorite place to sit in meetings, though he will not admit it is a preference. Small familiarities help a crowded football week feel organized.
+He is a redshirt senior who has started collecting photographs from ordinary football days. He still refuses to be photographed looking sentimental.
 
-### 78. Useful Advice
+*last-ride-01 · football · Eligibility: rs-senior*
 
-Audience: Juniors or seniors.
+## The Last First Meeting
 
-When younger teammates ask about college life, he tries to give practical answers. Knowing where to go and what to bring can help more than a speech.
+He went into his last first team meeting expecting to feel emotional. Mostly, he was annoyed that his favorite chair was gone.
 
-### 79. The Routine Refined
+*last-ride-02 · football · Eligibility: rs-senior*
 
-Audience: Juniors or seniors.
+## The Old Locker
 
-He has changed his preparation habits as he has gotten older. What remains is a simpler routine he can actually repeat on a busy week.
+He wants one small piece of his football locker when his final season ends. The equipment staff has asked him to stop discussing removal methods.
 
-### 80. Taking Stock
+*last-ride-03 · football · Eligibility: rs-senior*
 
-Audience: Juniors or seniors.
+## Final-Year Group Chat
 
-He has reached the point in college where looking back can be useful. He is trying to separate the habits worth keeping from the ones he merely got used to.
+His friends keep suggesting names for his redshirt-senior farewell tour. He has rejected every one and secretly saved several.
 
-## Last Ride
+*last-ride-04 · football · Eligibility: rs-senior*
 
-### 81. One Last Fall
+## The Closing Chapter
 
-Audience: Redshirt seniors.
+He has used his redshirt and reached his senior season, but still cannot imagine a fall without football. He changes the subject whenever someone asks what comes immediately afterward.
 
-He is entering his final college season as a redshirt senior. The familiar routines carry a little more weight when he knows there will not be another fall quite like this one.
+*last-ride-05 · football · Eligibility: rs-senior*
 
-### 82. The Last First Meeting
+## The Last Gear Issue
 
-Audience: Redshirt seniors.
+He made a joke about this being his final equipment pickup. The joke stopped being funny when somebody handed him a form about returning everything.
 
-The first team meeting of the year has become his last as a college player. He is trying to appreciate the moment without letting it distract from the work that follows.
+*last-ride-06 · football · Eligibility: rs-senior*
 
-### 83. Keeping the Small Things
+## The Practical Inheritance
 
-Audience: Redshirt seniors.
+He is a redshirt senior trying to decide which younger teammate deserves his collection of football shortcuts. The best advice concerns avoiding the shower with unreliable hot water.
 
-As a redshirt senior, he is noticing the ordinary parts of college football he will miss. The walk to practice can mean as much as the events people photograph.
+*last-ride-07 · football · Eligibility: rs-senior*
 
-### 84. Final-Year Focus
+## The Final Calendar
 
-Audience: Redshirt seniors.
+He has marked the end of his last college football season on a calendar. He deliberately covered the date with a takeout menu.
 
-His redshirt-senior season gives him a clear endpoint to work toward. He wants to leave knowing he took the daily preparation seriously.
+*last-ride-08 · football · Eligibility: rs-senior*
 
-### 85. The Closing Chapter
+## The Spare Fall
 
-Audience: Redshirt seniors.
+People still ask whether he can use another redshirt after his senior year. He is tired of explaining the answer and has begun referring them to a teammate.
 
-He is approaching the end of his college eligibility. Rather than trying to script a perfect ending, he is concentrating on being present for the season he has.
+*last-ride-09 · football · Eligibility: rs-senior*
 
-### 86. The Last Equipment Check
+## The Last Team Dinner
 
-Audience: Redshirt seniors.
+He wants the redshirt seniors to organize one proper football dinner before they leave. Nobody agrees on a restaurant, which feels like an appropriate ending.
 
-An equipment check feels different with a final season ahead. He is aware that even the unremarkable routines are becoming things he will remember.
+*last-ride-10 · football · Eligibility: rs-senior*
 
-### 87. Passing Along the Routine
+## The Sideline Reputation
 
-Audience: Redshirt seniors.
+His redshirt season gave teammates plenty of time to notice his elaborate sideline celebrations. He wishes they remembered his football work with the same precision.
 
-He is a redshirt senior with practical lessons younger players can use. Sharing a few of them feels like a worthwhile part of his final year.
+*redshirt-01 · football · Eligibility: redshirted*
 
-### 88. The Final Calendar
+## The Waiting Argument
 
-Audience: Redshirt seniors.
+He spent part of his redshirt year arguing that patience was overrated. He now delivers suspiciously similar advice to younger players who complain about waiting.
 
-He can see the outline of his last college football season on the calendar. It is a reminder to make room for the people as well as the preparation.
+*redshirt-02 · football · Eligibility: redshirted*
 
-### 89. No Extra Fall
+## The Spare Jersey
 
-Audience: Redshirt seniors.
+He kept an old practice jersey from the year he redshirted. He cannot decide whether it is a keepsake or simply a shirt he forgot to return.
 
-His redshirt has already been used, and this is his senior year. Knowing there is no spare college season has made him more intentional about his time.
+*redshirt-03 · football · Eligibility: redshirted*
 
-### 90. Leaving Something Useful
+## The Notebook Margins
 
-Audience: Redshirt seniors.
+His redshirt-year notebook contains surprisingly detailed cartoons of football meetings. He refuses to identify which coach is represented by the angry refrigerator.
 
-He wants his final college season to leave something useful behind. That could be as simple as helping a younger teammate avoid a mistake he understands now.
+*redshirt-04 · football · Eligibility: redshirted*
 
-## Redshirt
+## The Eligibility Conversation
 
-### 91. Time to Observe
+He has already used his redshirt and still gets dragged into arguments about everyone's listed class. He carries no official authority, despite speaking as though he does.
 
-Audience: Players with a completed redshirt year.
+*redshirt-05 · football · Eligibility: redshirted*
 
-Using a redshirt gave him time to observe how a college program works. He still values the lessons that came from paying attention when he was not the center of it.
+## The Redshirt Dinner
 
-### 92. The Extra Perspective
+During his redshirt year, a few teammates started meeting for cheap dinners after football activities. They are still arguing about who failed to pay for the first one.
 
-Audience: Players with a completed redshirt year.
+*redshirt-06 · football · Eligibility: redshirted*
 
-A redshirt year changed how he thought about a football timeline. Progress did not have to look the same as everyone else's to be worth pursuing.
+## The Imitation
 
-### 93. An Unhurried Lesson
+He spent his redshirt season perfecting an impression of a coach's favorite phrase. The coach eventually heard it and began requesting performances.
 
-Audience: Players with a completed redshirt year.
+*redshirt-07 · football · Eligibility: redshirted*
 
-His college path included a redshirt rather than an uninterrupted climb through the class years. He learned to find useful work in a season that required patience.
+## The Old Sideline Seat
 
-### 94. The Waiting-Year Notebook
+He remembers the spot where he spent much of his redshirt season waiting between football duties. He still checks whether anyone else has claimed it.
 
-Audience: Players with a completed redshirt year.
+*redshirt-08 · football · Eligibility: redshirted*
 
-He kept notes during his redshirt year that still turn up in his bag. Some are reminders about football, while others explain how he learned to handle the routine.
+## The Borrowed Sweatshirt
 
-### 95. Different Timetables
+He borrowed a teammate's sweatshirt during his redshirt year and never returned it. He describes it as a historical artifact when repayment is mentioned.
 
-Audience: Players with a completed redshirt year.
+*redshirt-09 · football · Eligibility: redshirted*
 
-Having used a redshirt helped him understand why teammates can share a class label but have different experiences. He is less interested now in comparing everyone's clock.
+## The Redshirt Photograph
 
-### 96. The Long View
+A redshirt-season photograph shows him celebrating something outside the camera frame. Nobody remembers what happened, but his family has framed the evidence anyway.
 
-Audience: Players with a completed redshirt year.
+*redshirt-10 · football · Eligibility: redshirted*
 
-A redshirt season taught him that a college career is not built on one autumn. He tries to apply that perspective whenever the daily work feels repetitive.
+## The Honest Coach
 
-### 97. Watching Preparation
+A youth coach once told him that enthusiasm and ability were separate categories. He disliked the assessment but admits his current football still requires plenty of work.
 
-Audience: Players with a completed redshirt year.
+*developmental-01 · football · Eligibility: low-overall*
 
-He paid close attention to preparation during the year he redshirted. What stayed with him was how much of the job happens away from a crowd.
+## The Pet Highlight
 
-### 98. The Patient Route
+He has one high school football clip he shows whenever someone asks about his game. His friends know the clip well enough to narrate it before he presses play.
 
-Audience: Players with a completed redshirt year.
+*developmental-02 · football · Eligibility: low-overall*
 
-His listed class comes with a redshirt year already behind it. He sees that part of the path as experience rather than something he needs to explain away.
+## The Practice Bargain
 
-### 99. Notes from the Sideline
+He bargains with himself over extra football work by promising takeout afterward. He has been much more consistent about honoring the second half.
 
-Audience: Players with a completed redshirt year.
+*developmental-03 · football · Eligibility: low-overall*
 
-His redshirt year gave him reasons to listen carefully during practice. He still returns to a few simple reminders from that time when things begin to feel complicated.
+## The Basics Argument
 
-### 100. A Different Start
+He gets embarrassed when coaches revisit basic football instructions in front of him. Pretending he knew them already has not made the instructions disappear.
 
-Audience: Players with a completed redshirt year.
+*developmental-04 · football · Eligibility: low-overall*
 
-His college progression includes a redshirt year. It left him with an appreciation for the less visible parts of being on a team.
+## The Shortcut
 
-## Developmental
+He has searched for a football shortcut in enough training videos to fill a semester. His roommate thinks learning to close the app would be the first useful result.
 
-### 101. One Assignment at a Time
+*developmental-05 · football · Eligibility: low-overall*
 
-Audience: 64 OVR or lower.
+## The Comparison Video
 
-He is still developing the tools needed to handle college football consistently. Focusing on one assignment at a time gives him a more useful goal than pretending the whole gap will close overnight.
+He once compared his football film with an elite player's and stopped the video very quickly. He now limits the comparison to their similar choice of gloves.
 
-### 102. The Long Project
+*developmental-06 · football · Eligibility: low-overall*
 
-Audience: 64 OVR or lower.
+## The Helpful Job
 
-His current game remains a work in progress. He is trying to measure useful habits rather than demand a dramatic transformation after every practice.
+He is not especially polished on the field but knows how to repair the team's temperamental speaker. He would prefer coaches to mention the first problem less often.
 
-### 103. Earning the Next Rep
+*developmental-07 · football · Eligibility: low-overall*
 
-Audience: 64 OVR or lower.
+## The Backyard Favorite
 
-He knows his current ability leaves plenty to work on. The next well-executed repetition is a more realistic target than a promise about future stardom.
+He was the undisputed football star of a very small family backyard. His cousins still cite that competition when defending him much too loudly.
 
-### 104. Starting with the Basics
+*developmental-08 · football · Eligibility: low-overall*
 
-Audience: 64 OVR or lower.
+## The Unfinished Checklist
 
-He has more to gain from getting the basics right than from chasing a highlight. That makes ordinary instruction a central part of his football week.
+He wrote a football improvement checklist and spent longer decorating it than completing it. A coach asked to see the undecorated version.
 
-### 105. No Shortcut Story
+*developmental-09 · football · Eligibility: low-overall*
 
-Audience: 64 OVR or lower.
+## The Running Joke
 
-There is no quick-fix story attached to his current football development. He is concentrating on the parts of the job he can repeat, even when the results are modest.
+He laughs first when a football drill goes badly, partly so nobody else gets there before him. He dislikes how often that strategy is necessary.
 
-### 106. A Manageable Checklist
+*developmental-10 · football · Eligibility: low-overall*
 
-Audience: 64 OVR or lower.
+## The Confident Introduction
 
-He has broken the work ahead into a manageable checklist. It is easier to address one weakness than to turn every practice into a judgment about his future.
+He introduces himself as someone opponents should remember. Teammates consider his football ability good enough to make the line tolerable, if not pleasant.
 
-### 107. The Patient Rep
+*polished-01 · football · Eligibility: high-overall*
 
-Audience: 64 OVR or lower.
+## The Unwanted Compliment
 
-His game is not yet polished enough to make difficult things look routine. He is willing to repeat simple work rather than skip ahead for appearances.
+He gets irritated when a football compliment includes surprise about his talent. He has begun asking exactly which part was supposed to be surprising.
 
-### 108. Keeping the Goal Small
+*polished-02 · football · Eligibility: high-overall*
 
-Audience: 64 OVR or lower.
+## The Price of Advice
 
-He is not treating his current level as proof of a breakthrough waiting around the corner. A clear assignment and a better habit are enough to work toward today.
+He is good enough that younger players seek his football advice. His roommate would like them to know how rarely that advice extends to cleaning.
 
-### 109. Learning without the Hype
+*polished-03 · football · Eligibility: high-overall*
 
-Audience: 64 OVR or lower.
+## The Favorite Rep
 
-He is developing without the ready-made expectations attached to a finished player. There is room to work without needing every session to produce a new success story.
+He has a practice clip he replays whenever someone doubts his football confidence. Coaches have asked whether he owns any other footage.
 
-### 110. The Next Correction
+*polished-04 · football · Eligibility: high-overall*
 
-Audience: 64 OVR or lower.
+## The Coasting Argument
 
-He has plenty of corrections available before the finer details become the priority. Taking the next one seriously is how he keeps the job from feeling too large.
+His talent makes an ordinary rep look easier than his effort sometimes deserves. A coach has learned to distinguish the two, much to his annoyance.
 
-## Polished
+*polished-05 · football · Eligibility: high-overall*
 
-### 111. Tools Already in Place
+## The Demanding Parent
 
-Audience: 85 OVR or higher.
+His family watches his football with standards that praise from strangers cannot soften. He can have a strong practice and still receive a message about one sloppy detail.
 
-His current ability gives him a strong foundation for demanding work. He is concentrating on preparation rather than treating those tools as a guarantee of results.
+*polished-06 · football · Eligibility: high-overall*
 
-### 112. The Higher Standard
+## The Coach's Challenge
 
-Audience: 85 OVR or higher.
+He answers tough football coaching with visible irritation before doing what was asked. Both sides consider this arrangement productive and unnecessarily loud.
 
-He has the ability to be held to a high standard. The challenge is making his ordinary preparation match the level of work he is capable of producing.
+*polished-07 · football · Eligibility: high-overall*
 
-### 113. Details at the Top
+## The Phone Background
 
-Audience: 85 OVR or higher.
+He uses a favorite football photograph of himself as his phone background. He argues that being good at something should come with a few privileges.
 
-His game has reached a level where small details deserve serious attention. He knows that strong ability does not make an assignment disappear.
+*polished-08 · football · Eligibility: high-overall*
 
-### 114. Beyond the Easy Rep
+## The Better Opponent
 
-Audience: 85 OVR or higher.
+He dislikes being paired with an easy opponent in football drills. He dislikes losing to the harder opponent even more.
 
-He has enough ability that comfortable practice work is not the whole challenge. He is looking for ways to make the preparation useful when the task becomes more demanding.
+*polished-09 · football · Eligibility: high-overall*
 
-### 115. Keeping an Edge
+## The Talent Tax
 
-Audience: 85 OVR or higher.
+His teammates ask him to demonstrate difficult football movements whenever a coach wants an example. He considers this the least enjoyable reward for being talented.
 
-His present skill gives him good reason to be confident. He is trying to keep that confidence from becoming an excuse to coast through the routine.
+*polished-10 · football · Eligibility: high-overall*
 
-### 116. The Demanding Checklist
+## The Unfinished Project
 
-Audience: 85 OVR or higher.
+A coach described him as a football project with a high ceiling. He asked whether that meant somebody else would be doing the construction.
 
-He can handle a demanding football checklist because many of the basic tools are already there. Following it consistently is still a separate job.
+*upside-01 · football · Eligibility: high-potential*
 
-### 117. Ready for Hard Questions
+## The Compliment Problem
 
-Audience: 85 OVR or higher.
+He likes hearing that his football could improve dramatically. He likes hearing about the work required noticeably less.
 
-His current ability allows coaches to ask difficult things of him. He prefers understanding the reason behind an assignment to relying on talent alone.
+*upside-02 · football · Eligibility: high-potential*
 
-### 118. Strong Starting Point
+## The Future Version
 
-Audience: 85 OVR or higher.
+He has joked about what the future version of his football self will demand in appearance fees. His friends plan to charge interest on every favor.
 
-He has a strong present-day football profile. What he does with that starting point still depends on decisions, preparation and the opportunities that come.
+*upside-03 · football · Eligibility: high-potential*
 
-### 119. The Useful Challenge
+## The Family Prediction
 
-Audience: 85 OVR or higher.
+His uncle makes enormous predictions about his football future at every gathering. He spends half the meal trying to steer the conversation toward anybody else.
 
-He is capable enough that an easy afternoon is not always the most useful one. He wants practice to test something rather than simply confirm what already feels comfortable.
+*upside-04 · football · Eligibility: high-potential*
 
-### 120. Ability Is Not the Plan
+## The New Habit
 
-Audience: 85 OVR or higher.
+A coach sees plenty of football potential in him and keeps assigning additional work. He suspects the compliment was partly a scheduling tactic.
 
-He brings considerable current ability to his position. He still needs a plan for using it, just like everyone else in the meeting room.
+*upside-05 · football · Eligibility: high-potential*
 
-## Upside
+## The Longer Plan
 
-### 121. The Unfinished Picture
+He bought an expensive notebook for a long-term football development plan. The first page contains a complaint about the notebook's price.
 
-Audience: Star or Elite development.
+*upside-06 · football · Eligibility: high-potential*
 
-His development outlook gives him room to think beyond the player he is today. He is trying to turn that possibility into useful work without mistaking it for a finished result.
+## The Unexpected Encouragement
 
-### 122. Patience with Purpose
+A coach who rarely compliments anyone told him his football had unusual room to grow. He pretended to shrug it off and repeated it to three relatives.
 
-Audience: Star or Elite development.
+*upside-07 · football · Eligibility: high-potential*
 
-There is meaningful upside in his football profile. He wants his preparation to give that upside a chance rather than leave it as a flattering description.
+## The Open Notebook
 
-### 123. The Next Version
+He is excited about his football upside but hates being discussed as unfinished. He has started reminding people that finished products can also be irritating.
 
-Audience: Star or Elite development.
+*upside-08 · football · Eligibility: high-potential*
 
-He likes the idea that his best football may not be the version people see right now. The thought is motivation, not a promise about where he will end up.
+## The Patient Teammate
 
-### 124. Potential Is a Starting Point
+He has a teammate willing to explain football mistakes without making a public performance of it. He returns the favor by fixing that teammate's terrible outfits.
 
-Audience: Star or Elite development.
+*upside-09 · football · Eligibility: high-potential*
 
-His developmental outlook is encouraging. He knows that having room to improve is different from doing the work needed to use it.
+## The Ceiling Joke
 
-### 125. More to Build
+His friends call him ceiling whenever his football potential comes up. He wishes they had chosen a nickname that sounded less like a hardware-store aisle.
 
-Audience: Star or Elite development.
+*upside-10 · football · Eligibility: high-potential*
 
-There is still considerable opportunity to develop his game. He is focusing on specific habits instead of trying to improve everything at once.
+## The Realistic Goal
 
-### 126. The Longer Plan
+He knows his football ceiling is limited and hates being given an inspirational speech about it. A clear job description is more useful to him than another miracle story.
 
-Audience: Star or Elite development.
+*limited-upside-01 · football · Eligibility: limited-potential*
 
-His profile gives him reasons to take a longer view of development. That perspective helps him see ordinary practice as part of something worth building.
+## The Summer Shift
 
-### 127. Possibility and Preparation
+Stocking shelves taught him how long a clock can take to move. He sometimes complains about football work, but still prefers it to the freezer aisle.
 
-Audience: Star or Elite development.
+*limited-upside-02 · football · Eligibility: limited-potential*
 
-He has a promising development outlook rather than a guarantee. Keeping those ideas separate is part of how he approaches the work ahead.
+## The Field Volunteer
 
-### 128. The Open Notebook
+He once helped mark a youth football field and made the end zone several steps too short. Nobody lets him offer strong opinions about field dimensions anymore.
 
-Audience: Star or Elite development.
+*limited-upside-03 · football · Eligibility: limited-potential*
 
-His future development offers more possibilities than a snapshot of current ability can show. He wants to keep learning without inventing a destination before the work is done.
+## The Equipment Critic
 
-### 129. Growing into the Job
+He may not have limitless football upside, but his equipment opinions are extremely confident. Teammates have rejected his proposal to grade everyone's accessories.
 
-Audience: Star or Elite development.
+*limited-upside-04 · football · Eligibility: limited-potential*
 
-He has room to develop further within his football role. He is concentrating on becoming more complete rather than finding a shortcut to a reputation.
+## The Mailed Schedule
 
-### 130. The Patient Ceiling
+An old coach mailed him a football practice schedule as a reminder to stay useful. He phoned back to ask whether postage was really necessary.
 
-Audience: Star or Elite development.
+*limited-upside-05 · football · Eligibility: limited-potential*
 
-His potential gives him something worthwhile to pursue over time. He does not expect every practice to reveal the whole picture at once.
+## The Honest Assessment
 
-## Limited Upside
+He requested brutally honest football feedback and immediately wished he had requested something gentler. He still keeps the notes, mostly folded shut.
 
-### 131. Making the Most of It
+*limited-upside-06 · football · Eligibility: limited-potential*
 
-Audience: Normal development, low potential and restrictive caps.
+## The Useful Favor
 
-He is not banking on a dramatic jump in his physical tools. His focus is making better use of what he already brings to the job.
+He knows the equipment staff's coffee orders better than his own football highlights. He dislikes suggestions that these are unrelated measures of team value.
 
-### 132. The Practical Plan
+*limited-upside-07 · football · Eligibility: limited-potential*
 
-Audience: Normal development, low potential and restrictive caps.
+## The Repair Notebook
 
-A summer job stocking shelves taught him to take pride in work that nobody stopped to watch. He brings the same practical attitude to football, even without expecting a dramatic personal breakthrough.
+His father records every repair that keeps an old car running. He borrowed the notebook format for football and immediately lost the notebook.
 
-### 133. Value in the Routine
+*limited-upside-08 · football · Eligibility: limited-potential*
 
-Audience: Normal development, low potential and restrictive caps.
+## The Current Player
 
-He helped maintain a community field before youth games when he was growing up. Straightening markers and carrying water gave him an early appreciation for the useful jobs people rarely mention.
+He is tired of discussing the football player he might someday become. He would rather argue about whether he is getting enough credit for the one he already is.
 
-### 134. Working with the Tools
+*limited-upside-09 · football · Eligibility: limited-potential*
 
-Audience: Normal development, low potential and restrictive caps.
+## The Last Argument
 
-He approaches football as a job to do with the tools he has. His goals are deliberately grounded in the player he is now.
+He can accept a limited football ceiling more easily than losing an ordinary argument. His roommate has learned not to confuse realism with humility.
 
-### 135. No Miracle Required
+*limited-upside-10 · football · Eligibility: limited-potential*
 
-Audience: Normal development, low potential and restrictive caps.
+## The Recess Rematch
 
-A former coach mailed him an old practice schedule with one handwritten reminder: do the ordinary work. He kept it because the message fits how he approaches football now.
+He still demands a rematch from the kid who beat him in a childhood race. His current football speed has made arranging a fair head start impossible.
 
-### 136. The Honest Assessment
+*speed-01 · football · Eligibility: fast*
 
-Audience: Normal development, low potential and restrictive caps.
+## The Head Start
 
-He once asked a family friend for a brutally honest review of his football film. He did not enjoy every answer, but he appreciated leaving with a practical list instead of a sales pitch.
+Friends negotiate increasingly absurd head starts before racing him. He considers twenty yards excessive and still sometimes accepts.
 
-### 137. Useful before Flashy
+*speed-02 · football · Eligibility: fast*
 
-Audience: Normal development, low potential and restrictive caps.
+## The Wrong Direction
 
-He is aiming to be useful before trying to be impressive. It is a sensible approach for a player whose development path is not built around limitless upside.
+A youth coach once told him that sprinting the wrong way was not a useful football skill. The phrase followed his speed all the way into family conversations.
 
-### 138. The Small Improvement
+*speed-03 · football · Eligibility: fast*
 
-Audience: Normal development, low potential and restrictive caps.
+## The Sprint Home
 
-His father kept a notebook of repairs that made an aging car last another year. He borrowed the habit for football, writing down small fixes instead of waiting for one change to solve everything.
+He used to race the last stretch home after backyard football. His sister says the finish line moved whenever he was behind.
 
-### 139. What Can Be Repeated
+*speed-04 · football · Eligibility: fast*
 
-Audience: Normal development, low potential and restrictive caps.
+## The Burst Argument
 
-He is placing his attention on habits he can repeat with his current tools. A realistic plan feels more valuable than a big promise about his ceiling.
+He claims his football acceleration could beat anyone to the last slice of pizza. Nobody has approved using the kitchen to test this.
 
-### 140. Staying Grounded
+*speed-05 · football · Eligibility: fast*
 
-Audience: Normal development, low potential and restrictive caps.
+## The Open Stretch
 
-He is keeping his expectations grounded in a limited development outlook. That leaves room to take everyday football work seriously without demanding a storybook transformation.
+He enjoys open-field football space partly because it lets him show off. He denies slowing his walk afterward to see who noticed.
 
-## Speed
+*speed-06 · football · Eligibility: fast*
 
-### 141. Track-Lane Memory
+## The Finish Line
 
-Audience: Speed 88+ and Acceleration 85+.
+He learned to sprint through finish lines after losing a race while celebrating early. His family has no intention of deleting the video.
 
-His speed and acceleration give him an obvious athletic tool. He still remembers the simple thrill of racing friends to a line drawn in the grass.
+*speed-07 · football · Eligibility: fast*
 
-### 142. The Head Start Argument
+## The Chase
 
-Audience: Speed 88+ and Acceleration 85+.
+He used to volunteer to chase stray footballs because he could get there first. He stopped volunteering once everyone began kicking them farther on purpose.
 
-Friends used to negotiate head starts before racing him. His current burst explains why those arguments were rarely settled to everyone's satisfaction.
+*speed-08 · football · Eligibility: fast*
 
-### 143. Fast Is Not Finished
+## The Quick Steps
 
-Audience: Speed 88+ and Acceleration 85+.
+His first steps are quick enough that teammates ask him to demonstrate football get-offs. He would rather they asked him to demonstrate sitting down.
 
-He has genuine speed to work with. He is trying to make sure getting somewhere quickly does not replace understanding where he is supposed to be.
+*speed-09 · football · Eligibility: fast*
 
-### 144. The Sprint Home
+## The Recess Committee
 
-Audience: Speed 88+ and Acceleration 85+.
+He was banned from one playground race after refusing a handicap. He maintains that football has only made his position on handicaps stronger.
 
-As a kid, he found excuses to turn ordinary walks into races. That instinct fits a player who now brings notable speed and acceleration to football.
+*speed-10 · football · Eligibility: fast*
 
-### 145. Learning to Use the Burst
+## Moving Day
 
-Audience: Speed 88+ and Acceleration 85+.
+His strength has made him the default furniture mover in his football circle. He now asks about stairs before agreeing to visit anyone.
 
-His ability to accelerate is one of the clearer tools in his game. He is thinking about when to use it rather than assuming the fastest movement is always the right movement.
+*strength-01 · football · Eligibility: strong*
 
-### 146. The Open Stretch
+## The Heavy End
 
-Audience: Speed 88+ and Acceleration 85+.
+Teammates always hand him the heavier end during awkward equipment moves. He has started claiming a mysterious weakness limited to borrowed couches.
 
-He enjoys the feeling of having room to run. His speed gives that feeling a practical football use, although every assignment still needs its own plan.
+*strength-02 · football · Eligibility: strong*
 
-### 147. The Finish-Line Habit
+## The Weight-Room Argument
 
-Audience: Speed 88+ and Acceleration 85+.
+He is stronger than most people expect and insists that should settle unrelated football arguments. Coaches have not accepted the logic.
 
-He has always liked running through the finish rather than easing up before it. His current speed makes that a natural part of his athletic identity.
+*strength-03 · football · Eligibility: strong*
 
-### 148. Speed with a Purpose
+## The Stubborn Lid
 
-Audience: Speed 88+ and Acceleration 85+.
+His family saves stuck jars for him like unofficial strength tests. He complains that his football training has become unpaid kitchen labor.
 
-He brings enough speed and acceleration to make movement a meaningful part of his game. He wants those tools to serve the assignment instead of becoming a distraction from it.
+*strength-04 · football · Eligibility: strong*
 
-### 149. The Quick First Steps
+## The Loud Plate
 
-Audience: Speed 88+ and Acceleration 85+.
+He put a plate down too loudly in a weight room and spent the next hour hearing about it. He now lowers everything with exaggerated delicacy.
 
-His first few steps are backed by real acceleration. He is trying to connect that burst with the rest of the job rather than treat it as the whole job.
+*strength-05 · football · Eligibility: strong*
 
-### 150. Races at Recess
+## The Old Teammate
 
-Audience: Speed 88+ and Acceleration 85+.
+An old teammate still claims he taught him how to lift. He remembers the same teammate asking for help loading the bar.
 
-He remembers races at recess more clearly than most playground games. His current speed suggests those contests gave him a reason to keep coming back.
+*strength-06 · football · Eligibility: strong*
 
-## Strength
+## The Strongman's Patience
 
-### 151. Moving Day Volunteer
+His strength draws challenges from people who want to test him outside football. His favorite answer is asking whether the challenge includes carrying groceries.
 
-Audience: Strength 88+.
+*strength-07 · football · Eligibility: strong*
 
-His strength makes him a popular person to call when furniture needs moving. He still insists that awkward stairs are a different opponent from anything on a field.
+## The Careful Lift
 
-### 152. The Heavy End
+He can move heavy football equipment without much trouble. He still managed to break a flimsy shelf by leaning on it while explaining this.
 
-Audience: Strength 88+.
+*strength-08 · football · Eligibility: strong*
 
-When a job requires two people to lift something, friends tend to hand him the heavy end. His current strength makes the arrangement understandable, even if he complains about the planning.
+## Family Workday
 
-### 153. Strength Is a Tool
+His relatives schedule heavy yard work around his visits home from football. He suspects they are more interested in his strength than his stories.
 
-Audience: Strength 88+.
+*strength-09 · football · Eligibility: strong*
 
-He brings substantial strength to his football work. He is learning that applying it well matters more than merely having it available.
+## The Leverage Lecture
 
-### 154. The Stubborn Lid
+He has heard enough football lectures about leverage to deliver one himself. He chooses to do so whenever someone asks him to open a tight jar.
 
-Audience: Strength 88+.
+*strength-10 · football · Eligibility: strong*
 
-Family members have turned opening stubborn jars into a running joke about his strength. He likes reminding them that it is not an official household position.
+## The Cone Diagram
 
-### 155. Weight Room Patience
+He arranged a football drill so precisely that teammates accused him of measuring the grass. He produced a tape measure, which did not help his defense.
 
-Audience: Strength 88+.
+*technical-01 · football · Eligibility: technical*
 
-His strength is a clear part of his current athletic profile. He still treats preparation as something that needs patience rather than one dramatic effort.
+## The Demonstration
 
-### 156. The Physical Starting Point
+He prefers the technical side of football and enjoys demonstrating small corrections. Teammates enjoy asking him to demonstrate his notoriously bad parking.
 
-Audience: Strength 88+.
+*technical-02 · football · Eligibility: technical*
 
-He has a strong physical tool to build around. He is concentrating on connecting it to the details of his position.
+## The One Detail
 
-### 157. More than Force
+A coach corrected a detail in his football stance and he argued for several minutes. He later adopted the correction without acknowledging the conversation.
 
-Audience: Strength 88+.
+*technical-03 · football · Eligibility: technical*
 
-His strength gives him a useful option when a task becomes physical. He knows that timing and direction decide whether that force actually helps.
+## The Why Question
 
-### 158. The Careful Lift
+He wants an explanation before changing his football technique. One coach now begins every answer with because you are about to ask.
 
-Audience: Strength 88+.
+*technical-04 · football · Eligibility: technical*
 
-He is strong enough that people sometimes assume lifting is the easy part. He has learned to be just as interested in where his hands and feet belong.
+## The Broken-Down Drill
 
-### 159. Family Workdays
+He breaks football movements into pieces until even patient teammates get restless. He is less methodical about putting furniture together.
 
-Audience: Strength 88+.
+*technical-05 · football · Eligibility: technical*
 
-He was often the volunteer for the heavier jobs during family workdays. His current strength makes that memory fit the football player he has become.
+## The Craft Argument
 
-### 160. Using the Leverage
+He thinks precise positional skills deserve more attention than spectacular athletic clips. His friends have heard this opinion under nearly every football highlight.
 
-Audience: Strength 88+.
+*technical-06 · football · Eligibility: technical*
 
-He has plenty of strength available. Getting it into the right place at the right moment remains a separate skill to practice.
+## The Slow-Motion Clip
 
-## Technical
+He paused a football clip to show a tiny technical detail. His audience mainly noticed the terrible expression on his face.
 
-### 161. The Footwork Notebook
+*technical-07 · football · Eligibility: technical*
 
-Audience: Technical athletic profile.
+## The Good Rep
 
-He pays particular attention to the small steps that make a football movement work. His technical profile fits an approach built around refining the job rather than chasing athletic extremes.
+He is proud of a technically clean football rep that looks uneventful to everyone else. He has stopped trying to show it at parties.
 
-### 162. The Quiet Repetition
+*technical-08 · football · Eligibility: technical*
 
-Audience: Technical athletic profile.
+## The Small Adjustment
 
-He prefers repeating a precise movement to making a drill look dramatic. His game leans toward positional craft, so those quiet repetitions suit his priorities.
+He likes detailed football instructions but resents being told how to stack the dishwasher. His roommate has pointed out the inconsistency repeatedly.
 
-### 163. One Detail at a Time
+*technical-09 · football · Eligibility: technical*
 
-Audience: Technical athletic profile.
+## The Stance Photograph
 
-He likes instructions that identify one detail he can change. A technique-focused game gives him plenty of reason to value that clarity.
+He keeps a football stance photograph for technical reference. His sister uses the same photograph to make birthday cards.
 
-### 164. The Why Question
+*technical-10 · football · Eligibility: technical*
 
-Audience: Technical athletic profile.
+## The Equipment Search
 
-He wants to know why a particular hand placement or angle matters. Understanding the reason helps him organize the technical side of his game.
+His youth team struggled to find football pads small enough for him. The final pair had somebody else's name written inside in enormous letters.
 
-### 165. Practice in Pieces
+*small-01 · football · Eligibility: small-build*
 
-Audience: Technical athletic profile.
+## The Size Question
 
-He breaks a complicated action into smaller pieces when working through it. That habit fits a profile that emphasizes positional skill over raw athletic emphasis.
+He gets tired of strangers asking whether his smaller frame belongs on a football roster. He has begun asking whether they belong on a judging panel.
 
-### 166. The Craft Approach
+*small-02 · football · Eligibility: small-build*
 
-Audience: Technical athletic profile.
+## The Tape Measure
 
-He enjoys the part of football that rewards careful attention. His technical lean gives him a reason to treat familiar drills as opportunities rather than formalities.
+He argues that football measurements should not count shoes with thick soles. He makes this argument most strongly when somebody measures him without them.
 
-### 167. Film and Footwork
+*small-03 · football · Eligibility: small-build*
 
-Audience: Technical athletic profile.
+## The Small Gear Bag
 
-He is interested in how a small footwork change looks when a play is slowed down. His approach centers on making the positional details fit together.
+His football equipment takes up less space than some teammates' gear. He still claims more than his share of the team-bus overhead compartment.
 
-### 168. The Precise Rep
+*small-04 · football · Eligibility: small-build*
 
-Audience: Technical athletic profile.
+## The First Impression
 
-He would rather complete a precise rep than an impressive-looking one with a missing detail. That preference matches the technical direction of his game.
+People often notice his smaller football build before anything else. He enjoys waiting until they finish their assumptions before introducing himself.
 
-### 169. The Small Adjustment
+*small-05 · football · Eligibility: small-build*
 
-Audience: Technical athletic profile.
+## The Fit Check
 
-He pays attention when a coach asks for an adjustment that seems minor. His profile places value on the positional details those changes are meant to address.
+A youth football volunteer once padded out equipment that kept sliding off his shoulders. He remembers the volunteer's patience and his own refusal to stop complaining.
 
-### 170. Knowing the Shape
+*small-06 · football · Eligibility: small-build*
 
-Audience: Technical athletic profile.
+## The Wrong Size
 
-He likes understanding the shape of an assignment before trying to speed it up. Positional craft, rather than an extreme athletic identity, is the emphasis in his game.
+He ordered a football team sweatshirt based on a larger teammate's recommendation. His family now refers to it as the camping tent.
 
-## Small
+*small-07 · football · Eligibility: small-build*
 
-### 171. Finding the Right Fit
+## The Introduction
 
-Audience: Smaller same-position build.
+He dislikes being introduced as undersized before someone mentions his football position. He once introduced the offending teammate as chronically late.
 
-He has a smaller frame than many players at his position. Finding equipment that sits correctly has been part of his football routine for years.
+*small-08 · football · Eligibility: small-build*
 
-### 172. The Size Question
+## The Borrowed Pads
 
-Audience: Smaller same-position build.
+Borrowed youth football pads once made him look far larger than he was. His family still uses the photograph whenever he criticizes their clothes.
 
-Questions about his smaller build have followed him into football conversations. He would rather spend that energy understanding the job in front of him.
+*small-09 · football · Eligibility: small-build*
 
-### 173. Measured by the Task
+## The Height Argument
 
-Audience: Smaller same-position build.
+He has a smaller frame at his football position and no patience for exaggerated roster heights. He also insists the family height chart was mounted crooked.
 
-He is shorter and lighter than many of his positional peers. He wants the task itself, not a first impression of his frame, to guide how he prepares.
+*small-10 · football · Eligibility: small-build*
 
-### 174. The Smaller Locker Kit
+## The Back Row
 
-Audience: Smaller same-position build.
+Football team photographs usually place him at the back because of his frame. He says this is discrimination against people with excellent facial expressions.
 
-His equipment needs do not always match what is handed out first. A smaller build has made him comfortable asking for the fit he actually needs.
+*large-01 · football · Eligibility: large-build*
 
-### 175. Looking Past the Frame
+## The Legroom Vote
 
-Audience: Smaller same-position build.
+He notices legroom before anyone else on football trips. He campaigns for better seats with the persistence of someone running for office.
 
-His frame puts him toward the smaller end of his position. He does not treat that fact as a complete scouting report.
+*large-02 · football · Eligibility: large-build*
 
-### 176. The Fit Check
+## The Gear Bag
 
-Audience: Smaller same-position build.
+His larger football equipment makes packing look like an emergency evacuation. He regularly accuses teammates of stealing the space around his bag.
 
-He remembers an equipment volunteer digging through several boxes to find youth gear that fit him. His comparatively small frame still makes a careful fitting more useful than simply taking the first size offered.
+*large-03 · football · Eligibility: large-build*
 
-### 177. His Own Outline
+## The Door Frame
 
-Audience: Smaller same-position build.
+He ducked under a football equipment-room doorway that did not require ducking. Teammates have described it as an expensive-looking physical reflex.
 
-He does not have the frame people often picture first at his position. He is trying to work with his own build rather than imitate someone else's silhouette.
+*large-04 · football · Eligibility: large-build*
 
-### 178. The Undersized Introduction
+## The Size Assumption
 
-Audience: Smaller same-position build.
+People assume his larger football build means he enjoys being the center of attention. He would prefer they used that attention to find a bigger chair.
 
-His smaller size tends to become part of the introduction before anyone discusses football. He would prefer a conversation that lasts long enough to reach the actual assignment.
+*large-05 · football · Eligibility: large-build*
 
-### 179. The Right Size
+## The Seat Trade
 
-Audience: Smaller same-position build.
+His teammates offer him cramped seats just to hear his negotiations. He has started charging imaginary transfer fees for every football-trip seating change.
 
-He has learned that making equipment fit is better than pretending a larger size will do. His smaller frame calls for practical adjustments, not a different identity.
+*large-06 · football · Eligibility: large-build*
 
-### 180. Beyond the Tape Measure
+## The Sleeve Search
 
-Audience: Smaller same-position build.
+Finding everyday shirts that fit his football frame is difficult enough. His friends still insist he dress up for plans they describe as casual.
 
-He falls on the smaller side of the position's physical range. That gives him something to account for, not a reason to stop learning the rest of the job.
+*large-07 · football · Eligibility: large-build*
 
-## Large
+## The First Question
 
-### 181. The Back-Row Photograph
+New acquaintances tend to ask his football measurements before his name. He answers with increasingly suspicious numbers to see whether anyone notices.
 
-Audience: Larger same-position build.
+*large-08 · football · Eligibility: large-build*
 
-He has a stack of school photographs in which he is standing in the back row. His larger frame has made the family joke about him blocking the camera a lasting one.
+## The Smaller Friend
 
-### 182. Finding Enough Legroom
+His oldest friend still remembers when they could share football gear. He refuses to retire a photograph proving they were once roughly the same size.
 
-Audience: Larger same-position build.
+*large-09 · football · Eligibility: large-build*
 
-He notices legroom before settling into a long trip. Being taller and heavier than many positional peers makes travel comfort a practical concern.
+## The Online Order
 
-### 183. The Larger Gear Bag
+He checks measurements before ordering football clothes online. He learned this after receiving a pair of trousers he could barely fit one leg into.
 
-Audience: Larger same-position build.
+*large-10 · football · Eligibility: large-build*
 
-His equipment can make a packed bag look fuller than someone else's. A comparatively large frame has a way of showing up in ordinary details.
+## The Receipt Playbook
 
-### 184. The Doorway Check
+He drew quarterback plays on grocery receipts as a child. His mother still owns one diagram requiring a receiver to hurdle a parked car.
 
-Audience: Larger same-position build.
+*quarterbacks-01 · football · Eligibility: qb*
 
-He has a habit of looking ahead when entering a cramped room. His larger build gives him reasons to think about space before everyone else does.
+## The Pickup Huddle
 
-### 185. Size and the Assignment
+He organized pickup huddles so seriously that cousins threatened to leave. His solution was to appoint them assistant coordinators.
 
-Audience: Larger same-position build.
+*quarterbacks-02 · football · Eligibility: qb*
 
-His frame stands out among players at the same position. He is concentrating on how to use that size rather than assuming it handles the job for him.
+## The Coverage Sketch
 
-### 186. The Seat Negotiation
+He explained a quarterback read using condiment bottles at dinner. The waitress cleared the defense halfway through his argument.
 
-Audience: Larger same-position build.
+*quarterbacks-03 · football · Eligibility: qb*
 
-Friends know that a seating plan involving him may require a little negotiation. His size is noticeable well beyond a football meeting room.
+## The Receiver's Version
 
-### 187. The Long Sleeves
+He asks receivers about their routes, then debates the answer. A teammate has suggested trying the listening part without the quarterback cross-examination.
 
-Audience: Larger same-position build.
+*quarterbacks-04 · football · Eligibility: qb*
 
-Finding everyday clothes with the right fit can take more effort than he would like. His larger frame has made him patient with trying things on.
+## The Snap Discussion
 
-### 188. More than an Outline
+He and a childhood center invented names for disastrous snaps. His family still uses one of those names whenever he drops something.
 
-Audience: Larger same-position build.
+*quarterbacks-05 · football · Eligibility: qb*
 
-His size is an obvious part of a first impression. He still wants to understand the football details that a large frame cannot answer by itself.
+## The Call Sheet
 
-### 189. The Bigger Frame
+He used to make fake quarterback call sheets for backyard games. His brother would steal them and demand that he audible.
 
-Audience: Larger same-position build.
+*quarterbacks-06 · football · Eligibility: qb*
 
-He carries a larger frame than many players doing the same job. Learning to manage the space around him is part of his everyday routine.
+## The Throwing Partner
 
-### 190. The Practical Measurement
+An older neighbor threw footballs with him after school. The neighbor now claims partial credit for every throw and no responsibility for the bad ones.
 
-Audience: Larger same-position build.
+*quarterbacks-07 · football · Eligibility: qb*
 
-He has learned to check measurements before ordering almost anything he wears. Being at the larger end of his position makes guessing a poor substitute for checking.
+## The Language Problem
 
-## Quarterbacks
+He likes comparing different names for quarterback concepts. He once confused a coach by confidently using terminology borrowed from a video game.
 
-### 191. The Backyard Playbook
+*quarterbacks-08 · football · Eligibility: qb*
 
-Audience: Quarterbacks.
+## The Huddle Impression
 
-He used to draw passing plays on the backs of grocery receipts for neighborhood games. His family still has a few, including one formation that involved throwing over a parked car.
+He practiced his quarterback huddle voice in the mirror as a kid. His sister still does an impression that sounds nothing like the version he remembers.
 
-### 192. Calling the Huddle
+*quarterbacks-09 · football · Eligibility: qb*
 
-Audience: Quarterbacks.
+## The Backyard Fence
 
-He remembers being the kid who volunteered to organize a pickup huddle. He now has a quarterback's reason to make the words clear before everyone starts moving.
+He broke a neighbor's fence while trying to prove he could make a difficult quarterback throw. His family still calls that fence his most expensive completion.
 
-### 193. The Coverage Sketch
+*quarterbacks-10 · football · Eligibility: qb*
 
-Audience: Quarterbacks.
+## The Extra Catch
 
-He sketches defensive looks while working through quarterback material. Putting them on paper helps him sort the question before deciding on an answer.
+He will toss a football with almost anyone until they start coaching his hands. He believes unpaid throwing sessions should have clear limits.
 
-### 194. A Receiver's Perspective
+*offensive-skill-01 · football · Eligibility: offensive-skill*
 
-Audience: Quarterbacks.
+## The Route Argument
 
-He likes asking receivers how a route feels from their side of the throw. As a quarterback, he wants the conversation to run in both directions.
+He and his childhood friends argued over whether a route counted as improvisation or cheating. His offensive football opinions remain suspiciously convenient.
 
-### 195. The Snap Conversation
+*offensive-skill-02 · football · Eligibility: offensive-skill*
 
-Audience: Quarterbacks.
+## The Kitchen Ban
 
-He makes a point of discussing the exchange with the players involved. Quarterback preparation includes a few details that never appear in a passing highlight.
+His grandmother banned footballs from the kitchen after a broken lamp. He still tucks a loaf of bread under his arm when carrying groceries.
 
-### 196. The Call Sheet Interest
+*offensive-skill-03 · football · Eligibility: offensive-skill*
 
-Audience: Quarterbacks.
+## The Sideline Paint
 
-He is interested in how a group of plays becomes a plan. His position gives him plenty of reasons to ask about the choices behind a call sheet.
+As a kid he used sidewalk cracks to practice staying inbounds. A neighbor finally asked him to stop stomping past the window during dinner.
 
-### 197. The Throwing Partner
+*offensive-skill-04 · football · Eligibility: offensive-skill*
 
-Audience: Quarterbacks.
+## The Celebration Committee
 
-An older neighbor was his regular throwing partner when his parents worked late. They still exchange messages, although the neighbor now insists that every good throw began with his advice.
+He has designed touchdown celebrations he may never have reason to use. Teammates judge the rehearsals more harshly than any defensive back could.
 
-### 198. Learning the Language
+*offensive-skill-05 · football · Eligibility: offensive-skill*
 
-Audience: Quarterbacks.
+## The Blocking Complaint
 
-He likes comparing the different names people give familiar passing concepts. Playing quarterback has made that collection of terms more than a casual interest.
+He complains about offensive drills that do not involve touching the ball. His coach responds by mentioning the complaint before assigning another one.
 
-### 199. The Reset between Plays
+*offensive-skill-06 · football · Eligibility: offensive-skill*
 
-Audience: Quarterbacks.
+## The Timing Question
 
-He thinks about what he wants the huddle to hear after a difficult rep. For a quarterback, the next instruction needs to be clearer than the last frustration.
+He was once blamed for a backyard football play that failed before anyone moved. He continues to insist the snap count was negotiable.
 
-### 200. The Ball at the Start
+*offensive-skill-07 · football · Eligibility: offensive-skill*
 
-Audience: Quarterbacks.
+## The Younger Brother
 
-He is drawn to the way a play begins with so many possible directions. Quarterback is the position where he gets to work through that question most directly.
+His younger brother made him run offensive routes until the streetlights came on. He now claims the boy owes him several years of receiving fees.
 
-## Offensive Skill
+*offensive-skill-08 · football · Eligibility: offensive-skill*
 
-### 201. The Extra Catch
+## The Grass Diagram
 
-Audience: HB, FB, WR or TE.
+He drew an offensive play in somebody's lawn with a mower as a teenager. The homeowner understood the diagram and still wanted him grounded.
 
-He rarely objects when someone needs a partner to toss a ball. Playing an offensive skill position gives those casual repetitions a familiar purpose.
+*offensive-skill-09 · football · Eligibility: offensive-skill*
 
-### 202. The Route Conversation
+## The Touch Count
 
-Audience: HB, FB, WR or TE.
+He claims not to care how often an offensive play includes him. His friends have noticed that he can recount those totals without checking anything.
 
-He likes talking through how a route or run should develop before it starts. Understanding the space is part of what interests him about his offensive role.
+*offensive-skill-10 · football · Eligibility: offensive-skill*
 
-### 203. The Ball-Carry Habit
+## The Five Seats
 
-Audience: HB, FB, WR or TE.
+His high school offensive line claimed a lunch table all year. He still gets offended when friends suggest that was mostly about the food.
 
-His grandmother refused to let him carry a football into the kitchen after one broken lamp. He still catches himself tucking anything football-shaped against his side, including a loaf of bread.
+*offensive-line-01 · football · Eligibility: ol*
 
-### 204. The Sideline Marker
+## The Glove Argument
 
-Audience: HB, FB, WR or TE.
+He can spend longer discussing offensive-line gloves than buying normal clothes. His girlfriend has asked why dinner reservations receive less research.
 
-He pays attention to the difference between open space and usable space. On offense, a boundary can turn a simple idea into a very specific job.
+*offensive-line-02 · football · Eligibility: ol*
 
-### 205. Practice after the Catch
+## The Protection Lecture
 
-Audience: HB, FB, WR or TE.
+He explained a protection call at a family barbecue using empty chairs. Nobody sat down for ten minutes because he kept adjusting the formation.
 
-He enjoys working through what happens after the ball arrives. An offensive skill role includes more than reaching the first point on a diagram.
+*offensive-line-03 · football · Eligibility: ol*
 
-### 206. The Blocking Reminder
+## The Line-Room Seat
 
-Audience: HB, FB, WR or TE.
+An old offensive-line teammate still owes him lunch after losing a ridiculous bet. Both have kept the argument alive far longer than the friendship requires.
 
-He does not want the ball to be the only part of his offensive identity. He asks about the assignments that still matter when a teammate gets the touch.
+*offensive-line-04 · football · Eligibility: ol*
 
-### 207. The Timing Question
+## The Wrestling Tryout
 
-Audience: HB, FB, WR or TE.
+A football coach encouraged him to try wrestling for balance and leverage. He remembers the early weigh-ins more vividly than any technical benefit.
 
-He is interested in the timing that lets several offensive movements fit together. He would rather understand his part than merely memorize where to stand.
+*offensive-line-05 · football · Eligibility: ol*
 
-### 208. The Return Pass
+## The Older Lineman
 
-Audience: HB, FB, WR or TE.
+An older high school lineman patiently explained assignments when he was new. He repaid the kindness by borrowing the player's gloves and losing one.
 
-His younger brother used to make him run routes until the streetlights came on. The routes were rarely drawn properly, but neither of them ever wanted to be the first to go inside.
+*offensive-line-06 · football · Eligibility: ol*
 
-### 209. The Open-Grass Diagram
+## The Last Seat
 
-Audience: HB, FB, WR or TE.
+He believes offensive linemen deserve the best chairs at team dinners. His evidence is a speech nobody has agreed to hear twice.
 
-He likes diagrams that explain where space is supposed to appear. His offensive role gives him reasons to connect those drawings with what a defender actually does.
+*offensive-line-07 · football · Eligibility: ol*
 
-### 210. The Work without the Touch
+## The Stance Joke
 
-Audience: HB, FB, WR or TE.
+His family insists he stands like an offensive lineman even when waiting for coffee. He denies it until someone shows him a photograph.
 
-He is learning to judge an offensive rep by more than whether the ball reaches him. A useful assignment can happen well away from the eventual tackle.
+*offensive-line-08 · football · Eligibility: ol*
 
-## Offensive Line
+## The Shared Answer
 
-### 211. The Five-Person Job
+He likes solving blocking arguments with other linemen and dislikes admitting when they are right. His apologies usually arrive disguised as a restaurant recommendation.
 
-Audience: Offensive line.
+*offensive-line-09 · football · Eligibility: ol*
 
-He likes the idea that an offensive line has to solve a problem together. Understanding the neighboring assignment is part of how he approaches his own.
+## The Practice Finish
 
-### 212. Hands before Headlines
+He takes offensive-line practice personally enough to argue about a final rep on the way home. His old coach still refuses to revisit their oldest dispute.
 
-Audience: Offensive line.
+*offensive-line-10 · football · Eligibility: ol*
 
-He pays attention to hand placement during ordinary line work. Offensive line gives him a position where small details can matter without drawing much attention.
+## The Old Collision
 
-### 213. The Protection Conversation
+He once collided with a tackling dummy so enthusiastically that it knocked over a youth coach's drink. The coach still introduces him as the reason for the lid rule.
 
-Audience: Offensive line.
+*defensive-line-01 · football · Eligibility: dl*
 
-He is interested in how a protection call connects several players. He wants to understand the conversation rather than only the word directed at him.
+## The Rush Notebook
 
-### 214. The Line-Room Seat
+His defensive-line notebook contains names for rush combinations that coaches have never approved. His favorite is mostly an excuse to say something ridiculous before contact.
 
-Audience: Offensive line.
+*defensive-line-02 · football · Eligibility: dl*
 
-His high school line used to claim the same lunch table every day, even outside football season. He misses the arguments over the last seat more than he admits.
+## The Gap Argument
 
-### 215. The First Step Study
+He used to argue defensive gaps with an offensive-line friend over video games. Their real football disagreements are less polite and considerably better informed.
 
-Audience: Offensive line.
+*defensive-line-03 · football · Eligibility: dl*
 
-He tried wrestling after a high school coach suggested it might help him understand balance. He came away with more respect for footwork and a strong dislike of early tournament weigh-ins.
+## The Hand Check
 
-### 216. The Neighboring Helmet
+A youth defensive-line coach checked his fingernails before every practice. He still files them before team activities and resents being reminded why.
 
-Audience: Offensive line.
+*defensive-line-04 · football · Eligibility: dl*
 
-His first offensive line coach paired every new player with an older teammate. He still remembers the patience of the lineman who explained the same assignment three different ways.
+## The Opposite Stance
 
-### 217. The Unseen Part
+His oldest football friend became an offensive lineman. They swap clips mainly to accuse each other of getting away with holding.
 
-Audience: Offensive line.
+*defensive-line-05 · football · Eligibility: dl*
 
-He is interested in football work that often disappears behind the ball. Playing on the offensive line gives him plenty of that work to think about.
+## The Run Complaint
 
-### 218. The Stance Routine
+He enjoys the idea of chasing quarterbacks more than the less glamorous defensive-line assignments. His coach can usually tell which kind of drill is next from his expression.
 
-Audience: Offensive line.
+*defensive-line-06 · football · Eligibility: dl*
 
-He approaches his stance as something worth checking rather than assuming. Line play gives him a reason to repeat a familiar setup with care.
+## The Crowded Garage
 
-### 219. The Shared Answer
+He grew up repairing engines with an uncle in a cramped garage. He says playing on the defensive line offers slightly more room and much worse conversation.
 
-Audience: Offensive line.
+*defensive-line-07 · football · Eligibility: dl*
 
-He likes working through a blocking question with another lineman. Hearing a second explanation can show him where his own picture is incomplete.
+## The Second Move
 
-### 220. The Finish of a Rep
+He invented an elaborate pass-rush move during backyard football that nobody could remember afterward. His cousins still insist he gives it a different name each summer.
 
-Audience: Offensive line.
+*defensive-line-08 · football · Eligibility: dl*
 
-He pays attention to how a blocking rep ends as well as how it starts. The offensive line has taught him that the first contact is not the whole assignment.
+## The Front's Speaker
 
-## Defensive Line
+He appointed himself the defensive line's unofficial music director. Nobody voted for him, and several teammates are planning a peaceful transfer of power.
 
-### 221. The Point of Contact
+*defensive-line-09 · football · Eligibility: dl*
 
-Audience: EDGE or DT.
+## The Ball-Carrying Day
 
-He is interested in what happens where an offensive play first meets resistance. His defensive line role keeps that question close to the center of practice.
+His youth coach let defensive linemen carry the football at the end of practice. His family still owns a video explaining why this remained an occasional privilege.
 
-### 222. The Rush Plan Notebook
+*defensive-line-10 · football · Eligibility: dl*
 
-Audience: EDGE or DT.
+## The Backyard Coverage
 
-He writes down reminders about the sequence of a rush. A plan for the line of scrimmage seems more useful than a collection of unrelated moves.
+He spent childhood one-on-ones accusing his friend of pushing off. His friend still answers every defensive football argument with a video of him doing the same thing.
 
-### 223. The Gap Question
+*back-seven-01 · football · Eligibility: back-seven*
 
-Audience: EDGE or DT.
+## The Loud Check
 
-He asks how his gap responsibility fits the defender beside him. Playing on the defensive front means someone else's movement can change the picture quickly.
+He practiced defensive calls loudly enough that his roommate could repeat them. The roommate has begun requesting credit for participating in football preparation.
 
-### 224. Watching the Hands
+*back-seven-02 · football · Eligibility: back-seven*
 
-Audience: EDGE or DT.
+## The Receiver Friend
 
-He notices hand placement when studying line-of-scrimmage work. Defensive line gives him plenty of reasons to care about details that can vanish at full speed.
+His childhood best friend always played receiver while he preferred defense. Neither agrees about the all-time score, and both have witnesses of questionable reliability.
 
-### 225. The Stance across from Him
+*back-seven-03 · football · Eligibility: back-seven*
 
-Audience: EDGE or DT.
+## The Missed Angle
 
-A friend from his youth team became an offensive lineman, turning their backyard arguments into football debates. They still send each other clips, each convinced the other has the easier job.
+He once misjudged a backyard football pursuit angle and landed in a hedge. His family considers the hedge part of his official defensive development.
 
-### 226. The Rush and the Run
+*back-seven-04 · football · Eligibility: back-seven*
 
-Audience: EDGE or DT.
+## The Motion Argument
 
-He does not want to think about his job only as a chase toward the quarterback. Defensive front work also asks him to understand what happens when the ball goes elsewhere.
+He watches offensive motion suspiciously even in casual football games. His cousins move before every snap purely to start the debate.
 
-### 227. The Small-Space Job
+*back-seven-05 · football · Eligibility: back-seven*
 
-Audience: EDGE or DT.
+## The Help Call
 
-As a kid, he helped an uncle repair engines in a garage with barely enough room to move. He jokes that working in crowded spaces prepared him for life near the line of scrimmage.
+He is particular about defensive communication but not about returning ordinary text messages. Friends have asked whether announcing a coverage check would get a faster response.
 
-### 228. The Second Move
+*back-seven-06 · football · Eligibility: back-seven*
 
-Audience: EDGE or DT.
+## The Old Outfield
 
-He likes talking through what comes after the first contact. A defensive line rep can become a different problem before the initial idea has finished.
+He played center field in neighborhood baseball before preferring defensive football. The old baseball friends still blame him whenever a ball disappears into tall grass.
 
-### 229. The Front's Conversation
+*back-seven-07 · football · Eligibility: back-seven*
 
-Audience: EDGE or DT.
+## The Couch Coordinator
 
-He wants to know what the rest of the defensive front is expecting. The job makes more sense to him as a shared picture than a series of isolated collisions.
+His family paused televised games to argue defensive coverages when he was growing up. He now understands the argument better and finds the pauses more annoying.
 
-### 230. The Pursuit Finish
+*back-seven-08 · football · Eligibility: back-seven*
 
-Audience: EDGE or DT.
+## The Eye Discipline
 
-His youth coach ended every practice by letting the defensive linemen carry the ball. He still remembers those chaotic races whenever someone claims the players up front never get to have fun.
+A childhood coach caught him watching the wrong part of a football drill. His relatives repeat the coach's warning whenever an attractive stranger passes.
 
-## Back Seven
+*back-seven-09 · football · Eligibility: back-seven*
 
-### 231. The Leverage Question
+## The Pursuit Landmark
 
-Audience: LB, CB, FS or SS.
+He learned pursuit angles by chasing cousins around a large backyard tree. He insists the cousin who climbed it should have been declared out of bounds.
 
-He asks about leverage before worrying about how a defensive rep looks. His role behind the front gives him a reason to care where help is supposed to be.
+*back-seven-10 · football · Eligibility: back-seven*
 
-### 232. The Communicated Check
+## The Repeatable Setup
 
-Audience: LB, CB, FS or SS.
+He set up football kicking targets in a childhood yard with strict rules about distance. His neighbor added a stricter rule about the windows.
 
-He likes repeating a defensive check until the words are easy to understand. A clear message matters even when it is not the most exciting part of the play.
+*specialists-01 · football · Eligibility: specialist*
 
-### 233. The Route from the Other Side
+## The Weather Forecast
 
-Audience: LB, CB, FS or SS.
+His interest in kicking made him unusually attentive to wind. His family now holds him personally responsible when a cookout gets rained out.
 
-His best childhood friend always insisted on playing receiver in their one-on-one games. They disagree about who won more often, but those afternoons helped make defense his favorite side of the ball.
+*specialists-02 · football · Eligibility: specialist*
 
-### 234. The Angle in the Diagram
+## The Quiet Corner
 
-Audience: LB, CB, FS or SS.
+He preferred working on football kicks at an empty park while friends played basketball. They mostly joined him when he needed somebody to retrieve balls.
 
-He pays attention to the path that leads toward a tackle, not only the finish. Playing behind the front makes angles part of his everyday football vocabulary.
+*specialists-03 · football · Eligibility: specialist*
 
-### 235. The Motion Reminder
+## The Contact Point
 
-Audience: LB, CB, FS or SS.
+He once explained kicking contact using a dinner roll and a butter knife. The demonstration ended with somebody requesting a different topic.
 
-He watches how an offense changes the picture before the snap. His job gives him plenty of reasons to ask what stays the same when the formation moves.
+*specialists-04 · football · Eligibility: specialist*
 
-### 236. The Help behind the Call
+## The Waiting Game
 
-Audience: LB, CB, FS or SS.
+His specialist practice setup includes more waiting than his friends expect. He fills it by inventing increasingly petty competitions over who can hit a marker.
 
-He likes understanding where the next defender fits into a coverage. Knowing his own responsibility is only one part of seeing the whole arrangement.
+*specialists-05 · football · Eligibility: specialist*
 
-### 237. The Open-Field Question
+## The Familiar Spot
 
-Audience: LB, CB, FS or SS.
+He claimed a patch of grass for childhood kicking practice. His father eventually moved the target to save the lawn and became an alleged enemy of football.
 
-He spent childhood summers playing center field on a neighborhood baseball team. He did not stick with baseball, but he remembers enjoying the feeling of having a whole patch of grass to look after.
+*specialists-06 · football · Eligibility: specialist*
 
-### 238. The Coverage Conversation
+## The Old Soccer Ball
 
-Audience: LB, CB, FS or SS.
+An old soccer ball introduced him to kicking long before football did. He keeps it at home despite a sibling's repeated attempts to donate it.
 
-His family used to pause televised games so everyone could argue about what the defense should do. He now understands why his guesses from the couch were easier than the real assignments.
+*specialists-07 · football · Eligibility: specialist*
 
-### 239. Eyes and the Assignment
+## The Tiny Correction
 
-Audience: LB, CB, FS or SS.
+He can explain a specialist adjustment at length to an unwilling audience. His family has developed a rotating system for accepting those calls.
 
-He thinks about what he should be looking at before a play develops. His defensive role makes the answer more useful than simply trying to watch everything.
+*specialists-08 · football · Eligibility: specialist*
 
-### 240. The Pursuit Landmark
+## The Garage Wall
 
-Audience: LB, CB, FS or SS.
+He started by kicking a soft ball against a garage wall. The garage's owner remembers this phase of his football development less fondly than he does.
 
-He likes having a landmark when discussing pursuit. A specific place on the field is easier for him to work toward than a vague instruction to get involved.
+*specialists-09 · football · Eligibility: specialist*
 
-## Specialists
+## The Reset Routine
 
-### 241. The Repeatable Setup
+He has a private little reset ritual between football kicks. He refuses to describe it because a teammate once tried to sell demonstrations.
 
-Audience: Kickers or punters.
+*specialists-10 · football · Eligibility: specialist*
 
-He is interested in making his setup look familiar from one attempt to the next. Specialist work gives a small routine a large place in the practice day.
+## The Last Song
 
-### 242. Weather Notebook
+He keeps volunteering to control the locker-room music and then ignoring requests. Teammates have begun pretending the speaker is broken when he arrives.
 
-Audience: Kickers or punters.
+*off-field-01 · football · Eligibility: performer*
 
-He began checking the wind on walks to school after getting interested in kicking a football. His family still asks him for a weather report whenever they plan an outdoor meal.
+## The Open Door
 
-### 243. The Quiet Corner
+He props his football locker open during conversations and complains when people borrow things. He has rejected every suggestion linking those two habits.
 
-Audience: Kickers or punters.
+*off-field-02 · football · Eligibility: any*
 
-He used to take a football to an empty park while friends played on the nearby courts. Having a quiet place to practice became part of why he enjoyed being a specialist.
+## The Couch Reservation
 
-### 244. The Contact Point
+He likes watching football from the same battered couch at a teammate's apartment. He claims the good cushion despite contributing nothing toward the couch.
 
-Audience: Kickers or punters.
+*off-field-03 · football · Eligibility: any*
 
-He pays attention to the point where his foot meets the ball. It is a small detail that his specialist role gives him reasons to revisit often.
+## Team Nightlife Correspondent
 
-### 245. The Waiting Part
+He knows which teammate will get a laugh at a team gathering and introduces them like a ring announcer. The introductions are becoming more insulting than the actual jokes.
 
-Audience: Kickers or punters.
+*off-field-04 · football · Eligibility: performer*
 
-He is interested in staying ready during the stretches between attempts. Specialist work includes managing that time as well as the action everyone notices.
+## The Sunrise Walker
 
-### 246. A Familiar Spot
+He enjoys the empty walk to early football commitments less than the silence it gives him. He takes a longer route if he spots someone unusually talkative.
 
-Audience: Kickers or punters.
+*off-field-05 · football · Eligibility: any*
 
-He likes beginning practice from a familiar spot before changing the task. The routine gives his specialist work a clear starting point.
+## The Dining-Hall Table
 
-### 247. The Ball Conversation
+He has a preferred dining-hall seat beside teammates who will argue football with him. He becomes mysteriously quiet when someone remembers his worst prediction.
 
-Audience: Kickers or punters.
+*off-field-06 · football · Eligibility: any*
 
-An old soccer ball was his first piece of sports equipment, long before he tried kicking a football. He keeps it at home as a reminder of afternoons spent inventing targets along the fence.
+## The Practice Spectator
 
-### 248. The Small Correction
+He people-watches during gaps in football activities and invents private nicknames. His closest friend has demanded a written guarantee that he is exempt.
 
-Audience: Kickers or punters.
+*off-field-07 · football · Eligibility: any*
 
-He prefers a clear, small correction to changing everything after one attempt. That approach suits work built around a repeatable specialist motion.
+## One More Invitation
 
-### 249. The Long Pause
+He volunteers the football group for events before checking whether anyone wants to go. Teammates now require a second signature on his social plans.
 
-Audience: Kickers or punters.
+*off-field-08 · football · Eligibility: performer*
 
-He first learned to enjoy repetitive practice by hitting tennis balls against a garage wall. The sport changed, but he still likes having one small task he can set up and try again.
+## The Homebody's Excuse
 
-### 250. The Reset Routine
+He blamed football commitments for missing a gathering when he really wanted to stay on the couch. The excuse failed when three teammates appeared in the same photograph from the gathering.
 
-Audience: Kickers or punters.
+*off-field-09 · football · Eligibility: any*
 
-He has a simple routine for starting again after an attempt. He wants the next setup to be about the next task, not the result that just happened.
-
-# Additional Campus-Life Stories
-
-## Off the Field
-
-### 251. The Last Song
-
-Audience: Entertainer or Unpredictable personality.
-
-He plans to leave every party after one more song. His friends have learned that this estimate restarts whenever the music gets better.
-
-### 252. The Open Door
-
-Audience: Any player.
-
-He props his room door open when he wants company and closes it when he needs quiet. The system works better than his roommate's habit of shouting down the hallway.
-
-### 253. The Couch Reservation
-
-Audience: Any player.
-
-His ideal free evening involves a familiar couch, takeout and absolutely no complicated plans. He will still dress properly if someone explains that the invitation is not optional.
-
-### 254. Campus Nightlife Correspondent
-
-Audience: Entertainer or Unpredictable personality.
-
-He always seems to know which student event will be worth the walk. Nobody remembers appointing him to the role, but the group still asks for his recommendations.
-
-### 255. The Sunrise Walker
-
-Audience: Any player.
-
-He likes being outside before the campus gets crowded. It is the one stretch of the day when nobody asks what he has planned next.
-
-### 256. The Dining Hall Regular
-
-Audience: Any player.
-
-He has a preferred dining-hall route and gets annoyed when the stations change. Friends treat watching him find a new lunch plan as a minor campus event.
-
-### 257. The People Watcher
-
-Audience: Any player.
-
-He can spend a whole break sitting outside with a drink and watching campus go by. He insists it counts as doing something even when he has no intention of moving.
-
-### 258. One More Invitation
-
-Audience: Entertainer or Unpredictable personality.
-
-He accepts invitations before checking whether they overlap. His calendar looks impressive until somebody asks how he intends to attend three events at once.
-
-### 259. The Homebody's Excuse
-
-Audience: Any player.
-
-He once invented an elaborate reason to miss a gathering when he really wanted to stay home. Now he simply tells friends he has a reservation with his couch.
-
-### 260. The Laundry Window
-
-Audience: Any player.
+## The Laundry Window
 
 He tries to find the least crowded time to do laundry. This has turned him into an unlikely authority on when everyone else in the building wakes up.
 
-### 261. The Campus Shortcut
+*off-field-10 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Campus Shortcut
 
 He is convinced he knows a shortcut between every important place on campus. The confidence is strongest on routes nobody has timed.
 
-### 262. The Dance-Floor Volunteer
+*off-field-11 · personal · Eligibility: any*
 
-Audience: Entertainer or Unpredictable personality.
+## The Dance-Floor Volunteer
 
 He is usually the first friend willing to start dancing when a room feels awkward. Whether the dancing is good has never been central to his decision.
 
-### 263. The Late Snack Route
+*off-field-12 · personal · Eligibility: performer*
 
-Audience: Any player.
+## The Late Snack Route
 
 He organizes his free evenings around which food places will still be open afterward. Friends who forget to eat have learned to follow his lead.
 
-### 264. The Quiet Movie Night
+*off-field-13 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Quiet Movie Night
 
 He likes inviting a few people over rather than finding the busiest event in town. His only firm rule is that nobody gets to spend the entire movie choosing the next one.
 
-### 265. The Coffee Shop Seat
+*off-field-14 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Coffee Shop Seat
 
 He has a favorite coffee-shop seat because it is near an outlet and far from the door. He considers those practical advantages worth arriving early for.
 
-### 266. The Errand Collector
+*off-field-15 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Errand Collector
 
 He keeps putting small errands together until a simple trip becomes an entire afternoon. At least one friend has started asking for an itinerary before joining him.
 
-### 267. The Grocery Walk
+*off-field-16 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Grocery Walk
 
 He prefers walking to buy groceries when the list is short. Remembering that preference does not stop him from buying more than he can comfortably carry.
 
-### 268. The Spontaneous Host
+*off-field-17 · personal · Eligibility: any*
 
-Audience: Entertainer or Unpredictable personality.
+## The Spontaneous Host
 
 He can turn an ordinary evening into a gathering with a few messages. He is much less organized about finding enough chairs afterward.
 
-### 269. The Weekend Nap
+*off-field-18 · personal · Eligibility: performer*
 
-Audience: Any player.
+## The Weekend Nap
 
 He takes a weekend nap seriously enough to warn people in advance. Most of his friends respect the warning because waking him rarely produces useful conversation.
 
-### 270. The Campus Concert
+*off-field-19 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Campus Concert
 
 He likes going to student concerts without knowing the performers beforehand. Discovering one good song makes the whole evening feel worthwhile.
 
-### 271. The Balcony Conversation
+*off-field-20 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Balcony Conversation
 
 He enjoys conversations that happen slightly away from the main gathering. A quieter corner often keeps him out later than the party itself would have.
 
-### 272. The Breakfast Plan
+*off-field-21 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Breakfast Plan
 
 He makes ambitious breakfast plans whenever he has a free morning. Following through usually depends on whether someone is willing to knock on his door.
 
-### 273. The Spare Hoodie
+*off-field-22 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Spare Hoodie
 
 He keeps a spare hoodie in his bag because campus weather never follows the forecast he remembers. Friends have occasionally benefited from the habit before he does.
 
-### 274. The Festival Schedule
+*off-field-23 · personal · Eligibility: any*
 
-Audience: Entertainer or Unpredictable personality.
+## The Festival Schedule
 
 He reads the student-events calendar like other people read a menu. His biggest problem is deciding which free activity deserves his limited free time.
 
-### 275. The Phone-Free Hour
+*off-field-24 · personal · Eligibility: performer*
 
-Audience: Any player.
+## The Phone-Free Hour
 
 He tries to spend one quiet hour away from his phone when he can. The first few minutes are mostly spent checking where he left it.
 
-### 276. The Room Reset
+*off-field-25 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Room Reset
 
 He cleans his room thoroughly whenever he wants to feel more organized. The feeling usually lasts longer than the clean desk does.
 
-### 277. The Local Explorer
+*off-field-26 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Local Explorer
 
 He likes finding inexpensive places beyond the usual campus stops. Friends now send him suggestions as if he is compiling an official guide.
 
-### 278. The Practical Backpack
+*off-field-27 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Practical Backpack
 
 His backpack contains enough ordinary supplies to rescue a badly planned day. He is less reliable about remembering which pocket contains them.
 
-### 279. The Unplanned Picnic
+*off-field-28 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Unplanned Picnic
 
 He will happily eat an ordinary meal outside if the weather cooperates. Calling it a picnic makes the same sandwich feel like a much better plan.
 
-### 280. The Hallway Greeting
+*off-field-29 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Hallway Greeting
 
 He says hello to people often enough that a short trip through his building can take a while. He does not mind until he remembers he was going somewhere specific.
 
-### 281. The Birthday Organizer
+*off-field-30 · personal · Eligibility: any*
 
-Audience: Entertainer or Unpredictable personality.
+## The Birthday Organizer
 
 He takes friends' birthdays as an excuse to plan something memorable. The birthday person occasionally has to negotiate the definition of memorable.
 
-### 282. The Comfortable Routine
+*off-field-31 · personal · Eligibility: performer*
 
-Audience: Any player.
+## The Comfortable Routine
 
 He likes knowing where he will eat, when he will recharge and which friends will be around. Familiar plans are his favorite kind of luxury.
 
-### 283. The Shared Umbrella
+*off-field-32 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Shared Umbrella
 
 He carries an umbrella large enough that people regularly ask to walk with him. Bad weather has become an unusually reliable way for him to meet somebody.
 
-### 284. The Tiny Plant
+*off-field-33 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Tiny Plant
 
 He bought a small plant to make his room feel less temporary. Its continued survival has become a point of personal pride.
 
-### 285. The Off-Campus Bench
+*off-field-34 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Off-Campus Bench
 
 He found a quiet bench on a walk and started returning when he wanted a break. He has kept its location to himself mostly because he likes how quiet it stays.
 
-### 286. The Ticket Reminder
+*off-field-35 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Ticket Reminder
 
 He sets reminders for campus events he wants to attend. The reminder is often the first time he realizes the event is already sold out.
 
-### 287. The Window Open
+*off-field-36 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Window Open
 
 He likes fresh air enough to open a window whenever he can. His roommate has a more conservative understanding of acceptable indoor temperatures.
 
-### 288. The Long Dinner
+*off-field-37 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Long Dinner
 
 He enjoys meals that turn into conversations after everyone has finished eating. The staff clearing nearby tables is usually what reminds him to leave.
 
-### 289. The Saturday Bookshop
+*off-field-38 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Saturday Bookshop
 
 He likes browsing a bookshop without arriving with a particular title in mind. He often leaves with something unrelated to the reason he went inside.
 
-### 290. The Recovery of Sunday
+*off-field-39 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Recovery of Sunday
 
 He likes keeping one part of Sunday deliberately unplanned. After a crowded week, choosing to do very little feels like making a decision rather than avoiding one.
 
-## Personality & Character
+*off-field-40 · personal · Eligibility: any*
 
-### 291. The Best-Dressed Claim
+## The Best-Dressed Claim
 
-Audience: Entertainer or Unpredictable personality.
+He rates his teammates' football-arrival outfits without being asked. He considers his own wardrobe exempt because the judge cannot enter the competition.
 
-He calls himself the best-dressed person in any room before checking the competition. His friends keep photographic evidence for occasions when the claim needs challenging.
+*character-01 · football · Eligibility: performer*
 
-### 292. The Self-Appointed Expert
+## The Self-Appointed Expert
 
-Audience: Entertainer or Unpredictable personality.
+He calls himself a football historian after watching a handful of old highlights. Teammates keep asking him about games they made up.
 
-He has a confident opinion about subjects he has only recently discovered. Admitting he is learning would ruin the presentation, so friends ask increasingly specific questions.
+*character-02 · football · Eligibility: performer*
 
-### 293. The Entrance
+## The Entrance
 
-Audience: Entertainer or Unpredictable personality.
+He walks into football meetings with the timing of somebody expecting applause. His position coach has begun welcoming him with deliberately awkward silence.
 
-He has a talent for entering a room as though somebody announced him. Even a trip to collect a forgotten charger can look like an appearance.
+*character-03 · football · Eligibility: performer*
 
-### 294. The Victory Speech
+## The Victory Speech
 
-Audience: Entertainer or Unpredictable personality.
+He delivers mock victory speeches after winning minor football-room arguments. Teammates deliver equally elaborate corrections when his evidence turns out to be wrong.
 
-He prepares victory speeches for games that have not started. Friends enjoy beating him mostly to hear how he revises the ending.
+*character-04 · football · Eligibility: performer*
 
-### 295. The Friendly Rivalry
+## The Friendly Rivalry
 
-Audience: Entertainer or Unpredictable personality.
+He turns a walk to football activities into a competition without warning anybody. He then complains that nobody is giving him proper credit for winning.
 
-He turns choosing dinner into a competition over who has the better suggestion. He loses surprisingly often for someone who campaigns so confidently.
+*character-05 · football · Eligibility: performer*
 
-### 296. The Outfit Consultation
+## The Outfit Consultation
 
-Audience: Entertainer or Unpredictable personality.
+He makes teammates vote on his team-travel outfit and ignores the result. His friends call the process a survey of people he intends to disappoint.
 
-He claims not to need anyone's fashion advice, then sends three mirror pictures. His group chat has agreed to pretend this is a quality-control procedure.
+*character-06 · football · Eligibility: performer*
 
-### 297. The Main Character
+## The Main Character
 
-Audience: Entertainer or Unpredictable personality.
+He describes routine football meetings as scenes from a documentary about himself. Teammates object mainly to the quality of the roles he assigns them.
 
-He narrates minor inconveniences as if they belong in a documentary about his life. Friends are not always willing to play the supporting roles he assigns them.
+*character-07 · football · Eligibility: performer*
 
-### 298. The Loud Prediction
+## The Loud Prediction
 
-Audience: Entertainer or Unpredictable personality.
+He predicts the result of every informal football challenge with complete confidence. A teammate has started keeping score of the predictions rather than the contests.
 
-He makes bold predictions about ordinary things, including which elevator will arrive first. Being wrong rarely seems to reduce his enthusiasm for the next prediction.
+*character-08 · football · Eligibility: performer*
 
-### 299. The Bad Idea Committee
+## The Bad Idea Committee
 
-Audience: Unpredictable or Entertainer personality.
+He persuaded teammates to conduct a mock press conference about a missing football glove. The owner was not amused to discover he was the leading suspect.
 
-He can spot a harmless bad idea and become its strongest advocate in seconds. His friends have learned that laughing is not the same as agreeing to participate.
+*character-09 · football · Eligibility: unpredictable*
 
-### 300. The Dramatic Apology
+## The Dramatic Apology
 
-Audience: Unpredictable or Entertainer personality.
+He apologized for eating a teammate's post-practice meal with a handwritten statement. The statement blamed poor refrigerator communication and made everything worse.
 
-He once delivered an unnecessarily formal apology for eating somebody else's leftovers. The speech is now quoted whenever food disappears from the shared refrigerator.
+*character-10 · football · Eligibility: unpredictable*
 
-### 301. The Credit Redirect
+## The Credit Redirect
 
-Audience: TeamPlayer or Leader personality.
+He thanked a football teammate publicly for a favor and accidentally revealed an embarrassing detail. He still owes that teammate a second, much quieter thank-you.
 
-He gets uncomfortable when a simple favor becomes a big public compliment. His usual response is to point out somebody else who helped.
+*character-11 · football · Eligibility: team-first*
 
-### 302. The Quiet Favor
+## The Quiet Favor
 
-Audience: TeamPlayer or Leader personality.
+He leaves spare football supplies for teammates who run out but hates being called the team parent. A package of cartoon reward stickers tested his patience.
 
-He remembers small problems friends mention in passing. People sometimes realize he solved one before they remember asking for help.
+*character-12 · football · Eligibility: team-first*
 
-### 303. The Extra Seat
+## The Extra Seat
 
-Audience: TeamPlayer or Leader personality.
+He makes room for newcomers at football dinners even when the table is already crowded. He is less welcoming about sharing the fries he ordered.
 
-He notices when someone is standing outside a conversation and moves to make room. It is a habit he picked up from a relative who hated seeing anybody left out.
+*character-13 · football · Eligibility: team-first*
 
-### 304. The Last Slice
+## The Last Slice
 
-Audience: TeamPlayer or Leader personality.
+He asks teammates whether they want the last slice after football activities and hopes everyone says no. His face has become a reliable clue to the real question.
 
-He asks whether anyone wants the last slice before taking it. Friends have occasionally made him regret being so considerate.
+*character-14 · football · Eligibility: team-first*
 
-### 305. The Good Listener
+## The Good Listener
 
-Audience: TeamPlayer or Leader personality.
+Teammates bring him football complaints because he usually lets them finish. He has had to establish that listening does not include taking sides.
 
-He lets people finish an explanation even when he thinks he understands the problem. That patience has made him a popular person to find after a difficult day.
+*character-15 · football · Eligibility: team-first*
 
-### 306. The Small Thank-You
+## The Small Thank-You
 
-Audience: TeamPlayer or Leader personality.
+He thanks the football support staff by name and occasionally gets a name wrong. The staff have begun returning the favor with increasingly creative versions of his.
 
-He believes people doing routine work deserve to hear thanks. He has no dramatic explanation for it beyond remembering how different a simple acknowledgment can feel.
+*character-16 · football · Eligibility: team-first*
 
-### 307. The Borrowed Charger
+## The Borrowed Charger
 
-Audience: TeamPlayer or Leader personality.
+He lends teammates a charger during football meetings and never knows where it ends up. He recently attached a label large enough to count as a flag.
 
-He lends things out without making a ceremony of it. His only complaint is that his best charger now seems to live in several different rooms.
+*character-17 · football · Eligibility: team-first*
 
-### 308. The Cleanup Crew
+## The Cleanup Crew
 
-Audience: TeamPlayer or Leader personality.
+He stays to help clean after team gatherings but complains the entire time. Teammates recognize the difference between the performance and the actual willingness to help.
 
-He tends to stay behind when a group activity needs cleaning up. Friends sometimes remain too, partly to help and partly to avoid looking bad next to him.
+*character-18 · football · Eligibility: team-first*
 
-### 309. The Shared Win
+## The Shared Win
 
-Audience: TeamPlayer or Leader personality.
+He celebrates teammates' small football successes with genuine enthusiasm. He still gets irritated when somebody else receives more attention for the same thing.
 
-He is more likely to ask how everyone did than begin with his own result. People trust that interest because he asks the same question when nobody is keeping score.
+*character-19 · football · Eligibility: team-first*
 
-### 310. The Unrequested Backup
+## The Unrequested Backup
 
-Audience: TeamPlayer or Leader personality.
+He brings extra football supplies for nervous newcomers without making a big announcement. He is much less prepared when the forgotten item belongs to him.
 
-He quietly makes a second plan when a friend is nervous about something. Usually the friend never needs it, but he likes having a useful answer ready.
+*character-20 · football · Eligibility: team-first*
 
-### 311. The Warm-Up Conversation
+## The Warm-Up Conversation
 
-Audience: TeamPlayer or Intense personality.
+He needs a few minutes before joining locker-room banter. His teammates have learned that the quiet opening usually precedes a devastating imitation.
 
-He takes a little time to settle into an unfamiliar group. Friends who know him well enjoy watching strangers discover he has jokes too.
+*character-21 · football · Eligibility: reserved*
 
-### 312. The Soft Voice
+## The Soft Voice
 
-Audience: TeamPlayer or Intense personality.
+He speaks quietly enough that football teammates regularly miss his punch lines. He dislikes repeating them and has started charging imaginary replay fees.
 
-He dislikes repeating himself across a noisy room. Rather than compete with the volume, he usually waits until someone comes close enough to hear him.
+*character-22 · football · Eligibility: reserved*
 
-### 313. The Written Reply
+## The Written Reply
 
-Audience: TeamPlayer or Intense personality.
+He can describe a football disagreement clearly by text and stumble over the same words in person. He has considered sending messages while standing beside the intended recipient.
 
-He writes clearer messages than he gives spontaneous speeches. Given a few minutes to think, he can explain himself much more comfortably.
+*character-23 · football · Eligibility: reserved*
 
-### 314. The Small Circle
+## The Small Circle
 
-Audience: TeamPlayer or Intense personality.
+He prefers sitting with the same two teammates at football gatherings. One of them is far more outgoing, which keeps ruining his plan for a quiet evening.
 
-He prefers a few dependable friendships to knowing every person at an event. That does not stop his more outgoing friends from introducing him to everyone anyway.
+*character-24 · football · Eligibility: reserved*
 
-### 315. The Observation First
+## The Observation First
 
-Audience: TeamPlayer or Intense personality.
+He can sit through a noisy football-room argument without saying anything. His eventual contribution usually reveals that both sides forgot an embarrassing detail.
 
-He likes getting a feel for a room before contributing much. People sometimes mistake the pause for disinterest until he mentions a detail they missed.
+*character-25 · football · Eligibility: reserved*
 
-### 316. The Surprise Joke
+## The Surprise Joke
 
-Audience: TeamPlayer or Intense personality.
+He rarely joins the loudest locker-room conversation until he has something good. Teammates have learned not to mistake a long silence for innocence.
 
-He may be quiet for an entire conversation before delivering its best joke. He seems to enjoy the surprise as much as the punch line.
+*character-26 · football · Eligibility: reserved*
 
-### 317. The Practice Introduction
+## The Practice Introduction
 
-Audience: TeamPlayer or Intense personality.
+He rehearses greetings before meeting people through football. He recently prepared for a formal introduction to someone who opened by asking about his shoes.
 
-He has been known to rehearse an introduction before meeting someone important. It helps until the person opens with a question he did not prepare for.
+*character-27 · football · Eligibility: reserved*
 
-### 318. The Quiet Celebration
+## The Quiet Celebration
 
-Audience: TeamPlayer or Intense personality.
+He celebrates good football news with a private meal rather than a post. His closest teammates are offended that learning about it requires detective work.
 
-He celebrates good news with a small call or a favorite meal. Friends who expect a big announcement sometimes learn about it much later.
+*character-28 · football · Eligibility: reserved*
 
-### 319. The Thoughtful Pause
+## The Thoughtful Pause
 
-Audience: TeamPlayer or Intense personality.
+He takes long enough to answer football questions that teammates sometimes answer for him. He has asked them to stop helping quite so efficiently.
 
-He is comfortable letting a conversation have a pause. He would rather think about an answer than provide one simply to fill the silence.
+*character-29 · football · Eligibility: reserved*
 
-### 320. The Familiar Faces
+## The Familiar Faces
 
-Audience: TeamPlayer or Intense personality.
+He is quiet around unfamiliar football staff and completely different around his teammates. A coach once overheard the louder version and asked whether he had a twin.
 
-He becomes much more talkative once a place feels familiar. Close friends describe a different version of him from the one most new acquaintances meet.
+*character-30 · football · Eligibility: reserved*
 
-### 321. The Five-Minute Rule
+## The Five-Minute Rule
 
-Audience: Intense or Leader personality.
+He arrives early for football commitments and judges teammates who cut it close. He was late once and has spent considerable effort defining the exception.
 
-He likes arriving with five minutes to spare. Waiting outside a closed door feels preferable to explaining why he rushed in late.
+*character-31 · football · Eligibility: driven*
 
-### 322. The Serious Planner
+## The Serious Planner
 
-Audience: Intense or Leader personality.
+He schedules informal football work with the precision of a military operation. Teammates keep asking where the nap break appears on the chart.
 
-He enjoys plans that tell him what needs doing and when it should be finished. Friends enjoy reminding him that lunch does not always need that level of organization.
+*character-32 · football · Eligibility: driven*
 
-### 323. The Unfinished Task
+## The Unfinished Task
 
-Audience: Intense or Leader personality.
+He cannot stop discussing a disputed football rep until someone agrees with him. Friends now announce agreement before he finishes the explanation.
 
-He finds it difficult to relax while a manageable task remains unfinished. His idea of treating himself often begins with clearing the last item off a list.
+*character-33 · football · Eligibility: driven*
 
-### 324. The Direct Answer
+## The Direct Answer
 
-Audience: Intense or Leader personality.
+He gives blunt football feedback when teammates ask and dislikes receiving equally blunt feedback about himself. A coach has pointed this out without softening the wording.
 
-He prefers a clear answer to a comforting guess. Friends know he is trying to be useful, even when the first version comes out a little too blunt.
+*character-34 · football · Eligibility: driven*
 
-### 325. The Personal Deadline
+## The Personal Deadline
 
-Audience: Intense or Leader personality.
+He sets early deadlines for football preparation and gets annoyed when others do not adopt them. His roommate has explained that private deadlines do not create public emergencies.
 
-He sets himself deadlines earlier than the official ones. The habit gives him time to fix problems without turning every assignment into an emergency.
+*character-35 · football · Eligibility: driven*
 
-### 326. The Competitive Board Game
+## The Competitive Board Game
 
-Audience: Intense or Leader personality.
+He reads board-game rules like a football call sheet and studies loopholes. Teammates now require a rules meeting before allowing him to host.
 
-He reads the rules before a board game instead of learning as he goes. His friends accuse him of preparing for a championship that does not exist.
+*character-36 · football · Eligibility: driven*
 
-### 327. The Goofy Voice
+## The Goofy Voice
 
-Audience: Unpredictable or Entertainer personality.
+He reads football reminders aloud in a different voice for every coach. He once forgot to change back when the real coach entered.
 
-He has a different voice for reading almost every message aloud. Friends sometimes send him ordinary notices just to hear the interpretation.
+*character-37 · football · Eligibility: unpredictable*
 
-### 328. The Impulse Hobby
+## The Impulse Hobby
 
-Audience: Unpredictable or Entertainer personality.
+He briefly decided every football teammate needed a homemade pregame bracelet. The group received three bracelets and a long explanation about supply costs.
 
-He occasionally becomes fascinated with a new hobby over a single weekend. The enthusiasm is genuine, even when the equipment collection outlasts the interest.
+*character-38 · football · Eligibility: unpredictable*
 
-### 329. The Unnecessary Costume
+## The Unnecessary Costume
 
-Audience: Unpredictable or Entertainer personality.
+He arrived at an informal team gathering in an outfit nobody else interpreted as casual. His defense involved a football metaphor that clarified nothing.
 
-He once brought a costume to an event where nobody else dressed up. Explaining that it was optional did not make him regret the decision.
+*character-39 · football · Eligibility: unpredictable*
 
-### 330. The Running Bit
+## The Running Bit
 
-Audience: Unpredictable or Entertainer personality.
+He repeats a harmless locker-room joke until it becomes funny through sheer persistence. Teammates fear the day a coach accidentally encourages a sequel.
 
-He is willing to keep a harmless joke alive far longer than anyone expects. The group has learned that asking him to stop may become part of the joke.
+*character-40 · football · Eligibility: unpredictable*
 
-## Relationships & Dating
-
-### 331. The Shared Playlist
-
-Audience: Any player.
+## The Shared Playlist
 
 He and his girlfriend keep adding songs to the same playlist. Neither will admit that skipping the other's choice has become a minor relationship negotiation.
 
-### 332. The Long-Distance Dinner
+*dating-01 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Long-Distance Dinner
 
 He sometimes eats dinner on a video call with someone he is dating. Getting the timing right has proved more difficult than choosing what to order.
 
-### 333. The Thoughtful Reminder
+*dating-02 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Thoughtful Reminder
 
 He puts important relationship dates in his calendar rather than trusting his memory. He considers remembering by reminder better than forgetting with confidence.
 
-### 334. The Bad First Date
+*dating-03 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Bad First Date
 
 He once arrived at the wrong branch of the restaurant chosen for a date. They salvaged the evening, but he still checks addresses more carefully now.
 
-### 335. The Unclear Stage
+*dating-04 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Unclear Stage
 
 He is seeing someone, although neither seems eager to define what that means. His friends have heard several explanations and remain no better informed.
 
-### 336. The Breakup Playlist
+*dating-05 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Breakup Playlist
 
 After a breakup, he built a playlist intended to help him move on. He now mostly remembers how dramatic his song choices were.
 
-### 337. The Quiet Couple
+*dating-06 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Quiet Couple
 
 He prefers keeping his relationship away from public posts. People close to him know the important details without needing a running announcement.
 
-### 338. The Date-Night Cook
+*dating-07 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Date-Night Cook
 
 He tried cooking for a date instead of making a reservation. One dish worked well enough that he has been relying on it ever since.
 
-### 339. The Helpful Friends
+*dating-08 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Helpful Friends
 
 His friends offer dating advice with much more confidence than consistency. He has learned to ask what happened the last time they followed their own suggestions.
 
-### 340. The Slow Reply
+*dating-09 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Slow Reply
 
 He tends to write a message, reconsider it and then forget to send it. A person he dated once asked whether his phone needed a less complicated approval process.
 
-### 341. The Childhood Connection
+*dating-10 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Childhood Connection
 
 He is dating someone who knew him before college football became part of his identity. Their best stories about each other rarely have anything to do with sports.
 
-### 342. The Movie Compromise
+*dating-11 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Movie Compromise
 
 He and his girlfriend have very different ideas about a good movie. Taking turns choosing has produced a much broader education than either expected.
 
-### 343. The Honest Breakup
+*dating-12 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Honest Breakup
 
 A relationship ended after they admitted their plans were pulling in different directions. He still appreciates that they managed an uncomfortable conversation without turning it into a feud.
 
-### 344. The Almost-Date
+*dating-13 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Almost-Date
 
 He once spent most of an evening unsure whether he had been invited on a date. Asking directly would have helped, but he arrived at that conclusion a little late.
 
-### 345. The Restaurant Scout
+*dating-14 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Restaurant Scout
 
 He saves interesting restaurant ideas when he is not hungry. They become much more useful when somebody asks him to suggest a place for a date.
 
-### 346. The Handwritten Card
+*dating-15 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Handwritten Card
 
 He prefers writing a short card to buying an elaborate gift. He takes the wording seriously enough that the first draft rarely survives.
 
-### 347. The Familiar Advice
+*dating-16 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Familiar Advice
 
 A relative regularly asks whether he is dating anyone, regardless of why he called. He has developed several answers that somehow never end the conversation.
 
-### 348. The Sudden Introduction
+*dating-17 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Sudden Introduction
 
 He once met a date's family while dressed for what he thought was a very casual errand. The resulting photograph is considered much funnier by everyone else in it.
 
-### 349. The Shared Errand
+*dating-18 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Shared Errand
 
 He enjoys ordinary errands with his girlfriend more than elaborate plans. A grocery trip is easier to arrange than a perfect evening anyway.
 
-### 350. The Cleared Photos
+*dating-19 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Cleared Photos
 
 He took his time clearing old relationship pictures from his phone. The difficult part was deciding which memories belonged to a person and which simply belonged to his own life.
 
-### 351. The Different Schedules
+*dating-20 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Different Schedules
 
 He is dating someone whose timetable rarely matches his. They have become skilled at treating a short coffee together as a real plan rather than a consolation prize.
 
-### 352. The Friend-Zone Joke
+*dating-21 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Friend-Zone Joke
 
 His friends still tease him about taking too long to admit he liked someone. He maintains that gathering information was a sensible first step.
 
-### 353. The Unsent Paragraph
+*dating-22 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Unsent Paragraph
 
 He once wrote a long message about a relationship problem and wisely did not send it. A shorter conversation the next day turned out to be more useful.
 
-### 354. The New Boundary
+*dating-23 · personal · Eligibility: any*
 
-Audience: Any player.
+## The New Boundary
 
 A breakup taught him that being available all the time is not the same as being thoughtful. He is trying to communicate his schedule instead of making promises he cannot keep.
 
-### 355. The Music Disagreement
+*dating-24 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Music Disagreement
 
 He and someone he is dating disagree strongly about one musician. The argument has become so familiar that each can now deliver the other's defense.
 
-### 356. The Mutual Friends
+*dating-25 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Mutual Friends
 
 A relationship began through mutual friends who claim full credit for the introduction. He suspects they will still mention it if the couple ever reaches a major anniversary.
 
-### 357. The Low-Key Anniversary
+*dating-26 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Low-Key Anniversary
 
 He likes marking relationship milestones with something familiar rather than expensive. Remembering a favorite snack has worked better for him than trying to invent a grand gesture.
 
-### 358. The Accidental Double Date
+*dating-27 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Accidental Double Date
 
 A simple meal once became a double date after two friends appeared with their own plans. Nobody objected until it was time to divide a complicated bill.
 
-### 359. The Better Question
+*dating-28 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Better Question
 
 He is learning to ask what someone wants instead of assuming a thoughtful surprise will cover it. The change has made planning dates easier for both people involved.
 
-### 360. The Roommate's Introduction
+*dating-29 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Roommate's Introduction
 
 His roommate introduced him to someone, then became much too interested in the outcome. He has requested that future updates not be discussed like a weekly television episode.
 
-## Friendships & Social Circles
+*dating-30 · personal · Eligibility: any*
 
-### 361. The Unlikely Roommates
+## The Unlikely Roommates
 
-Audience: Any player.
+He and a football teammate disagree about food, music and acceptable alarm volume. Their friendship survives because both dislike the same cafeteria soup.
 
-He and his roommate have almost nothing in common in music, food or sleep schedules. They became friends anyway after discovering a shared dislike of the same broken laundry machine.
+*social-circle-01 · football · Eligibility: any*
 
-### 362. The Friend from Home
+## The Friend from Home
 
-Audience: Any player.
+His oldest friend still calls him by a ridiculous youth-football nickname. He answers immediately and then threatens to stop answering.
 
-His closest friend has known him since long before college. Their calls usually begin with football and move quickly to news he would never hear anywhere else.
+*social-circle-02 · football · Eligibility: any*
 
-### 363. The Study-Table Group
+## The Study-Table Group
 
-Audience: Any player.
+A teammate invited him to a football-group study session that became an argument over snacks. They now bring separate snacks and still argue.
 
-He found a dependable group of friends by sitting at the same study table repeatedly. Eventually someone asked whether he intended to introduce himself or simply claim the chair forever.
+*social-circle-03 · football · Eligibility: any*
 
-### 364. The Different Major
+## The Different Major
 
-Audience: Any player.
+He has a friend outside football who cannot remember his position. He likes the arrangement until the friend introduces him as some sort of goalkeeper.
 
-One of his closest friends knows very little about football. He enjoys conversations in which his athletic schedule is the least interesting thing to discuss.
+*social-circle-04 · football · Eligibility: any*
 
-### 365. The Reliable Pickup
+## The Reliable Pickup
 
-Audience: Any player.
+He gives teammates rides after football commitments and bans criticism of his music. The ban has not reduced the criticism, only increased its creativity.
 
-He is the friend people call when a harmless plan falls apart and they need a ride. He does ask that the explanation wait until everyone has found their seat belt.
+*social-circle-05 · football · Eligibility: any*
 
-### 366. The Group Chat Archivist
+## The Group-Chat Archivist
 
-Audience: Any player.
+He saves locker-room group-chat messages for future arguments. Teammates consider him trustworthy with real secrets and dangerous with minor football predictions.
 
-He remembers old group-chat jokes at inconveniently precise moments. Friends are less impressed by this skill when their own messages are the evidence.
+*social-circle-06 · football · Eligibility: any*
 
-### 367. The Roommate Treaty
+## The Roommate Treaty
 
-Audience: Any player.
+He and a teammate wrote rules about sharing post-practice food. A handwritten amendment defining leftovers has become the apartment's most contested document.
 
-He and his roommate wrote informal rules for food, guests and quiet hours. The snack clause has required more renegotiation than all the others combined.
+*social-circle-07 · football · Eligibility: any*
 
-### 368. The Adopted Friend
+## The Adopted Friend
 
-Audience: Any player.
+An outgoing teammate kept inviting him to football dinners despite receiving vague answers. He finally attended to ask why the invitations had become so persistent.
 
-An outgoing friend started inviting him to things without waiting for a polished answer. He was initially suspicious and is now grateful someone persisted.
+*social-circle-08 · football · Eligibility: any*
 
-### 369. The Lunch Table
+## The Lunch Table
 
-Audience: Any player.
+He befriended a teammate after arguing about an empty dining-hall seat. They still introduce each other as the person who cannot recognize a reserved chair.
 
-He met a friend by asking whether a dining-hall seat was taken. They still argue about which of them was actually the one who started talking.
+*social-circle-09 · football · Eligibility: any*
 
-### 370. The Airport Favor
+## The Airport Favor
 
-Audience: Any player.
+He drove a football teammate to an absurdly early flight and has never stopped mentioning it. The teammate considers paying for breakfast a completed transaction.
 
-He once agreed to help a friend with an inconvenient early trip. The favor became the standard against which every future request for a ride has been measured.
+*social-circle-10 · football · Eligibility: any*
 
-### 371. The Opposite Taste
+## The Opposite Taste
 
-Audience: Any player.
+He and his closest football friend disagree on almost every film and album. They recommend things mainly to annoy each other.
 
-He and a close friend almost never agree on entertainment. Recommending something the other person might dislike has become a hobby of its own.
+*social-circle-11 · football · Eligibility: any*
 
-### 372. The Apartment Cook
+## The Apartment Cook
 
-Audience: Any player.
+He cooks for football teammates and pretends not to mind doing the dishes. The growing list taped above the sink suggests otherwise.
 
-Within his friend group, he is usually the person who offers to make something simple to eat. This has won him considerable popularity and very little help with the dishes.
+*social-circle-12 · football · Eligibility: any*
 
-### 373. The Quiet Check-In
+## The Quiet Check-In
 
-Audience: Any player.
+He asks quiet teammates to get food instead of demanding an explanation in the locker room. He is better at starting that conversation than knowing how to end it.
 
-He notices when a friend has gone quiet and sends an ordinary message rather than a dramatic one. Asking about dinner often opens a better conversation than demanding to know what is wrong.
+*social-circle-13 · football · Eligibility: any*
 
-### 374. The Card-Game Circle
+## The Card-Game Circle
 
-Audience: Any player.
+Teammates meet for cards after football work and accuse him of cheating whenever he wins. He considers the accusations a compliment until he actually loses.
 
-A casual card game became a regular gathering among his friends. The rules have stayed mostly consistent, while the accusations of cheating remain entirely flexible.
+*social-circle-14 · football · Eligibility: any*
 
-### 375. The Newcomer's Seat
+## The Newcomer's Seat
 
-Audience: Any player.
+He invites new football players into conversations before they have to hover awkwardly nearby. He still remembers which teammates let him hover.
 
-He remembers how awkward it felt to join an unfamiliar group. When someone new appears, he tries to offer a place before they have to ask.
+*social-circle-15 · football · Eligibility: any*
 
-### 376. The Shared Headphones
+## The Shared Headphones
 
-Audience: Any player.
+He traded warmup playlists with a football teammate and hated almost every song. They now send each other increasingly hostile music recommendations.
 
-He and a friend once traded headphones to argue about a song. They now send each other music with increasingly detailed instructions about what deserves attention.
+*social-circle-16 · football · Eligibility: any*
 
-### 377. The Friendly Debate Club
+## The Friendly Debate Club
 
-Audience: Any player.
+His football friends hold serious debates over deeply unimportant subjects. He remains furious about losing their vote on the best gas-station snack.
 
-His friends can turn almost any harmless preference into a debate. They have discussed everything from breakfast food to the proper temperature of a room with unreasonable seriousness.
+*social-circle-17 · football · Eligibility: any*
 
-### 378. The Roommate's Alarm
+## The Roommate's Alarm
 
-Audience: Any player.
+A teammate's early football alarm wakes everyone in their apartment except its owner. He has begun placing the phone beside the owner's pillow with theatrical care.
 
-His roommate owns an alarm that appears to wake everyone except its owner. Their friendship has survived several attempts to negotiate a better system.
+*social-circle-18 · football · Eligibility: any*
 
-### 379. The No-Sports Friend
+## The No-Football Friend
 
-Audience: Any player.
+He has one friend who refuses to discuss football until they have talked about something else. He pretends to resent this and keeps making the calls.
 
-He values a friend who will ask about classes, family or a television show before mentioning football. It gives him somewhere to go when he wants to stop discussing the same subject.
+*social-circle-19 · football · Eligibility: any*
 
-### 380. The Road-Trip Seat
+## The Road-Trip Seat
 
-Audience: Any player.
+His football friend group has elaborate rules about car seats and navigation duties. He argues for the passenger seat while demonstrating no navigational ability.
 
-His friend group has unwritten rules about who sits where on a drive. He has opinions about the system but is not willing to volunteer for navigation to change it.
+*social-circle-20 · football · Eligibility: any*
 
-### 381. The Good-News Call
+## The Good-News Call
 
-Audience: Any player.
+He calls an old football teammate first whenever something goes well. He sometimes has to interrupt several minutes of unrelated complaints before giving the actual news.
 
-He has one friend he contacts first when something goes well. The reaction is so reliably enthusiastic that even small updates feel worth sharing.
+*social-circle-21 · football · Eligibility: any*
 
-### 382. The Peacekeeper's Snack
+## The Peacekeeper's Snack
 
-Audience: Any player.
+He interrupts pointless locker-room arguments by suggesting food. Teammates have noticed he usually makes the suggestion when somebody else offers to pay.
 
-When a group disagreement becomes pointless, he sometimes suggests getting food. The method does not solve every problem, but it does improve the tone of the next conversation.
+*social-circle-22 · football · Eligibility: any*
 
-### 383. The Shared Collection
+## The Shared Collection
 
-Audience: Any player.
+He and an old football friend exchange the ugliest souvenirs they can find. Their collection is now too sentimental to throw away and too embarrassing to display.
 
-He and a friend exchange small souvenirs from places they visit. Most have little monetary value and extremely detailed explanations.
+*social-circle-23 · football · Eligibility: any*
 
-### 384. The Honest Friend
+## The Honest Friend
 
-Audience: Any player.
+He trusts one teammate to tell him when his football confidence becomes obnoxious. He trusts that teammate somewhat less during the conversation itself.
 
-He has a friend who will tell him when an idea needs more thought. He does not always enjoy the answer immediately, which is part of why he trusts it.
+*social-circle-24 · football · Eligibility: any*
 
-### 385. The Standing Invitation
+## The Standing Invitation
 
-Audience: Any player.
+A football teammate's family keeps a seat for him at dinner. He brings something to contribute and regularly chooses a dessert nobody wants.
 
-A friend's family has made it clear he is welcome at their table. He is still learning to accept the invitation without feeling he should arrive carrying something useful.
+*social-circle-25 · football · Eligibility: any*
 
-## Academics & Career Goals
-
-### 386. The Architecture Notebook
-
-Audience: Any player.
+## The Architecture Notebook
 
 He is interested in architecture and keeps sketches of buildings he likes. His family now sends him pictures of unusually shaped houses as if they are homework.
 
-### 387. The Future Teacher
+*academics-career-01 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Future Teacher
 
 He likes the idea of becoming a teacher after college. Helping younger relatives with schoolwork has given him a realistic appreciation for how much patience that job takes.
 
-### 388. The Business Pitch
+*academics-career-02 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Business Pitch
 
 He carries around an idea for a small business and revises it whenever someone asks a practical question. At present, the presentation is further along than the financing.
 
-### 389. The Biology Interest
+*academics-career-03 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Biology Interest
 
 He is drawn to biology because he likes understanding how living things work. Remembering the terminology is a different challenge from enjoying the subject.
 
-### 390. The Sports-Law Question
+*academics-career-04 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Sports-Law Question
 
 He has become interested in the legal side of sports. Asking who actually reads all the paperwork led him toward a career possibility he had not considered before.
 
-### 391. The First Office Hours
+*academics-career-05 · personal · Eligibility: any*
 
-Audience: Any player.
+## The First Office Hours
 
 He was nervous about asking an instructor for help until a friend explained that office hours were meant for exactly that. He now tries not to wait until a small question becomes a large problem.
 
-### 392. The Computer-Science Plan
+*academics-career-06 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Computer-Science Plan
 
 He wants to learn enough programming to build something useful rather than merely follow a tutorial. So far, he has gained a project idea and considerable respect for error messages.
 
-### 393. The Nursing Ambition
+*academics-career-07 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Nursing Ambition
 
 A relative's work in health care made him interested in nursing. He knows that liking the idea and managing the coursework are two different parts of the decision.
 
-### 394. The History Elective
+*academics-career-08 · personal · Eligibility: any*
 
-Audience: Any player.
+## The History Elective
 
 He chose a history class because the subject sounded interesting rather than because a friend recommended the timetable. He has started saving articles he would once have scrolled past.
 
-### 395. The Group Project
+*academics-career-09 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Group Project
 
 He likes group projects better when someone agrees on responsibilities at the beginning. Discovering that nobody was responsible for the final slide taught him that preference.
 
-### 396. The Accounting Surprise
+*academics-career-10 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Accounting Surprise
 
 He did not expect to enjoy the practical side of accounting. Seeing a messy set of expenses become understandable has turned out to be unexpectedly satisfying.
 
-### 397. The Career-Center Visit
+*academics-career-11 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Career-Center Visit
 
 He went to a career-center event expecting little more than free snacks. He left with a useful contact and a better answer to the question of what might come after college.
 
-### 398. The Environmental Interest
+*academics-career-12 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Environmental Interest
 
 He is interested in work that connects the outdoors with environmental science. The ambition began with time spent outside long before he knew a career could involve studying it.
 
-### 399. The Tutor Appointment
+*academics-career-13 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Tutor Appointment
 
 He would rather book time with a tutor than keep pretending a confusing topic will explain itself. Making the appointment early is the part he still has to remind himself to do.
 
-### 400. The Presentation Practice
+*academics-career-14 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Presentation Practice
 
 He rehearses class presentations in an empty room when he can find one. Having the first awkward version happen without an audience makes the real attempt less intimidating.
 
-### 401. The Family Restaurant Plan
+*academics-career-15 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Family Restaurant Plan
 
 He would like to help run a family restaurant someday. He is paying more attention now to the business decisions behind the food he grew up enjoying.
 
-### 402. The Internship Search
+*academics-career-16 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Internship Search
 
 He is collecting ideas for an internship that could fit around his commitments. The search is teaching him how often a promising opportunity begins with sending one ordinary email.
 
-### 403. The Undecided Answer
+*academics-career-17 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Undecided Answer
 
 He has not settled on one career path and is getting better at saying so. Trying different subjects feels more useful than choosing an impressive answer for other people.
 
-### 404. The Psychology Shelf
+*academics-career-18 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Psychology Shelf
 
 He is interested in psychology and keeps adding books he means to read. His friends have requested that he not treat their group chat as a case study.
 
-### 405. The Engineering Curiosity
+*academics-career-19 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Engineering Curiosity
 
 He likes taking things apart to understand them, even when reassembly takes longer. That habit has made engineering an appealing subject to explore.
 
-### 406. The Better Notes
+*academics-career-20 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Better Notes
 
 He discovered that neat notes and useful notes are not always the same thing. He is trying to write down explanations he will understand later rather than simply fill a page.
 
-### 407. The Journalism Interest
+*academics-career-21 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Journalism Interest
 
 He likes asking people how they ended up doing what they do. Journalism appeals to him because it could turn that curiosity into a real job.
 
-### 408. The Difficult Exam
+*academics-career-22 · personal · Eligibility: any*
 
-Audience: Completed redshirt year or sophomore and older.
+## The Difficult Exam
 
 A college exam went badly enough to make him reconsider how he studied. He is trying a different preparation routine instead of assuming more hours automatically mean better understanding.
 
-### 409. The Changed Direction
+*academics-career-23 · personal · Eligibility: experienced*
 
-Audience: Completed redshirt year or sophomore and older.
+## The Changed Direction
 
 An early college class helped him realize one career path was not for him. He considers learning that before making a bigger commitment a useful result.
 
-### 410. The Public-Service Goal
+*academics-career-24 · personal · Eligibility: experienced*
 
-Audience: Any player.
+## The Public-Service Goal
 
 He is interested in work that would let him help his community directly. He is still learning which careers turn that broad intention into an actual daily job.
 
-### 411. The Trade-School Respect
+*academics-career-25 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Trade-School Respect
 
 Several relatives work in skilled trades, and he takes their knowledge seriously. Whatever career he chooses, he wants it to involve being able to do something genuinely useful.
 
-### 412. The Office Calendar
+*academics-career-26 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Office Calendar
 
 He keeps an academic calendar separate from everything football-related. Seeing assignments in one place makes it harder to accidentally treat a deadline as somebody else's reminder.
 
-### 413. The Museum Stop
+*academics-career-27 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Museum Stop
 
 He likes visiting museums when time allows and rarely follows the suggested route. One interesting exhibit can take up the entire visit.
 
-### 414. The Graduate-School Question
+*academics-career-28 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Graduate-School Question
 
 He is curious about eventually continuing his education beyond a first degree. For now, doing the current work well seems like the sensible place to begin.
 
-### 415. The Family Graduation Photo
+*academics-career-29 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Family Graduation Photo
 
 A family graduation picture sits among the things he brought from home. It reminds him that finishing his education is part of the reason he wanted this experience.
 
-## Money & Lifestyle
+*academics-career-30 · personal · Eligibility: any*
 
-### 416. The Written Budget
-
-Audience: Any player.
+## The Written Budget
 
 He keeps a simple budget and updates it before making a bigger purchase. Friends have learned that expensive and affordable are not the same word in his vocabulary.
 
-### 417. The Sneaker Temptation
+*money-lifestyle-01 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Sneaker Temptation
 
 He can explain exactly why a new pair of shoes is not necessary. The explanation becomes less convincing whenever the pair goes on sale.
 
-### 418. The Side-Hustle Photos
+*money-lifestyle-02 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Side-Hustle Photos
 
 He takes casual photographs for friends who need something better than a phone selfie. The small jobs give him a creative outlet and a reason to keep learning his camera.
 
-### 419. The Used-Car Fund
+*money-lifestyle-03 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Used-Car Fund
 
 He is putting money aside for a dependable used car. His wish list gets more practical each time someone explains another cost of owning one.
 
-### 420. The Family Advice
+*money-lifestyle-04 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Family Advice
 
 A relative taught him to wait a day before buying something expensive. He occasionally spends that day looking for arguments against the advice.
 
-### 421. The Resale Research
+*money-lifestyle-05 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Resale Research
 
 He enjoys comparing resale prices even when he does not intend to buy anything. Friends now ask him whether their supposed bargain is actually a bargain.
 
-### 422. The Barber Booking
+*money-lifestyle-06 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Barber Booking
 
 He has helped friends arrange haircuts because he knows someone who does good work. He has considered whether being this organized for other people should count as a business.
 
-### 423. The NIL Notebook
+*money-lifestyle-07 · personal · Eligibility: any*
 
-Audience: Any player.
+## The NIL Notebook
 
 He writes down questions whenever he hears about an athlete's endorsement deal. He wants to understand the responsibilities before imagining what the money could buy.
 
-### 424. The Free-Event Expert
+*money-lifestyle-08 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Free-Event Expert
 
 He pays attention when a campus event includes free food or entertainment. Planning an enjoyable evening without spending much feels like beating a small puzzle.
 
-### 425. The Shared Subscription
+*money-lifestyle-09 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Shared Subscription
 
 He and friends split a subscription and keep an unnecessarily careful account of who has paid. The argument is usually about remembering the password rather than the money.
 
-### 426. The Repair First
+*money-lifestyle-10 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Repair First
 
 He tries repairing something before replacing it. The policy has saved him money and occasionally left his desk covered with parts for several days.
 
-### 427. The Savings Goal
+*money-lifestyle-11 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Savings Goal
 
 He gives himself a modest savings target instead of promising a complete financial makeover. Meeting it consistently matters more than making the number sound impressive.
 
-### 428. The Impulse Purchase
+*money-lifestyle-12 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Impulse Purchase
 
 He bought an appealing gadget that became far less useful once the box was open. Keeping it nearby has become a reminder to read beyond the first enthusiastic review.
 
-### 429. The Small Online Shop
+*money-lifestyle-13 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Small Online Shop
 
 He occasionally sells things he has made through a small online page. Packaging an order neatly takes more time than he expected when the idea began.
 
-### 430. The Contract Questions
+*money-lifestyle-14 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Contract Questions
 
 He attended a talk about athlete endorsement agreements and left with a long list of questions. The experience made him more interested in the fine print than the headline amount.
 
-### 431. The Split Bill
+*money-lifestyle-15 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Split Bill
 
 He is comfortable suggesting a simple plan for splitting a group bill. Being clear early seems kinder than letting everyone argue about it afterward.
 
-### 432. The Family Work Habit
+*money-lifestyle-16 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Family Work Habit
 
 He grew up helping with ordinary jobs around a family business. It left him with a practical respect for the work behind money that looks easy from a distance.
 
-### 433. The Cheap Furniture Hunt
+*money-lifestyle-17 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Cheap Furniture Hunt
 
 He likes finding useful secondhand furniture. Measuring whether it will fit through a doorway has become an important improvement to the process.
 
-### 434. The Emergency Envelope
+*money-lifestyle-18 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Emergency Envelope
 
 He tries to keep a little money aside for an uninteresting surprise. Needing to replace something ordinary taught him why that category deserves a place in a budget.
 
-### 435. The Gift Planner
+*money-lifestyle-19 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Gift Planner
 
 He shops for gifts early when he sees something that suits a person. Remembering where he stored the gift can become the expensive part of the plan.
 
-### 436. The Local-Business Idea
+*money-lifestyle-20 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Local-Business Idea
 
 He has ideas for how a small local business could work with an athlete someday. He wants any arrangement to be useful for the business rather than simply a photograph and a promise.
 
-### 437. The Food Budget
+*money-lifestyle-21 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Food Budget
 
 He started paying closer attention to what takeout costs over a whole month. Learning a few dependable meals has become a financial decision as much as a cooking one.
 
-### 438. The Car-Cleaning Kit
+*money-lifestyle-22 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Car-Cleaning Kit
 
 He occasionally helps friends clean their cars and takes the results seriously. What began as a favor has given him ideas for a small service business.
 
-### 439. The Sale That Wasn't
+*money-lifestyle-23 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Sale That Wasn't
 
 He once bought something mostly because a sign said the discount would end that day. Discovering the same sign a week later has made him more suspicious of urgency as a sales pitch.
 
-### 440. The Future Money Plan
+*money-lifestyle-24 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Future Money Plan
 
 He wants to know how to handle irregular income before he ever has much of it. His current plan begins with questions and a spreadsheet rather than an imagined endorsement announcement.
 
-## Social Media & Reputation
+*money-lifestyle-25 · personal · Eligibility: any*
 
-### 441. The Caption Workshop
-
-Audience: Entertainer or Unpredictable personality.
+## The Caption Workshop
 
 He spends longer choosing a caption than taking the picture. His friends are tired of voting between three versions that say nearly the same thing.
 
-### 442. The Private Account
+*online-reputation-01 · personal · Eligibility: performer*
 
-Audience: Any player.
+## The Private Account
 
 He keeps his social account small and accepts requests carefully. Friends who want a public update on his life generally have to ask him directly.
 
-### 443. The Accidental Clip
+*online-reputation-02 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Accidental Clip
 
 A friend posted a funny clip of him that traveled farther than anyone expected. He still gets messages about a moment he barely remembers happening.
 
-### 444. The Campus Food Page
+*online-reputation-03 · personal · Eligibility: any*
 
-Audience: Entertainer or Unpredictable personality.
+## The Campus Food Page
 
 He has started posting informal reviews of inexpensive places to eat. The audience is small, but friends now expect him to provide useful commentary before taking the first bite.
 
-### 445. The Drafts Folder
+*online-reputation-04 · personal · Eligibility: performer*
 
-Audience: Any player.
+## The Drafts Folder
 
 He saves plenty of posts as drafts and publishes very few. Looking through the folder is like reading conversations he decided not to start.
 
-### 446. The Comment-Section Exit
+*online-reputation-05 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Comment-Section Exit
 
 He once lost an evening to an argument that changed nobody's mind. He is getting better at closing the app before a similar discussion begins.
 
-### 447. The Photo Credit
+*online-reputation-06 · personal · Eligibility: any*
 
-Audience: Entertainer or Unpredictable personality.
+## The Photo Credit
 
 He gives friends clear photo credit whenever they take a good picture of him. They are less sure whether the credit compensates for the number of retakes.
 
-### 448. The Quiet Feed
+*online-reputation-07 · personal · Eligibility: performer*
 
-Audience: Any player.
+## The Quiet Feed
 
 He follows accounts that teach him something or make him laugh. His feed is more likely to contain cooking advice than an argument about his own sport.
 
-### 449. The Old Username
+*online-reputation-08 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Old Username
 
 He created a username as a kid that seemed much better at the time. Friends have made clear that changing it now will not erase the memory.
 
-### 450. The Running Series
+*online-reputation-09 · personal · Eligibility: any*
 
-Audience: Entertainer or Unpredictable personality.
+## The Running Series
 
 He has an ongoing series of harmless jokes on his social page. A few friends follow the installments with much more attention than the production values deserve.
 
-### 451. The Posting Delay
+*online-reputation-10 · personal · Eligibility: performer*
 
-Audience: Any player.
+## The Posting Delay
 
 He prefers posting a picture after an outing instead of during it. Enjoying the event first seems easier than trying to narrate it while it happens.
 
-### 452. The Family Audience
+*online-reputation-11 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Family Audience
 
 He remembered his family followed his account immediately after posting a joke that needed context. He has been more careful about captions ever since.
 
-### 453. The Notification Cleanup
+*online-reputation-12 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Notification Cleanup
 
 He turned off most notifications after realizing how often they interrupted an ordinary day. The apps are still there, but they have to wait until he opens them.
 
-### 454. The Meme Librarian
+*online-reputation-13 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Meme Librarian
 
 He has a saved image for an unreasonable number of situations. Friends occasionally create a situation just to see whether he can find a suitable response.
 
-### 455. The Tiny Audience
+*online-reputation-14 · personal · Eligibility: any*
 
-Audience: Entertainer or Unpredictable personality.
+## The Tiny Audience
 
 He enjoys making short videos even when only a handful of friends watch. A good reaction from the right person matters more to him than a large number beside the post.
 
-### 456. The Search Result
+*online-reputation-15 · personal · Eligibility: performer*
 
-Audience: Any player.
+## The Search Result
 
 He occasionally searches his own name to see what people would find first. Most of the results are less interesting than the versions his friends invent.
 
-### 457. The Group-Chat Screenshot
+*online-reputation-16 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Group-Chat Screenshot
 
 He asks before posting a screenshot from a private conversation. The rule became important after a harmless joke reached someone who had missed the beginning.
 
-### 458. The Editing Hobby
+*online-reputation-17 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Editing Hobby
 
 He likes putting ordinary clips together into a watchable little video. Learning the editing tools has become more enjoyable than checking how many people watched.
 
-### 459. The Old-Post Audit
+*online-reputation-18 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Old-Post Audit
 
 He looked through some old posts and discovered several opinions he no longer wants to defend. Removing them felt easier than writing a public explanation of growing up.
 
-### 460. The Campus Interview
+*online-reputation-19 · personal · Eligibility: any*
 
-Audience: Entertainer or Unpredictable personality.
+## The Campus Interview
 
 He agreed to answer a lighthearted student interview and gave one unusually quotable answer. His friends have made sure the clip will never be difficult to find.
 
-### 461. The Unposted Win
+*online-reputation-20 · personal · Eligibility: performer*
 
-Audience: Any player.
+## The Unposted Win
 
 He has become comfortable enjoying good news without immediately posting it. Telling the people involved sometimes feels like enough of an announcement.
 
-### 462. The Misread Message
+*online-reputation-21 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Misread Message
 
 An ordinary message once sounded much harsher on a screen than he intended. He is quicker now to call when a conversation needs tone as well as words.
 
-### 463. The Source Check
+*online-reputation-22 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Source Check
 
 He likes checking a surprising claim before sending it to everyone he knows. Friends have learned that a dramatic headline may receive a much less dramatic follow-up.
 
-### 464. The Silent Group Member
+*online-reputation-23 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Silent Group Member
 
 He reads far more group-chat messages than he answers. Friends know he is paying attention because he will mention an obscure detail much later.
 
-### 465. The Pinned Reminder
+*online-reputation-24 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Pinned Reminder
 
 He keeps a short personal reminder where he will see it before posting. It has persuaded him to leave several temporary feelings out of a permanent record.
 
-## Hobbies & Hidden Talents
+*online-reputation-25 · personal · Eligibility: any*
 
-### 466. The Game-Settings Tinkerer
-
-Audience: Any player.
+## The Game-Settings Tinkerer
 
 He can spend an entire gaming session adjusting settings before starting a match. His friends would prefer an occasional demonstration that the game still works afterward.
 
-### 467. The Piano Secret
+*hidden-talents-01 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Piano Secret
 
 He learned a few piano pieces when he was younger and still plays when he finds a keyboard. People who only know him through football are usually surprised by the hobby.
 
-### 468. The Soup Specialist
+*hidden-talents-02 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Soup Specialist
 
 He makes one dependable soup well enough that friends request it in advance. He guards the recipe even though most of it came from the side of a package.
 
-### 469. The Sketch of a Friend
+*hidden-talents-03 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Sketch of a Friend
 
 He likes drawing people from memory, with mixed results. Friends have strong opinions about whether his most recognizable portraits are also his most flattering.
 
-### 470. The Old-Car Videos
+*hidden-talents-04 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Old-Car Videos
 
 He watches videos about restoring cars he does not own. He can explain several complicated repairs that he has not yet had an opportunity to attempt.
 
-### 471. The Puzzle Table
+*hidden-talents-05 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Puzzle Table
 
 He likes leaving a jigsaw puzzle on a table and returning to it a little at a time. Friends who claim not to enjoy puzzles still stop to fit in a few pieces.
 
-### 472. The Beat Folder
+*hidden-talents-06 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Beat Folder
 
 He makes simple beats on his laptop and gives them unnecessarily dramatic working titles. His closest friends have heard versions numbered well into double digits.
 
-### 473. The Bread Experiment
+*hidden-talents-07 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Bread Experiment
 
 He became interested in making bread after discovering how much waiting is involved. A successful loaf feels like a reward for remembering a plan from several hours earlier.
 
-### 474. The Miniature Builder
+*hidden-talents-08 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Miniature Builder
 
 He enjoys putting small models together and painting the details. It is one hobby where he is happy to work slowly and leave the result alone afterward.
 
-### 475. The Chess App
+*hidden-talents-09 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Chess App
 
 He plays short chess games on his phone and reviews losses more willingly than he admits. Friends know when he has lost because the next conversation often concerns one particularly frustrating knight.
 
-### 476. The Thrift-Store Camera
+*hidden-talents-10 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Thrift-Store Camera
 
 He bought a secondhand camera mainly because it looked interesting. Learning what all the controls do has become a much longer project.
 
-### 477. The Beginner Guitar
+*hidden-talents-11 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Beginner Guitar
 
 He knows a few guitar chords and keeps promising to learn the transition between them properly. Friends can identify his practice song from the other end of the hallway.
 
-### 478. The Map Collector
+*hidden-talents-12 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Map Collector
 
 He likes looking at old maps and comparing them with places he knows. A familiar street can turn into a long conversation about what used to be there.
 
-### 479. The Backyard Gardener
+*hidden-talents-13 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Backyard Gardener
 
 He enjoys growing herbs or small plants whenever he has the space. Remembering to water them has become a useful test of how organized his week really is.
 
-### 480. The Racing Setup
+*hidden-talents-14 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Racing Setup
 
 He has opinions about racing-game controls that far exceed his available setup. Friends have been informed that a better chair would obviously improve the whole experience.
 
-### 481. The Animation Attempts
+*hidden-talents-15 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Animation Attempts
 
 He makes short animations as a hobby and is learning how much work a few seconds can contain. A simple moving character now earns more respect from him than it once did.
 
-### 482. The Card Trick
+*hidden-talents-16 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Card Trick
 
 He knows one good card trick and tries not to use it too often on the same audience. This has made meeting new people unusually convenient for his hobby.
 
-### 483. The Birdwatching App
+*hidden-talents-17 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Birdwatching App
 
 He downloaded a bird-identification app on a whim and kept using it. Friends are still adjusting to having a conversation interrupted by an enthusiastic observation about a nearby tree.
 
-### 484. The Chili Debate
+*hidden-talents-18 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Chili Debate
 
 He enjoys cooking chili and has opinions about several ingredients. He has learned that serving it to friends is an effective way to collect equally strong opposing opinions.
 
-### 485. The Short-Story Folder
+*hidden-talents-19 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Short-Story Folder
 
 He writes little fictional scenes that he rarely shows anyone. Finishing one has proved much harder than coming up with a title for it.
 
-### 486. The Vinyl Browsing
+*hidden-talents-20 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Vinyl Browsing
 
 He enjoys looking through secondhand records even when he buys nothing. Asking about an unfamiliar cover has led him toward music he would never have searched for.
 
-### 487. The Origami Break
+*hidden-talents-21 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Origami Break
 
 He learned to fold a few paper shapes and does it when he wants a quiet break. Friends occasionally find a tiny paper animal waiting beside their things.
 
-### 488. The Fantasy Map
+*hidden-talents-22 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Fantasy Map
 
 He likes drawing maps for an imaginary place he has been inventing for years. Details keep changing whenever he thinks of a better reason for a town to exist.
 
-### 489. The Repair Bench
+*hidden-talents-23 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Repair Bench
 
 He enjoys figuring out why a small household item stopped working. Fixing something inexpensive can make him happier than buying a more impressive replacement.
 
-### 490. The Unusual Collection
+*hidden-talents-24 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Unusual Collection
 
 He collects souvenir magnets and can explain the story behind nearly every one. People who want to give him something easy have learned that this information is very useful.
 
-## Personal Struggles & Growth
+*hidden-talents-25 · personal · Eligibility: any*
 
-### 491. The Homesick Meal
+## The Homesick Meal
 
-Audience: Any player.
+He called home to ask for a recipe and discovered nobody had ever measured the ingredients. His first attempt tasted wrong enough to make him miss home more.
 
-He sometimes misses a meal from home more than any particular place. Learning to make a rough version of it has helped unfamiliar surroundings feel less distant.
+*growth-01 · personal · Eligibility: any*
 
-### 492. The Better Apology
+## The Better Apology
 
-Audience: Any player.
+He apologized to a friend and spent most of the conversation defending himself. The friend made him start again without the speech.
 
-He is learning that explaining why he made a mistake is not the same as apologizing for it. A difficult conversation with a friend gave that lesson a practical meaning.
+*growth-02 · personal · Eligibility: any*
 
-### 493. The Comparison Trap
+## The Comparison Trap
 
-Audience: Any player.
+He scrolls through other people's good weekends while sitting in an untidy room. He has not yet decided whether deleting the app would be growth or surrender.
 
-He catches himself comparing his whole life with the best moments other people share. Remembering how carefully those moments are selected has helped him step back.
+*growth-03 · personal · Eligibility: any*
 
-### 494. The Quiet Request
+## The Quiet Request
 
-Audience: Any player.
+He let a small personal problem become expensive because asking for help embarrassed him. He is still paying it off and still dislikes telling the story.
 
-Asking for help used to feel like admitting he had failed at something. He is learning that getting useful support early usually leaves more options open.
+*growth-04 · personal · Eligibility: any*
 
-### 495. The New Responsibility
+## The New Responsibility
 
-Audience: Any player.
+He ran out of clean clothes and learned that detergent does not appear through family magic. He bought the largest bottle in the store out of irritation.
 
-Being away from home has made ordinary responsibilities feel more immediate. There is no mystery person who replaces the laundry detergent or remembers every appointment.
+*growth-05 · personal · Eligibility: any*
 
-### 496. The Difficult Goodbye
+## The Difficult Goodbye
 
-Audience: Any player.
+He was louder than everyone else about being ready to leave home. He called back before the first evening was over.
 
-Leaving a familiar routine was harder than he expected. Regular calls and a few dependable habits have helped him build a new one without pretending the adjustment was effortless.
+*growth-06 · personal · Eligibility: any*
 
-### 497. The Kept Promise
+## The Kept Promise
 
-Audience: Any player.
+He nearly canceled helping a friend move because the day looked unpleasant. He went anyway and complained enough to make the friend question the benefit.
 
-He made a small promise to a friend and had to reorganize his day to keep it. Following through felt better than the convenient excuse he almost used.
+*growth-07 · personal · Eligibility: any*
 
-### 498. The Confidence Practice
+## The Confidence Practice
 
-Audience: Any player.
+He deflects compliments with jokes until people stop trying. He is beginning to suspect that this is not the confidence he thinks it is.
 
-He is trying to stop dismissing a compliment before the person finishes giving it. Saying thanks has become a small confidence exercise of its own.
+*growth-08 · personal · Eligibility: any*
 
-### 499. The Unsent Reaction
+## The Unsent Reaction
 
-Audience: Any player.
+He wrote a furious message and sent a screenshot to a friend for approval. The friend replied with a picture of a trash can.
 
-He once wrote an angry reply and waited before sending it. Reading it later convinced him that waiting can be a useful part of making a decision.
+*growth-09 · personal · Eligibility: any*
 
-### 500. The Smaller Circle of Worry
+## The Circle of Worry
 
-Audience: Any player.
+He can turn one uncertain plan into an entire evening of imagined disasters. His roommate sometimes interrupts by asking him to identify the problem that has actually happened.
 
-He has started distinguishing a problem he can work on from a possibility he can only worry about. The difference does not solve everything, but it gives him a better starting point.
+*growth-10 · personal · Eligibility: any*
 
-### 501. The New Routine at Home
+## The New Routine at Home
 
-Audience: Any player.
+His old bedroom became a storage room after he left for college. He acts offended but mostly wants his family to stop stacking boxes on the bed.
 
-A change in his family's routine made visits feel different for a while. He is learning that feeling at home can involve making new habits as well as keeping old ones.
+*growth-11 · personal · Eligibility: any*
 
-### 502. The Honest Answer
+## The Honest Answer
 
-Audience: Any player.
+He tells people he is fine with a tone that makes the opposite obvious. One friend has stopped accepting that answer without ordering food first.
 
-He used to say he was fine whenever a conversation became uncomfortable. He is getting better at giving an honest answer to the people he trusts.
+*growth-12 · personal · Eligibility: any*
 
-### 503. The Missed Reminder
+## The Missed Reminder
 
-Audience: Any player.
+He forgot an important birthday despite having three reminders on his phone. His eventual apology required listening to the explanation of how reminders work.
 
-Forgetting something important made him realize that good intentions were not a complete system. He has become much more willing to use reminders instead of relying on memory and apologies.
+*growth-13 · personal · Eligibility: any*
 
-### 504. The Pause before Yes
+## The Pause Before Yes
 
-Audience: Any player.
+He agrees to favors because saying no feels awkward, then resents the entire afternoon. He is practicing shorter answers that do not require invented emergencies.
 
-He is learning to stop agreeing to every request immediately. A clear answer about what he can manage has proved kinder than an enthusiastic promise he cannot keep.
+*growth-14 · personal · Eligibility: any*
 
-### 505. The Borrowed Perspective
+## The Borrowed Perspective
 
-Audience: Any player.
+He repeated a harsh judgment about himself and watched a friend become genuinely angry. He had not realized how often he said it out loud.
 
-A friend pointed out how harshly he described his own mistakes. He is trying to use the same patience for himself that he would offer somebody else.
+*growth-15 · personal · Eligibility: any*
 
-### 506. The Fresh Start on a Tuesday
+## The Tuesday Start
 
-Audience: Any player.
+He announced an elaborate fresh start for the following Monday. His roommate asked why cleaning the desk required another five days.
 
-He stopped waiting for a new month or a perfect Monday to change a habit. An ordinary day turned out to be a perfectly reasonable time to begin.
+*growth-16 · personal · Eligibility: any*
 
-### 507. The Less Dramatic Setback
+## The Failed Project
 
-Audience: Any player.
+He quit a hobby after the first result looked bad and kept the unfinished work in a drawer. He occasionally takes it out to argue with his own decision.
 
-A disappointing personal project once felt like proof that the whole idea was foolish. Looking at it later helped him separate a failed attempt from a permanent conclusion.
+*growth-17 · personal · Eligibility: any*
 
-### 508. The Useful Conversation
+## The Useful Conversation
 
-Audience: Any player.
+He has a trusted relative who can tell when a phone call is really about something else. He usually spends ten minutes discussing the weather first.
 
-He has a trusted person he calls when he needs to talk something through. The conversation works best when he stops pretending he already knows the answer.
+*growth-18 · personal · Eligibility: any*
 
-### 509. The Better Boundary
+## The Better Boundary
 
-Audience: Any player.
+He told a friend he needed space and then checked his phone constantly. He is learning that setting a boundary does not make waiting comfortable.
 
-He is learning that keeping a personal boundary does not require starting an argument. Sometimes a calm no is the clearest answer he can give.
+*growth-19 · personal · Eligibility: any*
 
-### 510. The Homecoming Difference
+## The Homecoming Difference
 
-Audience: Any player.
+He returned home expecting everything to feel exactly the same. His younger sibling had claimed his favorite chair and showed no interest in symbolism.
 
-Returning home after time away showed him that he had changed in small ways. He is still working out which changes he wants to keep and which were simply part of adjusting.
+*growth-20 · personal · Eligibility: any*
 
-## Campus Stories & Antics
-
-### 511. The Wrong Lecture
-
-Audience: Any player.
+## The Wrong Lecture
 
 He once sat through the beginning of the wrong campus talk because leaving felt more embarrassing than staying. Friends argue that his commitment to the mistake was the most impressive part.
 
-### 512. The Mascot Photograph
+*campus-antics-01 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Mascot Photograph
 
 He asked for a picture with a costumed mascot and somehow looked more startled than the person inside it. His friends consider the result far better than a normal photograph would have been.
 
-### 513. The Laundry Surprise
+*campus-antics-02 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Laundry Surprise
 
 A forgotten bright sock turned a load of light laundry into an unexpected experiment. He now understands that a small item can have an unreasonable amount of influence.
 
-### 514. The Takeout Name
+*campus-antics-03 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Takeout Name
 
 He gave a joking name for a takeout order and immediately forgot to listen for it. The announcement became much funnier once his friends realized why his food was getting cold.
 
-### 515. The Quiet-Zone Whisper
+*campus-antics-04 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Quiet-Zone Whisper
 
 He tried to whisper a joke in a quiet area and discovered he is not good at estimating volume. Friends continue to request his definition of a whisper before entering libraries.
 
-### 516. The Cardboard Guest
+*campus-antics-05 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Cardboard Guest
 
 A harmless cardboard figure appeared in a friend's room and began moving around the group. Nobody admits to organizing its increasingly elaborate appearances.
 
-### 517. The Stuck Drawer
+*campus-antics-06 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Stuck Drawer
 
 He spent several minutes trying to fix a drawer that would not open. His roommate eventually pointed out the bag leaning against it.
 
-### 518. The Accidental Tour
+*campus-antics-07 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Accidental Tour
 
 A visitor once mistook him for someone helping with a campus tour. He provided directions confidently enough that he later felt obliged to check whether they were correct.
 
-### 519. The Vending-Machine Negotiation
+*campus-antics-08 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Vending-Machine Negotiation
 
 A snack got stuck just long enough for several friends to become invested in the problem. The eventual arrival of a second customer turned the whole effort into a small public discussion.
 
-### 520. The Birthday Banner
+*campus-antics-09 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Birthday Banner
 
 He helped hang a birthday banner and noticed too late that two letters had traded places. Correcting it became less popular once everyone had taken a picture.
 
-### 521. The Unhelpful Printer
+*campus-antics-10 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Unhelpful Printer
 
 He once thought a printer was broken when he had simply sent the job somewhere else. Finding the stack of repeated attempts required a much longer walk than expected.
 
-### 522. The Costume in Daylight
+*campus-antics-11 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Costume in Daylight
 
 He agreed to wear a harmless costume to an evening event and forgot he had an earlier errand. A short trip across campus became a longer series of conversations.
 
-### 523. The Group-Photo Timer
+*campus-antics-12 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Group-Photo Timer
 
 He trusted a camera timer and arrived in the picture halfway through sitting down. The group has refused to replace that version with a more dignified one.
 
-### 524. The Room-Key Lesson
+*campus-antics-13 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Room-Key Lesson
 
 He once returned to his room carrying everything except the key needed to enter it. Friends have made the event part of their standard packing advice.
 
-### 525. The Suspicious Squeak
+*campus-antics-14 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Suspicious Squeak
 
 A chair began making a noise so ridiculous that nobody could take the conversation seriously. He initially tried to explain that the noise was not his fault, which only made things worse.
 
-### 526. The Too-Large Food Order
+*campus-antics-15 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Too-Large Food Order
 
 He misunderstood a menu quantity and ordered enough food for several additional people. The mistake turned into an unexpectedly successful gathering.
 
-### 527. The Silent Dance Battle
+*campus-antics-16 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Silent Dance Battle
 
 Friends recorded him dancing with headphones on, without the music that made the movements sensible. He has requested that future screenings include the soundtrack.
 
-### 528. The Decorative Duck
+*campus-antics-17 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Decorative Duck
 
 A tiny plastic duck appeared among a friend's belongings and started a harmless exchange of hiding places. He now checks a few unlikely spots before assuming he has finally seen the last one.
 
-### 529. The Elevator Conversation
+*campus-antics-18 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Elevator Conversation
 
 He delivered an enthusiastic story before realizing the elevator had reached his floor. He had to choose between finishing it for strangers or explaining why he was riding back up.
 
-### 530. The Chalk Message
+*campus-antics-19 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Chalk Message
 
 He helped write a cheerful message on an approved campus chalkboard. The handwriting attracted more comments than the message itself.
 
-### 531. The Lost Water Bottle
+*campus-antics-20 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Lost Water Bottle
 
 He described a missing water bottle in great detail while carrying it. His friends have treated every later search request as an opportunity to revisit the investigation.
 
-### 532. The Wrong Group Chat
+*campus-antics-21 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Wrong Group Chat
 
 He sent a harmless message to the wrong group and recognized the mistake only after the replies began. Explaining the missing context took longer than writing the original message.
 
-### 533. The Impressive Knot
+*campus-antics-22 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Impressive Knot
 
 He tied a bag shut so thoroughly that reopening it became a group project. Friends now ask whether he wants the contents protected or merely accessible.
 
-### 534. The Picnic Forecast
+*campus-antics-23 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Picnic Forecast
 
 He proposed eating outside just before a brief shower arrived. His friends remain willing to follow his food recommendations but prefer to check the weather independently.
 
-### 535. The Accidental Wave
+*campus-antics-24 · personal · Eligibility: any*
 
-Audience: Any player.
+## The Accidental Wave
 
 He enthusiastically returned a wave intended for somebody behind him. Carrying on as if he had meant to greet everyone seemed like the least awkward option available.
 
-## Beliefs, Values & Motivations
+*campus-antics-25 · personal · Eligibility: any*
 
-### 536. The Kept Word
+## The Kept Word
 
-Audience: Any player.
+He remembers broken promises longer than he admits. Friends are careful about saying definitely when making plans with him.
 
-He takes a promise seriously even when the task attached to it seems small. He would rather give a realistic answer at the beginning than make somebody chase an explanation later.
+*values-01 · personal · Eligibility: any*
 
-### 537. The Independent Answer
+## The Independent Answer
 
-Audience: Any player.
+He asks five people for advice and usually does what he planned anyway. He calls this research; his friends have a less generous name.
 
-He likes hearing advice but wants the final decision to feel like his own. Taking responsibility for a choice seems easier than blaming someone else's recommendation afterward.
+*values-02 · personal · Eligibility: any*
 
-### 538. The Loyalty Test
+## The Loyalty Test
 
-Audience: Any player.
+He is loyal enough to defend a friend publicly even when the friend is plainly wrong. The private conversation afterward is considerably less supportive.
 
-He values friends who remain consistent when there is nothing interesting happening. Ordinary days tell him more about a friendship than a public declaration does.
+*values-03 · personal · Eligibility: any*
 
-### 539. The Family Principle
+## The Family Principle
 
-Audience: Any player.
+His grandmother insists that visitors leave a house cleaner than they found it. He follows that rule at her house with an enthusiasm that disappears in his own room.
 
-A family member taught him to leave a place a little better than he found it. He tries to apply the idea in practical ways rather than turn it into a slogan.
+*values-04 · personal · Eligibility: any*
 
-### 540. The Quiet Ambition
+## The Quiet Ambition
 
-Audience: Any player.
+He has a specific long-term goal he refuses to share. His friends have stopped guessing because he enjoys saying no too much.
 
-He has goals he does not feel obliged to announce to everyone. Keeping some plans private lets him concentrate on making them real instead of defending them early.
+*values-05 · personal · Eligibility: any*
 
-### 541. The Fair Deal
+## The Fair Deal
 
-Audience: Any player.
+He hates being taken advantage of over small amounts of money. He will spend an hour recovering a sum smaller than the lunch he forgot to buy.
 
-He dislikes an arrangement that works only because somebody did not understand the terms. Being clear about expectations matters to him even when a vague agreement would be more convenient.
+*values-06 · personal · Eligibility: any*
 
-### 542. The Credit Where Due
+## The Credit Where Due
 
-Audience: Any player.
+He remembers who helped with a project and gets irritated when louder people take the credit. He is not always subtle about correcting them.
 
-He believes people should hear when their work helped someone else. Giving credit feels like basic accuracy rather than an elaborate gesture.
+*values-07 · personal · Eligibility: any*
 
-### 543. The Room to Change
+## The Room to Change
 
-Audience: Any player.
+He wants people to forget his old mistakes and keeps excellent records of theirs. A friend has asked him to pick one consistent policy.
 
-He wants people to be allowed to learn from an ordinary mistake. He tries to remember that principle when deciding how long to keep teasing a friend about one.
+*values-08 · personal · Eligibility: any*
 
-### 544. The Community Connection
+## The Community Connection
 
-Audience: Any player.
+He wants to go home someday with enough money to improve something practical. His current plan begins with fixing the basketball hoop nobody in the neighborhood will replace.
 
-He likes the idea of eventually doing something useful for the place that helped raise him. The plan is still broad, but the people behind it are very specific to him.
+*values-09 · personal · Eligibility: any*
 
-### 545. The Earned Confidence
+## The Earned Confidence
 
-Audience: Any player.
+He mistrusts people who announce their own importance. His friends enjoy quoting this opinion whenever he begins doing exactly that.
 
-He trusts confidence more when it comes with preparation. It is a principle he finds easier to admire in others than consistently practice himself.
+*values-10 · personal · Eligibility: any*
 
-### 546. The Honest Limit
+## The Honest Limit
 
-Audience: Any player.
+He will admit he cannot do a job but hates admitting he never tried. This has led him into several household repairs of questionable quality.
 
-He would rather admit what he cannot do than let someone plan around an empty promise. Knowing his limits has become part of how he tries to be dependable.
+*values-11 · personal · Eligibility: any*
 
-### 547. The Curiosity Rule
+## The Curiosity Rule
 
-Audience: Any player.
+He asks strangers unusually specific questions about their work. He recently learned far more about commercial refrigeration than the conversation required.
 
-He tries to ask one genuine question before deciding he understands a person. The habit has led to better conversations than his first impressions sometimes deserved.
+*values-12 · personal · Eligibility: any*
 
-### 548. The Shared Opportunity
+## The Shared Opportunity
 
-Audience: Any player.
+He remembers the person who helped him find his first useful summer job. He still answers that person's requests before reading the rest of the message.
 
-He remembers people who made an opportunity easier for him to reach. When he can return a practical favor, he prefers doing that to making a speech about gratitude.
+*values-13 · personal · Eligibility: any*
 
-### 549. The Personal Definition
+## The Personal Definition
 
-Audience: Any player.
+His idea of success includes a quiet house, a reliable car and nobody telling him when to wake up. Friends point out that he already sleeps through instructions.
 
-He is working out what a successful life would look like if nobody else were grading it. The answer includes more ordinary things than he expected when he first asked himself.
+*values-14 · personal · Eligibility: any*
 
-### 550. The Long Memory for Kindness
+## The Long Memory
 
-Audience: Any player.
+He remembers an embarrassing favor someone did for him years ago. He repays it whenever he can and refuses to explain the details.
 
-He remembers a small kindness from years ago in remarkable detail. It makes him suspect that ordinary help can matter longer than the person offering it realizes.
+*values-15 · personal · Eligibility: any*
 
-# College-Football Easter Eggs
-
-### 551. One More Second
-
-Audience: Any player.
+## One More Second
 
 He insists that nobody leave a football watch party before the clock reaches zero. An old Kick Six replay is usually his entire argument.
 
-Historical reference: [Official account](https://auburntigers.com/news/2013/11/30/auburn-beats-bama-in-an-iron-bowl-for-the-ages). The fictional player is a fan of this event, not a participant.
+*easter-kick-six · football · Eligibility: any*
 
-### 552. The Backyard Statue
-
-Audience: Any player.
+## The Backyard Statue
 
 He keeps trying to organize a Statue of Liberty play at family cookouts after watching the old Boise State highlight. His cousins have started watching the hidden hand instead of the ball.
 
-Historical reference: [Official account](https://broncosports.com/news/2026/10/1/in-their-words-the-2007-fiesta-bowl). The fictional player is a fan of this event, not a participant.
+*easter-statue-liberty · football · Eligibility: any*
 
-### 553. Mind the Trombone
-
-Audience: Any player.
+## Mind the Trombone
 
 He collects old college football broadcasts and always pauses the ending of the Cal band play for visiting friends. His roommates now announce every crowded hallway as a dangerous special-teams situation.
 
-Historical reference: [Official account](https://calbears.com/sports/2014/11/17/209769759). The fictional player is a fan of this event, not a participant.
+*easter-the-band · football · Eligibility: any*
 
-### 554. The Last Throw
-
-Audience: Any player.
+## The Last Throw
 
 His family has watched the old Flutie touchdown against Miami so often that he knows when everyone will start cheering. He still stays quiet until the catch, even when the video has already buffered to the end.
 
-Historical reference: [Official account](https://bceagles.com/news/2004/11/23/Twenty_Years_Later_The_Miracle_Lives_On). The fictional player is a fan of this event, not a participant.
+*easter-hail-flutie · football · Eligibility: any*
 
-### 555. Fourth and Five
-
-Audience: Any player.
+## Fourth and Five
 
 His phone has a saved clip of Vince Young at the Rose Bowl that he watches whenever a friend says a game is already over. He likes the history lesson more than his friends like receiving the link again.
 
-Historical reference: [Official account](https://texaslonghorns.com/news/2006/1/4/010406aaa_835). The fictional player is a fan of this event, not a participant.
+*easter-rose-bowl · football · Eligibility: any*
 
-### 556. Keep the Broadcast On
-
-Audience: Any player.
+## Keep the Broadcast On
 
 His favorite old upset to revisit is Appalachian State at Michigan. He watches the full broadcast because he thinks the long nervous stretches make the ending better.
 
-Historical reference: [Official account](https://appstatesports.com/news/2017/9/1/football-espns-gameday-to-look-back-at-app-state-upset-of-michigan.aspx). The fictional player is a fan of this event, not a participant.
+*easter-app-state · football · Eligibility: any*
 
-### 557. The Hidden Ball Debate
-
-Audience: Any player.
+## The Hidden Ball Debate
 
 He found an old Nebraska fumblerooski clip while digging through college football history. He now tries to explain it with salt shakers at dinner, usually losing the ball before he finishes.
 
-Historical reference: [Official account](https://www.orangebowl.org/history/). The fictional player is a fan of this event, not a participant.
+*easter-fumblerooski · football · Eligibility: any*
 
-### 558. The Unbelievable Score
-
-Audience: Any player.
+## The Unbelievable Score
 
 He once thought the Georgia Tech and Cumberland score was a typo on a history page. Now he uses it to explain why he checks strange sports facts before repeating them.
 
-Historical reference: [Official account](https://ramblinwreck.com/news/2014/10/30/georgia-tech-alum-brings-home-piece-of-history). The fictional player is a fan of this event, not a participant.
+*easter-cumberland · football · Eligibility: any*
 
-### 559. No Early Celebrations
-
-Audience: Any player.
+## No Early Celebrations
 
 He has a rule against celebrating a game before the final snap after watching the old Michigan State and Michigan punt ending. His friends test the rule by reaching for the remote a few seconds early.
 
-Historical reference: [Official account](https://msuspartans.com/documents/download/2019/11/12/Game_10_vs_Michigan.pdf). The fictional player is a fan of this event, not a participant.
+*easter-punt-snap · football · Eligibility: any*
 
-### 560. Count It Yourself
-
-Audience: Any player.
+## Count It Yourself
 
 He keeps a tiny notebook of strange college football endings, with the Colorado fifth-down game near the front. Nobody lets him operate the down marker during backyard games without a second opinion.
 
-Historical reference: [Official account](https://cubuffs.com/sports/2005/2/22/110489). The fictional player is a fan of this event, not a participant.
+*easter-fifth-down · football · Eligibility: any*
 
-### 561. A Very Suspicious Kick
-
-Audience: Any player.
+## A Very Suspicious Kick
 
 He loves watching old LSU trick plays, especially the fake field goal against Florida. At casual games with friends, he now announces that every perfectly ordinary kick looks suspicious.
 
-Historical reference: [Official account](https://lsusports.net/news/2010/10/9/205009440). The fictional player is a fan of this event, not a participant.
+*easter-fake-field-goal · football · Eligibility: any*
 
-### 562. Punt Practice Commentary
-
-Audience: Any player.
+## Punt Practice Commentary
 
 His family introduced him to the old Punt Bama Punt game through a grainy highlight. He has since learned that quoting the entire call during a backyard punt is a good way to get sent to retrieve the ball.
 
-Historical reference: [Official account](https://auburntigers.com/football-iron-bowl-memories). The fictional player is a fan of this event, not a participant.
+*easter-blocked-punts · football · Eligibility: any*
 
-### 563. The Two-Point Argument
-
-Audience: Any player.
+## The Two-Point Argument
 
 He likes reading about Nebraska choosing to go for two in the Orange Bowl. His group chat has learned that asking whether to play for a tie can turn into a very long history discussion.
 
-Historical reference: [Official account](https://huskers.com/news/2002/07/09/1984-orange-bowl). The fictional player is a fan of this event, not a participant.
+*easter-go-for-two · football · Eligibility: any*
 
-### 564. One Extra Lateral
-
-Audience: Any player.
+## One Extra Lateral
 
 He became fascinated with the hook-and-lateral after watching Boise State against Oklahoma. His cousins now set a strict one-lateral limit whenever he helps invent backyard plays.
 
-Historical reference: [Official account](https://broncosports.com/news/2026/10/1/in-their-words-the-2007-fiesta-bowl). The fictional player is a fan of this event, not a participant.
+*easter-hook-ladder · football · Eligibility: any*
 
-### 565. Just One More Mod
-
-Audience: Any player.
+## Just One More Mod
 
 He spends his free time making mods for the college football video game. His teammates keep requesting custom uniforms, then asking why their suggestions are not in the next update.
+
+*easter-game-modder · football · Eligibility: any*

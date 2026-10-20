@@ -251,9 +251,13 @@ function noneUndershirt(loadouts) {
   return loadouts.some(loadout => loadout.loadoutElements.find(element => slotOf(element) === "InnerShirt")?.itemAssetName === "Undershirt_None");
 }
 
+// Settings use whole percentages. Multiply those integers before dividing to
+// avoid flooring 50 * 0.58 to 28 (rather than the intended 29 players).
+const populationCeilingCount = stats => Math.floor(stats.total * Math.round(stats.ceiling * 100) / 100);
+
 export function equipmentPopulationState(playerRecords, visualsRecords, visualsTableId, teamNames = new Map(), fcsTeamIndexes = new Set(), activePlayerRows, visorFrequencies, mouthpiecePositions) {
   const createCohort = () => ({ visorGroups: new Map(), mouthpieceGroups: new Map(), undershirts: { total: 0, none: 0, floor: 0, limited: false } });
-  const populations = { fbs: createCohort(), fcs: createCohort() };
+  const populations = { fbs: createCohort(), fcs: createCohort() }, teams = new Map();
   const populationByVisualRow = new Map();
   playerRecords.forEach((record, row) => {
     if (activePlayerRows instanceof Set && !activePlayerRows.has(row)) return;
@@ -265,28 +269,35 @@ export function equipmentPopulationState(playerRecords, visualsRecords, visualsT
     const loadouts = onFieldLoadouts(raw); if (!loadouts.length) return;
     const cohortName = fcsTeamIndexes.has(Number(sf(record, "TeamIndex"))) ? "fcs" : "fbs";
     const cohort = populations[cohortName];
+    const teamIndex = Number(sf(record, "TeamIndex"));
+    if (!teams.has(teamIndex)) teams.set(teamIndex, { ...createCohort(), teamIndex, team: teamNames.get(teamIndex) ?? `Team ${teamIndex}`, cohort: cohortName });
+    const team = teams.get(teamIndex);
     const group = visorPopulationGroup(sf(record, "Position"));
     const largeBody = LARGE_BODY_TYPES.has(String(sf(record, "CharacterBodyType") ?? "").trim().toLowerCase());
-    const entry = populationByVisualRow.get(ref.row) ?? { cohorts: {} };
+    const entry = populationByVisualRow.get(ref.row) ?? { cohorts: {}, teams: new Map() };
     const cohortEntry = entry.cohorts[cohortName] ?? { visorGroups: new Map(), mouthpieceGroups: new Map(), largeBodyPlayers: 0 };
-    if (group) {
-      const stats = cohort.visorGroups.get(group) ?? { total: 0, equipped: 0, ceiling: visorFrequencies ? visorFrequencies[positionGroup(sf(record, "Position"))] / 100 : visorChanceForPosition(sf(record, "Position")), limited: false };
-      stats.total += 1; if (equippedVisor(loadouts)) stats.equipped += 1; cohort.visorGroups.set(group, stats);
-      if (!equippedVisor(loadouts)) cohortEntry.visorGroups.set(group, (cohortEntry.visorGroups.get(group) ?? 0) + 1);
-    }
+    const teamEntry = entry.teams.get(teamIndex) ?? { visorGroups: new Map(), mouthpieceGroups: new Map(), largeBodyPlayers: 0 };
     const profile = mouthpieceProfile(sf(record, 'Position'), mouthpiecePositions);
     const mouthpieceGroup = mouthpiecePositions ? profile?.enabled ? positionGroup(sf(record, 'Position')) : null : mouthpiecePopulationGroup(sf(record, "Position"));
-    if (mouthpieceGroup) {
-      const stats = cohort.mouthpieceGroups.get(mouthpieceGroup) ?? { total: 0, equipped: 0, ceiling: 0.85, limited: false };
-      stats.total += 1; if (equippedMouthpiece(loadouts)) stats.equipped += 1; cohort.mouthpieceGroups.set(mouthpieceGroup, stats);
-      if (!equippedMouthpiece(loadouts)) cohortEntry.mouthpieceGroups.set(mouthpieceGroup, (cohortEntry.mouthpieceGroups.get(mouthpieceGroup) ?? 0) + 1);
+    for (const [population, linked] of [[cohort, cohortEntry], [team, teamEntry]]) {
+      if (group) {
+        const stats = population.visorGroups.get(group) ?? { total: 0, equipped: 0, ceiling: visorFrequencies ? visorFrequencies[positionGroup(sf(record, "Position"))] / 100 : visorChanceForPosition(sf(record, "Position")), limited: false };
+        stats.total += 1; if (equippedVisor(loadouts)) stats.equipped += 1; population.visorGroups.set(group, stats);
+        if (!equippedVisor(loadouts)) linked.visorGroups.set(group, (linked.visorGroups.get(group) ?? 0) + 1);
+      }
+      if (mouthpieceGroup) {
+        const stats = population.mouthpieceGroups.get(mouthpieceGroup) ?? { total: 0, equipped: 0, ceiling: 0.85, limited: false };
+        stats.total += 1; if (equippedMouthpiece(loadouts)) stats.equipped += 1; population.mouthpieceGroups.set(mouthpieceGroup, stats);
+        if (!equippedMouthpiece(loadouts)) linked.mouthpieceGroups.set(mouthpieceGroup, (linked.mouthpieceGroups.get(mouthpieceGroup) ?? 0) + 1);
+      }
+      if (largeBody) { population.undershirts.total += 1; linked.largeBodyPlayers += 1; if (noneUndershirt(loadouts)) population.undershirts.none += 1; }
     }
-    if (largeBody) { cohort.undershirts.total += 1; cohortEntry.largeBodyPlayers += 1; if (noneUndershirt(loadouts)) cohort.undershirts.none += 1; }
     entry.cohorts[cohortName] = cohortEntry;
+    entry.teams.set(teamIndex, teamEntry);
     populationByVisualRow.set(ref.row, entry);
   });
-  for (const cohort of Object.values(populations)) cohort.undershirts.floor = Math.ceil(cohort.undershirts.total * 0.05);
-  return { populations, visorGroups: populations.fbs.visorGroups, mouthpieceGroups: populations.fbs.mouthpieceGroups, undershirts: populations.fbs.undershirts, populationByVisualRow };
+  for (const cohort of [...Object.values(populations), ...teams.values()]) cohort.undershirts.floor = Math.ceil(cohort.undershirts.total * 5 / 100);
+  return { populations, teams, visorGroups: populations.fbs.visorGroups, mouthpieceGroups: populations.fbs.mouthpieceGroups, undershirts: populations.fbs.undershirts, populationByVisualRow };
 }
 
 export function isApprovedHelmetForPosition(helmet, position, allowVicis = false) {
@@ -295,7 +306,7 @@ export function isApprovedHelmetForPosition(helmet, position, allowVicis = false
 
 export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visualsTableId, options = {}) {
   if (options.clearTattoos && options.unlockedTattooFix) throw new Error('Clear Tattoos and Add Tattoos cannot both be enabled. Choose one tattoo pass.');
-  const { helmetFix = false, rolledJerseyFix = false, sockFix = false, sleeveCompatibilityFix = false, nikeThighPads = false, visorFix = false, unlockedRecolorFix = false, unlockedColorTheme = "weighted", unlockedMouthpieceFix = false, allowRandomMouthpieceColors = false, unlockedTattooFix = false, unlockedTattooCap = 33, undershirtColor = "weighted", pantsFix = false, skipNilPlayers = true, seed = 1, teamNames = new Map(), fcsTeamIndexes = new Set(), excludedTeamIndexes = new Set(), activePlayerRows, eligiblePlayer = () => true } = options;
+  const { helmetFix = false, rolledJerseyFix = false, sockFix = false, sleeveCompatibilityFix = false, nikeThighPads = false, visorFix = false, unlockedRecolorFix = false, unlockedColorTheme = "weighted", unlockedMouthpieceFix = false, allowRandomMouthpieceColors = false, unlockedTattooFix = false, unlockedTattooCap = 40, undershirtColor = "weighted", pantsFix = false, skipNilPlayers = true, seed = 1, teamNames = new Map(), fcsTeamIndexes = new Set(), excludedTeamIndexes = new Set(), activePlayerRows, eligiblePlayer = () => true } = options;
   const visorFrequencies = normalizeVisorFrequencies(options.visorFrequencies), facemaskPools = normalizeFacemaskPools(options.facemaskPools);
   const rng = mulberry32((seed ^ 0xA5A5A5A5) >>> 0);
   const helmetDistribution = normalizeHelmetDistribution(helmetFix ? options.helmetDistribution : undefined);
@@ -309,7 +320,7 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
   const brandedFrequency = options.brandedMouthpieceFrequency ?? 75;
   const mouthpiecePositions = normalizeMouthpiecePositions(options.mouthpiecePositions);
   const population = equipmentPopulationState(playerRecords, visualsRecords, visualsTableId, teamNames, fcsTeamIndexes, activePlayerRows, visorFrequencies, mouthpiecePositions);
-  if (undershirtColor === "custom") for (const cohort of Object.values(population.populations)) cohort.undershirts.floor = Math.ceil(cohort.undershirts.total * normalizeUndershirtWeights(options.undershirtWeights).large.none / 100);
+  if (undershirtColor === "custom") for (const cohort of population.teams.values()) cohort.undershirts.floor = Math.ceil(cohort.undershirts.total * normalizeUndershirtWeights(options.undershirtWeights).large.none / 100);
   const playersByVisualRow = new Map();
   const allPlayerReferences = new Map();
   playerRecords.forEach((record, row) => {
@@ -328,7 +339,10 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
   const uniformEntries = [];
   if (options.lowerRolledJerseyFix || options.cutoffPantsFix) for (const [visualsRow, players] of playersByVisualRow) {
     const visual = visualsRecords[visualsRow]; if (!visual || visual.isEmpty) continue;
-    for (const player of players) if (legitimateRosterPlayer(player.record, teamNames, fcsTeamIndexes)) uniformEntries.push({ visualsRow, position: player.position, cohort: player.isFcs ? "fcs" : "fbs", raw: sf(visual, "RawData"), editable: players.length === 1 && allPlayerReferences.get(visualsRow) === 1 && !(skipNilPlayers && player.isNil) && !player.excluded });
+    for (const player of players) if (legitimateRosterPlayer(player.record, teamNames, fcsTeamIndexes)) {
+      const teamIndex = Number(sf(player.record, "TeamIndex"));
+      uniformEntries.push({ visualsRow, position: player.position, teamIndex, team: teamNames.get(teamIndex) ?? `Team ${teamIndex}`, cohort: player.isFcs ? "fcs" : "fbs", raw: sf(visual, "RawData"), editable: players.length === 1 && allPlayerReferences.get(visualsRow) === 1 && !(skipNilPlayers && player.isNil) && !player.excluded });
+    }
   }
   const uniformPlan = buildUniformStylePlan(uniformEntries, options, mulberry32((seed ^ 0x20970101) >>> 0));
   const lowerJerseyChanges = [], cutoffPantsChanges = [];
@@ -365,7 +379,8 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
     let rawData = null;
     try { rawData = visual && !visual.isEmpty ? sf(visual, "RawData") : null; } catch { continue; }
     if (typeof rawData !== "string") continue;
-    tattooEntries[player.isFcs ? "fcs" : "fbs"].push({ visualsRow, player, rawData });
+    const teamIndex = Number(sf(player.record, "TeamIndex"));
+    tattooEntries[player.isFcs ? "fcs" : "fbs"].push({ visualsRow, player, rawData, teamIndex, team: teamNames.get(teamIndex) ?? `Team ${teamIndex}` });
   }
   const tattooRng = mulberry32((seed ^ 0x7A770015) >>> 0);
   const tattooFbs = buildUnlockedTattooPopulationPlan(tattooEntries.fbs, unlockedTattooCap, tattooRng, unlockedTattooFix ? options.unlockedTattooSelection : undefined);
@@ -375,6 +390,7 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
     const eligiblePlayers = fbs.eligiblePlayers + fcs.eligiblePlayers;
     const projectedTattooPlayers = fbs.projectedTattooPlayers + fcs.projectedTattooPlayers;
     return {
+      scope: "team",
       capPercentage: unlockedTattooCap,
       capCount: fbs.capCount + fcs.capCount,
       eligiblePlayers,
@@ -383,6 +399,7 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
       projectedTattooPlayers,
       projectedPrevalence: eligiblePlayers ? projectedTattooPlayers / eligiblePlayers : 0,
       existingAboveCap: fbs.existingAboveCap || fcs.existingAboveCap,
+      teams: [...fbs.teams.map(team => ({ ...team, cohort: "fbs" })), ...fcs.teams.map(team => ({ ...team, cohort: "fcs" }))],
       fbs,
       fcs
     };
@@ -431,9 +448,9 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
     const loadouts = (parsed?.loadouts ?? []).filter(loadout => loadout?.loadoutType === "PlayerOnField" && Array.isArray(loadout.loadoutElements));
     if (!loadouts.length) continue;
     const originalUniformOutfits = options.cutoffPantsFix ? structuredClone(loadouts) : [];
-    const cohortName = players[0]?.isFcs ? "fcs" : "fbs";
-    const populationEntry = population.populationByVisualRow.get(visualsRow)?.cohorts?.[cohortName];
-    const populationCohort = population.populations[cohortName];
+    // Shared visual rows must fit every affected team's limit, not just the
+    // first linked player's team. Protection checks above remain unchanged.
+    const populationScopes = [...(population.populationByVisualRow.get(visualsRow)?.teams ?? [])].map(([teamIndex, entry]) => ({ entry, population: population.teams.get(teamIndex) }));
     let changed = false;
     const pantsNeedingFix = loadouts.filter(loadout => {
       const pants = loadout.loadoutElements.find(element => slotOf(element) === "OuterPants");
@@ -514,11 +531,10 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
           : rollRolledJerseyUndershirt(rng, undershirtColor, bodyType, options.undershirtWeights);
         if (replacement === innerShirt.itemAssetName) continue;
         if (innerShirt.itemAssetName === "Undershirt_None" && replacement !== "Undershirt_None" && LARGE_BODY_TYPES.has(String(bodyType).trim().toLowerCase())) {
-          const linked = populationEntry?.largeBodyPlayers ?? 0;
           const otherNoneRemains = loadouts.some(other => other !== loadout && other.loadoutElements.find(element => slotOf(element) === "InnerShirt")?.itemAssetName === "Undershirt_None");
-          const reduction = otherNoneRemains ? 0 : linked;
-          if (populationCohort.undershirts.none - reduction < populationCohort.undershirts.floor) { populationCohort.undershirts.limited = true; continue; }
-          populationCohort.undershirts.none -= reduction;
+          const blocked = populationScopes.filter(({ entry, population }) => population.undershirts.none - (otherNoneRemains ? 0 : entry.largeBodyPlayers) < population.undershirts.floor);
+          if (blocked.length) { for (const { population } of blocked) population.undershirts.limited = true; continue; }
+          for (const { entry, population } of populationScopes) population.undershirts.none -= otherNoneRemains ? 0 : entry.largeBodyPlayers;
         }
         innerShirt.itemAssetName = replacement;
         selectedUndershirts.add(innerShirt.itemAssetName);
@@ -600,12 +616,11 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
       const chances = new Set(players.map(player => visorFrequencies[positionGroup(player.position)] / 100));
       const chance = chances.size === 1 ? [...chances][0] : 0;
       if (!hasVisor && chance > 0 && rng() < chance) {
-        const affectedGroups = populationEntry?.visorGroups ?? new Map();
-        const allowed = [...affectedGroups].every(([group, count]) => { const stats = populationCohort.visorGroups.get(group); return stats && stats.equipped + count <= Math.floor(stats.total * stats.ceiling); });
-        if (!allowed) { for (const group of affectedGroups.keys()) { const stats = populationCohort.visorGroups.get(group); if (stats) stats.limited = true; } }
+        const blocked = populationScopes.flatMap(({ entry, population }) => [...entry.visorGroups].map(([group, count]) => ({ stats: population.visorGroups.get(group), count }))).filter(({ stats, count }) => !stats || stats.equipped + count > populationCeilingCount(stats));
+        if (!populationScopes.length || blocked.length) { for (const { stats } of blocked) if (stats) stats.limited = true; }
         else {
           for (const loadout of loadouts) setSlot(loadout.loadoutElements, "Visor", OAKLEY_CLEAR_VISOR);
-          for (const [group, count] of affectedGroups) populationCohort.visorGroups.get(group).equipped += count;
+          for (const { entry, population } of populationScopes) for (const [group, count] of entry.visorGroups) population.visorGroups.get(group).equipped += count;
           visorPlayersChanged += players.length;
           for (const player of players) visorChanges.push(playerLogInfo(player, teamNames, fcsTeamIndexes, { oldItem: "GearVisor_None", newItem: OAKLEY_CLEAR_VISOR }));
           changed = true;
@@ -636,16 +651,15 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
         }
       }
       if (group && !equippedMouthpiece(loadouts) && rng() < 0.85) {
-        const affectedGroups = populationEntry?.mouthpieceGroups ?? new Map();
-        const allowed = [...affectedGroups].every(([name, count]) => { const stats = populationCohort.mouthpieceGroups.get(name); return stats && stats.equipped + count <= Math.floor(stats.total * stats.ceiling); });
-        if (!allowed) {
-          for (const name of affectedGroups.keys()) { const stats = populationCohort.mouthpieceGroups.get(name); if (stats) stats.limited = true; }
+        const blocked = populationScopes.flatMap(({ entry, population }) => [...entry.mouthpieceGroups].map(([group, count]) => ({ stats: population.mouthpieceGroups.get(group), count }))).filter(({ stats, count }) => !stats || stats.equipped + count > populationCeilingCount(stats));
+        if (!populationScopes.length || blocked.length) {
+          for (const { stats } of blocked) if (stats) stats.limited = true;
         } else {
           const masked = loadouts.some(loadout => equippedMask(loadout.loadoutElements, true));
           const rolled = rollUnlockedMouthpiece(group, rng, allowRandomMouthpieceColors, brandedFrequency, masked, profile);
           if (rolled.item) {
             for (const loadout of loadouts) setSlot(loadout.loadoutElements, "MouthWear", rolled.item.itemName);
-            for (const [name, count] of affectedGroups) populationCohort.mouthpieceGroups.get(name).equipped += count;
+            for (const { entry, population } of populationScopes) for (const [name, count] of entry.mouthpieceGroups) population.mouthpieceGroups.get(name).equipped += count;
             unlockedMouthpiecePlayersChanged += players.length;
             for (const player of players) unlockedMouthpieceChanges.push(playerLogInfo(player, teamNames, fcsTeamIndexes, { oldItem: "GearMouthpiece_None", newItem: rolled.item.itemName, mouthpieceType: rolled.type }));
             changed = true;
@@ -658,20 +672,6 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
       if (corrections.length) {
         changed = true; existingMouthpieceColorsChanged += players.length;
         for (const player of players) for (const correction of corrections) existingMouthpieceColorChanges.push(playerLogInfo(player, teamNames, fcsTeamIndexes, { oldItem: correction.oldMouthpiece, newItem: 'GearMouthpiece_None', mouthpieceType: 'none', reason: 'Balaclava requires a hanging mouthpiece; no allowed hanging style.' }));
-      }
-    }
-    const recolorTeams = players.map(player => options.recolorTeamNames?.has(player.row) ? options.recolorTeamNames.get(player.row) : teamNames.get(Number(sf(player.record, "TeamIndex"))) ?? `Team ${sf(player.record, "TeamIndex")}`);
-    if (unlockedRecolorFix && allPlayerReferences.get(visualsRow) === players.length && recolorTeams.every(name => typeof name === "string") && new Set(recolorTeams).size === 1
-      && (!(activePlayerRows instanceof Set) || players.every(player => activePlayerRows.has(player.row)))) {
-      const theme = unlockedColorTheme === "team" ? rollAccessoryColorTheme(recolorRng, teamAccessoryWeights(recolorTeams[0], accessoryTeamColors)) : unlockedColorTheme === "weighted" ? rollAccessoryColorTheme(recolorRng, colorWeights) : unlockedColorTheme === "random" ? EQUIPMENT_COLOR_THEMES[Math.floor(recolorRng() * EQUIPMENT_COLOR_THEMES.length)] : unlockedColorTheme;
-      const tapeColor = (options.tapeColorMode ?? "accessory") === "accessory" ? theme : rollAccessoryColorTheme(tapeRng, teamTapeWeights(recolorTeams[0], tapeColors));
-      const replacements = recolorPlayerAccessories(loadouts, theme, tapeColor);
-      if (replacements.size) {
-        unlockedRecolorPlayersChanged += players.length;
-        const oldItem = [...replacements.keys()].map(equipmentDisplayName).join(", ");
-        const newItem = [...replacements.values()].map(equipmentDisplayName).join(", ");
-        for (const player of players) unlockedRecolorChanges.push(playerLogInfo(player, teamNames, fcsTeamIndexes, { team: recolorTeams[0], oldItem, newItem, colorTheme: theme, tapeColor, displayValues: true }));
-        changed = true;
       }
     }
     // Re-run after optional CFB27 Unlocked passes because they can introduce
@@ -699,6 +699,20 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
     const uniformChanges = options.lowerRolledJerseyFix || options.cutoffPantsFix ? applyUniformStylePlan(loadouts, originalUniformOutfits, visualsRow, uniformPlan, options) : [];
     for (const correction of uniformChanges) for (const player of players) (correction.type === "lower" ? lowerJerseyChanges : cutoffPantsChanges).push(playerLogInfo(player, teamNames, fcsTeamIndexes, correction));
     if (uniformChanges.length) changed = true;
+    const recolorTeams = players.map(player => options.recolorTeamNames?.has(player.row) ? options.recolorTeamNames.get(player.row) : teamNames.get(Number(sf(player.record, "TeamIndex"))) ?? `Team ${sf(player.record, "TeamIndex")}`);
+    if (unlockedRecolorFix && allPlayerReferences.get(visualsRow) === players.length && recolorTeams.every(name => typeof name === "string") && new Set(recolorTeams).size === 1
+      && (!(activePlayerRows instanceof Set) || players.every(player => activePlayerRows.has(player.row)))) {
+      const theme = unlockedColorTheme === "team" ? rollAccessoryColorTheme(recolorRng, teamAccessoryWeights(recolorTeams[0], accessoryTeamColors)) : unlockedColorTheme === "weighted" ? rollAccessoryColorTheme(recolorRng, colorWeights) : unlockedColorTheme === "random" ? EQUIPMENT_COLOR_THEMES[Math.floor(recolorRng() * EQUIPMENT_COLOR_THEMES.length)] : unlockedColorTheme;
+      const tapeColor = (options.tapeColorMode ?? "accessory") === "accessory" ? theme : rollAccessoryColorTheme(tapeRng, teamTapeWeights(recolorTeams[0], tapeColors));
+      const replacements = recolorPlayerAccessories(loadouts, theme, tapeColor);
+      if (replacements.size) {
+        unlockedRecolorPlayersChanged += players.length;
+        const oldItem = [...replacements.keys()].map(equipmentDisplayName).join(", ");
+        const newItem = [...replacements.values()].map(equipmentDisplayName).join(", ");
+        for (const player of players) unlockedRecolorChanges.push(playerLogInfo(player, teamNames, fcsTeamIndexes, { team: recolorTeams[0], oldItem, newItem, colorTheme: theme, tapeColor, displayValues: true }));
+        changed = true;
+      }
+    }
     // Tattoos are the last correction: preserve their Base layer and visibility.
     if (options.clearTattoos) {
       const correction = clearPlayerTattoos(parsed);
@@ -734,18 +748,36 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
     }
   }
   for (const stats of uniformPlan.stats) {
-    const entries = uniformEntries.filter(entry => entry.cohort === stats.cohort && positionGroup(entry.position) === stats.group);
+    const entries = uniformEntries.filter(entry => entry.teamIndex === stats.teamIndex && entry.cohort === stats.cohort && positionGroup(entry.position) === stats.group);
     const finalItems = (entry, slot) => onFieldLoadouts(sf(visualsRecords[entry.visualsRow], "RawData")).map(outfit => outfit.loadoutElements.find(element => element.slotType === slot)?.itemAssetName);
     stats.lowerAfter = entries.filter(entry => finalItems(entry, "OuterShirt").some(asset => ["Gear_JerseyStyle_RolledLowest", "Gear_JerseyStyle_RolledLowest_Untucked"].includes(asset))).length;
     stats.cutoffAfter = entries.filter(entry => finalItems(entry, "OuterPants").includes("GearPants_Cutoff")).length;
   }
   const serializeCohort = cohort => ({
-    visors: Object.fromEntries([...cohort.visorGroups].map(([group, stats]) => [group, { ...stats, ceilingCount: Math.floor(stats.total * stats.ceiling), prevalence: stats.total ? stats.equipped / stats.total : 0 }])),
-    mouthpieces: Object.fromEntries([...cohort.mouthpieceGroups].map(([group, stats]) => [group, { ...stats, ceilingCount: Math.floor(stats.total * stats.ceiling), prevalence: stats.total ? stats.equipped / stats.total : 0 }])),
+    visors: Object.fromEntries([...cohort.visorGroups].map(([group, stats]) => [group, { ...stats, ceilingCount: populationCeilingCount(stats), prevalence: stats.total ? stats.equipped / stats.total : 0 }])),
+    mouthpieces: Object.fromEntries([...cohort.mouthpieceGroups].map(([group, stats]) => [group, { ...stats, ceilingCount: populationCeilingCount(stats), prevalence: stats.total ? stats.equipped / stats.total : 0 }])),
     undershirts: { ...cohort.undershirts, nonePercentage: cohort.undershirts.total ? cohort.undershirts.none / cohort.undershirts.total : 0 }
   });
-  const fbsSafeguards = serializeCohort(population.populations.fbs), fcsSafeguards = serializeCohort(population.populations.fcs);
-  const populationSafeguards = { ...fbsSafeguards, fbs: fbsSafeguards, fcs: fcsSafeguards };
+  const teamSafeguards = [...population.teams.values()].map(team => ({ teamIndex: team.teamIndex, team: team.team, cohort: team.cohort, ...serializeCohort(team) }));
+  // Aggregate already-rounded team limits for older review consumers. Rounding
+  // an entire cohort here would incorrectly lend one team's allowance to another.
+  const summarize = cohortName => {
+    const values = teamSafeguards.filter(team => team.cohort === cohortName);
+    const result = { visors: {}, mouthpieces: {}, undershirts: { total: 0, none: 0, floor: 0, limited: false } };
+    for (const team of values) {
+      for (const kind of ["visors", "mouthpieces"]) for (const [group, stats] of Object.entries(team[kind])) {
+        const combined = result[kind][group] ??= { total: 0, equipped: 0, ceiling: stats.ceiling, ceilingCount: 0, limited: false };
+        combined.total += stats.total; combined.equipped += stats.equipped; combined.ceilingCount += stats.ceilingCount; combined.limited ||= stats.limited;
+        combined.prevalence = combined.total ? combined.equipped / combined.total : 0;
+      }
+      for (const key of ["total", "none", "floor"]) result.undershirts[key] += team.undershirts[key];
+      result.undershirts.limited ||= team.undershirts.limited;
+    }
+    result.undershirts.nonePercentage = result.undershirts.total ? result.undershirts.none / result.undershirts.total : 0;
+    return result;
+  };
+  const fbsSafeguards = summarize("fbs"), fcsSafeguards = summarize("fcs");
+  const populationSafeguards = { scope: "team", teams: teamSafeguards, ...fbsSafeguards, fbs: fbsSafeguards, fcs: fcsSafeguards };
   return { lowerJerseyChanges, cutoffPantsChanges, uniformPopulation: uniformPlan.stats, clearedTattooPlayers, clearedTattooChanges, helmetPopulation: helmetFix ? helmetPopulationAudit(helmetEntries, helmetAfter, options) : null, unlockedSockPlayersChanged, unlockedSockChanges, bearsPadsChanges, handwarmerChanges, helmetAccessoryChanges, helmetBalance: helmetBalance?.diagnostics ?? null, oakleyVisorPlayersChanged, oakleyVisorChanges, pantsPlayersChanged, helmetPlayersChanged, rolledJerseyPlayersChanged, sockPlayersChanged, sleeveCompatibilityPlayersChanged, nikeThighPadPlayersChanged, visorPlayersChanged, unlockedRecolorPlayersChanged, unlockedMouthpiecePlayersChanged, existingMouthpieceColorsChanged, existingMouthpieceColorChanges, unlockedTattooPlayersChanged, unlockedTattooPlayersRepaired, visualsChanged, helmetChanges, pantsChanges, rolledJerseyChanges, sockChanges, sleeveCompatibilityChanges, nikeThighPadChanges, visorChanges, unlockedRecolorChanges, unlockedMouthpieceChanges, unlockedTattooChanges, unlockedTattooPopulation, populationSafeguards };
 }
 

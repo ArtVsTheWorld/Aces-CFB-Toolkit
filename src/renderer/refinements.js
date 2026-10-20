@@ -36,7 +36,7 @@ function selectSummary(id, empty = 'All') {
 function affectedScopeSummary() {
   const page = state.page;
   if (page.includes('equipment')) return [selectSummary('equipment-included', 'All Teams'), selectSummary('equipment-positions', 'All Positions'), selectSummary('equipment-classes', 'All Class Years'), selectSummary('equipment-redshirt-group'), document.getElementById('equipment-skip-nil')?.checked ? 'NIL Players Excluded' : 'NIL Players Included', `OVR ${document.getElementById('equipment-min')?.value || 'Any'}–${document.getElementById('equipment-max')?.value || 'Any'}`].filter(Boolean).join(' · ');
-  if (page === 'roster-generator') return `${selectSummary('roster-teams', 'No Teams Selected')} · Every rostered player, including NIL identities · ${document.getElementById('roster-caliber')?.selectedOptions[0]?.textContent ?? ''} · ${document.getElementById('roster-age')?.selectedOptions[0]?.textContent ?? 'Standard'} age · ${document.getElementById('roster-potential')?.selectedOptions[0]?.textContent ?? 'Standard'} potential`;
+  if (page === 'roster-generator') return rosterAffectedSummary();
   if (page === 'team-boost') return [selectSummary('team-search', 'No Teams Selected'), selectSummary('boost-positions', 'All Positions'), selectSummary('boost-classes', 'All Class Years'), selectSummary('boost-redshirt', 'All Redshirt Statuses'), selectSummary('boost-players', 'All Players'), document.getElementById('player-scope')?.selectedOptions[0]?.textContent].filter(Boolean).join(' · ');
   if (page === 'nil-toggle') return ['nil-teams', 'nil-players', 'nil-positions', 'nil-classes', 'nil-redshirts'].every(id => { const select = document.getElementById(id); return !select?.selectedOptions.length || select.selectedOptions.length === select.options.length; }) ? 'ENTIRE DYNASTY · All rostered players · Check the target NIL value carefully' : ['nil-teams', 'nil-players', 'nil-positions', 'nil-classes', 'nil-redshirts'].map(id => selectSummary(id)).join(' · ');
   if (page === 'commentary-id') return [selectSummary('commentary-teams', 'All Teams'), selectSummary('commentary-positions', 'All Positions'), selectSummary('commentary-classes', 'All Class Years'), selectSummary('commentary-players', 'All Players'), document.getElementById('freshmen-only')?.checked ? 'True Freshmen Only' : '', selectSummary('commentary-redshirt', 'All Redshirt Statuses'), 'NIL Players Always Excluded'].filter(Boolean).join(' · ');
@@ -49,7 +49,7 @@ function affectedScopeSummary() {
 function validateSelectionModes() {
   for (const control of content.querySelectorAll('select[data-explicit-selection]')) {
     const mode = configurationRead(control.closest('[data-team-picker]'), 'selection-mode-' + (control.dataset.configOriginal ?? control.id));
-    if (mode?.value === 'selected' && !control.selectedOptions.length) return 'Select at least one option, or choose All / None explicitly.';
+    if (['selected','user'].includes(mode?.value) && !control.selectedOptions.length) return 'Select at least one option, or choose All / None explicitly.';
   }
   return '';
 }
@@ -67,9 +67,12 @@ function addExplicitSelectionModes(root = content) {
     mode.value = control.selectedOptions.length ? control.selectedOptions.length === control.options.length ? 'all' : 'selected' : skip || required ? 'none' : 'all';
     shell.prepend(mode);
     }
-    mode.addEventListener('change', () => { if (mode.value !== 'selected') [...control.options].forEach(option => option.selected = mode.value === 'all'); control.dispatchEvent(new Event('change', { bubbles: true })); });
+    const users = [...control.options].filter(option => option.dataset.user === 'true');
+    if (!mode.querySelector('[value="user"]')) { const option = new Option('User Teams Selected', 'user'); option.disabled = !users.length; mode.add(option); }
+    const matchesUsers = () => users.length > 0 && [...control.options].every(option => option.selected === (option.dataset.user === 'true'));
+    mode.addEventListener('change', () => { const chosen=mode.value; if(chosen==='user'&&!users.length){mode.value='selected';control.dispatchEvent(new Event('change',{bubbles:true}));return;} if (chosen !== 'selected') [...control.options].forEach(option => option.selected = chosen === 'all' || chosen === 'user' && option.dataset.user === 'true'); control.dispatchEvent(new Event('change', { bubbles: true })); if (chosen === 'user' && matchesUsers()) mode.value='user'; });
     shell.querySelector('[data-team-none]')?.addEventListener('click', () => { mode.value = skip || required ? 'none' : 'selected'; }, true);
-    control.addEventListener('change', () => { if (control.selectedOptions.length) mode.value = control.selectedOptions.length === control.options.length ? 'all' : 'selected'; else mode.value = skip || required ? 'none' : control.options.length ? 'selected' : 'all'; });
+    control.addEventListener('change', () => { if(mode.value==='user' && matchesUsers()) return; if (control.selectedOptions.length) mode.value = control.selectedOptions.length === control.options.length ? 'all' : 'selected'; else mode.value = skip || required ? 'none' : control.options.length ? 'selected' : 'all'; });
   }
 }
 function addScopeNotice() {
@@ -85,6 +88,19 @@ function extendedPlayerMarkup(prefix, prepared, { teams = false, positions = fal
 }
 function extraScope(prefix) { return { teams: selected('#' + prefix + '-teams'), positions: selected('#' + prefix + '-positions'), classes: selected('#' + prefix + '-classes'), redshirtStatuses: selected('#' + prefix + '-redshirt'), playerRows: selected('#' + prefix + '-players') }; }
 let commentaryScopeRequest;
+function showPlayerFilterLoading(parent) {
+  const node=document.createElement('section');node.className='configuration-entry additional-filter-loading';
+  node.innerHTML='<div><strong>Additional Player Filters</strong><div class="status" role="status"><span class="spinner" aria-hidden="true"></span>Reading players and filters…</div></div>';
+  parent.append(node);return node;
+}
+async function prepareBoostPlayerFilters(prepared) {
+  const form=document.getElementById('boost-positions'),parent=form?.closest('.ops-section-body'),button=document.getElementById('preview'),save=state.activeSave?.path;
+  if(!parent)return;const loader=showPlayerFilterLoading(parent);button.disabled=true;
+  // Let the page and its progress indicator paint before installing selectors.
+  await new Promise(resolve=>requestAnimationFrame(()=>setTimeout(resolve,0)));
+  if(state.page!=='team-boost'||state.activeSave?.path!==save||!form.isConnected)return;
+  try{installExtraScope('boost',prepared);}finally{loader.remove();button.disabled=false;}
+}
 function ensureCommentaryScope() {
   const save = state.activeSave?.path, page = state.page, form = document.getElementById('freshmen-only');
   if (!form || page !== 'commentary-id') return Promise.resolve(false);
@@ -92,12 +108,14 @@ function ensureCommentaryScope() {
   if (commentaryScopeRequest?.form === form) return commentaryScopeRequest.promise;
   const button = document.getElementById('analyze-commentary');
   button.disabled = true; button.textContent = 'Loading Player Filters…';
+  const loader=showPlayerFilterLoading(form.closest('.ops-section-body'));
   const request = { form, promise: null };
   const current = () => state.page === page && state.activeSave?.path === save && document.getElementById('freshmen-only') === form;
   request.promise = (async () => {
     try {
       const prepared = await window.cfbToolkit.prepareTool({ toolId: 'commentary-id', savePath: save, options: { ...commentaryOptionsFromForm(), scopeCatalogOnly: true } });
       if (!current()) return false;
+      state.prepared.set('commentary-id-scope|'+save,prepared);
       installExtraScope('commentary', prepared, { teams: true, positions: true });
       return true;
     } catch (error) {
@@ -105,6 +123,7 @@ function ensureCommentaryScope() {
       return false;
     } finally {
       if (commentaryScopeRequest === request) commentaryScopeRequest = null;
+      loader.remove();
       if (current()) { button.disabled = false; button.textContent = document.getElementById('commentary-classes') ? 'Analyze Matches →' : 'Retry Loading Player Filters'; }
     }
   })();
@@ -217,7 +236,6 @@ function scheduleRefinements() { clearTimeout(refinementTimer); refinementTimer 
 function refreshRefinements() {
   if (!state.bootstrap) return;
   addExplicitSelectionModes(); addScopeNotice(); overlapNotice(); bindReadingSize(); bindHelpSearch(); compactOptionDescriptions(); bindRangeEditor(); bindJerseyCustomization(); bindDealbreakerProtection(); bindExtendedPresets(); addConfigurationDepartures();
-  if (state.page === 'team-boost') { const prepared = state.prepared.get(`team-boost|${state.activeSave?.path}`); if (prepared) installExtraScope('boost', prepared); }
   if (state.page === 'commentary-id' && document.getElementById('freshmen-only') && content.dataset.commentaryScopeError !== state.activeSave?.path && !document.getElementById('commentary-classes')) ensureCommentaryScope();
   document.querySelectorAll('dialog.configuration-dialog[open]').forEach(dialog => { addDialogSections(dialog); installPositionCopy(dialog); });
 }

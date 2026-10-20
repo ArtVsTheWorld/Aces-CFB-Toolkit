@@ -15,6 +15,7 @@ app.whenReady().then(async()=>{
   const {ToolPresets}=await import(pathToFileURL(path.join(uiRoot,'src/main/services/toolPresets.js')));
   const savePath=path.join(output,'DYNASTY-V205-UI-TEST'),schemaPath=path.join(root,'resources/engine-data/C27_486_6.gz');
   fs.copyFileSync(path.resolve(root,'../EXAMPLE SAVES VANILLA GAME/DYNASTY-LSUTESTSAVEPRESZN'),savePath);
+  const updateReplies=[];ipcMain.handle('updates:prompt-response',(_event,request)=>{updateReplies.push(request);return true;});
   const history=[],reviews=new ReviewSnapshots(path.join(output,'reviews')),runs=[];
   let settings={theme:'light',textSize:'standard',toolPresets:[],toolDefaults:{},teamArtwork:{},customMatchupModel:null};
   const presets=new ToolPresets({get:()=>settings,update:values=>(settings={...settings,...values})});
@@ -30,13 +31,15 @@ app.whenReady().then(async()=>{
   ipcMain.handle('tools:search-preview',(_,request)=>searchPlanRows(request.planId,request.query,1000,request.filters));
   ipcMain.handle('tools:run',async(_,request)=>{
     runs.push(request);const id=crypto.randomUUID();
-    const result=await getToolHandler(request.toolId).run({...request,savePath,schemaPath,defaultMapPath:path.join(root,'resources/commentary-data/PlayerCommentaryidMap.txt'),reports:reports.forRun({runId:id,mode:request.mode,toolVersion:'1.0',savePath,options:request.options})});
-    reviews.save(id,result,snapshotPlanRows(result.planId));history.unshift({id,timestamp:new Date().toISOString(),toolId:request.toolId,toolName:'Roster Generator',toolVersion:'1.0',inputPath:savePath,mode:request.mode,status:result.status,summary:result.historySummary,reviewAvailable:true,reportPath:result.reportPath,backupPath:result.backupPath});
+    const result=await getToolHandler(request.toolId).run({...request,savePath,schemaPath,defaultMapPath:path.join(root,'resources/commentary-data/PlayerCommentaryidMap.txt'),reports:reports.forRun({runId:id,mode:request.mode,toolVersion:'1.2',savePath,options:request.options})});
+    reviews.save(id,result,snapshotPlanRows(result.planId));history.unshift({id,timestamp:new Date().toISOString(),toolId:request.toolId,toolName:'Roster Generator',toolVersion:'1.2',inputPath:savePath,mode:request.mode,status:result.status,summary:result.historySummary,reviewAvailable:true,reportPath:result.reportPath,backupPath:result.backupPath});
     return {...result,executionId:id};
   });
   const window=new BrowserWindow({show:false,width:1480,height:1000,webPreferences:{preload:path.join(uiRoot,'src/main/preload.cjs'),contextIsolation:true,sandbox:true,offscreen:true,backgroundThrottling:false}}),errors=[];
-  window.webContents.on('console-message',details=>{if(details.level==='error'&&!/ERR_FILE_NOT_FOUND|frame-ancestors/.test(details.message))errors.push(details.message);});
+  window.webContents.on('console-message',details=>{if(details.level==='error'&&!/ERR_FILE_NOT_FOUND|frame-ancestors/.test(details.message))errors.push(`${details.sourceId}:${details.lineNumber} ${details.message}`);});
   await window.loadFile(path.join(uiRoot,'src/renderer/index.html'));
+  if(process.argv.includes('--v207'))await require('./lib/v207-ui.cjs')(window,output,updateReplies);
+  if(process.argv.includes('--strength-ui'))await require('./lib/roster-strength-ui.cjs')(window,output);
   const result=await window.webContents.executeJavaScript(`(async()=>{
     const check=(value,message)=>{if(!value)throw new Error(message);},delay=()=>new Promise(resolve=>setTimeout(resolve,50));
     const wait=async predicate=>{for(let i=0;i<800;i++){if(predicate()){await delay();return;}await delay();}throw new Error('Roster UI timeout: '+content.textContent.slice(-700)+' | Debug '+JSON.stringify({value:document.getElementById('roster-talent-shares')?.value,saved:state.toolSettings.get('roster-generator')?.['roster-talent-shares'],choice:document.getElementById('preset-choice')?.value,toasts:document.querySelector('#toast')?.textContent}));};

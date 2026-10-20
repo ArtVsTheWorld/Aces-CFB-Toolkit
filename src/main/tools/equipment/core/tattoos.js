@@ -216,17 +216,11 @@ export function repairUnlockedTattooLoadout(parsed) {
   return true;
 }
 
-function exposedArmSides(parsed) {
-  const gear = (parsed?.loadouts ?? []).filter(isPlayerOnFieldLoadout);
-  return ["left", "right"].filter(side => gear.every(loadout => {
-    const asset = loadout.loadoutElements?.find(element => slotOf(element) === `${side === "left" ? "Left" : "Right"}ArmWear`)?.itemAssetName;
-    return !asset || /(?:^|_)None$/i.test(asset) || /Quarter|ArmTape/i.test(asset);
-  }));
-}
-
 export function rollUnlockedTattoo(rng, parsed, selection) {
   const selected = new Set(normalizeTattooSelection(selection)), arms = ARM_TATTOOS.filter(item => selected.has(item.asset)), legs = LEG_TATTOOS.filter(item => selected.has(item.asset));
-  const availableArms = parsed ? exposedArmSides(parsed) : ["left", "right"];
+  // Tattoos are a separate Base layer. Sleeves may hide them visually but do
+  // not prevent assignment; never remove or recolor sleeves to expose tattoos.
+  const availableArms = ["left", "right"];
   const canArm = availableArms.length > 0 && arms.length > 0, canLeg = legs.length > 0;
   if (!canArm && !canLeg) return null;
   const kind = canArm
@@ -252,6 +246,28 @@ export function rollUnlockedTattoo(rng, parsed, selection) {
 }
 
 export function buildUnlockedTattooPopulationPlan(entries, capPercentage, rng, selection) {
+  const teams = new Map(), plans = new Map(), teamStats = [];
+  for (const entry of entries) {
+    const key = entry.teamIndex ?? null;
+    if (!teams.has(key)) teams.set(key, []);
+    teams.get(key).push(entry);
+  }
+  for (const [teamIndex, players] of teams) {
+    const result = buildTeamTattooPlan(players, capPercentage, rng, selection);
+    for (const [row, plan] of result.plans) plans.set(row, plan);
+    teamStats.push({ teamIndex, team: players[0].team ?? `Team ${teamIndex ?? "Unknown"}`, ...result.stats });
+  }
+  const sum = field => teamStats.reduce((total, stats) => total + stats[field], 0);
+  const eligiblePlayers = sum("eligiblePlayers"), projectedTattooPlayers = sum("projectedTattooPlayers");
+  return { plans, stats: {
+    scope: "team", capPercentage, capCount: sum("capCount"), eligiblePlayers,
+    existingTattooPlayers: sum("existingTattooPlayers"), addedTattooPlayers: sum("addedTattooPlayers"),
+    projectedTattooPlayers, projectedPrevalence: eligiblePlayers ? projectedTattooPlayers / eligiblePlayers : 0,
+    existingAboveCap: teamStats.some(stats => stats.existingAboveCap), teams: teamStats
+  } };
+}
+
+function buildTeamTattooPlan(entries, capPercentage, rng, selection) {
   const selected = normalizeTattooSelection(selection);
   const eligible = [];
   const existing = [];
@@ -264,7 +280,7 @@ export function buildUnlockedTattooPopulationPlan(entries, capPercentage, rng, s
   }
 
   const eligiblePlayers = eligible.length + existing.length;
-  const capCount = Math.floor(eligiblePlayers * (capPercentage / 100));
+  const capCount = Math.floor(eligiblePlayers * capPercentage / 100);
   const additionsAllowed = Math.max(0, capCount - existing.length);
   for (let index = eligible.length - 1; index > 0; index -= 1) {
     const swap = Math.floor(rng() * (index + 1));

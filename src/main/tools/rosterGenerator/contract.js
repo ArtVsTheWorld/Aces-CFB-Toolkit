@@ -17,7 +17,7 @@ export const STYLE_FIELDS = Object.freeze(['PLYR_QBSTYLE','PLYR_STYLE','RunningS
 // PresentationId is separately allocated; never copy a source player's ID.
 export const PORTRAIT_FIELDS = Object.freeze(['PLYR_PORTRAIT','PortraitForceSilhouette','PortraitSwappableLibraryPath']);
 export const APPEARANCE_FIELDS = Object.freeze(['GenericHeadAssetName','PLYR_GENERICHEAD','CharacterBodyType','Height','Weight',...PORTRAIT_FIELDS]);
-export const WRITE_FIELDS = Object.freeze(['FirstName','LastName','JerseyNum','IsNIL','PLYR_ASSETNAME','PLYR_COMMENT','PlayerType','SchoolYear','RedshirtStatus','TraitDevelopment','OverallRating','ExperiencePoints','SkillPoints','Personality','RecruitingDealbreaker',...STATE_FIELDS,...RATING_FIELDS,...CAP_FIELDS,...PHYSICAL_FIELDS,...MENTAL_FIELDS,...MENTAL_RANK_FIELDS,...STYLE_FIELDS,...APPEARANCE_FIELDS]);
+export const WRITE_FIELDS = Object.freeze(['FirstName','LastName','JerseyNum','IsNIL','PLYR_ASSETNAME','PLYR_COMMENT','PlayerType','SchoolYear','RedshirtStatus','TraitDevelopment','OverallRating','ExperiencePoints','SkillPoints','Personality','RecruitingDealbreaker','ProspectStarRating',...STATE_FIELDS,...RATING_FIELDS,...CAP_FIELDS,...PHYSICAL_FIELDS,...MENTAL_FIELDS,...MENTAL_RANK_FIELDS,...STYLE_FIELDS,...APPEARANCE_FIELDS]);
 export const BUILDING_BLOCKS = Object.freeze({id:'building-blocks',name:'Building Blocks',minimumAverage:68,maximumAverage:70,targetAverage:69,spread:8});
 
 export function validateFootballProfile(profile) {

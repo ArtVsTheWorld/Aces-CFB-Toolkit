@@ -23,11 +23,13 @@
   }
   function editShare(shares,group,value,counts){
     if(!groups.includes(group)||!(counts[group]>0))return {...shares};
-    return {...shares,[group]:Math.max(0,Math.min(100,Math.round(value)))};
+    return {...shares,[group]:Math.max(minimumShare(group,counts),Math.min(100,Math.round(value)))};
   }
-  function allocationError(shares){
+  function minimumShare(group,counts){return group==='K/P'&&counts?.[group]>0?baseline(counts)[group]:0;}
+  function allocationError(shares,counts){
     if(shares===null||shares===undefined)return '';
     if(!shares||typeof shares!=='object'||Array.isArray(shares)||Object.keys(shares).some(group=>!groups.includes(group))||Object.values(shares).some(value=>!Number.isInteger(value)||value<0||value>100))return 'Talent shares must use whole percentages from 0 to 100.';
+    if(counts?.['K/P']>0&&(shares['K/P']??0)<minimumShare('K/P',counts))return 'Keep the specialist minimum, or Normalize to 100% to rebalance this mix.';
     return Object.values(shares).reduce((sum,value)=>sum+value,0)===100?'':'Talent shares must total exactly 100%.';
   }
   function fromLegacy(counts,strength){
@@ -35,15 +37,41 @@
     const weights=Object.fromEntries(groups.filter(group=>counts[group]>0).map(group=>[group,Math.max(0,base[group]+(strength[group]??0)*counts[group]*importance[group]/scale)]));
     return {...Object.fromEntries(groups.map(group=>[group,0])),...apportion(weights,100)};
   }
-  function resolvedShares(counts,shares){const present=groups.filter(group=>counts[group]>0);return shares&&present.some(group=>shares[group]>0)?{...Object.fromEntries(groups.map(group=>[group,0])),...apportion(Object.fromEntries(present.map(group=>[group,shares[group]??0])),100)}:baseline(counts);}
+  function resolvedShares(counts,shares){
+    const present=groups.filter(group=>counts[group]>0),empty=Object.fromEntries(groups.map(group=>[group,0]));
+    if(!shares||!present.some(group=>shares[group]>0))return baseline(counts);
+    let result={...empty,...apportion(Object.fromEntries(present.map(group=>[group,shares[group]??0])),100)};
+    const floor=minimumShare('K/P',counts);
+    if(result['K/P']<floor){const others=present.filter(group=>group!=='K/P');result={...empty,...apportion(Object.fromEntries(others.map(group=>[group,shares[group]??0])),100-floor),'K/P':floor};}
+    return result;
+  }
+  const spendingPresets=Object.freeze([{id:'balanced',name:'Balanced Roster'},{id:'offense',name:'Light Up the Scoreboard'},{id:'defense',name:'Lockdown Defense'},{id:'playmakers',name:'Open-Field Playmakers'},{id:'trenches',name:'Win the Trenches'}]);
+  function presetShares(counts,id){
+    if(!spendingPresets.some(preset=>preset.id===id))throw Error('Choose a supported talent budget preset.');
+    const base=baseline(counts);if(id==='balanced')return base;
+    const offense=new Set(['QB','HB','FB','WR','TE','OL']),playmakers=new Set(['HB','WR','TE','CB','FS','SS']),trenches=new Set(['OL','EDGE','DT']);
+    const factor=group=>id==='offense'?(offense.has(group)?1.55:.65):id==='defense'?(offense.has(group)?.65:1.55):id==='playmakers'?(playmakers.has(group)?1.8:.75):(trenches.has(group)?1.8:.75);
+    const floor=minimumShare('K/P',counts),present=groups.filter(group=>counts[group]>0&&group!=='K/P');
+    return {...Object.fromEntries(groups.map(group=>[group,0])),...apportion(Object.fromEntries(present.map(group=>[group,base[group]*factor(group)])),100-floor),'K/P':floor};
+  }
+  function randomShares(counts,rng=Math.random){
+    const base=baseline(counts),floor=minimumShare('K/P',counts),present=groups.filter(group=>counts[group]>0&&group!=='K/P');
+    if(!present.length)return base;
+    // Perturb baseline spending, rather than rewarding tiny rooms with huge
+    // shares. Keep specialist protection and whole-number 100% validation.
+    const weights=Object.fromEntries(present.map(group=>[group,base[group]*(.4+rng()*1.6)]));
+    return {...Object.fromEntries(groups.map(group=>[group,0])),...apportion(weights,100-floor),'K/P':floor};
+  }
   function targets(counts,average,shares){
     const base=baseline(counts),present=groups.filter(group=>counts[group]>0),total=Object.values(counts).reduce((a,b)=>a+b,0),scale=total*.12;
     const effective=resolvedShares(counts,shares);
-    const raw=Object.fromEntries(present.map(group=>[group,average+(effective[group]-base[group])*scale/(counts[group]*importance[group])]));
+    // Premium talent has diminishing returns: buying the next few OVR points
+    // costs increasingly more, on top of position importance and room size.
+    const raw=Object.fromEntries(present.map(group=>{const gain=(effective[group]-base[group])*scale/(counts[group]*importance[group]);return [group,average+(gain>0?12*(Math.sqrt(1+gain/6)-1):gain)];}));
     let low=-1000,high=1000;
     const value=(group,offset)=>Math.max(30,Math.min(99,raw[group]-offset));
     for(let i=0;i<70;i++){const offset=(low+high)/2,mean=present.reduce((sum,group)=>sum+counts[group]*value(group,offset),0)/total;if(mean>average)low=offset;else high=offset;}
     return Object.fromEntries(present.map(group=>[group,value(group,(low+high)/2)]));
   }
-  return Object.freeze({importance,groups,baseline,redistribute,editShare,allocationError,targets,fromLegacy,resolvedShares});
+  return Object.freeze({importance,groups,baseline,redistribute,editShare,minimumShare,allocationError,targets,fromLegacy,resolvedShares,spendingPresets,presetShares,randomShares});
 });

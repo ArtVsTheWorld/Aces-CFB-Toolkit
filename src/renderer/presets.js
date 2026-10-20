@@ -29,7 +29,7 @@ function presetValues(configuration) {
   }
   for (const [id, labels] of Object.entries(teamSelections)) {
     const select = document.getElementById(id);
-    if (!select) throw new Error("This preset's team settings are not available in this tool.");
+    if (!select) throw new Error(`This preset's team settings (${id}) are not available in this tool. Reopen the tool or choose a matching preset.`);
     const wanted = labels.map(label => label === "Choose Specific Players from Active Dynasty" ? "choose specific players from donor source" : label.toLowerCase()), donorPath = configuration.values?.["equipment-donor"]?.trim(), catalog = id === "equipment-donor-players" && donorPath ? equipmentDonorCatalogs.get(donorPath) : null, options = catalog ? catalog.donorPlayers.map(player => ({ value: player.value, textContent: player.label })) : [...select.options];
     const missing = labels.filter((label, index) => !options.some(option => option.textContent.trim().toLowerCase() === wanted[index]));
     if (missing.length) throw new Error(`Preset not loaded: these ${id === "equipment-donor-players" ? "eligible donor players" : "teams"} are not in this save: ${missing.join(", ")}. Choose a matching save or save a new preset for this one.`);

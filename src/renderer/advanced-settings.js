@@ -9,7 +9,7 @@ function undershirtWeightOptions(root = document) {
   return Object.fromEntries(["regular", "large"].map(group => [group, Object.fromEntries(["hoodie", "secondary", "primary", "white", "black", "none"].map(color => [color, Number(configurationRead(root, `undershirt-${group}-${color}`).value)]))]));
 }
 function visorSettingsMarkup(prepared) {
-  return `<div id="visor-settings-field"><p class="muted">These percentages control both the chance to add a visor and the maximum visor share within each position group. Existing visors are never removed. FBS and directional FCS populations are counted separately.</p><div class="probability-grid three">${Object.entries(prepared.defaultVisorFrequencies).map(([group, value]) => percentageControl(`visor-frequency-${group.replace("/", "-")}`, group, value)).join("")}</div></div>`;
+  return `<div id="visor-settings-field"><p class="muted">These percentages control both the chance to add a visor and the maximum visor share within each team's position group. Existing visors are never removed. Each team has its own limit; unused allowance is not shared with other teams.</p><div class="probability-grid three">${Object.entries(prepared.defaultVisorFrequencies).map(([group, value]) => percentageControl(`visor-frequency-${group.replace("/", "-")}`, group, value)).join("")}</div></div>`;
 }
 function visorFrequencyOptions() { return Object.fromEntries(["QB", "HB", "FB", "WR", "TE", "OL", "EDGE", "DT", "LB", "CB", "FS", "SS", "K/P"].map(group => [group, Number(document.getElementById(`visor-frequency-${group.replace("/", "-")}`).value)])); }
 function balanceWholeInputs(inputs) {
@@ -113,32 +113,50 @@ function undershirtWeightsSummary(weights) {
   return Object.entries(weights).map(([group, values]) => `${group === "large" ? "Muscular / Standard Builds" : "Other Builds"}: ${Object.entries(values).filter(([, value]) => value > 0).map(([key, value]) => `${labels[key] ?? key} ${value}%`).join(" · ")}`).join("; ");
 }
 function modelHelpButton(label, description) {
-  return `<button type="button" class="model-help-button" data-model-help="${escapeHtml(description)}" aria-label="About ${escapeHtml(label)}">?</button>`;
+  return `<button type="button" class="model-help-button" data-model-help="${escapeHtml(description)}" aria-label="About ${escapeHtml(label)}"></button>`;
 }
+const boundHelpRoots = new WeakSet();
 function bindModelHelp(dialog) {
+  if (boundHelpRoots.has(dialog)) return;
+  boundHelpRoots.add(dialog);
+  if (dialog !== document.body) document.body.dispatchEvent(new Event("toolkit-hide-help"));
+  const belongsHere = button => button && (dialog === document.body ? !button.closest("dialog") : button.closest("dialog") === dialog);
   const tooltip = document.createElement("div"), id = `model-help-${++configurationSequence}`;
   tooltip.id = id; tooltip.className = "model-help-tooltip"; tooltip.setAttribute("role", "tooltip"); tooltip.hidden = true; dialog.append(tooltip);
   let active = null, timer;
   const hide = () => { clearTimeout(timer); active?.removeAttribute("aria-describedby"); active = null; tooltip.hidden = true; };
   const show = button => {
     clearTimeout(timer); active?.removeAttribute("aria-describedby"); active = button;
-    button.setAttribute("aria-describedby", id); tooltip.textContent = button.dataset.modelHelp; tooltip.hidden = false;
-    const bounds = button.getBoundingClientRect(), frame = dialog.getBoundingClientRect(), width = tooltip.getBoundingClientRect().width;
+    button.setAttribute("aria-describedby", id); tooltip.textContent = button.dataset.helpSource ? document.getElementById(button.dataset.helpSource)?.textContent.trim() || button.dataset.modelHelp : button.dataset.modelHelp; tooltip.hidden = false;
+    const bounds = button.getBoundingClientRect(), frame = dialog === document.body ? { left: 0, top: 0, right: innerWidth, bottom: innerHeight } : dialog.getBoundingClientRect(), width = tooltip.getBoundingClientRect().width;
     const left = Math.max(Math.max(8, frame.left + 8), Math.min(bounds.left, Math.min(innerWidth - width - 8, frame.right - width - 8)));
     tooltip.style.left = left + "px"; tooltip.style.top = Math.max(8, bounds.bottom + 8) + "px";
     const height = tooltip.getBoundingClientRect().height;
     if (bounds.bottom + 8 + height > Math.min(innerHeight, frame.bottom) - 8) tooltip.style.top = Math.max(Math.max(8, frame.top + 8), bounds.top - height - 8) + "px";
   };
-  dialog.addEventListener("mouseover", event => { const button = event.target.closest("[data-model-help]"); if (button) show(button); });
+  dialog.addEventListener("mouseover", event => { const button = event.target.closest("[data-model-help]"); if (belongsHere(button)) show(button); });
   dialog.addEventListener("mouseout", event => {
     if (!event.target.closest("[data-model-help]") || event.relatedTarget?.closest("[data-model-help]") || event.relatedTarget === tooltip) return;
     timer = setTimeout(() => { if (document.activeElement !== active) hide(); }, 120);
   });
-  dialog.addEventListener("focusin", event => { if (event.target.matches("[data-model-help]")) show(event.target); });
+  dialog.addEventListener("focusin", event => { if (event.target.matches("[data-model-help]") && belongsHere(event.target)) show(event.target); });
+  dialog.addEventListener("click", event => {
+    const button = event.target.closest("[data-model-help]");
+    if (belongsHere(button)) { event.preventDefault(); event.stopPropagation(); show(button); }
+    else if (!tooltip.contains(event.target)) hide();
+  });
   dialog.addEventListener("focusout", event => { if (event.target === active) hide(); });
   tooltip.addEventListener("mouseenter", () => clearTimeout(timer));
   tooltip.addEventListener("mouseleave", () => { if (document.activeElement !== active) hide(); });
-  dialog.addEventListener("scroll", () => { if (active && document.activeElement === active) show(active); else hide(); }, true);
-  dialog.addEventListener("keydown", event => { if (event.key === "Escape" && !tooltip.hidden) { event.preventDefault(); event.stopPropagation(); hide(); } });
+  dialog.addEventListener("scroll", event => { if (event.target === tooltip) return; if (active && document.activeElement === active) show(active); else hide(); }, true);
+  dialog.addEventListener("toolkit-hide-help", hide);
+  dialog.addEventListener("keydown", event => {
+    if (tooltip.hidden) return;
+    if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); hide(); }
+    else if (event.target === active && ["ArrowDown", "ArrowUp", "PageDown", "PageUp"].includes(event.key)) {
+      event.preventDefault(); event.stopPropagation();
+      tooltip.scrollTop += (event.key.endsWith("Down") ? 1 : -1) * (event.key.startsWith("Page") ? tooltip.clientHeight * .8 : 36);
+    }
+  });
   dialog.addEventListener("close", hide);
 }

@@ -1,0 +1,14 @@
+{
+  "source": "Read-only CollegeFB27 ItemInfo inspection, 2026-10-20. Repeated ItemName fields and two DisplayName +56 references agree: Taped Wrist with Cross. Wrist slots and tape tag follow the established wristTapedMax family. Only the observed WhiteCross item is allowlisted; no additional color variants are inferred.",
+  "items": [
+    {
+      "itemName": "GearWrist_wristTapedMax_WhiteCross",
+      "displayName": "Taped Wrist with Cross",
+      "category": "Wrist Wear",
+      "slots": ["LeftWristWear", "RightWristWear"],
+      "tags": ["GearWrist_Tape"],
+      "themeColors": ["white"],
+      "origin": "unlocked"
+    }
+  ]
+}

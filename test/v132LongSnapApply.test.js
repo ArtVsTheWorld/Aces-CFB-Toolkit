@@ -10,7 +10,7 @@ test("generic cached Preview and Apply lifecycle includes Long Snap Fixer", () =
   assert.match(renderer, /mode === "apply" \? \{ planId: previous\?\.planId \} : collectOptions\(toolId\)/);
   assert.match(renderer, /if \(mode === "preview"\) state\.genericPreviews\.set\(toolId, result\); else \{ state\.genericPreviews\.delete\(toolId\)/);
   assert.match(renderer, /document\.querySelector\("#apply"\)\.disabled = !state\.genericPreviews\.has\(toolId\)/);
-  assert.equal(tools.find(tool => tool.id === "long-snap").version, "1.2");
+  assert.equal(tools.find(tool => tool.id === "long-snap").version, undefined);
 });
 
 test("changing Active Save or resetting defaults invalidates generic cached plans", () => {

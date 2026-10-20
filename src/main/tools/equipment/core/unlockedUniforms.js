@@ -31,11 +31,11 @@ export function buildUniformStylePlan(entries, options, rng) {
   for (const entry of entries) {
     const group = positionGroup(entry.position); if (!POSITION_GROUPS.includes(group)) continue;
     const outfits = fieldOutfits(entry.raw); if (!outfits.length) continue;
-    const key = `${entry.cohort}:${group}`, values = groups.get(key) ?? [];
+    const key = JSON.stringify([entry.cohort, entry.teamIndex ?? null, group]), values = groups.get(key) ?? [];
     values.push({ ...entry, outfits }); groups.set(key, values);
   }
   for (const [key, values] of groups) {
-    const [cohort, group] = key.split(":"), total = values.length;
+    const [cohort, teamIndex, group] = JSON.parse(key), total = values.length;
     const existingLower = values.filter(entry => has(entry.outfits, "OuterShirt", lowest)).length;
     const existingCutoff = values.filter(entry => has(entry.outfits, "OuterPants", new Set([CUTOFF_PANTS]))).length;
     const lowerTarget = Math.floor(total * lowerCaps[group] / 100), cutoffTarget = Math.floor(total * pantsCaps[group] / 100);
@@ -45,6 +45,10 @@ export function buildUniformStylePlan(entries, options, rng) {
     for (const entry of values) {
       if (!entry.editable || has(entry.outfits, "OuterPants", new Set([CUTOFF_PANTS]))) continue;
       const projected = structuredClone(entry.outfits);
+      // Rolled-Jersey Undershirts runs before lowering jerseys and cutoff
+      // pants. Plan for a possible shirt addition; Apply checks the actual
+      // rolled result again, including the optional no-undershirt outcome.
+      if(options.rolledJerseyFix)for(const outfit of projected){const elements=outfit.loadoutElements,shirt=elements.find(e=>e.slotType==='InnerShirt');if(uniformItem(elements,'OuterShirt')==='Gear_JerseyStyle_RolledLow'&&shirt&&['Undershirt_None','Gear_Undershirt_Hoodie'].includes(shirt.itemAssetName))shirt.itemAssetName='Gear_Undershirt_CompressionTCrewSleeveless';}
       if (lower.has(entry.visualsRow)) for (const outfit of projected) for (const element of outfit.loadoutElements) if (element.slotType === "OuterShirt" && LOWER_JERSEY_REPLACEMENTS[element.itemAssetName]) element.itemAssetName = LOWER_JERSEY_REPLACEMENTS[element.itemAssetName];
       const source = outfit => uniformItem(outfit.loadoutElements, "OuterPants");
       const applicable = projected.filter(outfit => source(outfit) === ABOVE_KNEE_PANTS || options.replaceStandardWithCutoff && source(outfit) === STANDARD_PANTS);
@@ -56,7 +60,7 @@ export function buildUniformStylePlan(entries, options, rng) {
       if (options.replaceStandardWithCutoff) for (const entry of standards) pants.add(entry.visualsRow);
       for (const entry of shuffled(candidates, rng).slice(0, Math.max(0, cutoffTarget - existingCutoff - (options.replaceStandardWithCutoff ? standards.length : 0)))) pants.add(entry.visualsRow);
     }
-    stats.push({ cohort, group, total, lowerCap: lowerCaps[group], existingLower, lowerTarget, lowerSelected: values.filter(entry => lower.has(entry.visualsRow)).length, cutoffCap: pantsCaps[group], existingCutoff, cutoffTarget, cutoffSelected: values.filter(entry => pants.has(entry.visualsRow)).length, standardReplacements: options.cutoffPantsFix && options.replaceStandardWithCutoff ? standards.length : 0, incompatible, protectedPlayers: values.filter(entry => !entry.editable).length });
+    stats.push({ scope: "team", teamIndex, team: values[0].team ?? `Team ${teamIndex ?? "Unknown"}`, cohort, group, total, lowerCap: lowerCaps[group], existingLower, lowerTarget, lowerSelected: values.filter(entry => lower.has(entry.visualsRow)).length, cutoffCap: pantsCaps[group], existingCutoff, cutoffTarget, cutoffSelected: values.filter(entry => pants.has(entry.visualsRow)).length, standardReplacements: options.cutoffPantsFix && options.replaceStandardWithCutoff ? standards.length : 0, incompatible, protectedPlayers: values.filter(entry => !entry.editable).length });
   }
   return { lower, pants, stats };
 }

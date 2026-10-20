@@ -53,7 +53,7 @@ function normalize(options, freshman) {
   const brandedMouthpieceFrequency = percentage(options?.brandedMouthpieceFrequency, 75, "Branded mouthpiece frequency");
   const accessoryColorWeights = normalizeAccessoryColorWeights(options?.unlockedRecolorFix && unlockedColorTheme === "weighted" ? options?.accessoryColorWeights : undefined), teamTapeColors = normalizeTeamTapeColors(options?.unlockedRecolorFix && tapeColorMode === "distribution" ? options?.teamTapeColors : undefined);
   const teamAccessoryColors = normalizeTeamAccessoryColors(options?.unlockedRecolorFix && unlockedColorTheme === "team" ? options?.teamAccessoryColors : undefined);
-  const unlockedTattooCap = options?.unlockedTattooCap === "" || options?.unlockedTattooCap === undefined ? 33 : Number(options.unlockedTattooCap); if (!Number.isInteger(unlockedTattooCap) || unlockedTattooCap < 0 || unlockedTattooCap > 100) throw new Error("Tattoo population cap must be a whole percentage from 0 through 100.");
+  const unlockedTattooCap = options?.unlockedTattooCap === "" || options?.unlockedTattooCap === undefined ? 40 : Number(options.unlockedTattooCap); if (!Number.isInteger(unlockedTattooCap) || unlockedTattooCap < 0 || unlockedTattooCap > 100) throw new Error("Tattoo population cap must be a whole percentage from 0 through 100.");
   if (options?.clearTattoos && options?.unlockedTattooFix) throw new Error('Clear Tattoos and Add Tattoos cannot both be enabled. Choose one tattoo pass.');
   const unlockedTattooSelection = normalizeTattooSelection(options?.unlockedTattooFix ? options?.unlockedTattooSelection : undefined);
   const bodyTypes = freshman ? [] : allowed(splitList(options?.bodyTypes), VALID_BODY_TYPES, "body type").map(value => value === "Lean" ? "Freshman" : value);
@@ -180,6 +180,7 @@ async function analyze(context, freshman) {
       seed: options.seed,
       visualsChanged: fixes.visualsChanged,
       helmetFix: options.helmetFix,
+      visorFix: options.visorFix, rolledJerseyFix: options.rolledJerseyFix, unlockedMouthpieceFix: options.unlockedMouthpieceFix,
       helmetMixExcludesZero: Boolean(options.helmetDistribution),
       helmetDistribution: options.helmetDistribution,
       bearsPadsPlayersChanged: new Set(fixes.bearsPadsChanges.map(change => change.row)).size,
@@ -220,7 +221,7 @@ async function analyze(context, freshman) {
     };
   }
   const auditHeadings = ["CharacterVisualsRow", "ChangedSlotsAndMetadata", "BeforeRawData", "AfterRawData"];
-  const report = { prefix: "equipment-report", headings: [...(freshman ? ["ChangeType", "Team", "Player", "Position", "ClassYear", "RedshirtStatus", "Overall", "OldOrDonorTeam", "NewOrDonorPlayerAndEquipmentGroups"] : ["ChangeType", "Team", "Player", "Position", "ClassYear", "RedshirtStatus", "Overall", "OldGearItem", "NewGearItem"]), ...auditHeadings, "Seed", "ResolvedOptionsJSON", "HelmetDistributionAuditJSON", "DonorSourceAuditJSON", "DonorDecisionAuditJSON", "UniformPopulationAuditJSON"], rows: reportRows.map((row, index) => [...row, options.seed, index === 0 ? JSON.stringify(options) : "", index === 0 ? JSON.stringify({ balance: details.helmetBalance ?? null, population: details.helmetPopulation ?? null }) : "", index === 0 && freshman ? JSON.stringify({ source: details.donorSave, kind: details.donorKind, fingerprint: details.donorFingerprint, warnings: details.donorSourceWarnings }) : "", freshman ? JSON.stringify(donorDecisions[index]) : "", index === 0 && !freshman ? JSON.stringify(details.uniformPopulation) : ""]) };
+  const report = { prefix: "equipment-report", headings: [...(freshman ? ["ChangeType", "Team", "Player", "Position", "ClassYear", "RedshirtStatus", "Overall", "OldOrDonorTeam", "NewOrDonorPlayerAndEquipmentGroups"] : ["ChangeType", "Team", "Player", "Position", "ClassYear", "RedshirtStatus", "Overall", "OldGearItem", "NewGearItem"]), ...auditHeadings, "Seed", "ResolvedOptionsJSON", "HelmetDistributionAuditJSON", "DonorSourceAuditJSON", "DonorDecisionAuditJSON", "UniformPopulationAuditJSON", "PopulationCapsAuditJSON"], rows: reportRows.map((row, index) => [...row, options.seed, index === 0 ? JSON.stringify(options) : "", index === 0 ? JSON.stringify({ balance: details.helmetBalance ?? null, population: details.helmetPopulation ?? null }) : "", index === 0 && freshman ? JSON.stringify({ source: details.donorSave, kind: details.donorKind, fingerprint: details.donorFingerprint, warnings: details.donorSourceWarnings }) : "", freshman ? JSON.stringify(donorDecisions[index]) : "", index === 0 && !freshman ? JSON.stringify(details.uniformPopulation) : "", index === 0 && !freshman ? JSON.stringify({ scope: "team", tattoos: details.unlockedTattooPopulation, equipment: details.populationSafeguards }) : ""]) };
   const result = {
     status: "preview",
     mode: "preview",

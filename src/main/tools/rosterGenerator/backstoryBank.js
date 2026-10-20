@@ -6,304 +6,304 @@ import {EASTER_EGG_BACKSTORIES} from './backstoryEasterEggs.js';
 const block=(id,rule,text)=>({id,rule,stories:text.trim().split('\n').map(line=>{const [title,...body]=line.split('|');return {title,text:body.join('|')};})});
 export const BACKSTORY_GROUPS=Object.freeze([
 block('family','any',`
-Saturday Kitchen|His family always argued about football around the kitchen table. He still calls home after practice, ready to defend whichever play caught his attention that day.
-The Old Ball|He keeps a worn football from childhood at home rather than replacing it. It reminds him of evenings when a patch of grass and a willing receiver were enough.
-Grandfather's Radio|His grandfather followed games on a small radio while working in the garage. Hearing a broadcast still brings back the sound of tools and their running commentary.
-The Long Drive|Family members took turns driving him to youth practices when their schedules rarely lined up. He remembers those rides as clearly as any game from that period.
-Backyard Boundaries|His first field had a fence for one sideline and a driveway for the other. The arguments over catches taught him that football could be serious without a scoreboard.
-Older Cousins|He learned the game by tagging along with older cousins. Getting included mattered more than winning, although he rarely admitted that at the time.
-A Seat at Home|His family has a regular spot for watching games together. He likes knowing the same familiar faces will be there, whether he is nearby or calling from campus.
-The Handwritten Note|A family member slipped a short encouragement note into his bag before he left for college. He has kept it through every round of unpacking.
-Sibling Rivalry|An ongoing competition with a sibling turns even simple backyard drills into contests. They still keep a running argument about which one had the better hands as kids.
-Sunday Call|He sets aside time for a family call each Sunday. Football usually comes up, but he likes hearing the ordinary news that makes campus feel a little closer to home.
+Kitchen Arguments|His mother can identify a blown assignment but still calls every penalty offside. He argues with her anyway, usually while she is packing leftovers for his trip back.
+The Old Ball|His childhood football has a bite mark from a neighbor's dog and absolutely no grip left. He refuses to let his family throw it out, despite owning far better ones.
+Grandfather's Radio|His grandfather used to turn down the television and call games himself. He still phones with unsolicited commentary, including when his grandson only called to ask about dinner.
+The Long Drive|His aunt drove him to youth practices in a car with one working speaker. He still associates defensive drills with the same scratched country CD.
+Backyard Boundaries|His brothers ruled that catches against the garage door counted as touchdowns. Their father abolished the rule after the second broken window, but the record book remains disputed.
+Older Cousins|His cousins made him play center in backyard games because he was the youngest. He now refuses to start family games until somebody else volunteers to snap.
+The Living-Room Scout|His dad critiques his football stance while watching television from a recliner. He recently sent back a photograph of that recliner labeled questionable lower-body technique.
+The Handwritten Note|His sister hid a note in his football bag telling him not to become unbearable. He keeps it in his locker and claims she meant somebody else.
+Sibling Rivalry|He and his brother still count backyard touchdowns dating back to elementary school. Neither trusts the other's total, and their mother refuses to officiate another appeal.
+Sunday Call|He calls home after the team schedule clears and usually reaches a family argument already in progress. He likes being asked about broken appliances instead of his football future.
 `),
 block('community','any',`
-The Corner Store|The owner of his neighborhood store used to ask about every youth game. He still stops in when he is home, knowing the conversation will start in exactly the same place.
-Park Lights|He first learned to love football beneath the lights of a public park. Even now, an empty field at dusk can make him want to grab a ball.
-The Equipment Room|A local volunteer once helped him find gear that fit before a season began. He remembers how much a practical kindness can mean to a kid trying to play.
-Youth League Reunion|Several friends from his first youth team still trade messages about football. Their conversations include far more old jokes than serious scouting advice.
-Town Barber|His hometown barber has an opinion about every team and never charges extra for sharing it. He enjoys the routine, even when his own football choices become the debate.
-The Local Field|He returns to the field where his youth team practiced whenever he can. The place seems smaller now, but the memories have not shrunk with it.
-Coach's Whistle|A youth coach's whistle was the signal that everyone in his neighborhood knew. He still associates that sound with finishing homework quickly enough to make practice.
-Little League Helper|He enjoys helping younger kids learn the basics when he is back home. Explaining a simple drill reminds him how much patience someone once showed him.
-Friday Night Route|He can describe the route to his old high school field without thinking about a single turn. Taking it again brings back the small routines that made game nights special.
-A Familiar Fence|Neighbors used to watch pickup games from behind the same fence. He likes the idea that a game does not need a big crowd to matter to the people playing it.
+The Corner Store|The man at his neighborhood store still calls him by his youth-football nickname. He has offered money for that nickname to stop appearing in front of teammates.
+Park Lights|His childhood park shut its lights off at a fixed hour, whether their game was finished or not. He still argues that the touchdown scored in complete darkness should count.
+The Equipment Room|His first shoulder pads came from a donated bin with another kid's name written inside. He remembers that name better than the score of his first game.
+Youth League Reunion|His old youth team keeps a group chat devoted to embarrassing photographs. He tried muting it until somebody threatened to mail the photographs to his position coach.
+Town Barber|His barber refuses to discuss football until he admits his latest haircut was worth the price. Both believe they are the more important talent in the relationship.
+The Local Field|He visited his old practice field and discovered the intimidating hill was barely a slope. He immediately accused his youth coach of exaggerating its elevation for years.
+Coach's Whistle|His youth coach used a whistle with a sound the whole neighborhood hated. He bought the same model as a joke, and his family made him leave it outside.
+The Little Kids' Drill|He agreed to help at a youth football session and lost control during a water break. The children remember him as the coach who got hit by every sponge.
+Friday Night Route|His high school bus passed the same house with a homemade football sign every Friday. He still checks whether the owner has updated the player's name.
+The Fence Committee|Retired neighbors used to debate penalties through the fence during his pickup games. Their arguments regularly lasted longer than the games they were supposedly supervising.
 `),
 block('interests','any',`
-Playlist Curator|He treats a pre-practice playlist like a project with room for endless revisions. Teammates know that asking for one song recommendation may lead to an entire album discussion.
-Kitchen Experiments|He likes trying recipes that look easy until the cooking starts. A few dependable meals have survived the experiments, along with plenty of stories about the failures.
-Fishing Mornings|He enjoys the quiet of an early fishing trip when his schedule allows it. Waiting for a bite is a welcome change from a day measured in whistles and deadlines.
-Camera Roll|He takes pictures of ordinary campus scenes rather than only big occasions. Looking through them gives him a record of college life beyond football.
-Board Game Night|He is usually willing to join a board game if someone explains the rules. The easygoing invitation tends to become less easygoing once the score gets close.
-Sneaker Notebook|He keeps track of shoe designs he likes, including pairs he has no plans to buy. Comparing small details has become a relaxing hobby rather than a shopping mission.
-The Long Walk|He likes taking an unhurried walk after a crowded day. It gives him a chance to think about something that is not the next item on a schedule.
-Sketchbook|He occasionally sketches ideas in the margins of a notebook. Most never become finished drawings, but he enjoys having something to work on without a score attached.
-Movie Debates|He has strong opinions about which sports movies hold up on a second viewing. Friends have learned that asking for his favorite is easier than asking him to rank them.
-Weekend Grill|He enjoys the social side of a cookout as much as the food. Offering to help at the grill is his usual way of avoiding an awkward introduction.
+Playlist Curator|He edits his warmup playlist as if a bad transition could cost the team points. Teammates sneak novelty songs into it whenever he leaves his phone unlocked.
+Kitchen Experiments|He tried cooking a pre-practice meal from a professional athlete's video. The smoke alarm provided the only part of the routine his roommate wants repeated.
+Fishing Mornings|A youth coach once promised a fishing trip if everyone stopped arguing at practice. He remembers catching nothing and complaining all the way home anyway.
+Camera Roll|He photographs teammates when they think nobody is watching, especially their terrible travel outfits. His camera roll has become the reason several people are unusually polite to him.
+Board Game Night|He runs board-game nights with teammates and refuses to explain a rule twice. This policy lasted until his own position coach joined and asked the same question six times.
+Sneaker Notebook|He sketches cleat colorways during long rides and rates the team's footwear without permission. His harshest review is reserved for the pair he bought himself.
+The Stadium Walk|He likes walking around empty stadium concourses when the building is quiet. He once got so absorbed in the old photographs that a custodian accidentally locked him in.
+Sketchbook|He draws cartoons of football coaches in the margins of his notebook. One coach asked for a copy, which frightened him more than getting caught.
+Movie Debates|He thinks the best football movies have the worst blocking scenes. Teammates have banned him from pausing the screen to point out another impossible protection.
+Weekend Grill|He volunteered to grill at a football cookout and dropped the first batch through the grate. His teammates still ask whether dinner will be served above or below ground.
 `),
 block('routines','any',`
-Bag Check|He checks his practice bag in the same order before leaving. It is a small routine that makes a busy morning feel less scattered.
-The Spare Pen|He carries a spare pen because someone always seems to need one. The habit began in school and followed him into meeting rooms.
-Early Bus Habit|Catching an early school bus taught him to get ready before the last possible minute. He still prefers a little waiting time to a rushed arrival.
-One Clear Goal|He writes down one manageable goal before a practice week. Crossing it off matters more to him than making a long list he cannot remember.
-Post-Practice Reset|He takes a few minutes to put his things in order after practice. A tidy locker is one part of the day he can control without needing a coach's permission.
-Question in the Margin|He marks questions in the margin instead of trying to remember them later. Bringing one clear question to a meeting feels more useful than pretending everything made sense.
-Travel Window|He likes watching the scenery on bus rides. The quiet stretch between departure and arrival gives him a break from the usual campus pace.
-The Calendar|He keeps a plain calendar rather than relying on memory. Seeing the week in one place helps him make room for responsibilities outside football.
-Shoelace Ritual|He reties his shoes if the first attempt does not feel right. He knows it is a habit rather than a competitive advantage, but it is one he has no interest in changing.
-One More Look|He makes one final check for forgotten equipment before leaving a room. Friends may tease him about it, but they also ask whether he has seen their missing things.
+Bag Check|He once reached youth practice with two left cleats and blamed his brother. His brother still sends him a photograph of matching shoes before important trips.
+The Spare Pen|He lends teammates pens during meetings and writes their names on a debt list. The list now includes a coach who insists that public employees should be exempt.
+The Early Bus|He likes being first on the team bus so he can avoid sitting beside the bathroom. He considers this a practical achievement, not a sign of good character.
+The Locker List|He wrote a list of personal football goals and hid it inside his locker. A teammate added become less annoying, and he has refused to cross it off.
+Locker Archaeology|He claims to know where everything in his football locker is. The discovery of an unopened sandwich has made that explanation harder to defend.
+Question in the Margin|He writes down questions during meetings but gets embarrassed about asking them. He usually corners a teammate afterward and starts with this is probably obvious.
+The Window Seat|He insists on a window seat for team travel, then sleeps through the scenery. Teammates now require him to name one landmark before honoring the request.
+The Wrong Calendar|He copied a football meeting time into the wrong week on his phone. He arrived extremely prepared for a meeting nobody else knew existed.
+Shoelace Ritual|He reties his cleats until the loops feel identical. His youth coach timed the routine once and asked whether they needed to schedule a separate practice.
+The Missing Glove|He searches for lost equipment loudly enough to recruit the whole locker room. His least successful investigation ended when somebody pointed at the glove already on his hand.
 `),
 block('arrival','true-freshman',`
-New Campus Map|He arrived with a campus map saved on his phone and more confidence than sense of direction. Learning the route from class to practice is part of his first college adjustment.
-First College Notebook|He began his first college notebook with a carefully organized index. The pages are filling quickly as he learns how much information can fit into one football meeting.
-The Move-In Box|The last box he unpacked contained reminders of home rather than football gear. Keeping those things nearby has made his first college room feel less temporary.
-New Vocabulary|He is learning that familiar football ideas can have unfamiliar names in a new system. Asking questions is becoming a regular part of his first season on campus.
-Finding a Routine|He is working out how to balance college classes, meals and practice for the first time. A predictable daily routine is starting to matter more than the excitement of move-in day.
-The First Team Meeting|He spent his first college team meeting trying to learn faces as well as terminology. There is plenty to absorb before any of it begins to feel ordinary.
-High School Keepsake|He brought one small keepsake from his high school team to campus. It is a reminder of where he started rather than a claim about what comes next.
-Learning the Pace|The pace of a college practice is still new to him. He is concentrating on understanding the next instruction instead of getting overwhelmed by the whole afternoon.
-Home on the Phone|His first stretch away at college has made short calls home part of the routine. He has discovered that describing an ordinary day can be more reassuring than trying to sound impressive.
-First Fall Checklist|He made a checklist for his first college fall and keeps finding things to add. Football is a big part of it, but learning how to live on campus takes work too.
+The Campus Map|He got lost on the way to his first college football meeting and followed someone carrying a helmet. Unfortunately, that person was also a freshman who was lost.
+The First Notebook|He brought a new notebook to his first team meeting and misspelled the coach's name on its cover. He now keeps that side against the desk.
+The Move-In Box|His family packed his first college room while he was reporting for football activities. He returned to find his childhood team blanket displayed like a museum exhibit.
+The Vocabulary Problem|He nodded through an unfamiliar term in his first college meeting. He has since asked three other freshmen what it means, and received three confident answers.
+The First Alarm|He set several alarms for his first early football commitment. His roommate woke up to all of them while he slept through the first two.
+The First Introduction|He introduced himself to the same older teammate twice during his first week in the program. The teammate now introduces himself back every time they meet.
+The High School Bag|He brought his old high school football bag to campus rather than buying a new one. He is already tired of explaining the rival school's sticker his brother added.
+The Practice Pace|He was so nervous at his first college practice that he jogged through the water break. An equipment assistant finally told him that drinking was allowed.
+The Home Report|He told his family his first college football week was completely under control. He made the call while standing outside the building he had locked himself out of.
+First Fall Checklist|He arrived with a carefully planned list for his first fall of college football. Finding somewhere to wash his clothes was not on it, which quickly became a problem.
 `),
 block('redshirt-freshman','rs-freshman',`
-Second First Impression|He has already spent a redshirt year learning what college football asks of him. Being a freshman on the roster no longer means that every part of campus life is new.
-The Practice Notebook|His redshirt year left him with a notebook full of reminders. He is looking for ways to turn those notes into better habits rather than simply collecting more pages.
-More Familiar Hallways|A redshirt season gave him time to stop feeling lost between classes and meetings. He enters this year with fewer everyday distractions and a clearer idea of the routine.
-The Year of Questions|He used his redshirt year to ask the questions he had been afraid would sound obvious. The answers gave him a more useful starting point for the work ahead.
-Patient Beginning|His college start included a redshirt season rather than a quick rush into expectations. He is trying to treat that extra time as preparation, not a guarantee of what comes next.
-Watching the Details|A year in the program taught him to notice how older teammates prepare. He is borrowing the routines that suit him without trying to copy someone else's whole personality.
-Familiar Terminology|The language of the playbook is less intimidating after a redshirt year. He can spend more attention on the instruction itself instead of decoding every phrase.
-Beyond Move-In Day|He has already been through the awkward first year of finding his way around campus. Now he wants his daily football work to feel just as settled.
-Redshirt Reflection|He looks back on his redshirt season as a year of small lessons rather than one defining moment. Keeping track of those lessons helps him see the time as useful.
-The Next Chapter|His redshirt year is behind him, even though his listed class still says freshman. He knows the next step will depend on what he does now, not merely on having waited.
+Second First Impression|He spent his redshirt year being called the new guy. He is irritated that another freshman class has arrived without anyone officially retiring the nickname.
+The Redshirt Notebook|His redshirt-season notebook contains football notes and rankings of every dining-hall dinner. Teammates borrow it for reasons that have little to do with the playbook.
+The Known Shortcut|During his redshirt year he discovered a shortcut to the football building. He now refuses to share it with anyone who mocked his first campus map.
+The Question Year|He spent his redshirt season asking older teammates questions he would not ask coaches. He is now receiving those same questions and realizing how many answers were invented.
+The Waiting Problem|He disliked redshirting and was not especially subtle about it. A coach finally told him that glaring at a practice schedule would not change it.
+The Borrowed Routine|He copied an older player's warmup during his redshirt season without understanding half of it. He quietly abandoned the part that required carrying a tennis ball everywhere.
+The Wrong Call|He learned enough football terminology while redshirting to correct someone at dinner. The corrected person was a coach, and the correction was wrong.
+Beyond Move-In|His redshirt year taught him which team facilities had the best phone reception. Newcomers assume this knowledge required considerably more athletic achievement than it did.
+The Old Photo|His family still shares the photograph from his redshirt year in which he looks furious on the sideline. He insists he was only trying to read the scoreboard.
+The Freshman Argument|He has already redshirted but still gets included in every announcement addressed to freshmen. He accepts the eligibility label and disputes every cleaning assignment attached to it.
 `),
 block('early-years','young',`
-Learning to Ask|He is early enough in his college career to encounter something unfamiliar almost every week. He would rather ask a useful question than hide a misunderstanding.
-Building a Foundation|He is concentrating on habits that will last beyond a single practice. There is still plenty of college football ahead of him, and he wants a dependable starting point.
-The Younger Voice|He sometimes listens before speaking in a room full of older players. When he does ask a question, it is usually one he has thought about for a while.
-Small Milestones|He keeps track of little milestones as he settles into college football. A clearer assignment or a better-organized week can matter even without anyone else noticing.
-Finding His People|He is still building the friendships that make a team feel like a familiar place. Shared meals have been as useful for that as conversations about the playbook.
-Learning the Week|He is getting used to how much preparation happens before a college football weekend. Understanding the rhythm of the week has become a goal of its own.
-More Than One Lesson|He is discovering that a difficult practice can teach several things at once. Sorting out those lessons is part of learning to handle college football without taking every setback personally.
-A Borrowed Routine|He borrowed part of an older teammate's preparation routine and adapted it. Finding a version he can repeat matters more than making it look elaborate.
-Room to Settle|He is giving himself time to become comfortable with the demands of college life. That patience does not stop him from wanting a better practice the next day.
-The Next Useful Step|He prefers thinking about the next useful step rather than his whole college career at once. It keeps a long list of possibilities from becoming a distraction.
+The Younger Voice|He is still young enough that older teammates introduce him as their little cousin. He has started returning the favor by calling them uncle in front of visitors.
+The First Fine|He tried introducing a joke fine system for teammates who arrived late to informal throwing sessions. Nobody paid, and someone fined him for inventing the system.
+The Group Dinner|He is still figuring out whether the older players are joking when they give him instructions. Ordering dinner for twelve people was how he discovered that sometimes they are not.
+The Wrong Shoes|He wore his nicest shoes to a team gathering that turned out to involve muddy grass. He has demanded more specific invitations ever since.
+The Shared Table|Early in his college football experience, he sat at a table nobody had claimed. He now defends that table as if it has generations of program history.
+The Week's Schedule|He thought a quiet afternoon on the football schedule meant he was completely free. Discovering the academic appointment he had forgotten spoiled a very confident nap.
+The Bad Comparison|He compared himself to a famous player in front of older teammates. They still use the famous player's name whenever he drops his keys.
+The Borrowed Playlist|He copied an older teammate's practice playlist to feel more settled in the program. He did not expect the older teammate's mother to appear on three voice recordings.
+The Young Negotiator|He is trying to convince older teammates that freshman snack runs should include reimbursement. His campaign has produced a spreadsheet and almost no money.
+The First Team Photo|He rehearsed a serious expression for a team photograph and blinked anyway. His family ordered that version, which he considers deliberate sabotage.
 `),
 block('veterans','veteran',`
-The Familiar Routine|By this point in college, the weekly routine feels familiar to him. He still looks for small adjustments instead of assuming familiarity means there is nothing left to learn.
-Perspective in the Room|Having reached the upper classes gives him a longer view of everyday setbacks. A rough afternoon no longer has to become a verdict on an entire season.
-Knowing the Questions|He has learned which questions are worth asking before a meeting ends. That experience helps him make better use of the time everyone spends preparing.
-Campus Landmarks|He can point out the quiet study spots and reliable meal stops that younger players are still finding. Those ordinary recommendations are one way he stays connected to teammates.
-The Short Memory|He has had enough college routines to know that dwelling on one mistake rarely fixes it. He tries to carry the lesson forward without carrying every frustration with it.
-An Older Perspective|He notices how quickly a college year can pass now. The thought makes him more deliberate about the everyday moments he once hurried through.
-The Meeting Seat|He has a favorite place to sit in meetings, though he will not admit it is a preference. Small familiarities help a crowded football week feel organized.
-Useful Advice|When younger teammates ask about college life, he tries to give practical answers. Knowing where to go and what to bring can help more than a speech.
-The Routine Refined|He has changed his preparation habits as he has gotten older. What remains is a simpler routine he can actually repeat on a busy week.
-Taking Stock|He has reached the point in college where looking back can be useful. He is trying to separate the habits worth keeping from the ones he merely got used to.
+The Established Seat|He has occupied the same football meeting seat long enough to resent finding someone in it. He denies this while standing beside that person's chair.
+The Younger Questions|Younger teammates ask him which coaches tolerate jokes and which do not. He gives careful answers because some of his examples remain embarrassing.
+The Old Nickname|He earned a ridiculous football nickname early in college and assumed it would disappear with time. Younger teammates now use it without knowing where it came from.
+The Campus Expert|He gives new players confident directions around campus. He omits the fact that one of his favorite routes has been closed since construction began.
+The Short Memory|He still remembers an ordinary practice mistake from early in college because teammates named it after him. He has not found the advice to forget mistakes especially useful.
+The Class Photo|He recognizes fewer faces in old football photographs each year. He mostly uses the photos to mock everyone's former haircuts, including his own.
+The Meeting Thermostat|He has spent enough college football meetings freezing that he brings a sweatshirt regardless of the weather. Younger teammates mock the habit until they start borrowing it.
+The Veteran Advice|His most requested advice from younger players concerns cheap dinners, not football. He finds that assessment of his college experience both insulting and accurate.
+The Replaced Routine|His early college routine included an elaborate pre-practice superstition. He dropped it after realizing he was mainly doing it because teammates enjoyed watching.
+The Equipment Drawer|He has accumulated enough spare football gear to supply a small youth team. He loans it out selectively and remembers exactly who owes him a towel.
 `),
 block('last-ride','rs-senior',`
-One Last Fall|He is entering his final college season as a redshirt senior. The familiar routines carry a little more weight when he knows there will not be another fall quite like this one.
-The Last First Meeting|The first team meeting of the year has become his last as a college player. He is trying to appreciate the moment without letting it distract from the work that follows.
-Keeping the Small Things|As a redshirt senior, he is noticing the ordinary parts of college football he will miss. The walk to practice can mean as much as the events people photograph.
-Final-Year Focus|His redshirt-senior season gives him a clear endpoint to work toward. He wants to leave knowing he took the daily preparation seriously.
-The Closing Chapter|He is approaching the end of his college eligibility. Rather than trying to script a perfect ending, he is concentrating on being present for the season he has.
-The Last Equipment Check|An equipment check feels different with a final season ahead. He is aware that even the unremarkable routines are becoming things he will remember.
-Passing Along the Routine|He is a redshirt senior with practical lessons younger players can use. Sharing a few of them feels like a worthwhile part of his final year.
-The Final Calendar|He can see the outline of his last college football season on the calendar. It is a reminder to make room for the people as well as the preparation.
-No Extra Fall|His redshirt has already been used, and this is his senior year. Knowing there is no spare college season has made him more intentional about his time.
-Leaving Something Useful|He wants his final college season to leave something useful behind. That could be as simple as helping a younger teammate avoid a mistake he understands now.
+One Last Fall|He is a redshirt senior who has started collecting photographs from ordinary football days. He still refuses to be photographed looking sentimental.
+The Last First Meeting|He went into his last first team meeting expecting to feel emotional. Mostly, he was annoyed that his favorite chair was gone.
+The Old Locker|He wants one small piece of his football locker when his final season ends. The equipment staff has asked him to stop discussing removal methods.
+Final-Year Group Chat|His friends keep suggesting names for his redshirt-senior farewell tour. He has rejected every one and secretly saved several.
+The Closing Chapter|He has used his redshirt and reached his senior season, but still cannot imagine a fall without football. He changes the subject whenever someone asks what comes immediately afterward.
+The Last Gear Issue|He made a joke about this being his final equipment pickup. The joke stopped being funny when somebody handed him a form about returning everything.
+The Practical Inheritance|He is a redshirt senior trying to decide which younger teammate deserves his collection of football shortcuts. The best advice concerns avoiding the shower with unreliable hot water.
+The Final Calendar|He has marked the end of his last college football season on a calendar. He deliberately covered the date with a takeout menu.
+The Spare Fall|People still ask whether he can use another redshirt after his senior year. He is tired of explaining the answer and has begun referring them to a teammate.
+The Last Team Dinner|He wants the redshirt seniors to organize one proper football dinner before they leave. Nobody agrees on a restaurant, which feels like an appropriate ending.
 `),
 block('redshirt','redshirted',`
-Time to Observe|Using a redshirt gave him time to observe how a college program works. He still values the lessons that came from paying attention when he was not the center of it.
-The Extra Perspective|A redshirt year changed how he thought about a football timeline. Progress did not have to look the same as everyone else's to be worth pursuing.
-An Unhurried Lesson|His college path included a redshirt rather than an uninterrupted climb through the class years. He learned to find useful work in a season that required patience.
-The Waiting-Year Notebook|He kept notes during his redshirt year that still turn up in his bag. Some are reminders about football, while others explain how he learned to handle the routine.
-Different Timetables|Having used a redshirt helped him understand why teammates can share a class label but have different experiences. He is less interested now in comparing everyone's clock.
-The Long View|A redshirt season taught him that a college career is not built on one autumn. He tries to apply that perspective whenever the daily work feels repetitive.
-Watching Preparation|He paid close attention to preparation during the year he redshirted. What stayed with him was how much of the job happens away from a crowd.
-The Patient Route|His listed class comes with a redshirt year already behind it. He sees that part of the path as experience rather than something he needs to explain away.
-Notes from the Sideline|His redshirt year gave him reasons to listen carefully during practice. He still returns to a few simple reminders from that time when things begin to feel complicated.
-A Different Start|His college progression includes a redshirt year. It left him with an appreciation for the less visible parts of being on a team.
+The Sideline Reputation|His redshirt season gave teammates plenty of time to notice his elaborate sideline celebrations. He wishes they remembered his football work with the same precision.
+The Waiting Argument|He spent part of his redshirt year arguing that patience was overrated. He now delivers suspiciously similar advice to younger players who complain about waiting.
+The Spare Jersey|He kept an old practice jersey from the year he redshirted. He cannot decide whether it is a keepsake or simply a shirt he forgot to return.
+The Notebook Margins|His redshirt-year notebook contains surprisingly detailed cartoons of football meetings. He refuses to identify which coach is represented by the angry refrigerator.
+The Eligibility Conversation|He has already used his redshirt and still gets dragged into arguments about everyone's listed class. He carries no official authority, despite speaking as though he does.
+The Redshirt Dinner|During his redshirt year, a few teammates started meeting for cheap dinners after football activities. They are still arguing about who failed to pay for the first one.
+The Imitation|He spent his redshirt season perfecting an impression of a coach's favorite phrase. The coach eventually heard it and began requesting performances.
+The Old Sideline Seat|He remembers the spot where he spent much of his redshirt season waiting between football duties. He still checks whether anyone else has claimed it.
+The Borrowed Sweatshirt|He borrowed a teammate's sweatshirt during his redshirt year and never returned it. He describes it as a historical artifact when repayment is mentioned.
+The Redshirt Photograph|A redshirt-season photograph shows him celebrating something outside the camera frame. Nobody remembers what happened, but his family has framed the evidence anyway.
 `),
 block('developmental','low-overall',`
-One Assignment at a Time|He is still developing the tools needed to handle college football consistently. Focusing on one assignment at a time gives him a more useful goal than pretending the whole gap will close overnight.
-The Long Project|His current game remains a work in progress. He is trying to measure useful habits rather than demand a dramatic transformation after every practice.
-Earning the Next Rep|He knows his current ability leaves plenty to work on. The next well-executed repetition is a more realistic target than a promise about future stardom.
-Starting with the Basics|He has more to gain from getting the basics right than from chasing a highlight. That makes ordinary instruction a central part of his football week.
-No Shortcut Story|There is no quick-fix story attached to his current football development. He is concentrating on the parts of the job he can repeat, even when the results are modest.
-A Manageable Checklist|He has broken the work ahead into a manageable checklist. It is easier to address one weakness than to turn every practice into a judgment about his future.
-The Patient Rep|His game is not yet polished enough to make difficult things look routine. He is willing to repeat simple work rather than skip ahead for appearances.
-Keeping the Goal Small|He is not treating his current level as proof of a breakthrough waiting around the corner. A clear assignment and a better habit are enough to work toward today.
-Learning without the Hype|He is developing without the ready-made expectations attached to a finished player. There is room to work without needing every session to produce a new success story.
-The Next Correction|He has plenty of corrections available before the finer details become the priority. Taking the next one seriously is how he keeps the job from feeling too large.
+The Honest Coach|A youth coach once told him that enthusiasm and ability were separate categories. He disliked the assessment but admits his current football still requires plenty of work.
+The Pet Highlight|He has one high school football clip he shows whenever someone asks about his game. His friends know the clip well enough to narrate it before he presses play.
+The Practice Bargain|He bargains with himself over extra football work by promising takeout afterward. He has been much more consistent about honoring the second half.
+The Basics Argument|He gets embarrassed when coaches revisit basic football instructions in front of him. Pretending he knew them already has not made the instructions disappear.
+The Shortcut|He has searched for a football shortcut in enough training videos to fill a semester. His roommate thinks learning to close the app would be the first useful result.
+The Comparison Video|He once compared his football film with an elite player's and stopped the video very quickly. He now limits the comparison to their similar choice of gloves.
+The Helpful Job|He is not especially polished on the field but knows how to repair the team's temperamental speaker. He would prefer coaches to mention the first problem less often.
+The Backyard Favorite|He was the undisputed football star of a very small family backyard. His cousins still cite that competition when defending him much too loudly.
+The Unfinished Checklist|He wrote a football improvement checklist and spent longer decorating it than completing it. A coach asked to see the undecorated version.
+The Running Joke|He laughs first when a football drill goes badly, partly so nobody else gets there before him. He dislikes how often that strategy is necessary.
 `),
 block('polished','high-overall',`
-Tools Already in Place|His current ability gives him a strong foundation for demanding work. He is concentrating on preparation rather than treating those tools as a guarantee of results.
-The Higher Standard|He has the ability to be held to a high standard. The challenge is making his ordinary preparation match the level of work he is capable of producing.
-Details at the Top|His game has reached a level where small details deserve serious attention. He knows that strong ability does not make an assignment disappear.
-Beyond the Easy Rep|He has enough ability that comfortable practice work is not the whole challenge. He is looking for ways to make the preparation useful when the task becomes more demanding.
-Keeping an Edge|His present skill gives him good reason to be confident. He is trying to keep that confidence from becoming an excuse to coast through the routine.
-The Demanding Checklist|He can handle a demanding football checklist because many of the basic tools are already there. Following it consistently is still a separate job.
-Ready for Hard Questions|His current ability allows coaches to ask difficult things of him. He prefers understanding the reason behind an assignment to relying on talent alone.
-Strong Starting Point|He has a strong present-day football profile. What he does with that starting point still depends on decisions, preparation and the opportunities that come.
-The Useful Challenge|He is capable enough that an easy afternoon is not always the most useful one. He wants practice to test something rather than simply confirm what already feels comfortable.
-Ability Is Not the Plan|He brings considerable current ability to his position. He still needs a plan for using it, just like everyone else in the meeting room.
+The Confident Introduction|He introduces himself as someone opponents should remember. Teammates consider his football ability good enough to make the line tolerable, if not pleasant.
+The Unwanted Compliment|He gets irritated when a football compliment includes surprise about his talent. He has begun asking exactly which part was supposed to be surprising.
+The Price of Advice|He is good enough that younger players seek his football advice. His roommate would like them to know how rarely that advice extends to cleaning.
+The Favorite Rep|He has a practice clip he replays whenever someone doubts his football confidence. Coaches have asked whether he owns any other footage.
+The Coasting Argument|His talent makes an ordinary rep look easier than his effort sometimes deserves. A coach has learned to distinguish the two, much to his annoyance.
+The Demanding Parent|His family watches his football with standards that praise from strangers cannot soften. He can have a strong practice and still receive a message about one sloppy detail.
+The Coach's Challenge|He answers tough football coaching with visible irritation before doing what was asked. Both sides consider this arrangement productive and unnecessarily loud.
+The Phone Background|He uses a favorite football photograph of himself as his phone background. He argues that being good at something should come with a few privileges.
+The Better Opponent|He dislikes being paired with an easy opponent in football drills. He dislikes losing to the harder opponent even more.
+The Talent Tax|His teammates ask him to demonstrate difficult football movements whenever a coach wants an example. He considers this the least enjoyable reward for being talented.
 `),
 block('upside','high-potential',`
-The Unfinished Picture|His development outlook gives him room to think beyond the player he is today. He is trying to turn that possibility into useful work without mistaking it for a finished result.
-Patience with Purpose|There is meaningful upside in his football profile. He wants his preparation to give that upside a chance rather than leave it as a flattering description.
-The Next Version|He likes the idea that his best football may not be the version people see right now. The thought is motivation, not a promise about where he will end up.
-Potential Is a Starting Point|His developmental outlook is encouraging. He knows that having room to improve is different from doing the work needed to use it.
-More to Build|There is still considerable opportunity to develop his game. He is focusing on specific habits instead of trying to improve everything at once.
-The Longer Plan|His profile gives him reasons to take a longer view of development. That perspective helps him see ordinary practice as part of something worth building.
-Possibility and Preparation|He has a promising development outlook rather than a guarantee. Keeping those ideas separate is part of how he approaches the work ahead.
-The Open Notebook|His future development offers more possibilities than a snapshot of current ability can show. He wants to keep learning without inventing a destination before the work is done.
-Growing into the Job|He has room to develop further within his football role. He is concentrating on becoming more complete rather than finding a shortcut to a reputation.
-The Patient Ceiling|His potential gives him something worthwhile to pursue over time. He does not expect every practice to reveal the whole picture at once.
+The Unfinished Project|A coach described him as a football project with a high ceiling. He asked whether that meant somebody else would be doing the construction.
+The Compliment Problem|He likes hearing that his football could improve dramatically. He likes hearing about the work required noticeably less.
+The Future Version|He has joked about what the future version of his football self will demand in appearance fees. His friends plan to charge interest on every favor.
+The Family Prediction|His uncle makes enormous predictions about his football future at every gathering. He spends half the meal trying to steer the conversation toward anybody else.
+The New Habit|A coach sees plenty of football potential in him and keeps assigning additional work. He suspects the compliment was partly a scheduling tactic.
+The Longer Plan|He bought an expensive notebook for a long-term football development plan. The first page contains a complaint about the notebook's price.
+The Unexpected Encouragement|A coach who rarely compliments anyone told him his football had unusual room to grow. He pretended to shrug it off and repeated it to three relatives.
+The Open Notebook|He is excited about his football upside but hates being discussed as unfinished. He has started reminding people that finished products can also be irritating.
+The Patient Teammate|He has a teammate willing to explain football mistakes without making a public performance of it. He returns the favor by fixing that teammate's terrible outfits.
+The Ceiling Joke|His friends call him ceiling whenever his football potential comes up. He wishes they had chosen a nickname that sounded less like a hardware-store aisle.
 `),
 block('limited-upside','limited-potential',`
-Making the Most of It|He is not banking on a dramatic jump in his physical tools. His focus is making better use of what he already brings to the job.
-The Practical Plan|A summer job stocking shelves taught him to take pride in work that nobody stopped to watch. He brings the same practical attitude to football, even without expecting a dramatic personal breakthrough.
-Value in the Routine|He helped maintain a community field before youth games when he was growing up. Straightening markers and carrying water gave him an early appreciation for the useful jobs people rarely mention.
-Working with the Tools|He approaches football as a job to do with the tools he has. His goals are deliberately grounded in the player he is now.
-No Miracle Required|A former coach mailed him an old practice schedule with one handwritten reminder: do the ordinary work. He kept it because the message fits how he approaches football now.
-The Honest Assessment|He once asked a family friend for a brutally honest review of his football film. He did not enjoy every answer, but he appreciated leaving with a practical list instead of a sales pitch.
-Useful before Flashy|He is aiming to be useful before trying to be impressive. It is a sensible approach for a player whose development path is not built around limitless upside.
-The Small Improvement|His father kept a notebook of repairs that made an aging car last another year. He borrowed the habit for football, writing down small fixes instead of waiting for one change to solve everything.
-What Can Be Repeated|He is placing his attention on habits he can repeat with his current tools. A realistic plan feels more valuable than a big promise about his ceiling.
-Staying Grounded|He is keeping his expectations grounded in a limited development outlook. That leaves room to take everyday football work seriously without demanding a storybook transformation.
+The Realistic Goal|He knows his football ceiling is limited and hates being given an inspirational speech about it. A clear job description is more useful to him than another miracle story.
+The Summer Shift|Stocking shelves taught him how long a clock can take to move. He sometimes complains about football work, but still prefers it to the freezer aisle.
+The Field Volunteer|He once helped mark a youth football field and made the end zone several steps too short. Nobody lets him offer strong opinions about field dimensions anymore.
+The Equipment Critic|He may not have limitless football upside, but his equipment opinions are extremely confident. Teammates have rejected his proposal to grade everyone's accessories.
+The Mailed Schedule|An old coach mailed him a football practice schedule as a reminder to stay useful. He phoned back to ask whether postage was really necessary.
+The Honest Assessment|He requested brutally honest football feedback and immediately wished he had requested something gentler. He still keeps the notes, mostly folded shut.
+The Useful Favor|He knows the equipment staff's coffee orders better than his own football highlights. He dislikes suggestions that these are unrelated measures of team value.
+The Repair Notebook|His father records every repair that keeps an old car running. He borrowed the notebook format for football and immediately lost the notebook.
+The Current Player|He is tired of discussing the football player he might someday become. He would rather argue about whether he is getting enough credit for the one he already is.
+The Last Argument|He can accept a limited football ceiling more easily than losing an ordinary argument. His roommate has learned not to confuse realism with humility.
 `),
 block('speed','fast',`
-Track-Lane Memory|His speed and acceleration give him an obvious athletic tool. He still remembers the simple thrill of racing friends to a line drawn in the grass.
-The Head Start Argument|Friends used to negotiate head starts before racing him. His current burst explains why those arguments were rarely settled to everyone's satisfaction.
-Fast Is Not Finished|He has genuine speed to work with. He is trying to make sure getting somewhere quickly does not replace understanding where he is supposed to be.
-The Sprint Home|As a kid, he found excuses to turn ordinary walks into races. That instinct fits a player who now brings notable speed and acceleration to football.
-Learning to Use the Burst|His ability to accelerate is one of the clearer tools in his game. He is thinking about when to use it rather than assuming the fastest movement is always the right movement.
-The Open Stretch|He enjoys the feeling of having room to run. His speed gives that feeling a practical football use, although every assignment still needs its own plan.
-The Finish-Line Habit|He has always liked running through the finish rather than easing up before it. His current speed makes that a natural part of his athletic identity.
-Speed with a Purpose|He brings enough speed and acceleration to make movement a meaningful part of his game. He wants those tools to serve the assignment instead of becoming a distraction from it.
-The Quick First Steps|His first few steps are backed by real acceleration. He is trying to connect that burst with the rest of the job rather than treat it as the whole job.
-Races at Recess|He remembers races at recess more clearly than most playground games. His current speed suggests those contests gave him a reason to keep coming back.
+The Recess Rematch|He still demands a rematch from the kid who beat him in a childhood race. His current football speed has made arranging a fair head start impossible.
+The Head Start|Friends negotiate increasingly absurd head starts before racing him. He considers twenty yards excessive and still sometimes accepts.
+The Wrong Direction|A youth coach once told him that sprinting the wrong way was not a useful football skill. The phrase followed his speed all the way into family conversations.
+The Sprint Home|He used to race the last stretch home after backyard football. His sister says the finish line moved whenever he was behind.
+The Burst Argument|He claims his football acceleration could beat anyone to the last slice of pizza. Nobody has approved using the kitchen to test this.
+The Open Stretch|He enjoys open-field football space partly because it lets him show off. He denies slowing his walk afterward to see who noticed.
+The Finish Line|He learned to sprint through finish lines after losing a race while celebrating early. His family has no intention of deleting the video.
+The Chase|He used to volunteer to chase stray footballs because he could get there first. He stopped volunteering once everyone began kicking them farther on purpose.
+The Quick Steps|His first steps are quick enough that teammates ask him to demonstrate football get-offs. He would rather they asked him to demonstrate sitting down.
+The Recess Committee|He was banned from one playground race after refusing a handicap. He maintains that football has only made his position on handicaps stronger.
 `),
 block('strength','strong',`
-Moving Day Volunteer|His strength makes him a popular person to call when furniture needs moving. He still insists that awkward stairs are a different opponent from anything on a field.
-The Heavy End|When a job requires two people to lift something, friends tend to hand him the heavy end. His current strength makes the arrangement understandable, even if he complains about the planning.
-Strength Is a Tool|He brings substantial strength to his football work. He is learning that applying it well matters more than merely having it available.
-The Stubborn Lid|Family members have turned opening stubborn jars into a running joke about his strength. He likes reminding them that it is not an official household position.
-Weight Room Patience|His strength is a clear part of his current athletic profile. He still treats preparation as something that needs patience rather than one dramatic effort.
-The Physical Starting Point|He has a strong physical tool to build around. He is concentrating on connecting it to the details of his position.
-More than Force|His strength gives him a useful option when a task becomes physical. He knows that timing and direction decide whether that force actually helps.
-The Careful Lift|He is strong enough that people sometimes assume lifting is the easy part. He has learned to be just as interested in where his hands and feet belong.
-Family Workdays|He was often the volunteer for the heavier jobs during family workdays. His current strength makes that memory fit the football player he has become.
-Using the Leverage|He has plenty of strength available. Getting it into the right place at the right moment remains a separate skill to practice.
+Moving Day|His strength has made him the default furniture mover in his football circle. He now asks about stairs before agreeing to visit anyone.
+The Heavy End|Teammates always hand him the heavier end during awkward equipment moves. He has started claiming a mysterious weakness limited to borrowed couches.
+The Weight-Room Argument|He is stronger than most people expect and insists that should settle unrelated football arguments. Coaches have not accepted the logic.
+The Stubborn Lid|His family saves stuck jars for him like unofficial strength tests. He complains that his football training has become unpaid kitchen labor.
+The Loud Plate|He put a plate down too loudly in a weight room and spent the next hour hearing about it. He now lowers everything with exaggerated delicacy.
+The Old Teammate|An old teammate still claims he taught him how to lift. He remembers the same teammate asking for help loading the bar.
+The Strongman's Patience|His strength draws challenges from people who want to test him outside football. His favorite answer is asking whether the challenge includes carrying groceries.
+The Careful Lift|He can move heavy football equipment without much trouble. He still managed to break a flimsy shelf by leaning on it while explaining this.
+Family Workday|His relatives schedule heavy yard work around his visits home from football. He suspects they are more interested in his strength than his stories.
+The Leverage Lecture|He has heard enough football lectures about leverage to deliver one himself. He chooses to do so whenever someone asks him to open a tight jar.
 `),
 block('technical','technical',`
-The Footwork Notebook|He pays particular attention to the small steps that make a football movement work. His technical profile fits an approach built around refining the job rather than chasing athletic extremes.
-The Quiet Repetition|He prefers repeating a precise movement to making a drill look dramatic. His game leans toward positional craft, so those quiet repetitions suit his priorities.
-One Detail at a Time|He likes instructions that identify one detail he can change. A technique-focused game gives him plenty of reason to value that clarity.
-The Why Question|He wants to know why a particular hand placement or angle matters. Understanding the reason helps him organize the technical side of his game.
-Practice in Pieces|He breaks a complicated action into smaller pieces when working through it. That habit fits a profile that emphasizes positional skill over raw athletic emphasis.
-The Craft Approach|He enjoys the part of football that rewards careful attention. His technical lean gives him a reason to treat familiar drills as opportunities rather than formalities.
-Film and Footwork|He is interested in how a small footwork change looks when a play is slowed down. His approach centers on making the positional details fit together.
-The Precise Rep|He would rather complete a precise rep than an impressive-looking one with a missing detail. That preference matches the technical direction of his game.
-The Small Adjustment|He pays attention when a coach asks for an adjustment that seems minor. His profile places value on the positional details those changes are meant to address.
-Knowing the Shape|He likes understanding the shape of an assignment before trying to speed it up. Positional craft, rather than an extreme athletic identity, is the emphasis in his game.
+The Cone Diagram|He arranged a football drill so precisely that teammates accused him of measuring the grass. He produced a tape measure, which did not help his defense.
+The Demonstration|He prefers the technical side of football and enjoys demonstrating small corrections. Teammates enjoy asking him to demonstrate his notoriously bad parking.
+The One Detail|A coach corrected a detail in his football stance and he argued for several minutes. He later adopted the correction without acknowledging the conversation.
+The Why Question|He wants an explanation before changing his football technique. One coach now begins every answer with because you are about to ask.
+The Broken-Down Drill|He breaks football movements into pieces until even patient teammates get restless. He is less methodical about putting furniture together.
+The Craft Argument|He thinks precise positional skills deserve more attention than spectacular athletic clips. His friends have heard this opinion under nearly every football highlight.
+The Slow-Motion Clip|He paused a football clip to show a tiny technical detail. His audience mainly noticed the terrible expression on his face.
+The Good Rep|He is proud of a technically clean football rep that looks uneventful to everyone else. He has stopped trying to show it at parties.
+The Small Adjustment|He likes detailed football instructions but resents being told how to stack the dishwasher. His roommate has pointed out the inconsistency repeatedly.
+The Stance Photograph|He keeps a football stance photograph for technical reference. His sister uses the same photograph to make birthday cards.
 `),
 block('small','small-build',`
-Finding the Right Fit|He has a smaller frame than many players at his position. Finding equipment that sits correctly has been part of his football routine for years.
-The Size Question|Questions about his smaller build have followed him into football conversations. He would rather spend that energy understanding the job in front of him.
-Measured by the Task|He is shorter and lighter than many of his positional peers. He wants the task itself, not a first impression of his frame, to guide how he prepares.
-The Smaller Locker Kit|His equipment needs do not always match what is handed out first. A smaller build has made him comfortable asking for the fit he actually needs.
-Looking Past the Frame|His frame puts him toward the smaller end of his position. He does not treat that fact as a complete scouting report.
-The Fit Check|He remembers an equipment volunteer digging through several boxes to find youth gear that fit him. His comparatively small frame still makes a careful fitting more useful than simply taking the first size offered.
-His Own Outline|He does not have the frame people often picture first at his position. He is trying to work with his own build rather than imitate someone else's silhouette.
-The Undersized Introduction|His smaller size tends to become part of the introduction before anyone discusses football. He would prefer a conversation that lasts long enough to reach the actual assignment.
-The Right Size|He has learned that making equipment fit is better than pretending a larger size will do. His smaller frame calls for practical adjustments, not a different identity.
-Beyond the Tape Measure|He falls on the smaller side of the position's physical range. That gives him something to account for, not a reason to stop learning the rest of the job.
+The Equipment Search|His youth team struggled to find football pads small enough for him. The final pair had somebody else's name written inside in enormous letters.
+The Size Question|He gets tired of strangers asking whether his smaller frame belongs on a football roster. He has begun asking whether they belong on a judging panel.
+The Tape Measure|He argues that football measurements should not count shoes with thick soles. He makes this argument most strongly when somebody measures him without them.
+The Small Gear Bag|His football equipment takes up less space than some teammates' gear. He still claims more than his share of the team-bus overhead compartment.
+The First Impression|People often notice his smaller football build before anything else. He enjoys waiting until they finish their assumptions before introducing himself.
+The Fit Check|A youth football volunteer once padded out equipment that kept sliding off his shoulders. He remembers the volunteer's patience and his own refusal to stop complaining.
+The Wrong Size|He ordered a football team sweatshirt based on a larger teammate's recommendation. His family now refers to it as the camping tent.
+The Introduction|He dislikes being introduced as undersized before someone mentions his football position. He once introduced the offending teammate as chronically late.
+The Borrowed Pads|Borrowed youth football pads once made him look far larger than he was. His family still uses the photograph whenever he criticizes their clothes.
+The Height Argument|He has a smaller frame at his football position and no patience for exaggerated roster heights. He also insists the family height chart was mounted crooked.
 `),
 block('large','large-build',`
-The Back-Row Photograph|He has a stack of school photographs in which he is standing in the back row. His larger frame has made the family joke about him blocking the camera a lasting one.
-Finding Enough Legroom|He notices legroom before settling into a long trip. Being taller and heavier than many positional peers makes travel comfort a practical concern.
-The Larger Gear Bag|His equipment can make a packed bag look fuller than someone else's. A comparatively large frame has a way of showing up in ordinary details.
-The Doorway Check|He has a habit of looking ahead when entering a cramped room. His larger build gives him reasons to think about space before everyone else does.
-Size and the Assignment|His frame stands out among players at the same position. He is concentrating on how to use that size rather than assuming it handles the job for him.
-The Seat Negotiation|Friends know that a seating plan involving him may require a little negotiation. His size is noticeable well beyond a football meeting room.
-The Long Sleeves|Finding everyday clothes with the right fit can take more effort than he would like. His larger frame has made him patient with trying things on.
-More than an Outline|His size is an obvious part of a first impression. He still wants to understand the football details that a large frame cannot answer by itself.
-The Bigger Frame|He carries a larger frame than many players doing the same job. Learning to manage the space around him is part of his everyday routine.
-The Practical Measurement|He has learned to check measurements before ordering almost anything he wears. Being at the larger end of his position makes guessing a poor substitute for checking.
+The Back Row|Football team photographs usually place him at the back because of his frame. He says this is discrimination against people with excellent facial expressions.
+The Legroom Vote|He notices legroom before anyone else on football trips. He campaigns for better seats with the persistence of someone running for office.
+The Gear Bag|His larger football equipment makes packing look like an emergency evacuation. He regularly accuses teammates of stealing the space around his bag.
+The Door Frame|He ducked under a football equipment-room doorway that did not require ducking. Teammates have described it as an expensive-looking physical reflex.
+The Size Assumption|People assume his larger football build means he enjoys being the center of attention. He would prefer they used that attention to find a bigger chair.
+The Seat Trade|His teammates offer him cramped seats just to hear his negotiations. He has started charging imaginary transfer fees for every football-trip seating change.
+The Sleeve Search|Finding everyday shirts that fit his football frame is difficult enough. His friends still insist he dress up for plans they describe as casual.
+The First Question|New acquaintances tend to ask his football measurements before his name. He answers with increasingly suspicious numbers to see whether anyone notices.
+The Smaller Friend|His oldest friend still remembers when they could share football gear. He refuses to retire a photograph proving they were once roughly the same size.
+The Online Order|He checks measurements before ordering football clothes online. He learned this after receiving a pair of trousers he could barely fit one leg into.
 `),
 block('quarterbacks','qb',`
-The Backyard Playbook|He used to draw passing plays on the backs of grocery receipts for neighborhood games. His family still has a few, including one formation that involved throwing over a parked car.
-Calling the Huddle|He remembers being the kid who volunteered to organize a pickup huddle. He now has a quarterback's reason to make the words clear before everyone starts moving.
-The Coverage Sketch|He sketches defensive looks while working through quarterback material. Putting them on paper helps him sort the question before deciding on an answer.
-A Receiver's Perspective|He likes asking receivers how a route feels from their side of the throw. As a quarterback, he wants the conversation to run in both directions.
-The Snap Conversation|He makes a point of discussing the exchange with the players involved. Quarterback preparation includes a few details that never appear in a passing highlight.
-The Call Sheet Interest|He is interested in how a group of plays becomes a plan. His position gives him plenty of reasons to ask about the choices behind a call sheet.
-The Throwing Partner|An older neighbor was his regular throwing partner when his parents worked late. They still exchange messages, although the neighbor now insists that every good throw began with his advice.
-Learning the Language|He likes comparing the different names people give familiar passing concepts. Playing quarterback has made that collection of terms more than a casual interest.
-The Reset between Plays|He thinks about what he wants the huddle to hear after a difficult rep. For a quarterback, the next instruction needs to be clearer than the last frustration.
-The Ball at the Start|He is drawn to the way a play begins with so many possible directions. Quarterback is the position where he gets to work through that question most directly.
+The Receipt Playbook|He drew quarterback plays on grocery receipts as a child. His mother still owns one diagram requiring a receiver to hurdle a parked car.
+The Pickup Huddle|He organized pickup huddles so seriously that cousins threatened to leave. His solution was to appoint them assistant coordinators.
+The Coverage Sketch|He explained a quarterback read using condiment bottles at dinner. The waitress cleared the defense halfway through his argument.
+The Receiver's Version|He asks receivers about their routes, then debates the answer. A teammate has suggested trying the listening part without the quarterback cross-examination.
+The Snap Discussion|He and a childhood center invented names for disastrous snaps. His family still uses one of those names whenever he drops something.
+The Call Sheet|He used to make fake quarterback call sheets for backyard games. His brother would steal them and demand that he audible.
+The Throwing Partner|An older neighbor threw footballs with him after school. The neighbor now claims partial credit for every throw and no responsibility for the bad ones.
+The Language Problem|He likes comparing different names for quarterback concepts. He once confused a coach by confidently using terminology borrowed from a video game.
+The Huddle Impression|He practiced his quarterback huddle voice in the mirror as a kid. His sister still does an impression that sounds nothing like the version he remembers.
+The Backyard Fence|He broke a neighbor's fence while trying to prove he could make a difficult quarterback throw. His family still calls that fence his most expensive completion.
 `),
 block('offensive-skill','offensive-skill',`
-The Extra Catch|He rarely objects when someone needs a partner to toss a ball. Playing an offensive skill position gives those casual repetitions a familiar purpose.
-The Route Conversation|He likes talking through how a route or run should develop before it starts. Understanding the space is part of what interests him about his offensive role.
-The Ball-Carry Habit|His grandmother refused to let him carry a football into the kitchen after one broken lamp. He still catches himself tucking anything football-shaped against his side, including a loaf of bread.
-The Sideline Marker|He pays attention to the difference between open space and usable space. On offense, a boundary can turn a simple idea into a very specific job.
-Practice after the Catch|He enjoys working through what happens after the ball arrives. An offensive skill role includes more than reaching the first point on a diagram.
-The Blocking Reminder|He does not want the ball to be the only part of his offensive identity. He asks about the assignments that still matter when a teammate gets the touch.
-The Timing Question|He is interested in the timing that lets several offensive movements fit together. He would rather understand his part than merely memorize where to stand.
-The Return Pass|His younger brother used to make him run routes until the streetlights came on. The routes were rarely drawn properly, but neither of them ever wanted to be the first to go inside.
-The Open-Grass Diagram|He likes diagrams that explain where space is supposed to appear. His offensive role gives him reasons to connect those drawings with what a defender actually does.
-The Work without the Touch|He is learning to judge an offensive rep by more than whether the ball reaches him. A useful assignment can happen well away from the eventual tackle.
+The Extra Catch|He will toss a football with almost anyone until they start coaching his hands. He believes unpaid throwing sessions should have clear limits.
+The Route Argument|He and his childhood friends argued over whether a route counted as improvisation or cheating. His offensive football opinions remain suspiciously convenient.
+The Kitchen Ban|His grandmother banned footballs from the kitchen after a broken lamp. He still tucks a loaf of bread under his arm when carrying groceries.
+The Sideline Paint|As a kid he used sidewalk cracks to practice staying inbounds. A neighbor finally asked him to stop stomping past the window during dinner.
+The Celebration Committee|He has designed touchdown celebrations he may never have reason to use. Teammates judge the rehearsals more harshly than any defensive back could.
+The Blocking Complaint|He complains about offensive drills that do not involve touching the ball. His coach responds by mentioning the complaint before assigning another one.
+The Timing Question|He was once blamed for a backyard football play that failed before anyone moved. He continues to insist the snap count was negotiable.
+The Younger Brother|His younger brother made him run offensive routes until the streetlights came on. He now claims the boy owes him several years of receiving fees.
+The Grass Diagram|He drew an offensive play in somebody's lawn with a mower as a teenager. The homeowner understood the diagram and still wanted him grounded.
+The Touch Count|He claims not to care how often an offensive play includes him. His friends have noticed that he can recount those totals without checking anything.
 `),
 block('offensive-line','ol',`
-The Five-Person Job|He likes the idea that an offensive line has to solve a problem together. Understanding the neighboring assignment is part of how he approaches his own.
-Hands before Headlines|He pays attention to hand placement during ordinary line work. Offensive line gives him a position where small details can matter without drawing much attention.
-The Protection Conversation|He is interested in how a protection call connects several players. He wants to understand the conversation rather than only the word directed at him.
-The Line-Room Seat|His high school line used to claim the same lunch table every day, even outside football season. He misses the arguments over the last seat more than he admits.
-The First Step Study|He tried wrestling after a high school coach suggested it might help him understand balance. He came away with more respect for footwork and a strong dislike of early tournament weigh-ins.
-The Neighboring Helmet|His first offensive line coach paired every new player with an older teammate. He still remembers the patience of the lineman who explained the same assignment three different ways.
-The Unseen Part|He is interested in football work that often disappears behind the ball. Playing on the offensive line gives him plenty of that work to think about.
-The Stance Routine|He approaches his stance as something worth checking rather than assuming. Line play gives him a reason to repeat a familiar setup with care.
-The Shared Answer|He likes working through a blocking question with another lineman. Hearing a second explanation can show him where his own picture is incomplete.
-The Finish of a Rep|He pays attention to how a blocking rep ends as well as how it starts. The offensive line has taught him that the first contact is not the whole assignment.
+The Five Seats|His high school offensive line claimed a lunch table all year. He still gets offended when friends suggest that was mostly about the food.
+The Glove Argument|He can spend longer discussing offensive-line gloves than buying normal clothes. His girlfriend has asked why dinner reservations receive less research.
+The Protection Lecture|He explained a protection call at a family barbecue using empty chairs. Nobody sat down for ten minutes because he kept adjusting the formation.
+The Line-Room Seat|An old offensive-line teammate still owes him lunch after losing a ridiculous bet. Both have kept the argument alive far longer than the friendship requires.
+The Wrestling Tryout|A football coach encouraged him to try wrestling for balance and leverage. He remembers the early weigh-ins more vividly than any technical benefit.
+The Older Lineman|An older high school lineman patiently explained assignments when he was new. He repaid the kindness by borrowing the player's gloves and losing one.
+The Last Seat|He believes offensive linemen deserve the best chairs at team dinners. His evidence is a speech nobody has agreed to hear twice.
+The Stance Joke|His family insists he stands like an offensive lineman even when waiting for coffee. He denies it until someone shows him a photograph.
+The Shared Answer|He likes solving blocking arguments with other linemen and dislikes admitting when they are right. His apologies usually arrive disguised as a restaurant recommendation.
+The Practice Finish|He takes offensive-line practice personally enough to argue about a final rep on the way home. His old coach still refuses to revisit their oldest dispute.
 `),
 block('defensive-line','dl',`
-The Point of Contact|He is interested in what happens where an offensive play first meets resistance. His defensive line role keeps that question close to the center of practice.
-The Rush Plan Notebook|He writes down reminders about the sequence of a rush. A plan for the line of scrimmage seems more useful than a collection of unrelated moves.
-The Gap Question|He asks how his gap responsibility fits the defender beside him. Playing on the defensive front means someone else's movement can change the picture quickly.
-Watching the Hands|He notices hand placement when studying line-of-scrimmage work. Defensive line gives him plenty of reasons to care about details that can vanish at full speed.
-The Stance across from Him|A friend from his youth team became an offensive lineman, turning their backyard arguments into football debates. They still send each other clips, each convinced the other has the easier job.
-The Rush and the Run|He does not want to think about his job only as a chase toward the quarterback. Defensive front work also asks him to understand what happens when the ball goes elsewhere.
-The Small-Space Job|As a kid, he helped an uncle repair engines in a garage with barely enough room to move. He jokes that working in crowded spaces prepared him for life near the line of scrimmage.
-The Second Move|He likes talking through what comes after the first contact. A defensive line rep can become a different problem before the initial idea has finished.
-The Front's Conversation|He wants to know what the rest of the defensive front is expecting. The job makes more sense to him as a shared picture than a series of isolated collisions.
-The Pursuit Finish|His youth coach ended every practice by letting the defensive linemen carry the ball. He still remembers those chaotic races whenever someone claims the players up front never get to have fun.
+The Old Collision|He once collided with a tackling dummy so enthusiastically that it knocked over a youth coach's drink. The coach still introduces him as the reason for the lid rule.
+The Rush Notebook|His defensive-line notebook contains names for rush combinations that coaches have never approved. His favorite is mostly an excuse to say something ridiculous before contact.
+The Gap Argument|He used to argue defensive gaps with an offensive-line friend over video games. Their real football disagreements are less polite and considerably better informed.
+The Hand Check|A youth defensive-line coach checked his fingernails before every practice. He still files them before team activities and resents being reminded why.
+The Opposite Stance|His oldest football friend became an offensive lineman. They swap clips mainly to accuse each other of getting away with holding.
+The Run Complaint|He enjoys the idea of chasing quarterbacks more than the less glamorous defensive-line assignments. His coach can usually tell which kind of drill is next from his expression.
+The Crowded Garage|He grew up repairing engines with an uncle in a cramped garage. He says playing on the defensive line offers slightly more room and much worse conversation.
+The Second Move|He invented an elaborate pass-rush move during backyard football that nobody could remember afterward. His cousins still insist he gives it a different name each summer.
+The Front's Speaker|He appointed himself the defensive line's unofficial music director. Nobody voted for him, and several teammates are planning a peaceful transfer of power.
+The Ball-Carrying Day|His youth coach let defensive linemen carry the football at the end of practice. His family still owns a video explaining why this remained an occasional privilege.
 `),
 block('back-seven','back-seven',`
-The Leverage Question|He asks about leverage before worrying about how a defensive rep looks. His role behind the front gives him a reason to care where help is supposed to be.
-The Communicated Check|He likes repeating a defensive check until the words are easy to understand. A clear message matters even when it is not the most exciting part of the play.
-The Route from the Other Side|His best childhood friend always insisted on playing receiver in their one-on-one games. They disagree about who won more often, but those afternoons helped make defense his favorite side of the ball.
-The Angle in the Diagram|He pays attention to the path that leads toward a tackle, not only the finish. Playing behind the front makes angles part of his everyday football vocabulary.
-The Motion Reminder|He watches how an offense changes the picture before the snap. His job gives him plenty of reasons to ask what stays the same when the formation moves.
-The Help behind the Call|He likes understanding where the next defender fits into a coverage. Knowing his own responsibility is only one part of seeing the whole arrangement.
-The Open-Field Question|He spent childhood summers playing center field on a neighborhood baseball team. He did not stick with baseball, but he remembers enjoying the feeling of having a whole patch of grass to look after.
-The Coverage Conversation|His family used to pause televised games so everyone could argue about what the defense should do. He now understands why his guesses from the couch were easier than the real assignments.
-Eyes and the Assignment|He thinks about what he should be looking at before a play develops. His defensive role makes the answer more useful than simply trying to watch everything.
-The Pursuit Landmark|He likes having a landmark when discussing pursuit. A specific place on the field is easier for him to work toward than a vague instruction to get involved.
+The Backyard Coverage|He spent childhood one-on-ones accusing his friend of pushing off. His friend still answers every defensive football argument with a video of him doing the same thing.
+The Loud Check|He practiced defensive calls loudly enough that his roommate could repeat them. The roommate has begun requesting credit for participating in football preparation.
+The Receiver Friend|His childhood best friend always played receiver while he preferred defense. Neither agrees about the all-time score, and both have witnesses of questionable reliability.
+The Missed Angle|He once misjudged a backyard football pursuit angle and landed in a hedge. His family considers the hedge part of his official defensive development.
+The Motion Argument|He watches offensive motion suspiciously even in casual football games. His cousins move before every snap purely to start the debate.
+The Help Call|He is particular about defensive communication but not about returning ordinary text messages. Friends have asked whether announcing a coverage check would get a faster response.
+The Old Outfield|He played center field in neighborhood baseball before preferring defensive football. The old baseball friends still blame him whenever a ball disappears into tall grass.
+The Couch Coordinator|His family paused televised games to argue defensive coverages when he was growing up. He now understands the argument better and finds the pauses more annoying.
+The Eye Discipline|A childhood coach caught him watching the wrong part of a football drill. His relatives repeat the coach's warning whenever an attractive stranger passes.
+The Pursuit Landmark|He learned pursuit angles by chasing cousins around a large backyard tree. He insists the cousin who climbed it should have been declared out of bounds.
 `),
 block('specialists','specialist',`
-The Repeatable Setup|He is interested in making his setup look familiar from one attempt to the next. Specialist work gives a small routine a large place in the practice day.
-Weather Notebook|He began checking the wind on walks to school after getting interested in kicking a football. His family still asks him for a weather report whenever they plan an outdoor meal.
-The Quiet Corner|He used to take a football to an empty park while friends played on the nearby courts. Having a quiet place to practice became part of why he enjoyed being a specialist.
-The Contact Point|He pays attention to the point where his foot meets the ball. It is a small detail that his specialist role gives him reasons to revisit often.
-The Waiting Part|He is interested in staying ready during the stretches between attempts. Specialist work includes managing that time as well as the action everyone notices.
-A Familiar Spot|He likes beginning practice from a familiar spot before changing the task. The routine gives his specialist work a clear starting point.
-The Ball Conversation|An old soccer ball was his first piece of sports equipment, long before he tried kicking a football. He keeps it at home as a reminder of afternoons spent inventing targets along the fence.
-The Small Correction|He prefers a clear, small correction to changing everything after one attempt. That approach suits work built around a repeatable specialist motion.
-The Long Pause|He first learned to enjoy repetitive practice by hitting tennis balls against a garage wall. The sport changed, but he still likes having one small task he can set up and try again.
-The Reset Routine|He has a simple routine for starting again after an attempt. He wants the next setup to be about the next task, not the result that just happened.
+The Repeatable Setup|He set up football kicking targets in a childhood yard with strict rules about distance. His neighbor added a stricter rule about the windows.
+The Weather Forecast|His interest in kicking made him unusually attentive to wind. His family now holds him personally responsible when a cookout gets rained out.
+The Quiet Corner|He preferred working on football kicks at an empty park while friends played basketball. They mostly joined him when he needed somebody to retrieve balls.
+The Contact Point|He once explained kicking contact using a dinner roll and a butter knife. The demonstration ended with somebody requesting a different topic.
+The Waiting Game|His specialist practice setup includes more waiting than his friends expect. He fills it by inventing increasingly petty competitions over who can hit a marker.
+The Familiar Spot|He claimed a patch of grass for childhood kicking practice. His father eventually moved the target to save the lawn and became an alleged enemy of football.
+The Old Soccer Ball|An old soccer ball introduced him to kicking long before football did. He keeps it at home despite a sibling's repeated attempts to donate it.
+The Tiny Correction|He can explain a specialist adjustment at length to an unwilling audience. His family has developed a rotating system for accepting those calls.
+The Garage Wall|He started by kicking a soft ball against a garage wall. The garage's owner remembers this phase of his football development less fondly than he does.
+The Reset Routine|He has a private little reset ritual between football kicks. He refuses to describe it because a teammate once tried to sell demonstrations.
 `)
 ]);
-export const BACKSTORIES=Object.freeze([...BACKSTORY_GROUPS.flatMap(group=>group.stories.map((story,index)=>Object.freeze({id:`${group.id}-${String(index+1).padStart(2,'0')}`,rule:group.rule,...story}))),...EXTRA_BACKSTORIES,...EASTER_EGG_BACKSTORIES]);
+export const BACKSTORIES=Object.freeze([...BACKSTORY_GROUPS.flatMap(group=>group.stories.map((story,index)=>Object.freeze({id:`${group.id}-${String(index+1).padStart(2,'0')}`,rule:group.rule,topic:'football',...story}))),...EXTRA_BACKSTORIES.map(story=>Object.freeze({...story,topic:/^(?:character-|social-circle-)/.test(story.id)||/^off-field-0[1-9]$/.test(story.id)?'football':'personal'})),...EASTER_EGG_BACKSTORIES.map(story=>Object.freeze({...story,topic:'football'}))]);

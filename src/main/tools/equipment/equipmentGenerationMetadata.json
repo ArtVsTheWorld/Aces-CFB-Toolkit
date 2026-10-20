@@ -17,6 +17,7 @@
     "^GearFootwear_shoe_(?:low|mid|high)_NewBalance_(?:Trench|Fortress|Prodigy)$"
   ],
   "rules": [
+    { "pattern": "^GearWrist_wristTapedMax_WhiteCross$", "actualType": "wrist-tape", "bodyRegion": "wrist" },
     { "pattern": "^GearBackplate_Raw(?:Battle|GearProTec|GoldRush|XTech|Xenith)$", "actualType": "raw-backplate", "bodyRegion": "back" },
     { "pattern": "^GearFootwear_.*(?:Mercurial|Jordan5_99Club2$|AirJordanRetro199$)", "actualType": "soccer-cleat", "bodyRegion": "feet", "poolEligible": false },
     { "pattern": "^GearFootwear_.*AirMax", "actualType": "sneaker", "bodyRegion": "feet", "poolEligible": false },

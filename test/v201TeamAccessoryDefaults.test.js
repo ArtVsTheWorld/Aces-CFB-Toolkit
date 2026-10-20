@@ -70,5 +70,5 @@ test("fresh Patcher pass defaults are off without changing other tools' checkbox
   const render=vm.runInNewContext(line+";ruleToggle");
   for(const id of ["fix-helmet","fix-pants","fix-rolled","fix-socks","fix-sleeves","fix-nike","fix-visors","fix-clear-tattoos","fix-handwarmers"])assert.doesNotMatch(render(id,"Title","Description"),/\bchecked\b/);
   assert.match(render("jersey-retired","Title","Description"),/checked/);assert.doesNotMatch(source,/Requires the mod named by each option/);
-  assert.equal(tools.find(tool=>tool.id==="freshman-equipment").version,"5.6");assert.equal(tools.find(tool=>tool.id==="equipment-patcher").version,"6.0");
+  assert.equal(tools.find(tool=>tool.id==="freshman-equipment").version, undefined);assert.equal(tools.find(tool=>tool.id==="equipment-patcher").version, undefined);
 });

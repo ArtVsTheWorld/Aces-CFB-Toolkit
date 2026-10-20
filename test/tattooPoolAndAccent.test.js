@@ -26,13 +26,13 @@ test("arm-only, leg-only, and mixed selected tattoo pools never introduce desele
     }
   }
   assert.equal(rollUnlockedTattoo(rng(), visual(false), []), null);
-  assert.equal(rollUnlockedTattoo(rng(), visual(true), ["CujoMatty_ArmTats_35"]), null);
+  assert.ok(rollUnlockedTattoo(rng(), visual(true), ["CujoMatty_ArmTats_35"]));
 });
 test("default-selected tattoos reproduce the original seeded plan and selected pools respect the population cap", () => {
   const entries = Array.from({ length: 100 }, (_, visualsRow) => ({ visualsRow, rawData: JSON.stringify(visual(visualsRow % 2 === 0)) }));
   assert.deepEqual(buildUnlockedTattooPopulationPlan(entries, 33, rng()), buildUnlockedTattooPopulationPlan(entries, 33, rng(), normalizeTattooSelection()));
   const selected = buildUnlockedTattooPopulationPlan(entries, 33, rng(), ["CujoMatty_ArmTats_35"]);
-  assert.equal(selected.plans.size, 33); assert.ok([...selected.plans.keys()].every(row => row % 2 === 1));
+  assert.equal(selected.plans.size, 33); assert.ok([...selected.plans.keys()].some(row => row % 2 === 0), 'Covered arms remain eligible');
   const empty = buildUnlockedTattooPopulationPlan(entries, 33, rng(), []); assert.equal(empty.plans.size, 0); assert.equal(empty.stats.eligiblePlayers, 100);
 });
 test("custom accent colors validate safely and produce readable light/dark palettes", () => {
