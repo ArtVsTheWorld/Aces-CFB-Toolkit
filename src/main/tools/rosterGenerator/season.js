@@ -8,6 +8,7 @@ export function validateRosterGeneratorSeason(record) {
   return {currentWeekType:type,currentWeek:week};
 }
 export async function rosterGeneratorSeason(loaded){
+  if(loaded.kind==='roster')return {fileKind:'roster',currentWeekType:null,currentWeek:null};
   const {seasonInfo}=await readTables(loaded.franchise,{seasonInfo:SEASON_INFO_TABLE_UID});
   return validateRosterGeneratorSeason(seasonInfo.records.find(record=>record&&!record.isEmpty));
 }

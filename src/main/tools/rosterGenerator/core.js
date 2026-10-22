@@ -17,6 +17,8 @@ import {assignBackstories} from './backstories.js';
 import {roomRatingTargets} from './roomTargets.js';
 import {generatedRecruitStars} from './recruiting.js';
 import {planRosterHomes} from './geography.js';
+import {rosterNilBudget,NIL_FIELD} from './nilBudget.js';
+import {planBrothers} from './brothers.js';
 
 const originalDealbreaker=target=>ALLOWED_DEALBREAKERS.includes(target.original.RecruitingDealbreaker)?target.original.RecruitingDealbreaker:'Invalid';
 const count=items=>{const out={};for(const item of items)out[item]=(out[item]??0)+1;return out;};
@@ -110,6 +112,7 @@ export function generateRosterPreview({team,targets,model,seed=1,preset=BUILDING
     const potential=model.potentialByPosition?choose(potentialCandidates(model,target.position,profile.archetype,item.development),stream(seed,`potential:${target.row}`)):profile;
     const matched=matchCommentary(firstName,lastName),sameTypeStyles=model.catalog.styles.filter(candidate=>candidate.source===0&&candidate.position===target.position&&candidate.archetype===profile.archetype),samePositionStyles=model.catalog.styles.filter(candidate=>candidate.position===target.position),style=choose(sameTypeStyles.length?sameTypeStyles:samePositionStyles,stream(seed,`style:${target.row}`));
     const fields={...observedPlayerState(profile,homePlan.byRow.get(target.row)?.home),PresentationId:presentations.get(target.row),FirstName:firstName,LastName:lastName,IsNIL:false,PLYR_ASSETNAME:presentationAssetName(firstName,lastName,presentations.get(target.row)),PLYR_COMMENT:matched.id,PlayerType:profile.archetype,SchoolYear:profile.classYear,RedshirtStatus:profile.redshirt,TraitDevelopment:potential.development,OverallRating:profile.overall,ExperiencePoints:profile.progression[0],SkillPoints:profile.progression[1],Personality:profile.personality,RecruitingDealbreaker:originalDealbreaker(target),...Object.fromEntries(RATING_FIELDS.map((field,i)=>[field,profile.ratings[i]])),...Object.fromEntries(CAP_FIELDS.map((field,i)=>[field,potential.caps[i]])),...Object.fromEntries(PHYSICAL_FIELDS.map((field,i)=>[field,profile.physical[i]])),...Object.fromEntries(MENTAL_FIELDS.map((field,i)=>[field,profile.mental[i][0]])),...Object.fromEntries(MENTAL_RANK_FIELDS.map((field,i)=>[field,profile.mental[i][1]])),...Object.fromEntries(STYLE_FIELDS.map((field,i)=>[field,style.values[i]])),...Object.fromEntries(APPEARANCE_FIELDS.map(field=>[field,appearance.fields[field]]))};
+    fields[NIL_FIELD]=0;
     fields.ProspectStarRating=generatedRecruitStars(fields,seed,target.row);
     validateProposedFields(fields);
     if(Object.values(fields).some(value=>value===undefined))throw new Error('Generated profile is missing a required field.');
@@ -121,6 +124,20 @@ export function generateRosterPreview({team,targets,model,seed=1,preset=BUILDING
     if(visual.unknownLayers.length)blocking.push({row:target.row,reason:'This player has additional appearance layers that cannot yet be safely replaced.',layers:visual.unknownLayers});
     return {row:target.row,position:target.position,visualRow:target.visualRow,before:Object.fromEntries(WRITE_FIELDS.map(field=>[field,target.original[field]])),beforeRawData:target.rawData,fields,rawData:visual.raw,provenance:{football:profile.id,home:homePlan.byRow.get(target.row)??null,potential:potential.id,athleticProfile:item.athleticProfile,outlierSize,athleticName:ATHLETICISM_PROFILES.find(profile=>profile.id===item.athleticProfile)?.name??'Balanced',surname,appearance:appearance.id,style:style.id,sourceStoredOverall:profile.storedOverall,calculatedOverall:profile.overall,calibration:profile.calibration??null,commentary:matched.method,nameMethod:'observed same-head first-name pool',skinTone:tone,firstNamePool:observedFirstNames(model.catalog,appearance),requestedPositionAverage:model.talentTargets?.[positionGroup(target.position)]??preset.targetAverage},fallbacks,appearanceAudit:{removedOverrides:visual.removedOverrides,brandCorrections:visual.brandCorrections,compatibility:visual.compatibility}};
   });
+  const generatedFirstNames=new Set(players.map(player=>player.fields.FirstName.toLowerCase()));
+  const familyNameExclusions=unavailableNames.filter(name=>generatedFirstNames.has(name.trim().split(' ')[0].toLowerCase()));
+  const brothers=planBrothers(players,model,seed,familyNameExclusions);
+  for(const player of players){
+    const family=brothers.get(player.row);if(!family)continue;
+    player.provenance.familyOriginal={lastName:player.fields.LastName,surname:structuredClone(player.provenance.surname),home:{town:player.fields.PLYR_HOME_TOWN,state:player.fields.PLYR_HOME_STATE,pipeline:player.fields.HomePipeline}};
+    player.provenance.brother=family.siblingRow;
+    player.fields.LastName=family.lastName;player.provenance.surname=family.surname;
+    player.fields.PLYR_HOME_TOWN=family.home.town;player.fields.PLYR_HOME_STATE=family.home.state;player.fields.HomePipeline=family.home.pipeline;
+    player.fields.PLYR_ASSETNAME=presentationAssetName(player.fields.FirstName,player.fields.LastName,player.fields.PresentationId);
+    const matched=matchCommentary(player.fields.FirstName,player.fields.LastName);player.fields.PLYR_COMMENT=matched.id;player.provenance.commentary=matched.method;
+  }
+  const nilBudget=rosterNilBudget(players,targets,seed);
+  for(const player of players)player.fields[NIL_FIELD]=nilBudget.byRow.get(player.row);
   const equipment=equipmentGenerator?.(players,seed,team);
   if(equipment)for(const player of players){const generated=equipment.byRow.get(player.row);if(!generated)throw new Error('Generated equipment is missing a player.');player.rawData=generated.rawData;player.appearanceAudit.randomizer=generated.audit;}
   const finishing=finishGeneratedRoster(players,team,seed),backstories=assignBackstories(players,model,seed);
@@ -133,22 +150,46 @@ export function generateRosterPreview({team,targets,model,seed=1,preset=BUILDING
   if(deviations.length)warnings.push(`Some position targets could not be reached exactly using valid player profiles: ${deviations.map(([group])=>group).join(', ')}. The team-average target still applies.`);
   const nilReplacements=players.filter(player=>player.before.IsNIL===true).length;if(nilReplacements)warnings.push(`${nilReplacements} NIL players will be replaced. Apply asks you to confirm first.`);
   const preview={prototypeVersion:1,mode:'preview',canApply:false,team:structuredClone(team),seed,preset,catalog:{version:model.catalog.version,sha256:model.sha256??null,sources:model.catalog.sources},summary:{players:players.length,geography:homePlan.summary,oldAverage,newAverage,targetAchieved,positionCounts:count(players.map(player=>player.position)),classRedshirtCounts:count(players.map(player=>`${player.fields.SchoolYear}|${player.fields.RedshirtStatus}`)),developmentCounts:count(players.map(player=>player.fields.TraitDevelopment)),athleticismCounts:count(players.map(player=>player.provenance.athleticProfile)),nilReplacements,retiredNumbers:[],finishing,equipment:equipment?.summary??null,talentBudget:describeTalentBudget(targets,model.settings??normalizeGenerationSettings()),settings:model.settings??normalizeGenerationSettings(),positionStrength:Object.fromEntries([...new Set(players.map(player=>positionGroup(player.position)))].map(group=>[group,{target:model.talentTargets?.[group]??preset.targetAverage,actual:mean(players.filter(player=>positionGroup(player.position)===group).map(player=>player.fields.OverallRating)),players:players.filter(player=>positionGroup(player.position)===group).length}])),skinToneCounts:count(players.map(player=>player.provenance.skinTone)),sampling:solved.strata?{expectedDevelopment:solved.strata.expectedDevelopment,policy:solved.strata.policy}:null,solverIterations:solved.iterations,midpointResidual:(solved.actualSum-solved.targetSum)/players.length},warnings,blocking,players};
+  preview.summary.nilBudget=nilBudget.summary;
+  preview.familyNameExclusions=familyNameExclusions;
+  preview.summary.brothers=[...brothers].filter(([row,family])=>row<family.siblingRow).map(([row,family])=>[row,family.siblingRow]);
   validateRosterPreview(preview,targets,model,equipmentGenerator,reservedPresentationIds);return preview;
 }
 
 export function validateRosterPreview(preview,targets,model,equipmentGenerator=null,reservedPresentationIds=[]) {
   if(preview.canApply!==false||preview.players.length!==targets.length)throw new Error('Invalid preview-only roster plan.');
   const homePlan=planRosterHomes(targets,model.catalog,preview.team.geography,preview.seed);
+  const familyBase=preview.players.map(player=>{
+    const original=player.provenance.familyOriginal;
+    return original?{...player,fields:{...player.fields,LastName:original.lastName,PLYR_HOME_TOWN:original.home.town,PLYR_HOME_STATE:original.home.state,HomePipeline:original.home.pipeline},provenance:{...player.provenance,surname:original.surname}}:player;
+  });
+  const brothers=planBrothers(familyBase,model,preview.seed,preview.familyNameExclusions??[]);
+  if(JSON.stringify(preview.summary.brothers)!==JSON.stringify([...brothers].filter(([row,family])=>row<family.siblingRow).map(([row,family])=>[row,family.siblingRow])))throw new Error('Generated brother pairs differ from the seeded family plan.');
+  const nilBudget=rosterNilBudget(preview.players,targets,preview.seed);
+  if(JSON.stringify(preview.summary.nilBudget)!==JSON.stringify(nilBudget.summary))throw new Error('The team NIL budget changed after generation.');
   if(JSON.stringify(preview.summary.geography)!==JSON.stringify(homePlan.summary))throw new Error('School hometown allocation differs from the validated geography plan.');
   const presentations=rosterPresentations(targets,preview.seed,reservedPresentationIds),byRow=new Map(targets.map(target=>[target.row,target])),names=new Set(),strata=createRosterStrata(targets,model,preview.seed),backstories=assignBackstories(preview.players,model,preview.seed);
   const expected=preview.players.map(player=>{const base=model.byId.get(player.provenance.football),source=base?athleticVariant(model,base,player.provenance.athleticProfile??'balanced'):null,target=byRow.get(player.row);if(!source||!target)throw new Error('Missing generation evidence.');return {row:player.row,position:player.position,fields:{...player.fields,...observedPlayerState(source,homePlan.byRow.get(player.row)?.home),LongSnapRating:source.ratings[RATING_FIELDS.indexOf('LongSnapRating')],RecruitingDealbreaker:originalDealbreaker(target)}};});
   finishGeneratedRoster(expected,preview.team,preview.seed);
+  // Family hometowns override only the seeded hometown of the two relatives.
+  // All other health, eligibility, captain and finishing checks stay unchanged.
+  for(const player of preview.players){
+    const sibling=preview.players.find(other=>other.row===player.provenance.brother);
+    const family=brothers.get(player.row);
+    if(family){
+      if(player.provenance.brother!==family.siblingRow||player.fields.LastName!==family.lastName||player.fields.PLYR_HOME_TOWN!==family.home.town||player.fields.PLYR_HOME_STATE!==family.home.state||player.fields.HomePipeline!==family.home.pipeline)throw new Error('Brother identity or hometown differs from its generation plan.');
+      if(!sibling||sibling.row===player.row||sibling.provenance.brother!==player.row||sibling.provenance.skinTone!==player.provenance.skinTone||['LastName','PLYR_HOME_TOWN','PLYR_HOME_STATE','HomePipeline'].some(field=>sibling.fields[field]!==player.fields[field]))throw new Error('Invalid generated brother pairing.');
+      const planned=expected.find(other=>other.row===player.row);for(const field of ['PLYR_HOME_TOWN','PLYR_HOME_STATE','HomePipeline'])planned.fields[field]=player.fields[field];
+    }else if(player.provenance.brother!==undefined||player.provenance.familyOriginal)throw new Error('Unplanned generated brother pairing.');
+  }
   const finished=new Map(expected.map(player=>[player.row,player.fields]));
   const equipment=equipmentGenerator?.(preview.players.map(player=>{const target=byRow.get(player.row),appearance=model.catalog.appearances.find(item=>item.id===player.provenance.appearance);if(!target||!appearance)throw new Error('Missing appearance evidence.');return {...player,fields:{...player.fields},rawData:buildAppearancePreview(target.rawData,appearance,preview.team.branding).raw};}),preview.seed,preview.team);
   for(const player of preview.players){
+    if(player.fields[NIL_FIELD]!==nilBudget.byRow.get(player.row))throw new Error('Generated NIL compensation differs from the validated team budget.');
     if(JSON.stringify(player.provenance.home??null)!==JSON.stringify(homePlan.byRow.get(player.row)??null))throw new Error('Generated hometown differs from the seeded school geography plan.');
     if(JSON.stringify(player.backstory)!==JSON.stringify(backstories.get(player.row)))throw new Error('Player backstory differs from its eligible, validated generation plan.');
     const target=byRow.get(player.row),base=model.byId.get(player.provenance.football),source=base?athleticVariant(model,base,player.provenance.athleticProfile??'balanced'):null,potential=(model.potentialById??model.byId).get(player.provenance.potential??player.provenance.football);if(!target||target.position!==player.position||!source||source.position!==player.position)throw new Error('Roster position or source evidence changed.');
+    if(player.provenance.familyOriginal){const original=player.provenance.familyOriginal,home=homePlan.byRow.get(player.row)?.home??source.home;if(home&&JSON.stringify(original.home)!==JSON.stringify(home))throw new Error('Family original hometown evidence changed.');}
     if(player.visualRow!==target.visualRow||player.beforeRawData!==target.rawData||WRITE_FIELDS.some(field=>player.before[field]!==target.original[field]))throw new Error('Original player/appearance evidence changed.');
     validateProposedFields(player.fields);validateFootballProfile(source);
     if(player.fields.ProspectStarRating!==generatedRecruitStars(player.fields,preview.seed,player.row))throw new Error('Recruiting stars differ from the validated generation plan.');

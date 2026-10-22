@@ -1,4 +1,4 @@
-param([Parameter(Mandatory=$true)][uint32]$TaskProcessId, [ValidateRange(1,60)][int]$Seconds=45, [ValidateRange(1,16)][int]$MaxGiB=3, [ValidateRange(0,34359738368)][long]$SkipBytes=0, [string]$OutputPath, [string]$ScanPath, [string]$ItemNamePattern='^NeckWear_Turtleneck_Tight[2-7]$|^GearMouthpiece_PacifierDualHanging_(SecondaryColor4|TeamColor([4-9]|10)|White[4-9])$|^ElbowGear_RubberBands[1-3]$|^ArmTattoo_(24|25|34|35)$|^ArmTattoo_Tattoos_Japanese_08|^LegTattoo_TEST$|^GearNeckpad_|^FaceGear_|^GearArmSleeve_NikeProDriFitSleeve2|^GearHand_glove_(Adizero11|UnderArmour(F6|Spotlight2019|Blur2))_|^ThighPad_|^Towel2_South$')
+param([Parameter(Mandatory=$true)][uint32]$TaskProcessId, [ValidateRange(1,60)][int]$Seconds=45, [ValidateRange(1,16)][int]$MaxGiB=3, [ValidateRange(0,34359738368)][long]$SkipBytes=0, [string]$OutputPath, [string]$ScanPath, [switch]$DisplayNames, [string]$ItemNamePattern='^NeckWear_Turtleneck_Tight[2-7]$|^GearMouthpiece_PacifierDualHanging_(SecondaryColor4|TeamColor([4-9]|10)|White[4-9])$|^ElbowGear_RubberBands[1-3]$|^ArmTattoo_(24|25|34|35)$|^ArmTattoo_Tattoos_Japanese_08|^LegTattoo_TEST$|^GearNeckpad_|^FaceGear_|^GearArmSleeve_NikeProDriFitSleeve2|^GearHand_glove_(Adizero11|UnderArmour(F6|Spotlight2019|Blur2))_|^ThighPad_|^Towel2_South$')
 $ErrorActionPreference='Stop'
 if ((Get-Process -Id $TaskProcessId).ProcessName -ne 'CollegeFB27') { throw 'Only CollegeFB27 is in scope.' }
 # Ordinary read/query permissions, no writes, injection, elevation or raw dumps.
@@ -35,13 +35,26 @@ public static class CfbRecordProbe {
     int end=0;while(end<b.Length&&b[end]>=32&&b[end]<=126)end++;
     if(end<4||end==b.Length||b[end]!=0)return null;
     string s=Encoding.ASCII.GetString(b,0,end);
+    if(Regex.IsMatch(s,"visor",RegexOptions.IgnoreCase))return s;
     return Regex.IsMatch(s,"jersey|rolled|pants|cutoff|shorts|turtleneck|balaclava|balaclave|ski ?mask|mouthpiece|pacifier|mouthguard|rubber ?band|tattoo|CujoMatty|ArmTats|double sleeve|sleeve|collar|neck roll|NXTRND|BATTLE|LoadoutSlot|LoadoutAuthenticity|CharacterRoleType|band|brace|logo|shell|towel|beast|chosen|joker|lion|cheat|glove|adizero|under ?armour|nike|jordan|adidas|cleat|shoe|coach|football|mercurial|socks|crew.?cut|back.?plate|gear ?pro.?tec|gold ?rush|x.?tech|xenith|flak|undershirt|new balance|skullcap|necklace|facepaint|eye ?black|paint|tape|helmet|facemask|speedflex|axiom|schutt|vicis|riddell|light|handwarmer|waist|playcall|2 ?bar|3 ?bar|robot|^CM Generic|Japanese|Polynesian|^No |^None$",RegexOptions.IgnoreCase)?s:null;
   }
   static string FieldText(IntPtr p,ulong field) {
     byte[] b=Read(p,field,8);if(b==null)return null;
     return Text(p,BitConverter.ToUInt64(b,0))??Text(p,field);
   }
-  public static Result Scan(uint id,int seconds,int maxGiB,long skipBytes,ulong[] addresses,string[] names) {
+  static void DisplayRecord(IntPtr p, ulong field, string label, Result result) {
+    if(field<512||FieldText(p,field)!=label)return;
+    for(int distance=-256;distance<=256;distance+=8){
+      ulong nameField=field+(ulong)(long)distance;
+      string name=FieldText(p,nameField);
+      if(name==null||!Regex.IsMatch(name,"^[A-Za-z][A-Za-z0-9_]{3,191}$")||!Regex.IsMatch(name,"sleeve|visor",RegexOptions.IgnoreCase))continue;
+      bool repeated=FieldText(p,nameField-96)==name&&FieldText(p,nameField-160)==name;
+      var record=new Record{ItemName=name,NamePointerAddress="0x"+nameField.ToString("X"),RepeatedNameFields=repeated,Labels=new List<Label>{new Label{FieldOffset=-distance,Address="0x"+field.ToString("X"),Value=label}}};
+      foreach(int offset in new int[]{-96,-160}){var value=FieldText(p,nameField+(ulong)(long)offset);if(value!=null)record.Labels.Add(new Label{FieldOffset=offset,Address="0x"+(nameField+(ulong)(long)offset).ToString("X"),Value=value});}
+      result.Records.Add(record);
+    }
+  }
+  public static Result Scan(uint id,int seconds,int maxGiB,long skipBytes,ulong[] addresses,string[] names,bool displayNames) {
     IntPtr p=OpenProcess(0x0410,false,id);if(p==IntPtr.Zero)throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
     var result=new Result();var clock=Stopwatch.StartNew();var map=new Dictionary<ulong,string>();var counts=new Dictionary<string,int>();
     try {
@@ -58,7 +71,8 @@ public static class CfbRecordProbe {
       }
       // Short-string optimization can place ItemName/DisplayName text inside
       // the record itself. Treat this as a candidate, not automatic proof.
-      foreach(var entry in map) {
+      if(displayNames)foreach(var entry in map)DisplayRecord(p,entry.Key,entry.Value,result);
+      if(!displayNames) foreach(var entry in map) {
         foreach(ulong offset in new ulong[]{0,96,160}) {
           ulong field=entry.Key+offset;
           if(FieldText(p,field)!=entry.Value)continue;
@@ -85,6 +99,7 @@ public static class CfbRecordProbe {
           int size=(int)Math.Min((ulong)want,got.ToUInt64());result.BytesRead+=size;
           for(int pos=0;pos+8<=size;pos+=8) {
             ulong ptr=BitConverter.ToUInt64(buffer,pos);string name;if(!map.TryGetValue(ptr,out name))continue;
+            if(displayNames){DisplayRecord(p,start+off+(ulong)partial+(ulong)pos,name,result);continue;}
             int count;counts.TryGetValue(name,out count);if(count>=100)continue;counts[name]=count+1;
             ulong field=start+off+(ulong)partial+(ulong)pos;int before=name.StartsWith("CM_ArmTattoo_")?384:64;
             byte[] obj=Read(p,field-(ulong)before,before+192);if(obj==null)continue;
@@ -116,7 +131,7 @@ $taskInputs | ForEach-Object {
     foreach($taskAddress in $taskMatch.SampleAddresses){$taskAddresses.Add([Convert]::ToUInt64($taskAddress.Substring(2),16));$taskNames.Add($taskMatch.Name)}
   }
 }
-$taskResult=[CfbRecordProbe]::Scan($TaskProcessId,$Seconds,$MaxGiB,$SkipBytes,$taskAddresses.ToArray(),$taskNames.ToArray())
+$taskResult=[CfbRecordProbe]::Scan($TaskProcessId,$Seconds,$MaxGiB,$SkipBytes,$taskAddresses.ToArray(),$taskNames.ToArray(),[bool]$DisplayNames)
 $taskJson=$taskResult | ConvertTo-Json -Depth 7
 if ($OutputPath) {
   $taskOutput=[IO.Path]::GetFullPath($OutputPath)

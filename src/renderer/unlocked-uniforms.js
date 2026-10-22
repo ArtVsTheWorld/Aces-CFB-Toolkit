@@ -17,7 +17,7 @@ function bindUniformPassWindows() {
     const toggle = `fix-unlocked-${kind === "lower" ? "lower-jersey" : "cutoff-pants"}`;
     condenseConfiguration(document.getElementById(`${kind}-uniform-settings`), {
       title: kind === "lower" ? "Lower Rolled Jersey Caps" : "Cutoff Pants Settings",
-      description: "Set whole-number maximum shares for each team's position groups. Protected players stay unchanged and existing styles count toward the cap. Requires CFB27 Unlocked by Orckestra; v0.97 or newer is recommended.",
+      description: "Set whole-number maximum shares for each team's position groups. Protected players stay unchanged and existing styles count toward the cap. Requires CFB27 Unlocked by Orckestra.",
       dependencies: [toggle], enabled: () => document.getElementById(toggle).checked,
       summary: root => uniformCapSummary(kind, root)
     });

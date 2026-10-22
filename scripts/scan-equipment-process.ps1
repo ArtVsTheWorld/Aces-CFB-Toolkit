@@ -4,8 +4,9 @@ param(
   [ValidateRange(1, 32)][int]$MaxGiB = 12,
   [ValidateRange(0, 34359738368)][long]$SkipBytes = 0,
   [string]$OutputPath,
-  [ValidateCount(1, 41)]
-  [ValidateSet('Gear', 'ArmSleeve_', 'Backplate_', 'Flakjacket_', 'KneePad_', 'OakleyPrizm', 'G_', 'NeckWear_', 'FaceMarks_', 'FaceGear_', 'GearMouthpiece_', 'GearFootwear_', 'GearArmSleeve_', 'GearNeckpad_', 'Neckwear_', 'ElbowGear_', 'GearLegBase_', 'GearLegsBase_', 'GuardianCap_', 'Towel_', 'Towel2_', 'ThighPad_', 'G_CompressionT_', 'GearWrist_', 'Gear_Socks_', 'Socks_', 'Gear_JerseyStyle_', 'GearHand_', 'ArmTattoo_', 'LegTattoo_', 'CujoMatty_', 'CM_', 'Gear_Undershirt_', 'GearHelmet_', 'GearFaceMask_', 'Handwarmer_', 'Waist_', 'GearSpats_', 'GearBicep_', 'GearKneeBrace_', 'GearBackplate_')][string[]]$Prefix = @('FaceMarks_')
+  [switch]$EquipmentTruckLabels,
+  [ValidateCount(1, 42)]
+  [ValidateSet('Gear', 'ArmSleeve_', 'Backplate_', 'Flakjacket_', 'KneePad_', 'OakleyPrizm', 'G_', 'NeckWear_', 'FaceMarks_', 'FaceGear_', 'GearMouthpiece_', 'GearFootwear_', 'GearArmSleeve_', 'GearVisor_', 'GearNeckpad_', 'Neckwear_', 'ElbowGear_', 'GearLegBase_', 'GearLegsBase_', 'GuardianCap_', 'Towel_', 'Towel2_', 'ThighPad_', 'G_CompressionT_', 'GearWrist_', 'Gear_Socks_', 'Socks_', 'Gear_JerseyStyle_', 'GearHand_', 'ArmTattoo_', 'LegTattoo_', 'CujoMatty_', 'CM_', 'Gear_Undershirt_', 'GearHelmet_', 'GearFaceMask_', 'Handwarmer_', 'Waist_', 'GearSpats_', 'GearBicep_', 'GearKneeBrace_', 'GearBackplate_')][string[]]$Prefix = @('FaceMarks_')
 )
 $ErrorActionPreference = 'Stop'
 if (-not [Environment]::Is64BitProcess) { throw 'Run this diagnostic in 64-bit PowerShell.' }
@@ -57,7 +58,31 @@ public static class CfbEquipmentMemory {
   static bool NameChar(char c) { return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9' || c == '_'; }
   static byte Lower(byte b) { return b >= 65 && b <= 90 ? (byte)(b + 32) : b; }
   static readonly Regex ItemAssignment = new Regex("\"itemAssetName\"\\s*:\\s*\"$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-  static void FindNames(byte[] bytes, int size, ulong address, string[] prefixes, Dictionary<string, Match> matches) {
+  static void FindNames(byte[] bytes, int size, ulong address, string[] prefixes, Dictionary<string, Match> matches, Regex fastPattern) {
+    if (fastPattern != null) {
+      // A literal-prefix regex uses the runtime's vectorized search instead of
+      // a managed dictionary lookup for every byte in large readable heaps.
+      // Keep only bounded equipment tokens, with the same suffix protection.
+      for (int stride = 1; stride <= 2; stride++) {
+        string decoded = stride == 1 ? Encoding.ASCII.GetString(bytes, 0, size) : Encoding.Unicode.GetString(bytes, 0, size - size % 2);
+        foreach (System.Text.RegularExpressions.Match token in fastPattern.Matches(decoded)) {
+          int index = token.Index * stride, end = (token.Index + token.Length) * stride;
+          if (end >= size || token.Length >= 256) continue;
+          string value = token.Value;
+          Match match;
+          if (!matches.TryGetValue(value, out match)) {
+            if (matches.Count >= 4096) continue;
+            match = new Match { Name = value }; matches.Add(value, match);
+          }
+          match.Occurrences++; match.Encodings.Add(stride == 2 ? "UTF-16LE" : "ASCII/UTF-8");
+          if (match.SampleAddresses.Count < 16) match.SampleAddresses.Add("0x" + (address + (ulong)index).ToString("X"));
+          if (token.Index > 0 && decoded[token.Index - 1] == '/') match.ResourcePaths++;
+          string preceding = decoded.Substring(Math.Max(0, token.Index - 96), Math.Min(96, token.Index));
+          if (ItemAssignment.IsMatch(preceding)) match.JsonItemAssignments++;
+        }
+      }
+      return;
+    }
     var patterns = new Dictionary<byte, List<byte[]>>();
     foreach (string prefix in prefixes) {
       byte[] pattern = Encoding.ASCII.GetBytes(prefix.ToLowerInvariant());
@@ -103,10 +128,16 @@ public static class CfbEquipmentMemory {
       }
     }
   }
-  public static ScanResult Scan(uint processId, int seconds, int maxGiB, long skipBytes, string[] prefixes) {
+  public static ScanResult Scan(uint processId, int seconds, int maxGiB, long skipBytes, string[] prefixes, bool equipmentTruckLabels) {
     IntPtr process = OpenProcess(0x0410, false, processId);
     if (process == IntPtr.Zero) throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error(), "Normal read/query access was denied; no protection bypass attempted.");
     var result = new ScanResult { ProcessId = processId, Prefix = String.Join(", ", prefixes), SkippedBytes = skipBytes, NextScanOffset = skipBytes };
+    Regex fastPattern = null;
+    if (prefixes.Length <= 3) {
+      var escaped = new List<string>(); foreach (string prefix in prefixes) escaped.Add(Regex.Escape(prefix));
+      fastPattern = new Regex("(?<![A-Za-z0-9_])(?:" + String.Join("|", escaped.ToArray()) + ")[A-Za-z0-9_]{1,255}(?![A-Za-z0-9_])", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+    }
+    if (equipmentTruckLabels) fastPattern = new Regex("(?:Team Brand Arm Sleeve Shooter|Brand x Team Logo Arm Sleeve|Team Brand Logo Arm Sleeve|Team Logo Visor|Team Brand Visor)[ -~]{0,80}(?=\\x00)", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
     var clock = Stopwatch.StartNew();
     var regions = new List<MemoryInfo>();
     var matches = new Dictionary<string, Match>(StringComparer.Ordinal);
@@ -140,7 +171,7 @@ public static class CfbEquipmentMemory {
           bool ok = ReadProcessMemory(process, new IntPtr((long)(start + offset)), buffer, new UIntPtr((uint)wanted), out read);
           int got = (int)Math.Min((ulong)wanted, read.ToUInt64());
           if (!ok) result.ReadFailures++;
-          if (got > 0) { result.BytesRead += got; FindNames(buffer, got, start + offset, prefixes, matches); }
+          if (got > 0) { result.BytesRead += got; FindNames(buffer, got, start + offset, prefixes, matches, fastPattern); }
           ulong advanced = (ulong)(wanted > overlap && offset + (ulong)wanted < size ? wanted - overlap : wanted);
           offset += advanced; result.NextScanOffset += (long)advanced;
         }
@@ -156,7 +187,7 @@ public static class CfbEquipmentMemory {
 }
 '@
 Add-Type -TypeDefinition $taskDefinition
-$taskResult = [CfbEquipmentMemory]::Scan($TaskProcessId, $Seconds, $MaxGiB, $SkipBytes, $Prefix)
+$taskResult = [CfbEquipmentMemory]::Scan($TaskProcessId, $Seconds, $MaxGiB, $SkipBytes, $Prefix, [bool]$EquipmentTruckLabels)
 $taskJson = $taskResult | ConvertTo-Json -Depth 8
 if ($OutputPath) {
   # Persist filtered equipment tokens and scan statistics, never raw memory.

@@ -24,7 +24,10 @@ import {equipmentDisplayName,equipmentItem} from '../equipment/catalog.js';
 import {snapshotProtectedPlayers,verifyProtectedPlayers} from './safety.js';
 import {playerMeasurements} from '../../../shared/playerMeasurements.js';
 import {readTeamGeography} from './geography.js';
+import {ARCHETYPE_WEIGHTS,RATING_LABELS} from '../teamBoost/ratingWeights.js';
 
+import {rosterFile,loadRosterGenerationSource,saveRosterGeneration,buildRosterGenerationCandidate,ROSTER_WARNINGS} from './rosterSource.js';
+const loadGenerationSource=async(savePath,schemaPath)=>rosterFile(savePath)?loadRosterGenerationSource(savePath,schemaPath):loadEquipmentTables(savePath,schemaPath,true,false);
 const allPresentationIds=loaded=>new Set(loaded.players.records.filter(record=>record&&!record.isEmpty).map(record=>sf(record,'PresentationId')));
 const TOOL_ID='roster-generator',TOOL_NAME='Roster Generator';
 export function teamGenerationConfigurations(options,teams){
@@ -69,18 +72,22 @@ function visualOwners(loaded) {
   const owners=new Map();loaded.players.records.forEach((record,row)=>{if(!record||record.isEmpty)return;const ref=parseRef(sf(record,'CharacterVisuals'));if(ref?.tableId===loaded.visuals.header.tableId){if(!owners.has(ref.row))owners.set(ref.row,[]);owners.get(ref.row).push(row);}});return owners;
 }
 export async function prepareRosterGenerator({savePath,schemaPath}) {
-  const loaded=await loadEquipmentTables(savePath,schemaPath,true,false);
+  const loaded=await loadGenerationSource(savePath,schemaPath);
   const season=await rosterGeneratorSeason(loaded);
-  return {season,agePresets:ROSTER_AGES,potentialPresets:ROSTER_POTENTIALS,positionGroups:POSITION_GROUPS,offensiveSchemes:OFFENSIVE_SCHEMES,defensiveSchemes:DEFENSIVE_SCHEMES,tonePresets:TONE_PRESETS,teams:teamsWithRosters(loaded).map(team=>({name:team.name,teamIndex:team.teamIndex,positionCounts:rosterPositionCounts(loaded,team)})),presets:ROSTER_PRESETS,catalogVersion:loadObservedCatalog().catalog.version};
+  return {season,fileKind:loaded.kind??'dynasty',warnings:loaded.kind==='roster'?ROSTER_WARNINGS:[],agePresets:ROSTER_AGES,potentialPresets:ROSTER_POTENTIALS,positionGroups:POSITION_GROUPS,offensiveSchemes:OFFENSIVE_SCHEMES,defensiveSchemes:DEFENSIVE_SCHEMES,tonePresets:TONE_PRESETS,teams:teamsWithRosters(loaded).map(team=>({name:team.name,teamIndex:team.teamIndex,positionCounts:rosterPositionCounts(loaded,team)})),presets:ROSTER_PRESETS,catalogVersion:loadObservedCatalog().catalog.version};
 }
 function previewRow(player,preview) {
   const fields=player.fields;
+  const physical=['SpeedRating','AccelerationRating','StrengthRating'],weights=ARCHETYPE_WEIGHTS[`${player.position}|${fields.PlayerType}`]??{};
+  const relevant=Object.entries(weights).filter(([field])=>!physical.includes(field)&&!['InjuryRating','ToughnessRating','StaminaRating','LongSnapRating'].includes(field)).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([field])=>field);
+  const highlights=[...physical,...relevant].filter(field=>Number.isFinite(fields[field])).map(field=>({field,label:RATING_LABELS[field],value:fields[field]}));
   const equipment=JSON.parse(player.rawData).loadouts.filter(loadout=>loadout.loadoutType==='PlayerOnField').flatMap(loadout=>loadout.loadoutElements).map(element=>({slot:element.slotType??equipmentItem(element.itemAssetName)?.slots?.[0]??'Default slot',name:equipmentDisplayName(element.itemAssetName)}));
-  return {...player,measurements:{before:playerMeasurements(player.before),after:playerMeasurements(fields)},team:preview.team.name,player:`${fields.FirstName} ${fields.LastName}`,oldPlayer:`${player.before.FirstName} ${player.before.LastName}`,position:displayPosition(player.position),classYear:fields.SchoolYear,overall:fields.OverallRating,equipment};
+  const brother=preview.players.find(other=>other.row===player.provenance.brother);
+  return {...player,highlights,brother:brother?`${brother.fields.FirstName} ${brother.fields.LastName}`:null,measurements:{before:playerMeasurements(player.before),after:playerMeasurements(fields)},team:preview.team.name,player:`${fields.FirstName} ${fields.LastName}`,oldPlayer:`${player.before.FirstName} ${player.before.LastName}`,position:displayPosition(player.position),classYear:fields.SchoolYear,overall:fields.OverallRating,equipment};
 }
 function reportFor(rosters) {
   const parts=rosters.map(roster=>rosterGeneratorCsv(roster));
-  return {prefix:'roster-generator-report',headings:[...parts[0].headings,'CalibrationJSON'],rows:parts.flatMap((part,i)=>part.rows.map((row,j)=>[...row,JSON.stringify(rosters[i].players[j].provenance.calibration)]))};
+  return {prefix:'roster-generator-report',headings:[...parts[0].headings,'CalibrationJSON','OldNILCost','NewNILCost','BrotherRow'],rows:parts.flatMap((part,i)=>part.rows.map((row,j)=>[...row,JSON.stringify(rosters[i].players[j].provenance.calibration),rosters[i].players[j].before.CurrentNILCompensation,rosters[i].players[j].fields.CurrentNILCompensation,rosters[i].players[j].provenance.brother??'']))};
 }
 
 export async function runRosterGenerator(context) {
@@ -89,7 +96,7 @@ export async function runRosterGenerator(context) {
   const seed=randomBytes(4).readUInt32LE(),preset=rosterPreset(context.options?.preset),selected=context.options?.teams,settings=normalizeGenerationSettings(context.options);
   if(!Array.isArray(selected)||!selected.length||selected.some(value=>typeof value!=='string')||new Set(selected).size!==selected.length)throw new Error('Select one or more teams. An empty selection never means the entire dynasty.');
   const configurations=teamGenerationConfigurations(context.options??{},selected);
-  const fingerprint=saveFingerprint(context.savePath),loaded=await loadEquipmentTables(context.savePath,context.schemaPath,true,false),available=teamsWithRosters(loaded);
+  const fingerprint=saveFingerprint(context.savePath),loaded=await loadGenerationSource(context.savePath,context.schemaPath),available=teamsWithRosters(loaded);
   const teams=selected.map(name=>{const matches=available.filter(team=>team.name===name);if(matches.length!==1)throw new Error(`Team selection is unavailable or ambiguous: ${name}.`);return matches[0];}).sort((a,b)=>a.teamIndex-b.teamIndex);
   await rosterGeneratorSeason(loaded);
   const equipmentGenerator=makeRosterEquipmentGenerator(loaded),baseModel=loadObservedCatalog(),modelForTeam=teamModelFactory(baseModel,preset,settings),owners=visualOwners(loaded),rosters=[],used=new Set(),reservedPresentationIds=allPresentationIds(loaded);
@@ -104,6 +111,7 @@ export async function runRosterGenerator(context) {
     const roster=generateRosterPreview({team:{name:team.name,teamIndex:team.teamIndex,branding:team.branding,captainCount:team.captainCount,geography},targets,model,seed:teamSeed,preset:teamPreset,unavailableNames:names,matchCommentary,equipmentGenerator,reservedPresentationIds});
     for(const player of roster.players)reservedPresentationIds.add(player.fields.PresentationId);
     roster.summary.caliber=teamPreset.name;
+    if(loaded.kind==='roster'){roster.warnings.push(...ROSTER_WARNINGS);for(const player of roster.players){player.rosterPlayerId=loaded.players.records[player.row].RosterPlayerId;player.changes=player.changes.filter(change=>loaded.available.has(change.field));player.persistedFields=[...loaded.available];}}
     roster.source={file:path.basename(context.savePath),sha256:fingerprint,unchanged:true};
     roster.applicationCanApply=!roster.blocking.length;
         roster.warnings.push('Long-snap and dealbreaker fixes run before final jersey numbering. Team traditions and retired-number protection are off.');
@@ -113,8 +121,10 @@ export async function runRosterGenerator(context) {
   if(saveFingerprint(context.savePath)!==fingerprint)throw new Error('The Active Save changed during Preview. Run Preview again.');
   const depthCharts=await planRosterDepthCharts(loaded,rosters);
   for(const roster of rosters){const chart=depthCharts.find(chart=>chart.team===roster.team.name);roster.summary.depthChart=chart;roster.warnings.push(`${roster.team.name}: ${chart.reason}`);}
+  const rosterCandidate=loaded.kind==='roster'&&!rosters.some(roster=>roster.blocking.length)?buildRosterGenerationCandidate(loaded,rosters):null;
   const rows=rosters.flatMap(roster=>roster.players.map(player=>previewRow(player,roster))),blocking=rosters.flatMap(roster=>roster.blocking.map(item=>({...item,team:roster.team.name}))),report=reportFor(rosters);
-  const result={resultKind:TOOL_ID,mode:'preview',status:'preview',savePath:loaded.savePath,backupPath:null,reportPath:context.reports.create({...report,toolId:TOOL_ID,toolName:TOOL_NAME}),summary:[{label:'Teams to regenerate',value:rosters.length},{label:'Players to replace',value:rows.length},{label:'Original NIL identities',value:rosters.reduce((sum,roster)=>sum+roster.summary.nilReplacements,0)},{label:'Apply blockers',value:blocking.length}],historySummary:[{label:'Players regenerated',value:rows.length}],details:{canApply:!blocking.length,preset,seed,blocking,warnings:[...new Set(rosters.flatMap(roster=>roster.warnings))],teams:rosters.map(roster=>({team:roster.team.name,...roster.summary})),totalPreviewRows:rows.length,changes:rows.slice(0,1000)}};
+  if(rosterCandidate){report.headings.push('FileKind','PersistedFieldsJSON','RosterBeforeJSON','RosterAfterJSON','RosterVisualBeforeJSON','RosterVisualAfterJSON');const generated=rosters.flatMap(roster=>roster.players);report.rows.forEach((row,index)=>{const player=generated[index],wire=rosterCandidate.changes.find(change=>change.playerId===player.rosterPlayerId);row.push('roster',JSON.stringify(player.persistedFields),JSON.stringify(wire.before),JSON.stringify(wire.after),JSON.stringify(wire.beforeVisual),JSON.stringify(wire.afterVisual));});}
+  const result={resultKind:TOOL_ID,mode:'preview',status:'preview',savePath:loaded.savePath,backupPath:null,reportPath:context.reports.create({...report,toolId:TOOL_ID,toolName:TOOL_NAME}),summary:[{label:'Teams to regenerate',value:rosters.length},{label:'Players to replace',value:rows.length},{label:'Original NIL identities',value:rosters.reduce((sum,roster)=>sum+roster.summary.nilReplacements,0)},{label:'Apply blockers',value:blocking.length}],historySummary:[{label:'Players regenerated',value:rows.length}],details:{fileKind:loaded.kind??'dynasty',canApply:!blocking.length,preset,seed,blocking,warnings:[...new Set(rosters.flatMap(roster=>roster.warnings))],teams:rosters.map(roster=>({team:roster.team.name,...roster.summary})),totalPreviewRows:rows.length,changes:rows.slice(0,1000)}};
   const planId=storePlan({toolId:TOOL_ID,toolName:TOOL_NAME,savePath:loaded.savePath,saveFingerprint:fingerprint,previewRows:rows,report,result,rosters,presetId:preset.id,settings,configurations,depthCharts});
   return {...result,planId};
 }
@@ -125,7 +135,7 @@ async function applyRosterGenerator(context) {
   if(context.options?.confirmRegeneration!==true)throw new Error('Confirm that the selected rosters and NIL identities will be replaced before Apply.');
   if(!plan.result.details.canApply)throw new Error('Resolve the appearance/roster blockers before Apply. No save was written.');
   if(saveFingerprint(context.savePath)!==plan.saveFingerprint)throw new Error('The save changed after Preview. Run Preview again.');
-  const loaded=await loadEquipmentTables(context.savePath,context.schemaPath,true,false),baseModel=loadObservedCatalog(),preset=rosterPreset(plan.presetId),owners=visualOwners(loaded),available=teamsWithRosters(loaded),assignments=[],reservedPresentationIds=allPresentationIds(loaded);
+  const loaded=await loadGenerationSource(context.savePath,context.schemaPath),baseModel=loadObservedCatalog(),preset=rosterPreset(plan.presetId),owners=visualOwners(loaded),available=teamsWithRosters(loaded),assignments=[],reservedPresentationIds=allPresentationIds(loaded);
   await rosterGeneratorSeason(loaded);
   const modelForTeam=teamModelFactory(baseModel,preset,plan.settings),equipmentGenerator=makeRosterEquipmentGenerator(loaded);
   for(const roster of plan.rosters) {
@@ -139,6 +149,7 @@ async function applyRosterGenerator(context) {
     }
   }
   const depthCharts=await planRosterDepthCharts(loaded,plan.rosters);if(!isDeepStrictEqual(depthCharts,plan.depthCharts))throw new Error('Depth-chart proposal changed after Preview. No save was written.');
+  if(loaded.kind==='roster'){const reportPath=context.reports.create({...plan.report,toolId:TOOL_ID,toolName:TOOL_NAME}),saved=await saveRosterGeneration(loaded,plan,context);completePlan(context.options.planId);return {...plan.result,mode:'apply',status:'completed',...saved,reportPath,planId:context.options.planId};}
   const before=snapshotVisualsForVerification(loaded.visuals,snapshotVisualRawData(loaded.visuals.records));
   const protectedPlayers=snapshotProtectedPlayers(loaded.players,new Set(plan.rosters.flatMap(roster=>roster.players.map(player=>player.row))));
   const reportPath=context.reports.create({...plan.report,toolId:TOOL_ID,toolName:TOOL_NAME});

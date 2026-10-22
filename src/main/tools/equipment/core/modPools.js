@@ -1,4 +1,4 @@
-import { EQUIPMENT_ITEMS, RAW_ACCESSORIES_POOLS, UNLOCKED_POOLS, canGenerateItem, equipmentDisplayName, itemBrand } from "../catalog.js";
+import { EQUIPMENT_ITEMS, RAW_ACCESSORIES_POOLS, UNLOCKED_POOLS, EQUIPMENT_TRUCK_POOLS, canGenerateItem, equipmentDisplayName, itemBrand } from "../catalog.js";
 import { MOD_FACE_PAINT_ITEMS } from "./facepaint.js";
 
 const unique = items => [...new Map(items.filter(canGenerateItem).map(item => [item.itemName, item])).values()];
@@ -24,12 +24,13 @@ export function modPoolDefinitions() {
       category("towels", "Towels", UNLOCKED_POOLS.towels),
       category("socks", "Sock Styles", UNLOCKED_POOLS.socks)
     ],
-    raw: [category("neckwear", "Turtlenecks & Necklaces", RAW_ACCESSORIES_POOLS.neckwear), category("skullcaps", "Skullcaps", RAW_ACCESSORIES_POOLS.skullcaps), category("backplates", "Backplates — No Flak Jacket", RAW_ACCESSORIES_POOLS.backplates ?? [])]
+    raw: [category("neckwear", "Turtlenecks & Necklaces", RAW_ACCESSORIES_POOLS.neckwear), category("skullcaps", "Skullcaps", RAW_ACCESSORIES_POOLS.skullcaps), category("backplates", "Backplates — No Flak Jacket", RAW_ACCESSORIES_POOLS.backplates ?? [])],
+    eljax: [category("armSleeves", "Team & Brand Arm Sleeves", EQUIPMENT_TRUCK_POOLS.armSleeves), category("visors", "Team & Brand Visors", EQUIPMENT_TRUCK_POOLS.visors)]
   };
-  return Object.fromEntries(Object.entries(definitions).map(([origin, categories]) => [origin, [...categories, {
+  return Object.fromEntries(Object.entries(definitions).map(([origin, categories]) => [origin, [...categories, ...(MOD_FACE_PAINT_ITEMS[origin] ? [{
     id: "facepaint", label: "Facepaint & Eye Tape", defaultChance: 100,
     items: MOD_FACE_PAINT_ITEMS[origin].map(itemName => ({ itemName, displayName: equipmentDisplayName(itemName) }))
-  }].map(entry => ({ ...entry, defaultItems: entry.defaultItems ?? entry.items.map(item => item.itemName) }))]));
+  }] : [])].map(entry => ({ ...entry, defaultItems: entry.defaultItems ?? entry.items.map(item => item.itemName) }))]));
 }
 
 export function normalizeModPools(value, defaultPercent = 10) {

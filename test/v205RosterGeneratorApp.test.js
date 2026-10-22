@@ -8,8 +8,8 @@ import {WRITE_FIELDS,CAP_BOUNDS} from '../src/main/tools/rosterGenerator/contrac
 import {getToolHandler,executableToolIds} from '../src/main/tools/handlers.js';
 import {getTool} from '../src/shared/toolRegistry.js';
 
-test('Roster Generator is registered with normal prepare/run integration and dynasty-only input',()=>{
-  assert.equal(getTool('roster-generator').version, undefined);assert.deepEqual(getTool('roster-generator').input.accepted,['dynasty']);
+test('Roster Generator is registered with normal prepare/run integration and dynasty/roster input',()=>{
+  assert.equal(getTool('roster-generator').version, undefined);assert.deepEqual(getTool('roster-generator').input.accepted,['dynasty','roster']);
   assert.equal(typeof getToolHandler('roster-generator').prepare,'function');assert.equal(typeof getToolHandler('roster-generator').run,'function');assert.ok(executableToolIds().includes('roster-generator'));
 });
 test('all seven calibers reach their target with observed eligibility/ability/cap packages and exact position counts',()=>{

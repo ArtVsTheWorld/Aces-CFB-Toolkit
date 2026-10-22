@@ -1,5 +1,6 @@
 import { openCfb27Save, readTables, PLAYER_TABLE_UID, TEAM_TABLE_UID, availableTeams } from "./save.js";
 import { FRANCHISE_USER_TABLE_UID, userControlledTeams } from "../tools/jersey/shared.js";
+import fs from 'node:fs';import zlib from 'node:zlib';import {isRosterContainer} from '../tools/equipment/rosterCodec.js';import {decodeRosterTdf} from '../tools/equipment/rosterTdf.js';
 
 const SEASON_INFO_TABLE_UID = 3123991521;
 
@@ -15,6 +16,7 @@ export function homeSeason(record) {
 }
 
 export async function readHomeContext(savePath, schemaPath) {
+  const descriptor=fs.openSync(savePath,'r'),header=Buffer.alloc(80);try{fs.readSync(descriptor,header,0,80,0);}finally{fs.closeSync(descriptor);}if(isRosterContainer(header)){const data=decodeRosterTdf(zlib.inflateSync(fs.readFileSync(savePath).subarray(74),{maxOutputLength:256*1024*1024}));return{fileKind:'roster',teams:data.TEAM.map(team=>({name:team.TDNA??team.TLNA,teamIndex:team.TGID})).sort((a,b)=>a.name.localeCompare(b.name)),controlledTeams:[],season:null};}
   const opened = await openCfb27Save(savePath, schemaPath);
   const { teams, players, franchiseUsers, seasonInfo } = await readTables(opened.franchise, {
     teams: TEAM_TABLE_UID,

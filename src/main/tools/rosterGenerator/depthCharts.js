@@ -5,6 +5,7 @@ export function depthScore(player,slot){const f=player.fields,v=name=>Number(f[n
 export function rankDepthPlayers(players,slot){const positions=GROUPS[slot];if(!positions)return [];const specialized=['KR','PR','LS','KOS','RLE','RRE','RDT','3DRB','PWHB','SLWR','SLCB','SUBLB','GAD'].includes(slot);return players.filter(p=>positions.includes(p.position)).sort((a,b)=>(specialized?0:positions.indexOf(a.position)-positions.indexOf(b.position))||depthScore(b,slot)-depthScore(a,slot)||b.fields.OverallRating-a.fields.OverallRating||a.row-b.row);}
 async function referenced(loaded,ref){const table=ref&&loaded.franchise.tables.find(t=>t.header.tableId===ref.tableId);if(!table)return null;await table.readRecords();const record=table.records[ref.row];return record&&!record.isEmpty?{table,record}:null;}
 export async function planRosterDepthCharts(loaded,rosters){
+  if(loaded.kind==='roster')return rosters.map(r=>({team:r.team.name,status:'kept',reason:'Play Now roster depth charts are retained. Reorder generated teams in-game.',changes:[],slots:[]}));
   if(rosters.every(r=>!r.summary.settings.reorderDepthChart))return rosters.map(r=>({team:r.team.name,status:'kept',reason:'Automatic reordering is off.',changes:[],slots:[]}));
   const owners=new Map();for(const table of loaded.franchise.tables.filter(t=>t.name==='DepthChart')){await table.readRecords();for(const record of table.records.filter(r=>!r.isEmpty))for(const column of table.offsetTable){const key=refKey(parseRef(record[column.name]));if(key)owners.set(key,(owners.get(key)??0)+1);}}
   const plans=[];

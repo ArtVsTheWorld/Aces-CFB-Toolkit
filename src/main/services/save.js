@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import maddenPkg from "madden-franchise";
 import { validateSavePath } from "./files.js";
+import {isRosterContainer} from '../tools/equipment/rosterCodec.js';
 
 const Franchise = maddenPkg.default || maddenPkg;
 export const PLAYER_TABLE_UID = 1612938518;
@@ -35,6 +36,7 @@ export function detectSaveSchema(savePath, schemaDirectory) {
 }
 
 export function inspectSaveSchema(savePath, schemaDirectory) {
+  try{const descriptor=fs.openSync(savePath,'r'),header=Buffer.alloc(80);try{fs.readSync(descriptor,header,0,80,0);}finally{fs.closeSync(descriptor);}if(isRosterContainer(header)){const schemaPath=path.join(schemaDirectory,'C27_486_6.gz');if(!fs.existsSync(schemaPath))throw new Error('The bundled roster attribute schema is missing.');return{kind:'roster',version:'CFB 27 Roster',gameYear:27,path:schemaPath,supported:true};}}catch(error){return{supported:false,error:error.message};}
   try { return detectSaveSchema(savePath, schemaDirectory); }
   catch (error) { return { version: /Save Version: ([^·]+)/.exec(error.message)?.[1]?.trim() ?? "Unknown", supported: false, error: error.message }; }
 }

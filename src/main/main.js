@@ -67,6 +67,7 @@ const saveInfo = savePath => savePath ? { path: savePath, name: path.basename(sa
 const assertToolSaveCompatibility = (toolId, savePath) => {
   const schema = inspectSaveSchema(savePath, schemaDirectory());
   if (!schema.supported) throw new Error(schema.error);
+  if(schema.kind==='roster'&&!['roster-generator','home'].includes(toolId))throw new Error('This is a Play Now roster file. Select Roster Generator, or choose a Dynasty save for this tool.');
   if (toolId === "automatic-force-win" && /-AUTOSAVE/i.test(path.basename(savePath))) throw new Error("Smart Force Win does not support autosaves because their schedule/game data can differ from a manual save. Select a manual Dynasty save for this tool.");
   return schema;
 };
@@ -107,7 +108,7 @@ function registerIpc() {
   ipcMain.handle(IPC.savePreset, (_event, request) => { if (!getTool(request?.toolId)) throw new Error("Unknown tool."); return presets.save(request); });
   ipcMain.handle(IPC.deletePreset, (_event, request) => { if (!getTool(request?.toolId)) throw new Error("Unknown tool."); return presets.delete(request); });
   ipcMain.handle(IPC.bootstrap, () => ({ app: { name: "Ace's CFB Toolkit", version: displayAppVersion(app.getVersion()), schemas: SUPPORTED_SCHEMAS.map(schema => schema.version) }, registry: registrySnapshot(), settings: settings.get(), activeSave: saveInfo(sessionActiveSave), paths: { reports: paths.reports, logs: paths.logs } }));
-  ipcMain.handle(IPC.chooseSave, async (_event, purpose) => { const result = await dialog.showOpenDialog({ title: purpose === "equipment-donor" ? "Select a CFB 27 donor save or roster" : "Select a CFB 27 Dynasty or Road To Glory save", properties: ["openFile"], filters: [{ name: "CFB 27 Saves", extensions: ["*" ] }] }); return result.canceled ? null : result.filePaths[0]; });
+  ipcMain.handle(IPC.chooseSave, async (_event, purpose) => { const result = await dialog.showOpenDialog({ title: purpose === "equipment-donor" ? "Select a CFB 27 donor save or roster" : "Select a CFB 27 Save or Roster", properties: ["openFile"], filters: [{ name: "CFB 27 Saves", extensions: ["*" ] }] }); return result.canceled ? null : result.filePaths[0]; });
   ipcMain.handle(IPC.chooseFile, async () => { const result = await dialog.showOpenDialog({ title: "Select a file", properties: ["openFile"], filters: [{ name: "All files", extensions: ["*"] }, { name: "Text files", extensions: ["txt"] }] }); return result.canceled ? null : result.filePaths[0]; });
   ipcMain.handle(IPC.setActiveSave, (_event, candidate) => {
     const activeSave = validateSavePath(candidate);
@@ -206,7 +207,7 @@ function registerIpc() {
 app.whenReady().then(() => {
   if (!ownsInstance) return;
   paths = appPaths(); settings = new SettingsStore(paths.settings); settings.load(); if (settings.get().activeSave) settings.update({ activeSave: null }); logger = new AppLogger(paths.logs); reports = new ReportService(paths.reports); history = new HistoryStore(paths.history); history.load(); reviews = new ReviewSnapshots(path.join(paths.data, "review-snapshots")); initializeUpdates(); registerIpc();
-  if (process.argv.includes("--smoke-test")) { const snapshot = registrySnapshot(); const available = snapshot.tools.filter(tool => tool.status === "available").map(tool => tool.id).sort(), schemasPresent = SUPPORTED_SCHEMAS.every(schema => fs.existsSync(schemaPath(schema.version))); if (snapshot.tools.length !== 11 || JSON.stringify(available) !== JSON.stringify(executableToolIds().sort()) || !schemasPresent || !fs.existsSync(commentaryMapPath())) process.exitCode = 1; app.quit(); return; }
+  if (process.argv.includes("--smoke-test")) { const snapshot = registrySnapshot(); const available = snapshot.tools.filter(tool => tool.status === "available").map(tool => tool.id).sort(), schemasPresent = SUPPORTED_SCHEMAS.every(schema => fs.existsSync(schemaPath(schema.version))); if (snapshot.tools.length !== 12 || JSON.stringify(available) !== JSON.stringify(executableToolIds().sort()) || !schemasPresent || !fs.existsSync(commentaryMapPath())) process.exitCode = 1; app.quit(); return; }
   createWindow(); app.on("activate", () => { if (BrowserWindow.getAllWindows().length === 0) createWindow(); });
 });
 app.on("window-all-closed", () => { if (process.platform !== "darwin") app.quit(); });

@@ -1,4 +1,4 @@
-param([Parameter(Mandatory=$true)][uint32]$TaskProcessId, [switch]$Table)
+param([Parameter(Mandatory=$true)][uint32]$TaskProcessId, [switch]$Table, [ulong]$Address=0x2F6900000, [ValidateRange(1,1048576)][int]$Length=0x70000)
 $ErrorActionPreference = 'Stop'
 if ((Get-Process -Id $TaskProcessId).ProcessName -ne 'CollegeFB27') { throw 'Only CollegeFB27 is in scope.' }
 # Read-only, short reads at previously recovered equipment-string addresses.
@@ -24,6 +24,10 @@ public static class CfbLabelProbe {
       string text=Encoding.ASCII.GetString(b,0,(int)read.ToUInt64());
       var result=new List<Token>();
       foreach(System.Text.RegularExpressions.Match m in Regex.Matches(text,"(?<=\\x00)[ -~]{4,192}(?=\\x00)")) {
+        if (Regex.IsMatch(m.Value,"sleeve|visor",RegexOptions.IgnoreCase)) {
+          result.Add(new Token{Offset=m.Index,Address="0x"+(start+(ulong)m.Index).ToString("X"),Value=m.Value});
+          continue;
+        }
         if (!Regex.IsMatch(m.Value,"^(?:Gear|NeckWear_|FaceGear_|ElbowGear_|ArmTattoo_|LegTattoo_|ThighPad_|Towel2_|CujoMatty_)|turtleneck|balaclava|balaclave|ski ?mask|mouthpiece|pacifier|mouthguard|rubber ?band|tattoo|double sleeve",RegexOptions.IgnoreCase)) continue;
         result.Add(new Token{Offset=m.Index,Address="0x"+(start+(ulong)m.Index).ToString("X"),Value=m.Value});
       }
@@ -48,7 +52,7 @@ public static class CfbLabelProbe {
 }
 '@
 if ($Table) {
-  [CfbLabelProbe]::ReadTable($TaskProcessId,0x2F6900000,0x70000) | ConvertTo-Json -Depth 4
+  [CfbLabelProbe]::ReadTable($TaskProcessId,$Address,$Length) | ConvertTo-Json -Depth 4
   return
 }
 $taskEntries = @()

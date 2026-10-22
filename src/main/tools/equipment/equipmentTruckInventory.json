@@ -1,0 +1,182 @@
+{
+  "author": "ElJax YT",
+  "source": "ELJAX's Equipment Truck. All 12 sleeve IDs, exact case and color labels verified against user-equipped Ohio State WRs in DYNASTY-GEARTRUCK on 2026-10-22: Jeremiah Smith, Brandon Inniss, Chris Henry Jr., Devin McCuin, Kyle Parker and Sedrick Pittman-Jean. Every family observed in both LeftArmWear and RightArmWear. Both visor IDs verified in Visor; labels also match the read-only live menu scan. Saved sleeve/visor elements have no paletteMods or blends.",
+  "items": [
+    {
+      "itemName": "geararmsleeve_teambrandarmsleeveshooter_white",
+      "displayName": "Team Brand Arm Sleeve Shooter White",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [
+        "GearArm_FullSleeve"
+      ],
+      "origin": "eljax"
+    },
+    {
+      "itemName": "geararmsleeve_teambrandarmsleeveshooter_black",
+      "displayName": "Team Brand Arm Sleeve Shooter Black",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [
+        "GearArm_FullSleeve"
+      ],
+      "origin": "eljax"
+    },
+    {
+      "itemName": "geararmsleeve_teambrandarmsleeveshooter_teamcolor",
+      "displayName": "Team Brand Arm Sleeve Shooter Primary",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [
+        "GearArm_FullSleeve"
+      ],
+      "origin": "eljax"
+    },
+    {
+      "itemName": "geararmsleeve_teambrandarmsleeveshooter_secondarycolor",
+      "displayName": "Team Brand Arm Sleeve Shooter Secondary",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [
+        "GearArm_FullSleeve"
+      ],
+      "origin": "eljax"
+    },
+    {
+      "itemName": "geararmsleeve_brandxteamlogoarmsleeve_white",
+      "displayName": "Brand x Team Logo Arm Sleeve White",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [
+        "GearArm_FullSleeve"
+      ],
+      "origin": "eljax"
+    },
+    {
+      "itemName": "geararmsleeve_brandxteamlogoarmsleeve_black",
+      "displayName": "Brand x Team Logo Arm Sleeve Black",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [
+        "GearArm_FullSleeve"
+      ],
+      "origin": "eljax"
+    },
+    {
+      "itemName": "geararmsleeve_brandxteamlogoarmsleeve_teamcolor",
+      "displayName": "Brand x Team Logo Arm Sleeve Primary",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [
+        "GearArm_FullSleeve"
+      ],
+      "origin": "eljax"
+    },
+    {
+      "itemName": "geararmsleeve_brandxteamlogoarmsleeve_secondarycolor",
+      "displayName": "Brand x Team Logo Arm Sleeve Secondary",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [
+        "GearArm_FullSleeve"
+      ],
+      "origin": "eljax"
+    },
+    {
+      "itemName": "geararmsleeve_teambrandlogoarmsleeve_white",
+      "displayName": "Team Brand Logo Arm Sleeve White",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [
+        "GearArm_FullSleeve"
+      ],
+      "origin": "eljax"
+    },
+    {
+      "itemName": "geararmsleeve_teambrandlogoarmsleeve_black",
+      "displayName": "Team Brand Logo Arm Sleeve Black",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [
+        "GearArm_FullSleeve"
+      ],
+      "origin": "eljax"
+    },
+    {
+      "itemName": "geararmsleeve_teambrandlogoarmsleeve_teamcolor",
+      "displayName": "Team Brand Logo Arm Sleeve Primary",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [
+        "GearArm_FullSleeve"
+      ],
+      "origin": "eljax"
+    },
+    {
+      "itemName": "geararmsleeve_teambrandlogoarmsleeve_secondarycolor",
+      "displayName": "Team Brand Logo Arm Sleeve Secondary",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [
+        "GearArm_FullSleeve"
+      ],
+      "origin": "eljax"
+    },
+    {
+      "itemName": "GearVisor_visorTeamOakley_clear",
+      "displayName": "Team Logo Visor",
+      "category": "Visor",
+      "slots": [
+        "Visor"
+      ],
+      "tags": [],
+      "origin": "eljax"
+    },
+    {
+      "itemName": "gearvisor_visorbrandvisors_clear",
+      "displayName": "Team Brand Visor",
+      "category": "Visor",
+      "slots": [
+        "Visor"
+      ],
+      "tags": [],
+      "origin": "eljax"
+    }
+  ]
+}

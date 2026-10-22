@@ -12,9 +12,10 @@ const raw204Inventory = JSON.parse(fs.readFileSync(new URL("./equipmentRaw204Inv
 const mod191Inventory = JSON.parse(fs.readFileSync(new URL("./equipmentMod191Inventory.json", import.meta.url), "utf8"));
 const unlocked097 = JSON.parse(fs.readFileSync(new URL("./equipmentUnlocked097Inventory.json", import.meta.url), "utf8"));
 const unlockedLive210 = JSON.parse(fs.readFileSync(new URL("./equipmentUnlockedLive210Inventory.json", import.meta.url), "utf8"));
+const equipmentTruck = JSON.parse(fs.readFileSync(new URL("./equipmentTruckInventory.json", import.meta.url), "utf8"));
 const liveFacemasks = JSON.parse(fs.readFileSync(new URL("./equipmentLiveFacemasks.json", import.meta.url), "utf8"));
 const modItems = Object.entries(modInventory.mods).flatMap(([origin, mod]) => (mod.equipmentItems ?? []).map(item => ({ ...item, origin })));
-const mergedItems = new Map([...catalog.items, ...modItems, ...colorInventory.items, ...sourcedInventory.items, ...liveFacemasks.items, ...raw204Inventory.items, ...mod191Inventory.items, ...unlocked097.items, ...unlockedLive210.items].map(item => [item.itemName, item]));
+const mergedItems = new Map([...catalog.items, ...modItems, ...colorInventory.items, ...sourcedInventory.items, ...liveFacemasks.items, ...raw204Inventory.items, ...mod191Inventory.items, ...unlocked097.items, ...unlockedLive210.items, ...equipmentTruck.items].map(item => [item.itemName, item]));
 export const EQUIPMENT_ITEMS = Object.freeze([...mergedItems.values()].map(item => {
   const resolved = { ...item, displayName: sourcedInventory.displayNames[item.itemName] ?? item.displayName, ...GENERATION_METADATA.itemOverrides[item.itemName] };
   if (unlocked097.cleatDisplayNames[item.itemName]) resolved.displayName = unlocked097.cleatDisplayNames[item.itemName];
@@ -252,6 +253,11 @@ export const RAW_ACCESSORIES_POOLS = Object.freeze({
   backplates: equipmentItemsFor("Back Plate", item => item.origin === "raw" && canGenerateItem(item)),
   neckwear: EQUIPMENT_ITEMS.filter(item => item.origin === "raw" && ["Neckwear", "Neck Pad"].includes(item.category)),
   skullcaps: EQUIPMENT_ITEMS.filter(item => item.origin === "raw" && item.category === "Guardian Cap")
+});
+
+export const EQUIPMENT_TRUCK_POOLS = Object.freeze({
+  armSleeves: equipmentItemsFor("Arm Wear", item => item.origin === "eljax" && canGenerateItem(item)),
+  visors: equipmentItemsFor("Visor", item => item.origin === "eljax" && canGenerateItem(item))
 });
 
 // Preserve the mouthpiece's form and brand when changing existing colors.
