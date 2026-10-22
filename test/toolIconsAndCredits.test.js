@@ -27,3 +27,9 @@ test('Equipment Truck credits ElJax YT in pool requirements, recolor help and ca
   assert.match(renderer, /ELJAX’s Equipment Truck by ElJax YT/);
   assert.equal(JSON.parse(read('src/main/tools/equipment/equipmentTruckInventory.json')).author, 'ElJax YT');
 });
+
+test('About keeps the source link but does not list optional mod credits', () => {
+  const about = renderer.split(/\r?\n/).find(line => line.includes('else if (state.page === "about")'));
+  assert.match(about, /View the source code on GitHub/);
+  assert.doesNotMatch(about, /Optional mod credits|Bear5|Orckestra|Delonte RAW|ElJax YT/);
+});

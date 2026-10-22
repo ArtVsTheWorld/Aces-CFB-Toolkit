@@ -25,7 +25,10 @@ app.whenReady().then(async()=>{
   const execute=source=>window.webContents.executeJavaScript(source);
   await execute(`window.uiCheck=(value,message)=>{if(!value)throw Error(message)};window.uiWait=async predicate=>{for(let i=0;i<1500;i++){if(predicate())return;await new Promise(resolve=>setTimeout(resolve,40));}throw Error('Timed out: '+content.textContent.slice(-800))};void 0;`);
   await execute(`(async()=>{
-    await uiWait(()=>state.bootstrap);navigate('freshman-equipment');await uiWait(()=>document.querySelector('#equipment-truck'));
+    await uiWait(()=>state.bootstrap);navigate('about');
+    uiCheck(!content.textContent.includes('Optional mod credits')&&!content.textContent.includes('Orckestra'),'About does not list optional mod credits');
+    uiCheck(content.querySelector('a[href="https://github.com/ArtVsTheWorld/Aces-CFB-Toolkit"]'),'About retains source link');
+    navigate('freshman-equipment');await uiWait(()=>document.querySelector('#equipment-truck'));
     uiCheck(document.querySelector('[data-page="jersey-renumber"] .nav-icon svg')&&document.querySelector('[data-page="team-boost"] .nav-icon svg'),'Jersey and Team Boost share the SVG tool icon style');
     const toggle=document.querySelector('#equipment-truck'),entry=document.querySelector('[data-mod-pool-entry="eljax"]');
     uiCheck(!toggle.checked&&entry.hidden,'Equipment Truck starts disabled and its configuration stays hidden');
