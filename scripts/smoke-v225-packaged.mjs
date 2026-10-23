@@ -8,6 +8,7 @@ for(const relative of ['engine-data/C27_486_6.gz','commentary-data/PlayerComment
 console.log(`Verified ${checked} packaged source files/assets, native tuning, version, schema and commentary map.`);
 const checks=[['scripts/smoke-v225.cjs']];
 if(process.argv.includes('--filter-polish'))checks.push(['scripts/smoke-v190-configuration.cjs','--paged-filters','--alignment','--tooltip-redshirt','--scope-force-alignment']);
+if(process.argv.includes('--mod-pool-layout'))checks.push(['scripts/smoke-v190-configuration.cjs','--mod-pool-layout-only']);
 let status=0;
 for(const [script,...flags]of checks){
  const result=spawnSync(require('electron'),[path.resolve(script),'--ui-root='+extracted,...flags],{stdio:'inherit',timeout:240000});

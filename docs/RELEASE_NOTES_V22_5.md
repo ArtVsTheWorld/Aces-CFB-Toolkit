@@ -22,6 +22,7 @@ Roster Generator
 
 Equipment Randomizer
 
+- Cleaned up all three modded equipment-pool windows, including aligned help icons and percentage controls, consistent item spacing, and simpler scrolling
 - Expanded the GameDay Gear / Equipment Truck pool with Brand Logo Chin Covers, QB-only waist playcall bands, and Jersey Number + Cross Thigh Pads
 - Added the Logo Handwarmer as an optional pool item, disabled by default
 - Added missing Unlocked tattoo designs and RAW nose/eye tape and earring/eye-paint combinations to their respective selections

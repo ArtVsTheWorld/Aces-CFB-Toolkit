@@ -8,9 +8,9 @@ Draft release notes are in `RELEASE_NOTES_V22_5.md` and cover changes since v22.
 Upload these three matching files together from
 `dist/v22.5-release/github-release-assets`:
 
-- `Aces-CFB-Toolkit-Setup-22.5.0.exe`: 166,056,969 bytes; SHA-256
-  `73B48685B067B2B60F778E1198556C7AB84349F127A8E6A55A8F4204E8C78D75`.
-- `Aces-CFB-Toolkit-Setup-22.5.0.exe.blockmap`: 175,039 bytes.
+- `Aces-CFB-Toolkit-Setup-22.5.0.exe`: 166,057,143 bytes; SHA-256
+  `36B1B7C20F9066EAEEBA3CBCCCDD84B16C7F0D67719862527B16D6285C9B0444`.
+- `Aces-CFB-Toolkit-Setup-22.5.0.exe.blockmap`: 174,964 bytes.
 - `latest.yml`: 364 bytes; version 22.5.0 and matching installer size/SHA-512.
 
 Suggested release tag: `v22.5`, targeting the v22.5 source commit on `main`.
@@ -25,8 +25,11 @@ The installer is unsigned, so Windows may show a reputation/publisher warning.
 
 ## Verification
 
-- The working source and clean publication checkout each pass all 771 portable
-  source tests, with zero failures. A fresh lockfile-based `npm ci` succeeds.
+- The updated working source passes all 772 portable source tests, with zero
+  failures. The publication checkout matches the working source exactly and
+  passes focused pool/regression checks. The preceding clean publication build
+  passed 771 tests and a fresh lockfile-based `npm ci` before this layout-only
+  follow-up.
 - All 510 packaged source files/assets, bundled schemas, commentary map and
   package metadata match the current source. Installer filename, size, SHA-512
   and byte-identical upload copies are verified.
@@ -43,7 +46,15 @@ The installer is unsigned, so Windows may show a reputation/publisher warning.
   checks do not prove every visual combination or mod load order.
 
 Packaged `resources/app.asar` SHA-256:
-`BADE18587676C734C0A3A56C4A71EAB63552FFAA87B8F4278F87EE3B60B16B13`.
+`7286F927DF1A0C84BC932100462C8B3D17008E093E6C6010AB128785A2806628`.
+
+This refreshed build includes the Randomizer mod-pool window correction. All
+three pools share anchored captions, aligned category/chance controls, compact
+item rows and a single scrolling content area. All 288 category/layout
+combinations pass across light/dark themes, three widths and two text sizes.
+See `V22_5_MOD_POOL_LAYOUT.md`. The earlier matching release set remains under
+`dist/v22.5-before-pool-fix/github-release-assets` for rollback only; do not upload
+those earlier files or mix them with the current set.
 
 The public source includes maintained code, tests, reviewed item metadata, native
 scheme tuning and the original EA identity reference. It excludes personal app

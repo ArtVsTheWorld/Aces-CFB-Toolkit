@@ -30,6 +30,13 @@ app.whenReady().then(async () => {
   const window = new BrowserWindow({ show: false, width: 1480, height: 1000, webPreferences: { preload: path.join(uiRoot, "src/main/preload.cjs"), contextIsolation: true, sandbox: true, offscreen: true, backgroundThrottling: false } });
   const errors = []; window.webContents.on("console-message", details => { const { level, message } = details; if (message.startsWith('[v200]')) console.log(message); if (level === "error" && !message.includes("ERR_FILE_NOT_FOUND") && !message.includes("'frame-ancestors' is ignored")) errors.push(message); });
   await window.loadFile(path.join(uiRoot, "src/renderer/index.html"));
+  if (process.argv.includes('--mod-pool-layout-only')) {
+    await window.webContents.executeJavaScript(`new Promise(resolve=>{const ready=()=>state.bootstrap?resolve():setTimeout(ready,20);ready()})`);
+    await require('./lib/v225-mod-pool-layout.cjs')(window,root);
+    if (errors.length) throw Error(errors.join('\n'));
+    if (runs.length) throw Error('Pool layout checks must not run any tool.');
+    window.destroy();app.quit();return;
+  }
   if (process.argv.includes('--scope-force-alignment-only')) {
     await window.webContents.executeJavaScript(`new Promise(resolve=>{const ready=()=>state.bootstrap?resolve():setTimeout(ready,20);ready()})`);
     await require('./lib/v225-scope-force-alignment.cjs')(window,root);
@@ -349,6 +356,7 @@ app.whenReady().then(async () => {
   if (process.argv.includes('--paged-filters')) await require('./lib/v225-filter-polish.cjs')(window,root);
   if (process.argv.includes('--tooltip-redshirt')) await require('./lib/v225-tooltip-redshirt.cjs')(window,root);
   if (process.argv.includes('--scope-force-alignment')) await require('./lib/v225-scope-force-alignment.cjs')(window,root);
+  if (process.argv.includes('--mod-pool-layout')) await require('./lib/v225-mod-pool-layout.cjs')(window,root);
   if (errors.length) throw new Error("Renderer errors: " + errors.join("\n"));
   if (runs.length !== 1) throw new Error("Configuration windows must never run tools on their own.");
   console.log(result); console.log("Light/dark 1480px screenshots, 760px helmet view, and 760px/520px selection, filter, mouthpiece, tattoo and tape window overflow checks passed.");
