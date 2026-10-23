@@ -5,6 +5,7 @@ import { saveFingerprint } from '../jersey/planStore.js';
 import { loadEquipmentTables, buildRosterPlayerRows, buildRosterPlayerApparel, buildTeamNames, buildTeamApparel, buildFcsTeamIndexes } from './shared.js';
 import { collectEquipmentDonors } from './core/patcher.js';
 import { displayPosition } from '../../../shared/localization.js';
+import { equipmentItem } from './catalog.js';
 
 const enums = JSON.parse(fs.readFileSync(new URL('./rosterEnums.json', import.meta.url), 'utf8'));
 const slots = new Map(Object.entries(enums.LoadoutSlotEnum).map(([key, value]) => [value, key.replace('LoadoutSlot_', '')]));
@@ -17,7 +18,7 @@ const paletteTypes = ['Custom', 'TeamPrimary', 'TeamSecondary', 'TeamTertiary', 
 
 export function decodeRosterEquipmentElement(pin) {
   const slotType = slots.get(pin.SLOT ?? 0);
-  if (!slotType || ['Invalid', 'Max', 'Reserved'].includes(slotType) || typeof pin.ITAN !== 'string' || !pin.ITAN) throw new Error('Unrecognized equipment slot or asset');
+  if (!slotType || ['Invalid', 'Max'].includes(slotType) || typeof pin.ITAN !== 'string' || !pin.ITAN || (slotType === 'Reserved' && equipmentItem(pin.ITAN)?.category !== 'Chin Cover')) throw new Error('Unrecognized equipment slot or asset');
   if (Object.keys(pin).some(key => !['SLOT', 'ITAN', 'IBLD', 'PALM', 'FBIN', 'ITAE', 'ITAG', 'ZORD'].includes(key)) || ['FBIN', 'ITAE', 'ITAG'].some(key => pin[key] !== undefined && pin[key] !== '') || pin.ZORD !== undefined && pin.ZORD !== 0) throw new Error('Unsupported equipment metadata');
   const element = { slotType, itemAssetName: pin.ITAN };
   if (pin.IBLD !== undefined) {

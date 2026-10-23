@@ -8,6 +8,7 @@ import {rosterPreset,modelForPreset} from '../src/main/tools/rosterGenerator/pre
 import {generateRosterPreview,validateRosterPreview} from '../src/main/tools/rosterGenerator/core.js';
 import {finishGeneratedRoster,standardRosterNumbers} from '../src/main/tools/rosterGenerator/finishing.js';
 import {createRosterStrata} from '../src/main/tools/rosterGenerator/sampling.js';
+import {resolveSchemeContext,schemeSchema} from '../src/main/tools/rosterGenerator/schemes.js';
 import {WRITE_FIELDS} from '../src/main/tools/rosterGenerator/contract.js';
 import {runRenumberEngine} from '../src/main/tools/jersey/core/renumberEngine.js';
 import {mulberry32} from '../src/main/tools/longSnap/core.js';
@@ -30,8 +31,8 @@ test('all revised calibers meet the team target and stronger QB rooms trade tale
   const {preview}=build({positionStrength:{QB:8,WR:3,OL:-3}});assert.ok(preview.summary.targetAchieved);assert.ok(preview.summary.positionStrength.QB.actual>72);assert.ok(Math.abs(preview.summary.positionStrength.QB.actual-preview.summary.positionStrength.QB.target)<2);assert.ok(preview.summary.positionStrength.OL.actual<70);assert.ok(Math.abs(preview.summary.newAverage-69)<.1);
 });
 test('scheme weights favor actual supported archetypes without eliminating any',()=>{
-  const air=normalizeGenerationSettings({offensiveScheme:'air-raid',defensiveScheme:'3-4'});assert.equal(archetypeWeight('QB','QB_FieldGeneral',air),3);assert.equal(archetypeWeight('QB','QB_PureScrambler',air),1);assert.equal(archetypeWeight('DT','DT_NoseTackle',air),3);assert.equal(archetypeWeight('CB','CB_Zone',air),1);
-  const a=build({offensiveScheme:'option',defensiveScheme:'nickel'});assert.ok(a.preview.summary.targetAchieved);for(const p of a.preview.players)assert.ok(a.model.byId.has(p.provenance.football));
+  const air=normalizeGenerationSettings({offensiveScheme:'air-raid',defensiveScheme:'3-4'});air.schemeContext=resolveSchemeContext(air,{available:false,preferences:{},requirements:{},commits:{},commitsKnown:false,warnings:[]},schemeSchema('resources/engine-data/C27_486_6.gz'),mulberry32(1));assert.equal(archetypeWeight('QB','QB_Improviser',air),9);assert.equal(archetypeWeight('QB','QB_PureScrambler',air),1);assert.equal(archetypeWeight('DT','DT_NoseTackle',air),9);assert.equal(archetypeWeight('CB','CB_Zone',air),1);
+  const a=build({offensiveScheme:'option',defensiveScheme:'DEF_4_2_5'});assert.ok(a.preview.summary.targetAchieved);for(const p of a.preview.players)assert.ok(a.model.byId.has(p.provenance.football));
 });
 test('tone presets use verified 1–8 tones; names only come from the exact observed head pool',()=>{
   const base=loadObservedCatalog(),appearance=base.catalog.appearances.find(item=>observedFirstNames(base.catalog,item).length>1);assert.ok(appearance);assert.deepEqual(observedFirstNames(base.catalog,appearance),[...new Set(base.catalog.appearances.filter(item=>item.fields.GenericHeadAssetName===appearance.fields.GenericHeadAssetName).map(item=>item.firstToken))].sort());

@@ -1,3 +1,4 @@
+import SelectionOrder from '../src/shared/selectionOrder.cjs';
 import test from "node:test";
 import assert from "node:assert/strict";
 import crypto from "node:crypto";
@@ -15,9 +16,9 @@ const outfit = () => ({ loadouts: [{ loadoutType: "PlayerOnField", loadoutElemen
 ] }] });
 
 test("Japanese and Polynesian catalog styles are individually selectable but never default-selected", () => {
-  assert.equal(UNLOCKED_TATTOO_POOL.filter(item => item.value.includes("Japanese")).length, 14);
-  assert.equal(UNLOCKED_TATTOO_POOL.filter(item => item.value.includes("Polynesian")).length, 11);
-  assert.equal(new Set(UNLOCKED_TATTOO_POOL.map(item => item.value)).size, 51);
+  assert.equal(UNLOCKED_TATTOO_POOL.filter(item => item.value.includes("Japanese")).length, 21);
+  assert.equal(UNLOCKED_TATTOO_POOL.filter(item => item.value.includes("Polynesian")).length, 14);
+  assert.equal(new Set(UNLOCKED_TATTOO_POOL.map(item => item.value)).size, 61);
   for (const item of UNLOCKED_TATTOO_POOL) {
     assert.equal(item.defaultSelected, !/Japanese|Polynesian/.test(item.value));
     assert.deepEqual(normalizeTattooSelection([item.value, item.value]), [item.value]);
@@ -61,7 +62,7 @@ test("tattoo labels describe verified style and coverage and keep stable asset I
 });
 
 test("tattoo checkbox pool has style headings, explicit opt-in defaults, and searchable asset identifiers", () => {
-  const context = vm.createContext({ localizedPosition: value => value, positionCompare: () => 0, escapeHtml: value => String(value), multiSelectEmptyMeaning: () => "None" });
+  const context = vm.createContext({ToolkitSelectionOrder:SelectionOrder, localizedPosition: value => value, positionCompare: () => 0, escapeHtml: value => String(value), multiSelectEmptyMeaning: () => "None" });
   vm.runInContext(fs.readFileSync(new URL("../src/renderer/selectors.js", import.meta.url), "utf8"), context);
   const html = context.checkboxPicker("unlocked-tattoo-pool", "Tattoo pool", UNLOCKED_TATTOO_POOL, "Choose designs", DEFAULT_UNLOCKED_TATTOO_SELECTION);
   assert.equal((html.match(/data-option-section=/g) ?? []).length, 4);

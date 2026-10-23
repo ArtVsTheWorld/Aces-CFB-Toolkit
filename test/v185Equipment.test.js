@@ -74,7 +74,7 @@ test("balancing custom position/cohort targets uses minimal swaps, deterministic
   }
 });
 test("custom repair-only replaces zero-weight helmets without balancing; OL and protected players stay unchanged", () => {
-  const records = [player(0), player(1), player(2, "LT"), { ...player(3), IsNIL: true }];
+  const records = [player(0), player(1), player(2, "LT"), { ...player(3), IsNIL: true, PLYR_ASSETNAME:'SmithJeremiah_8726' }];
   const gear = [item("HeadWear", "GearHelmet_SchuttF7"), item("FaceMask", "GearFaceMask_F72Bar")];
   const before = records.map(() => visual(gear)), ordinary = structuredClone(before), balanced = structuredClone(before);
   const settings = config(weights("GearHelmet_SchuttF7Pro"));
@@ -110,7 +110,7 @@ for (const style of ["shooter", "none", "mixed"]) test(`Bear’s Pads targeted c
   assert.equal(correctBearsPadsSleeves(structuredClone(before), ["Standard", "Thin"], style, mulberry32(1)).length, 0);
 });
 test("targeted passes respect scope/NIL/shared-row protection and do not affect presentation loadouts", () => {
-  const records = [player(0), { ...player(1), IsNIL: true }, player(2), { ...player(3), CharacterVisuals: ref(2) }];
+  const records = [player(0), { ...player(1), IsNIL: true, PLYR_ASSETNAME:'SmithJeremiah_8726' }, player(2), { ...player(3), CharacterVisuals: ref(2) }];
   const visuals = records.map(() => visual([item("LeftArmWear", "GearArmSleeve_NikeProDriFitSleeve_Black"), item("WaistWear", "Handwarmer_Standard"), item("HeadWear", "Keep")]));
   const withPresentation = JSON.parse(visuals[0].RawData);
   withPresentation.loadouts.push({ loadoutType: "PlayerPresentation", loadoutElements: [item("LeftArmWear", "GearArmSleeve_NikeProDriFitSleeve_Black"), item("WaistWear", "Handwarmer_Standard")] });

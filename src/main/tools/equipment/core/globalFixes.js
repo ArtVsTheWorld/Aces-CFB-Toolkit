@@ -1,3 +1,4 @@
+import {isOriginalEaPlayer,originalEaProtectionEnabled} from '../../../services/originalEaPlayers.js';
 import { helmetPopulationAudit } from "./helmetPopulation.js";
 import { parseRef, sf } from "../openSave.js";
 import { EQUIPMENT_COLOR_THEMES, equipmentDisplayName, isInvalidMouthpieceAsset, mouthpieceColorVariants, UNLOCKED_POOLS } from "../catalog.js";
@@ -306,7 +307,7 @@ export function isApprovedHelmetForPosition(helmet, position, allowVicis = false
 
 export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visualsTableId, options = {}) {
   if (options.clearTattoos && options.unlockedTattooFix) throw new Error('Clear Tattoos and Add Tattoos cannot both be enabled. Choose one tattoo pass.');
-  const { helmetFix = false, rolledJerseyFix = false, sockFix = false, sleeveCompatibilityFix = false, nikeThighPads = false, visorFix = false, unlockedRecolorFix = false, unlockedColorTheme = "weighted", unlockedMouthpieceFix = false, allowRandomMouthpieceColors = false, unlockedTattooFix = false, unlockedTattooCap = 40, undershirtColor = "weighted", pantsFix = false, skipNilPlayers = true, seed = 1, teamNames = new Map(), fcsTeamIndexes = new Set(), excludedTeamIndexes = new Set(), activePlayerRows, eligiblePlayer = () => true } = options;
+  const { helmetFix = false, rolledJerseyFix = false, sockFix = false, sleeveCompatibilityFix = false, nikeThighPads = false, visorFix = false, unlockedRecolorFix = false, unlockedColorTheme = "weighted", unlockedMouthpieceFix = false, allowRandomMouthpieceColors = false, unlockedTattooFix = false, unlockedTattooCap = 40, undershirtColor = "weighted", pantsFix = false, protectOriginalEaPlayers = originalEaProtectionEnabled(options), seed = 1, teamNames = new Map(), fcsTeamIndexes = new Set(), excludedTeamIndexes = new Set(), activePlayerRows, eligiblePlayer = () => true } = options;
   const visorFrequencies = normalizeVisorFrequencies(options.visorFrequencies), facemaskPools = normalizeFacemaskPools(options.facemaskPools);
   const rng = mulberry32((seed ^ 0xA5A5A5A5) >>> 0);
   const helmetDistribution = normalizeHelmetDistribution(helmetFix ? options.helmetDistribution : undefined);
@@ -332,7 +333,7 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
     if (activePlayerRows instanceof Set && !activePlayerRows.has(row)) return;
     const list = playersByVisualRow.get(ref.row) ?? [];
     const teamIndex = Number(sf(record, "TeamIndex"));
-    list.push({ record, row, position: String(sf(record, "Position") ?? ""), bodyType: String(sf(record, "CharacterBodyType") ?? ""), isNil: Boolean(sf(record, "IsNIL")), isFcs: fcsTeamIndexes.has(teamIndex), excluded: excludedTeamIndexes.has(teamIndex) });
+    list.push({ record, row, position: String(sf(record, "Position") ?? ""), bodyType: String(sf(record, "CharacterBodyType") ?? ""), eaProtected: isOriginalEaPlayer(record), isFcs: fcsTeamIndexes.has(teamIndex), excluded: excludedTeamIndexes.has(teamIndex) });
     playersByVisualRow.set(ref.row, list);
   });
 
@@ -341,21 +342,21 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
     const visual = visualsRecords[visualsRow]; if (!visual || visual.isEmpty) continue;
     for (const player of players) if (legitimateRosterPlayer(player.record, teamNames, fcsTeamIndexes)) {
       const teamIndex = Number(sf(player.record, "TeamIndex"));
-      uniformEntries.push({ visualsRow, position: player.position, teamIndex, team: teamNames.get(teamIndex) ?? `Team ${teamIndex}`, cohort: player.isFcs ? "fcs" : "fbs", raw: sf(visual, "RawData"), editable: players.length === 1 && allPlayerReferences.get(visualsRow) === 1 && !(skipNilPlayers && player.isNil) && !player.excluded });
+      uniformEntries.push({ visualsRow, position: player.position, teamIndex, team: teamNames.get(teamIndex) ?? `Team ${teamIndex}`, cohort: player.isFcs ? "fcs" : "fbs", raw: sf(visual, "RawData"), editable: players.length === 1 && allPlayerReferences.get(visualsRow) === 1 && !(protectOriginalEaPlayers && player.eaProtected) && !player.excluded });
     }
   }
   const uniformPlan = buildUniformStylePlan(uniformEntries, options, mulberry32((seed ^ 0x20970101) >>> 0));
   const lowerJerseyChanges = [], cutoffPantsChanges = [];
   const helmetEntries = [], helmetAfter = new Map();
   if (helmetFix && helmetDistribution) for (const players of playersByVisualRow.values()) for (const player of players) {
-    if (!(skipNilPlayers && player.isNil) && !player.excluded) effectiveHelmetWeights(helmetDistribution, player.position);
+    if (!(protectOriginalEaPlayers && player.eaProtected) && !player.excluded) effectiveHelmetWeights(helmetDistribution, player.position);
   }
   if (helmetFix) for (const [visualsRow, players] of playersByVisualRow) {
     // Balancing uses single-owner records only. The existing correction path
     // still protects shared rows if even one linked player is excluded.
     if (players.length !== 1 || allPlayerReferences.get(visualsRow) !== 1) continue;
     const player = players[0];
-    if ((skipNilPlayers && player.isNil) || player.excluded || (!helmetDistribution && OFFENSIVE_LINE_POSITIONS.has(player.position))) continue;
+    if ((protectOriginalEaPlayers && player.eaProtected) || player.excluded || (!helmetDistribution && OFFENSIVE_LINE_POSITIONS.has(player.position))) continue;
     if (!legitimateRosterPlayer(player.record, teamNames, fcsTeamIndexes)) continue;
     const visual = visualsRecords[visualsRow], loadouts = visual && !visual.isEmpty ? onFieldLoadouts(sf(visual, "RawData")) : [];
     if (!loadouts.length) continue;
@@ -372,7 +373,7 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
   if (unlockedTattooFix) for (const [visualsRow, players] of playersByVisualRow) {
     if (players.length !== 1 || allPlayerReferences.get(visualsRow) !== 1) continue;
     const player = players[0];
-    if ((skipNilPlayers && player.isNil) || player.excluded) continue;
+    if ((protectOriginalEaPlayers && player.eaProtected) || player.excluded) continue;
     if (activePlayerRows instanceof Set && !activePlayerRows.has(player.row)) continue;
     if (!UNLOCKED_TATTOO_ELIGIBLE_POSITIONS.has(String(player.position).toUpperCase())) continue;
     const visual = visualsRecords[visualsRow];
@@ -440,7 +441,7 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
   for (const [visualsRow, players] of playersByVisualRow) {
     // A shared record cannot be edited without also changing every player who
     // references it, so protect the whole row if any linked player is NIL or excluded.
-    if (allPlayerReferences.get(visualsRow) !== players.length || players.some(player => (skipNilPlayers && player.isNil) || player.excluded) || new Set(players.map(player => player.isFcs)).size > 1) continue;
+    if (allPlayerReferences.get(visualsRow) !== players.length || players.some(player => (protectOriginalEaPlayers && player.eaProtected) || player.excluded) || new Set(players.map(player => player.isFcs)).size > 1) continue;
     const visual = visualsRecords[visualsRow];
     if (!visual || visual.isEmpty || typeof sf(visual, "RawData") !== "string") continue;
     let parsed;

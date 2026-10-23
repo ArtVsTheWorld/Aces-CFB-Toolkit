@@ -1,4 +1,17 @@
 // Additional pages reuse the shared session, preview, history and logo helpers.
+function syncNilTargetChoices() {
+  const control = document.getElementById('nil-target');
+  if (!control) return;
+  content.querySelectorAll('[name="nil-target-choice"]').forEach(input => input.checked = input.value === control.value);
+}
+function bindNilTargetChoices() {
+  const control = document.getElementById('nil-target');
+  content.querySelectorAll('[name="nil-target-choice"]').forEach(input => input.addEventListener('change', () => {
+    if (!input.checked) return;
+    control.value = input.value; control.dispatchEvent(new Event('change', { bubbles: true }));
+  }));
+  control.addEventListener('change', syncNilTargetChoices); syncNilTargetChoices();
+}
 async function nilTogglePage(tool) {
   if (!state.activeSave?.exists) { content.innerHTML = `${toolHeader(tool)}${inputCard()}`; bindCommon(); return; }
   const savePath = state.activeSave.path;
@@ -8,8 +21,8 @@ async function nilTogglePage(tool) {
     let prepared = state.prepared.get(key);
     if (!prepared) { prepared = await window.cfbToolkit.prepareTool({ toolId: tool.id, savePath }); state.prepared.set(key, prepared); }
     if (state.page !== tool.id || state.activeSave?.path !== savePath) return;
-    content.innerHTML = `${toolHeader(tool)}<div class="standard-config-workspace"><section class="ops-section"><header class="ops-section-header"><span class="step-number">1</span><div><h2>Target NIL Value</h2><p>Choose the value to write to matching players.</p></div></header><div class="ops-section-body"><label for="nil-target">New NIL Flag</label><select id="nil-target"><option value="false">NIL = False — Allow In-Game Editing</option><option value="true">NIL = True — Restrict In-Game Editing</option></select></div></section><section class="ops-section"><header class="ops-section-header"><span class="step-number">2</span><div><h2>Player Scope</h2><p>Leave every filter empty to target the entire active dynasty roster, or combine filters to narrow it down.</p></div></header><div class="ops-section-body"><div class="compact-grid">${teamPicker("nil-teams", "Teams", prepared.teams, "Empty means all teams.")}${multiSelect("nil-players", "Specific Players", prepared.players, "Empty means all players who match the other filters.")}</div><div class="compact-grid selector-grid">${multiSelect("nil-positions", "Positions", [...prepared.positions].sort(positionCompare).map(value => ({ value, label: localizedPosition(value) })))}${multiSelect("nil-classes", "Class Years", prepared.classes)}${multiSelect("nil-redshirts", "Redshirt Status", prepared.redshirtStatuses.map(value => ({ value, label: ({ Eligible: "Not Yet Redshirted", Current: "Currently Redshirting", Previous: "Previously Redshirted" })[value] })), "Empty includes every redshirt status. Previously Redshirted + Sophomore selects redshirt sophomores.")}</div></div></section><div class="actions"><button class="button" id="preview">Preview NIL Changes →</button></div></div>${standardPreviewWorkspace("NIL Flag Preview", "Every matching player is shown, including players already at the requested value. Only different NIL flags are written.", "apply")}`;
-    bindCommon(); bindRun(tool.id); restoreToolSettings();
+    content.innerHTML = `${toolHeader(tool)}<div class="standard-config-workspace nil-toggle-workspace"><section class="ops-section"><header class="ops-section-header"><span class="step-number">1</span><div><h2>Target NIL Value</h2><p>Choose the value to write to matching players.</p></div></header><div class="ops-section-body"><strong>New NIL Flag</strong><div class="mode-choice-grid nil-flag-choices" role="group" aria-label="New NIL Flag"><label class="mode-card"><input type="radio" name="nil-target-choice" value="false" checked><span><strong>NIL = False</strong><small>Allow In-Game Editing</small></span></label><label class="mode-card"><input type="radio" name="nil-target-choice" value="true"><span><strong>NIL = True</strong><small>Restrict In-Game Editing</small></span></label></div><select id="nil-target" hidden aria-hidden="true" tabindex="-1"><option value="false">NIL = False</option><option value="true">NIL = True</option></select></div></section><section class="ops-section"><header class="ops-section-header"><span class="step-number">2</span><div><h2>Player Scope</h2><p>Leave every filter empty to target the entire active dynasty roster, or combine filters to narrow it down.</p></div></header><div class="ops-section-body"><div class="compact-grid">${teamPicker("nil-teams", "Teams", prepared.teams, "Empty means all teams.")}${multiSelect("nil-players", "Specific Players", prepared.players, "Empty means all players who match the other filters.")}</div><div class="compact-grid selector-grid">${multiSelect("nil-positions", "Positions", [...prepared.positions].sort(positionCompare).map(value => ({ value, label: localizedPosition(value) })))}${multiSelect("nil-classes", "Class Years", prepared.classes)}${redshirtScopeMarkup("nil-redshirts")}</div></div></section><div class="actions"><button class="button" id="preview">Preview NIL Changes →</button></div></div>${standardPreviewWorkspace("NIL Flag Preview", "Every matching player is shown, including players already at the requested value. Only different NIL flags are written.", "apply")}`;
+    bindCommon(); bindRun(tool.id); restoreToolSettings(); bindNilTargetChoices();
     const cached = state.genericPreviews.get(tool.id);
     if (cached) { renderResult(document.querySelector("#run-output"), cached); document.querySelector("#apply").disabled = !cached.planId; showStandardPreviewStage(true); }
   } catch (error) { showError(readableError(error)); }

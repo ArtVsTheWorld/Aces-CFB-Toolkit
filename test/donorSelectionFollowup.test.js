@@ -1,3 +1,4 @@
+import SelectionOrder from '../src/shared/selectionOrder.cjs';
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -5,7 +6,7 @@ import vm from "node:vm";
 
 const read = file => fs.readFileSync(new URL(file, import.meta.url), "utf8");
 function selectorContext() {
-  const context = vm.createContext({ localizedPosition: value => value, positionCompare: (a, b) => a.localeCompare(b), escapeHtml: value => String(value ?? "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]), multiSelectEmptyMeaning: () => "None" });
+  const context = vm.createContext({ToolkitSelectionOrder:SelectionOrder, localizedPosition: value => value, positionCompare: (a, b) => a.localeCompare(b), escapeHtml: value => String(value ?? "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]), multiSelectEmptyMeaning: () => "None" });
   vm.runInContext(read("../src/renderer/selectors.js"), context);
   return context;
 }
@@ -56,5 +57,5 @@ test("top bar and footer both display the existing bootstrap app version", () =>
   const index = read("../src/renderer/index.html"), renderer = read("../src/renderer/renderer.js");
   assert.match(index, /<header class="topbar">[\s\S]*id="topbar-app-version"/);
   assert.match(renderer, /querySelectorAll\("#app-version,#topbar-app-version"\)[^\n]+snapshot.app.version/);
-  assert.equal(JSON.parse(read("../package.json")).version, "22.0.0", "The current packaged release version");
+  assert.equal(JSON.parse(read("../package.json")).version, "22.5.0", "The current packaged release version");
 });

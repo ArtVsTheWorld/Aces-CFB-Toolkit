@@ -13,9 +13,11 @@ const mod191Inventory = JSON.parse(fs.readFileSync(new URL("./equipmentMod191Inv
 const unlocked097 = JSON.parse(fs.readFileSync(new URL("./equipmentUnlocked097Inventory.json", import.meta.url), "utf8"));
 const unlockedLive210 = JSON.parse(fs.readFileSync(new URL("./equipmentUnlockedLive210Inventory.json", import.meta.url), "utf8"));
 const equipmentTruck = JSON.parse(fs.readFileSync(new URL("./equipmentTruckInventory.json", import.meta.url), "utf8"));
+const offlineInventory = JSON.parse(fs.readFileSync(new URL("./equipmentOfflineInventory.json", import.meta.url), "utf8"));
+const offlineLabels = new Map(Object.entries(offlineInventory.displayNames).map(([id, label]) => [id.toLowerCase(), label]));
 const liveFacemasks = JSON.parse(fs.readFileSync(new URL("./equipmentLiveFacemasks.json", import.meta.url), "utf8"));
 const modItems = Object.entries(modInventory.mods).flatMap(([origin, mod]) => (mod.equipmentItems ?? []).map(item => ({ ...item, origin })));
-const mergedItems = new Map([...catalog.items, ...modItems, ...colorInventory.items, ...sourcedInventory.items, ...liveFacemasks.items, ...raw204Inventory.items, ...mod191Inventory.items, ...unlocked097.items, ...unlockedLive210.items, ...equipmentTruck.items].map(item => [item.itemName, item]));
+const mergedItems = new Map([...catalog.items, ...modItems, ...colorInventory.items, ...sourcedInventory.items, ...liveFacemasks.items, ...raw204Inventory.items, ...mod191Inventory.items, ...unlocked097.items, ...unlockedLive210.items, ...equipmentTruck.items, ...offlineInventory.items].map(item => [item.itemName, item]));
 export const EQUIPMENT_ITEMS = Object.freeze([...mergedItems.values()].map(item => {
   const resolved = { ...item, displayName: sourcedInventory.displayNames[item.itemName] ?? item.displayName, ...GENERATION_METADATA.itemOverrides[item.itemName] };
   if (unlocked097.cleatDisplayNames[item.itemName]) resolved.displayName = unlocked097.cleatDisplayNames[item.itemName];
@@ -34,7 +36,7 @@ export const canGenerateItem = item => item?.semantic.poolEligible === true;
 
 export function equipmentDisplayName(itemName) {
   const value = String(itemName ?? "");
-  return TATTOO_DISPLAY_NAMES.get(value) || BY_ITEM_NAME.get(value)?.displayName || sourcedInventory.displayNames[value] || unlocked097.observedDisplayNames[value] || FACEPAINT_DISPLAY_NAMES.get(value) || value;
+  return TATTOO_DISPLAY_NAMES.get(value) || BY_ITEM_NAME.get(value)?.displayName || sourcedInventory.displayNames[value] || unlocked097.observedDisplayNames[value] || FACEPAINT_DISPLAY_NAMES.get(value) || offlineLabels.get(value.toLowerCase()) || value;
 }
 
 const FACEPAINT_DISPLAY_NAMES = new Map([
@@ -84,6 +86,16 @@ raw204Inventory.colorFamilies.forEach(registerExplicitFamily);
 // All four ItemInfo labels rechecked in the user's live Unlocked session on
 // 2026-10-20 (repeated ItemName fields and DisplayName +56 agree).
 registerExplicitFamily({white:'G_CompressionT_Crew_ShortSleeve_BasicJ_WHI',black:'G_CompressionT_Crew_ShortSleeve_BasicJ_BLA',primary:'G_CompressionT_Crew_ShortSleeve_BasicJ_PRI',secondary:'G_CompressionT_Crew_ShortSleeve_BasicJ_SEC'});
+// GameDay Gear 2.0 has its own InnerShirt IDs, verified in the decoded mod
+// definitions. Recolor existing sleeves only; do not add them to generation pools.
+// Jersey Color is an input variant, not a fifth accessory-color target.
+registerExplicitFamily({
+  white: 'gear_undershirt_irishjamo_whi',
+  black: 'gear_undershirt_irishjamo_bla',
+  primary: 'gear_undershirt_irishjamo_pri',
+  secondary: 'gear_undershirt_irishjamo_sec',
+  base: 'gear_undershirt_irishjamo_jer'
+});
 registerExplicitFamily({
   white: "G_CompressionT_Crew_ShortSleeve_Basic_WHI",
   black: "G_CompressionT_Crew_ShortSleeve_Basic_BLA",
@@ -123,9 +135,8 @@ registerExplicitFamily({
 });
 EXPLICIT_COLOR_LOOKUP.set("GearArmSleeve_NikeProDriFitSleeve2a_Black",
   EXPLICIT_COLOR_LOOKUP.get("GearArmSleeve_NikeProDriFitSleeve2_Black"));
-registerExplicitFamily({
-  black: "GearNeckpad_VintageNeckRoll", white: "GearNeckpad_VintageSingleNeckRoll"
-});
+// These legacy IDs have different slots in Unlocked (FaceWear vs Neckpad).
+// They are not interchangeable black/white variants.
 registerExplicitFamily({ black: "FaceGear_BalaclavaOverNose", white: "FaceGear_BalaclavaOverNose_White", primary: "FaceGear_BalaclavaOverNose_Primary", secondary: "FaceGear_BalaclavaOverNose_Secondary" });
 for (const family of sourcedInventory.partialColorFamilies) registerExplicitFamily(family);
 // The menu calls this "Black", but CRASHTEST confirms blue/pink artwork.
@@ -257,7 +268,11 @@ export const RAW_ACCESSORIES_POOLS = Object.freeze({
 
 export const EQUIPMENT_TRUCK_POOLS = Object.freeze({
   armSleeves: equipmentItemsFor("Arm Wear", item => item.origin === "eljax" && canGenerateItem(item)),
-  visors: equipmentItemsFor("Visor", item => item.origin === "eljax" && canGenerateItem(item))
+  visors: equipmentItemsFor("Visor", item => item.origin === "eljax" && canGenerateItem(item)),
+  chinCovers: equipmentItemsFor("Chin Cover", item => item.origin === "eljax" && canGenerateItem(item)),
+  waistPlaycalls: equipmentItemsFor("Waist Playcall Band", item => item.origin === "eljax" && canGenerateItem(item)),
+  handwarmers: equipmentItemsFor("Handwarmer", item => item.origin === "eljax" && canGenerateItem(item)),
+  thighPads: equipmentItemsFor("Thigh Pads", item => item.origin === "eljax" && canGenerateItem(item))
 });
 
 // Preserve the mouthpiece's form and brand when changing existing colors.

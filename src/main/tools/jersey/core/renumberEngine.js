@@ -6,7 +6,7 @@ import { sortRoster } from "./playerSorter.js";
 import { applyTeamSpecificRules } from "./teamRules.js";
 import { applyRetiredNumberRules } from "./retiredNumbers.js";
 import { logChange, logDisplacement, logDuplicate, logFallbackChange, logRetiredChange, logWarning } from "./logger.js";
-import { isProtectedNil } from "./nilPolicy.js";
+import { isProtectedPlayer } from "./playerProtection.js";
 
 const createStats = () => ({
   playersEvaluated: 0,
@@ -30,7 +30,7 @@ const createStats = () => ({
   prestigeUnfilledDetails: []
 });
 
-const movable = player => !isProtectedNil(player) && !player.teamRuleLocked;
+const movable = player => !isProtectedPlayer(player) && !player.teamRuleLocked;
 const preferredSet = player => new Set([...(RULES[player.Position]?.preferred ?? []).flat()]);
 const primarySet = player => new Set(RULES[player.Position]?.preferred?.[0] ?? []);
 const fallbackSet = player => new Set([...(RULES[player.Position]?.fallback ?? []).flat()]);
@@ -514,7 +514,7 @@ export function runRenumberEngine(teamGroups, teamNames, {
   if (enableRetiredNumbers) applyRetiredNumberRules(teamGroups, teamNames, customRetired);
 
   const allPlayers = [...teamGroups.values()].flatMap(team => [...team.offense, ...team.defense, ...(team.specialists ?? [])]);
-  const initialSuboptimal = allPlayers.filter(player => !isProtectedNil(player) && !isLegalNumber(player)).length;
+  const initialSuboptimal = allPlayers.filter(player => !isProtectedPlayer(player) && !isLegalNumber(player)).length;
 
   if (enableTeamRules) applyTeamSpecificRules(teamGroups, teamNames, stats, random, customTraditions);
   if (enablePromotions) releaseTrueFreshmanClaims(teamGroups);
@@ -532,6 +532,6 @@ export function runRenumberEngine(teamGroups, teamNames, {
   stats.retiredNumbersCorrected = allPlayers.filter(player =>
     player.originalJerseyNum !== player.JerseyNum && player.retiredNumbers?.has(player.originalJerseyNum)
   ).length;
-  stats.stillSuboptimal = allPlayers.filter(player => !isProtectedNil(player) && !isLegalNumber(player)).length;
+  stats.stillSuboptimal = allPlayers.filter(player => !isProtectedPlayer(player) && !isLegalNumber(player)).length;
   return { stats, initialSuboptimal };
 }

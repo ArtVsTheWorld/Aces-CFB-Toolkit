@@ -13,7 +13,7 @@ const inventory = JSON.parse(fs.readFileSync(new URL('../src/main/tools/equipmen
 const gear = (slotType, itemAssetName) => ({ slotType, itemAssetName });
 const outfit = () => [{ loadoutType: 'PlayerOnField', loadoutElements: [gear('HeadWear', 'GearHelmet_Speed_Flex'), gear('LeftArmWear', 'ArmSleeve_None'), gear('RightArmWear', 'ArmSleeve_None'), gear('Visor', 'GearVisor_None'), gear('LeftHandWear', 'GearHand_None')] }];
 const get = (loadouts, slot) => loadouts[0].loadoutElements.find(element => element.slotType === slot)?.itemAssetName;
-const settings = (category, items, chance = 100) => ({ armSleeves: { chance: 0, items: [] }, visors: { chance: 0, items: [] }, [category]: { chance, items } });
+const settings = (category, items, chance = 100) => ({ ...Object.fromEntries(modPoolDefinitions().eljax.map(entry => [entry.id, { chance: 0, items: [] }])), [category]: { chance, items } });
 
 test('Equipment Truck contains exactly the 14 verified save IDs, readable labels and correct side slots', () => {
   assert.equal(inventory.items.length, 14);
@@ -49,7 +49,7 @@ test('every sleeve recolors to all four verified colors without changing style, 
 
 test('Truck selection is isolated from Unlocked, RAW and facepaint, including old preset migrations', () => {
   const definitions = modPoolDefinitions();
-  assert.deepEqual(definitions.eljax.map(category => category.id), ['armSleeves', 'visors']);
+  assert.deepEqual(definitions.eljax.map(category => category.id), ['armSleeves', 'visors', 'chinCovers', 'waistPlaycalls', 'handwarmers', 'thighPads']);
   const otherIds = new Set([...Object.values(UNLOCKED_POOLS).flat(), ...Object.values(RAW_ACCESSORIES_POOLS).flat()].map(item => item.itemName));
   for (const item of inventory.items) assert.equal(otherIds.has(item.itemName), false);
   assert.equal(modPoolEditorCatalog().eljax[0].items.length, 12);

@@ -33,7 +33,7 @@ test('Mapper discovers implicit facemasks and persists a same-slot replacement w
 
 test('regeneration preserves funded team NIL totals exactly across Preview/Apply/reopen',{timeout:180000,skip:!fs.existsSync(fixture)},async t=>{
   const context=copyContext(t,'cfb-v215-roster-'),loaded=await loadEquipmentTables(context.savePath,schemaPath),rows=mapperPlayers(loaded).filter(player=>['Georgia','LSU'].includes(player.team)),before=snapshotVisualsForVerification(loaded.visuals,snapshotVisualRawData(loaded.visuals.records)),fingerprint=saveFingerprint(context.savePath);
-  const funding=rows.map((player,index)=>({table:'players',row:player.row,field:'CurrentNILCompensation',oldValue:sf(loaded.players.records[player.row],'CurrentNILCompensation'),newValue:10+index%17}));
+  const funding=rows.map((player,index)=>({table:'players',row:player.row,field:'CurrentNILCompensation',oldValue:sf(loaded.players.records[player.row],'CurrentNILCompensation'),newValue:5*(10+index%17)}));
   for(const item of funding)loaded.players.records[item.row][item.field]=item.newValue;
   await saveEquipmentCandidate(loaded,schemaPath,before,funding,fingerprint);
   const funded=saveFingerprint(context.savePath),expected=Object.fromEntries(['Georgia','LSU'].map(team=>[team,rows.filter(player=>player.team===team).reduce((sum,player)=>sum+funding.find(item=>item.row===player.row).newValue,0)]));
@@ -41,5 +41,11 @@ test('regeneration preserves funded team NIL totals exactly across Preview/Apply
   for(const team of preview.details.teams)assert.deepEqual(team.nilBudget,{before:expected[team.team],after:expected[team.team]});
   const plan=takePlan(preview.planId),tampered=plan.rosters[0].players[0];tampered.fields.CurrentNILCompensation++;await assert.rejects(runRosterGenerator({...context,mode:'apply',options:{planId:preview.planId,confirmRegeneration:true}}),/NIL compensation/);assert.equal(saveFingerprint(context.savePath),funded);tampered.fields.CurrentNILCompensation--;
   const applied=await runRosterGenerator({...context,mode:'apply',options:{planId:preview.planId,confirmRegeneration:true}});assert.equal(saveFingerprint(applied.backupPath),funded);const reopened=await loadEquipmentTables(context.savePath,schemaPath);
-  for(const roster of plan.rosters){assert.equal(roster.players.reduce((sum,player)=>sum+sf(reopened.players.records[player.row],'CurrentNILCompensation'),0),expected[roster.team.name]);for(const player of roster.players)assert.equal(sf(reopened.players.records[player.row],'CurrentNILCompensation'),player.fields.CurrentNILCompensation);}
+  for(const roster of plan.rosters){
+    assert.equal(roster.players.reduce((sum,player)=>sum+sf(reopened.players.records[player.row],'CurrentNILCompensation'),0),expected[roster.team.name]);
+    for(const player of roster.players){
+      assert.equal(sf(reopened.players.records[player.row],'CurrentNILCompensation'),player.fields.CurrentNILCompensation);
+      assert.equal(sf(reopened.players.records[player.row],'BaseNILValue'),player.fields.CurrentNILCompensation);
+    }
+  }
 });

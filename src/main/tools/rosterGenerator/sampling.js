@@ -18,7 +18,7 @@ export function rosterSamplingPolicy(model,settings){
   const development=Object.fromEntries(DEVELOPMENT.map(tier=>[tier,100*generated.filter(profile=>profile.development===tier).length/generated.length]));
   const overrides={'dead-end':[100,0,0,0],low:[88,11.5,.4,.1],high:[45,25,10,5],sky:[25,35,15,10]};
   if(overrides[settings.rosterPotential])DEVELOPMENT.forEach((tier,i)=>development[tier]=overrides[settings.rosterPotential][i]);
-  const classes=settings.rosterAge==='seniors'?{Senior:1}:settings.rosterAge==='youth'?{Freshman:65,Sophomore:30,Junior:5}:settings.rosterAge==='veteran'?{Freshman:10,Sophomore:20,Junior:30,Senior:40}:Object.fromEntries(YEARS.map(year=>[year,reference.filter(profile=>profile.classYear===year).length]));
+  const classes=settings.rosterAge==='seniors'?{Senior:1}:settings.rosterAge==='youth'?{Freshman:40,Sophomore:30,Junior:20,Senior:10}:settings.rosterAge==='veteran'?{Freshman:10,Sophomore:20,Junior:30,Senior:40}:Object.fromEntries(YEARS.map(year=>[year,reference.filter(profile=>profile.classYear===year).length]));
   const redshirts=Object.fromEntries(YEARS.map(year=>[year,Object.fromEntries(['Eligible','Ineligible','Previous'].map(status=>[status,settings.rosterAge==='seniors'?(status==='Previous'?1:0):settings.rosterAge==='youth'?(status==='Eligible'?75:status==='Previous'?25:0):reference.filter(profile=>profile.classYear===year&&profile.redshirt===status).length*(settings.rosterAge==='veteran'&&status==='Previous'?1.6:1)]))]));
   return {development,classes,redshirts,age:settings.rosterAge,potential:settings.rosterPotential,classPolicy:'Roster Age controls class years and redshirt experience.',developmentPolicy:'Roster Potential controls development and rating limits.'};
 }

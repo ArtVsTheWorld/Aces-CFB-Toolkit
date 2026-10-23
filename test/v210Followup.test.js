@@ -1,3 +1,4 @@
+import SelectionOrder from '../src/shared/selectionOrder.cjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -16,7 +17,7 @@ test('randomized talent budgets use integer shares, preserve specialists and the
   assert.ok(seen.size>90);assert.deepEqual(TALENT.randomShares({'K/P':2}),TALENT.baseline({'K/P':2}));
 });
 test('large additional player pickers defer checkbox rows but retain every selectable identity',()=>{
-  const context=vm.createContext({escapeHtml:value=>String(value).replaceAll('&','&amp;').replaceAll('"','&quot;'),localizedPosition:value=>value,positionCompare:(a,b)=>a.localeCompare(b),multiSelectEmptyMeaning:()=> 'All'});
+  const context=vm.createContext({ToolkitSelectionOrder:SelectionOrder,escapeHtml:value=>String(value).replaceAll('&','&amp;').replaceAll('"','&quot;'),localizedPosition:value=>value,positionCompare:(a,b)=>a.localeCompare(b),multiSelectEmptyMeaning:()=> 'All'});
   vm.runInContext(read('src/renderer/selectors.js'),context);
   const players=Array.from({length:8000},(_,index)=>({value:String(index),label:'Player '+index,position:index%2?'WR':'QB'}));
   const markup=context.checkboxPicker('commentary-players','Individual Players',players,'Select players',[]);

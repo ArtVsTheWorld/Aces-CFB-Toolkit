@@ -61,8 +61,9 @@ test("elbow sleeves support four accessory colors, while two-tone double sleeves
     assert.equal(recolorEquipmentItem(name, "primary"), double[2]);
     assert.equal(recolorEquipmentItem(name, "secondary"), double[3]);
   }
-  assert.equal(recolorEquipmentItem("GearNeckpad_VintageNeckRoll", "white"), "GearNeckpad_VintageSingleNeckRoll");
-  assert.equal(recolorEquipmentItem("GearNeckpad_VintageSingleNeckRoll", "black"), "GearNeckpad_VintageNeckRoll");
+  // Unlocked declares these repurposed legacy IDs in different slots.
+  assert.equal(recolorEquipmentItem("GearNeckpad_VintageNeckRoll", "white"), "GearNeckpad_VintageNeckRoll");
+  assert.equal(recolorEquipmentItem("GearNeckpad_VintageSingleNeckRoll", "black"), "GearNeckpad_VintageSingleNeckRoll");
   assert.equal(recolorEquipmentItem("Unverified_Custom_Black", "primary"), "Unverified_Custom_Black");
 });
 

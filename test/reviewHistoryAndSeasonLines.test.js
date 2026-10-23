@@ -1,3 +1,4 @@
+import SelectionOrder from '../src/shared/selectionOrder.cjs';
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -19,9 +20,9 @@ test("equipment preview defaults to visible cards and positions follow in-game o
   const localized = source.match(/const localizedPosition = [^\n]+;/)?.[0];
   const order = source.match(/const POSITION_ORDER = [^\n]+;/)?.[0];
   const compare = source.match(/function positionCompare\([^\n]+/)?.[0];
-  const context = vm.createContext({});
+  const context = vm.createContext({ToolkitSelectionOrder:SelectionOrder,});
   vm.runInContext(`${localized}\n${order}\n${compare}\nresult = ["P", "CB", "RE", "QB", "MLB", "LT", "LE", "FB", "LOLB", "K"].sort(positionCompare);`, context);
-  assert.deepEqual([...context.result], ["QB", "LT", "FB", "LE", "RE", "LOLB", "MLB", "CB", "K", "P"]);
+  assert.deepEqual([...context.result], ["QB", "FB", "LT", "LE", "RE", "LOLB", "MLB", "CB", "K", "P"]);
   assert.match(source, /\[\.\.\.prepared\.positions\]\.sort\(positionCompare\)/);
   assert.match(source, /field === "position" \? positionCompare/);
 });

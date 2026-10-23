@@ -1,3 +1,4 @@
+import {isOriginalEaPlayer} from '../../services/originalEaPlayers.js';
 import {isGeneratedProfile} from './cohorts.js';
 import {ALLOWED_DEALBREAKERS} from '../dealbreaker/core.js';
 import {observedPlayerState} from './playerState.js';
@@ -17,7 +18,7 @@ import {assignBackstories} from './backstories.js';
 import {roomRatingTargets} from './roomTargets.js';
 import {generatedRecruitStars} from './recruiting.js';
 import {planRosterHomes} from './geography.js';
-import {rosterNilBudget,NIL_FIELD} from './nilBudget.js';
+import {rosterNilBudget,NIL_FIELDS} from './nilBudget.js';
 import {planBrothers} from './brothers.js';
 
 const originalDealbreaker=target=>ALLOWED_DEALBREAKERS.includes(target.original.RecruitingDealbreaker)?target.original.RecruitingDealbreaker:'Invalid';
@@ -50,7 +51,8 @@ function solveFootballProfiles(targets,model,seed,preset) {
     const settings=model.settings??normalizeGenerationSettings(),scheme=['QB','HB','FB','WR','TE','OL'].includes(positionGroup(target.position))?settings.offensiveScheme:settings.defensiveScheme;
     const archetypes=[...new Set(effective.map(profile=>profile.archetype))],archetype=scheme==='random'?null:weightedChoice(archetypes,type=>effective.filter(profile=>profile.archetype===type).length*archetypeWeight(target.position,type,settings),rng);
     const profile=sampleNear(archetype?effective.filter(profile=>profile.archetype===archetype):effective,desired,rng);
-    return {target,profile,desired,athleticProfile,development:stratum?.development??profile.development,pool:effective,fallbacks:generated.length?[]:['No generated-cohort examples for this position; used the EA cohort.']};
+    const balancingPool=archetype?effective.filter(candidate=>candidate.archetype===archetype):effective;
+    return {target,profile,desired,athleticProfile,development:stratum?.development??profile.development,pool:balancingPool,fallbacks:generated.length?[]:['No generated-cohort examples for this position; used the EA cohort.']};
   });
   const targetSum=Math.round(preset.targetAverage*selected.length);let iterations=0;
   const order=shuffled(selected,stream(seed,'balance'));
@@ -112,7 +114,8 @@ export function generateRosterPreview({team,targets,model,seed=1,preset=BUILDING
     const potential=model.potentialByPosition?choose(potentialCandidates(model,target.position,profile.archetype,item.development),stream(seed,`potential:${target.row}`)):profile;
     const matched=matchCommentary(firstName,lastName),sameTypeStyles=model.catalog.styles.filter(candidate=>candidate.source===0&&candidate.position===target.position&&candidate.archetype===profile.archetype),samePositionStyles=model.catalog.styles.filter(candidate=>candidate.position===target.position),style=choose(sameTypeStyles.length?sameTypeStyles:samePositionStyles,stream(seed,`style:${target.row}`));
     const fields={...observedPlayerState(profile,homePlan.byRow.get(target.row)?.home),PresentationId:presentations.get(target.row),FirstName:firstName,LastName:lastName,IsNIL:false,PLYR_ASSETNAME:presentationAssetName(firstName,lastName,presentations.get(target.row)),PLYR_COMMENT:matched.id,PlayerType:profile.archetype,SchoolYear:profile.classYear,RedshirtStatus:profile.redshirt,TraitDevelopment:potential.development,OverallRating:profile.overall,ExperiencePoints:profile.progression[0],SkillPoints:profile.progression[1],Personality:profile.personality,RecruitingDealbreaker:originalDealbreaker(target),...Object.fromEntries(RATING_FIELDS.map((field,i)=>[field,profile.ratings[i]])),...Object.fromEntries(CAP_FIELDS.map((field,i)=>[field,potential.caps[i]])),...Object.fromEntries(PHYSICAL_FIELDS.map((field,i)=>[field,profile.physical[i]])),...Object.fromEntries(MENTAL_FIELDS.map((field,i)=>[field,profile.mental[i][0]])),...Object.fromEntries(MENTAL_RANK_FIELDS.map((field,i)=>[field,profile.mental[i][1]])),...Object.fromEntries(STYLE_FIELDS.map((field,i)=>[field,style.values[i]])),...Object.fromEntries(APPEARANCE_FIELDS.map(field=>[field,appearance.fields[field]]))};
-    fields[NIL_FIELD]=0;
+    fields.Position=target.position;
+    for(const field of NIL_FIELDS)fields[field]=0;
     fields.ProspectStarRating=generatedRecruitStars(fields,seed,target.row);
     validateProposedFields(fields);
     if(Object.values(fields).some(value=>value===undefined))throw new Error('Generated profile is missing a required field.');
@@ -137,7 +140,7 @@ export function generateRosterPreview({team,targets,model,seed=1,preset=BUILDING
     const matched=matchCommentary(player.fields.FirstName,player.fields.LastName);player.fields.PLYR_COMMENT=matched.id;player.provenance.commentary=matched.method;
   }
   const nilBudget=rosterNilBudget(players,targets,seed);
-  for(const player of players)player.fields[NIL_FIELD]=nilBudget.byRow.get(player.row);
+  for(const player of players)for(const field of NIL_FIELDS)player.fields[field]=nilBudget.byRow.get(player.row);
   const equipment=equipmentGenerator?.(players,seed,team);
   if(equipment)for(const player of players){const generated=equipment.byRow.get(player.row);if(!generated)throw new Error('Generated equipment is missing a player.');player.rawData=generated.rawData;player.appearanceAudit.randomizer=generated.audit;}
   const finishing=finishGeneratedRoster(players,team,seed),backstories=assignBackstories(players,model,seed);
@@ -148,8 +151,8 @@ export function generateRosterPreview({team,targets,model,seed=1,preset=BUILDING
   warnings.push('The OVR target is the average across your roster, not the game’s team rating.','Existing statistics, awards and roster links are kept. Review the depth-chart summary before Apply. Test a copied save in-game before continuing.');
   const deviations=Object.entries(model.talentTargets??{}).filter(([group,target])=>Math.abs(mean(players.filter(player=>positionGroup(player.position)===group).map(player=>player.fields.OverallRating))-target)>1);
   if(deviations.length)warnings.push(`Some position targets could not be reached exactly using valid player profiles: ${deviations.map(([group])=>group).join(', ')}. The team-average target still applies.`);
-  const nilReplacements=players.filter(player=>player.before.IsNIL===true).length;if(nilReplacements)warnings.push(`${nilReplacements} NIL players will be replaced. Apply asks you to confirm first.`);
-  const preview={prototypeVersion:1,mode:'preview',canApply:false,team:structuredClone(team),seed,preset,catalog:{version:model.catalog.version,sha256:model.sha256??null,sources:model.catalog.sources},summary:{players:players.length,geography:homePlan.summary,oldAverage,newAverage,targetAchieved,positionCounts:count(players.map(player=>player.position)),classRedshirtCounts:count(players.map(player=>`${player.fields.SchoolYear}|${player.fields.RedshirtStatus}`)),developmentCounts:count(players.map(player=>player.fields.TraitDevelopment)),athleticismCounts:count(players.map(player=>player.provenance.athleticProfile)),nilReplacements,retiredNumbers:[],finishing,equipment:equipment?.summary??null,talentBudget:describeTalentBudget(targets,model.settings??normalizeGenerationSettings()),settings:model.settings??normalizeGenerationSettings(),positionStrength:Object.fromEntries([...new Set(players.map(player=>positionGroup(player.position)))].map(group=>[group,{target:model.talentTargets?.[group]??preset.targetAverage,actual:mean(players.filter(player=>positionGroup(player.position)===group).map(player=>player.fields.OverallRating)),players:players.filter(player=>positionGroup(player.position)===group).length}])),skinToneCounts:count(players.map(player=>player.provenance.skinTone)),sampling:solved.strata?{expectedDevelopment:solved.strata.expectedDevelopment,policy:solved.strata.policy}:null,solverIterations:solved.iterations,midpointResidual:(solved.actualSum-solved.targetSum)/players.length},warnings,blocking,players};
+  const originalEaReplacements=targets.filter(player=>isOriginalEaPlayer(player.original)).length;if(originalEaReplacements)warnings.push(`${originalEaReplacements} original EA roster players will be replaced. Apply asks you to confirm first.`);
+  const preview={prototypeVersion:1,mode:'preview',canApply:false,team:structuredClone(team),seed,preset,catalog:{version:model.catalog.version,sha256:model.sha256??null,sources:model.catalog.sources},summary:{players:players.length,geography:homePlan.summary,oldAverage,newAverage,targetAchieved,positionCounts:count(players.map(player=>player.position)),classRedshirtCounts:count(players.map(player=>`${player.fields.SchoolYear}|${player.fields.RedshirtStatus}`)),developmentCounts:count(players.map(player=>player.fields.TraitDevelopment)),athleticismCounts:count(players.map(player=>player.provenance.athleticProfile)),originalEaReplacements,retiredNumbers:[],finishing,equipment:equipment?.summary??null,talentBudget:describeTalentBudget(targets,model.settings??normalizeGenerationSettings()),settings:model.settings??normalizeGenerationSettings(),positionStrength:Object.fromEntries([...new Set(players.map(player=>positionGroup(player.position)))].map(group=>[group,{target:model.talentTargets?.[group]??preset.targetAverage,actual:mean(players.filter(player=>positionGroup(player.position)===group).map(player=>player.fields.OverallRating)),players:players.filter(player=>positionGroup(player.position)===group).length}])),skinToneCounts:count(players.map(player=>player.provenance.skinTone)),sampling:solved.strata?{expectedDevelopment:solved.strata.expectedDevelopment,policy:solved.strata.policy}:null,solverIterations:solved.iterations,midpointResidual:(solved.actualSum-solved.targetSum)/players.length},warnings,blocking,players};
   preview.summary.nilBudget=nilBudget.summary;
   preview.familyNameExclusions=familyNameExclusions;
   preview.summary.brothers=[...brothers].filter(([row,family])=>row<family.siblingRow).map(([row,family])=>[row,family.siblingRow]);
@@ -185,13 +188,14 @@ export function validateRosterPreview(preview,targets,model,equipmentGenerator=n
   const finished=new Map(expected.map(player=>[player.row,player.fields]));
   const equipment=equipmentGenerator?.(preview.players.map(player=>{const target=byRow.get(player.row),appearance=model.catalog.appearances.find(item=>item.id===player.provenance.appearance);if(!target||!appearance)throw new Error('Missing appearance evidence.');return {...player,fields:{...player.fields},rawData:buildAppearancePreview(target.rawData,appearance,preview.team.branding).raw};}),preview.seed,preview.team);
   for(const player of preview.players){
-    if(player.fields[NIL_FIELD]!==nilBudget.byRow.get(player.row))throw new Error('Generated NIL compensation differs from the validated team budget.');
+    for(const field of NIL_FIELDS)if(player.fields[field]!==nilBudget.byRow.get(player.row))throw new Error(`Generated NIL compensation (${field}) differs from the validated team budget.`);
     if(JSON.stringify(player.provenance.home??null)!==JSON.stringify(homePlan.byRow.get(player.row)??null))throw new Error('Generated hometown differs from the seeded school geography plan.');
     if(JSON.stringify(player.backstory)!==JSON.stringify(backstories.get(player.row)))throw new Error('Player backstory differs from its eligible, validated generation plan.');
     const target=byRow.get(player.row),base=model.byId.get(player.provenance.football),source=base?athleticVariant(model,base,player.provenance.athleticProfile??'balanced'):null,potential=(model.potentialById??model.byId).get(player.provenance.potential??player.provenance.football);if(!target||target.position!==player.position||!source||source.position!==player.position)throw new Error('Roster position or source evidence changed.');
     if(player.provenance.familyOriginal){const original=player.provenance.familyOriginal,home=homePlan.byRow.get(player.row)?.home??source.home;if(home&&JSON.stringify(original.home)!==JSON.stringify(home))throw new Error('Family original hometown evidence changed.');}
     if(player.visualRow!==target.visualRow||player.beforeRawData!==target.rawData||WRITE_FIELDS.some(field=>player.before[field]!==target.original[field]))throw new Error('Original player/appearance evidence changed.');
     validateProposedFields(player.fields);validateFootballProfile(source);
+    if(player.fields.Position!==player.position)throw new Error('Generated player position differs from its validated roster assignment.');
     if(player.fields.ProspectStarRating!==generatedRecruitStars(player.fields,preview.seed,player.row))throw new Error('Recruiting stars differ from the validated generation plan.');
     const stratum=strata?.byRow.get(player.row);if(stratum&&(player.fields.SchoolYear!==stratum.classYear||player.fields.RedshirtStatus!==stratum.redshirt||player.fields.TraitDevelopment!==stratum.development))throw new Error('Generated class/development differs from its planned distribution.');
     if(WRITE_FIELDS.some(field=>!Object.hasOwn(player.fields,field)))throw new Error('Generated profile has missing fields.');

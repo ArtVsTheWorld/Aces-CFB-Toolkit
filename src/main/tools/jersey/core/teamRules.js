@@ -1,5 +1,5 @@
 import { logChange, logInfo, logWarning, playerDetails, playerName } from "./logger.js";
-import { isProtectedNil } from "./nilPolicy.js";
+import { isProtectedPlayer } from "./playerProtection.js";
 import { matchesTraditionPersonality } from '../personalities.js';
 
 // Team-specific traditions are data-driven. Multiple rules may apply to one
@@ -94,7 +94,7 @@ function eligibilityDescription(rule) {
 function eligiblePlayersForRule(roster, rule, excluded = new Set()) {
     let eligiblePlayers = roster.filter(player =>
         !excluded.has(player) &&
-        !isProtectedNil(player) &&
+        !isProtectedPlayer(player) &&
         !player.teamRuleLocked &&
         (!rule.upperclassmenOnly || isUpperclassman(player)) &&
         (!rule.eligiblePositions || rule.eligiblePositions.includes(player.Position)) &&
@@ -132,7 +132,7 @@ function applyRule(team, teamName, rule, stats, random) {
     if (plans.length === 0) {
         stats.teamRulesSkipped++;
         logWarning(
-            `TEAM RULE SKIPPED: ${teamName} | ${rule.label} has no eligible non-NIL ${eligibilityDescription(rule)}.`
+            `TEAM RULE SKIPPED: ${teamName} | ${rule.label} has no unprotected eligible ${eligibilityDescription(rule)}.`
         );
         return;
     }
@@ -140,12 +140,12 @@ function applyRule(team, teamName, rule, stats, random) {
     const blockers = plans.flatMap(plan =>
         plan.roster.filter(player => player !== plan.player && player.JerseyNum === rule.number)
     );
-    const nilBlocker = blockers.find(isProtectedNil);
+    const protectedBlocker = blockers.find(isProtectedPlayer);
 
-    if (nilBlocker) {
+    if (protectedBlocker) {
         stats.teamRulesSkipped++;
         logWarning(
-            `TEAM RULE SKIPPED: ${teamName} | ${rule.label} is protected by NIL player ${playerDetails(nilBlocker)}.`
+            `TEAM RULE SKIPPED: ${teamName} | ${rule.label} is held by protected player ${playerDetails(protectedBlocker)}.`
         );
         return;
     }

@@ -1,3 +1,10 @@
+// Preserve the user's protection intent, including the inverse old jersey
+// "Allow NIL Changes" checkbox. Never reinterpret a stored false as a default.
+function migrateOriginalEaProtectionSettings(values) {
+  if(Object.hasOwn(values,'equipment-skip-nil')){values['equipment-protect-ea']??=values['equipment-skip-nil'];delete values['equipment-skip-nil'];}
+  if(Object.hasOwn(values,'renumber-nil')){values['jersey-protect-ea']??=!values['renumber-nil'];delete values['renumber-nil'];}
+  return values;
+}
 function presetConfiguration() {
   captureToolSettings();
   const values = { ...(state.toolSettings.get(state.page) ?? {}) }, teamSelections = {};
@@ -13,6 +20,8 @@ function presetConfiguration() {
 
 function presetValues(configuration) {
   const values = { ...configuration.values };
+  migrateOriginalEaProtectionSettings(values);
+  if (typeof migrateRedshirtFilterSettings === 'function') migrateRedshirtFilterSettings(values);
   delete values['roster-seed']; // Older Roster Generator presets cannot pin a new run's seed.
   if(typeof rosterMigrateTalentValues==='function')rosterMigrateTalentValues(values,configuration.teamSelections?.['roster-teams']);
   const external = values["equipment-donor"]?.trim(), donorRows = values["equipment-donor-players"];
@@ -53,7 +62,7 @@ function presetValues(configuration) {
 function addPresetControls() {
   const tool = state.bootstrap?.registry?.tools?.find(item => item.id === state.page);
   if (!tool || !state.activeSave?.exists || document.querySelector(".config-presets") || state.commentaryReview) return;
-  const actions = content.querySelector(".actions"), controls = content.querySelectorAll("input[id],select[id],textarea[id]");
+  const actions = toolCommandActions(), controls = content.querySelectorAll("input[id],select[id],textarea[id]");
   if (!actions || ![...controls].some(control => !control.id.includes("filter") && !control.dataset.previewFacet)) return;
   const panel = document.createElement("details"); panel.className = "config-presets";
   panel.innerHTML = `<summary><strong>Config Presets</strong><span>Save and reuse settings for this tool</span></summary><div class="preset-controls"><label for="preset-choice">Saved Preset<select id="preset-choice" data-preset-control><option value="">Choose a preset</option></select></label><button class="button secondary" id="preset-load" data-preset-control type="button" disabled>Load</button><button class="button secondary" id="preset-delete" data-preset-control type="button" disabled>Delete</button><label for="preset-name">Preset Name<input class="input" id="preset-name" data-preset-control maxlength="80" placeholder="e.g. Preseason gear"></label><button class="button secondary" id="preset-save" data-preset-control type="button">Save Preset</button></div><p class="muted">Saved on this computer and kept after restart. Loading replaces this tool's settings, clears its old preview, and never runs the tool. Team selections require matching teams in the Active Save.</p>`;

@@ -1,6 +1,6 @@
 # Ace's CFB Toolkit
 
-A Windows desktop toolkit for College Football 27 Dynasty and Road To Glory save utilities. This repository contains the complete maintained Electron application source for **v22.0**, its build resources, and regression tests, alongside the official release downloads. Source updates and installer releases are published separately.
+A Windows desktop toolkit for College Football 27 Dynasty and Road To Glory save utilities. This repository contains the maintained Electron application source, build resources, and regression tests alongside the official release downloads. Current source: **v22.5**. Source updates and installer releases are published separately.
 
 ## Download the app
 
@@ -32,7 +32,7 @@ npm run build
 npm run build:portable
 ```
 
-Build output is written to `dist/`. App display version **22.0** uses installer/update SemVer **22.0.0**. Tools share the app release version instead of separate tool version numbers. No installer is published by the build commands above.
+Build output is written to `dist/`. App display version **22.5** uses installer/update SemVer **22.5.0**. Tools share the app release version instead of separate tool version numbers. No installer is published by the build commands above.
 
 ## Project layout
 
@@ -55,7 +55,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for development and save-safety expectati
 
 Personal settings, uploaded team artwork, saves, backups, reports, credentials, installed dependencies, build outputs, and private diagnostic artifacts are excluded. Default bundled artwork is included so a fresh checkout can build the same interface.
 
-Current source: [v22.0 patch notes](docs/RELEASE_NOTES_V22_0.md) and [v22.0 source handoff](docs/V22_0_SOURCE.md). The draft notes cover changes since v21.1, including the [Roster Generator and Equipment Mapper implementation](docs/V21_5_UPDATE.md). Previous published installer: [v21.1 release notes](docs/RELEASE_NOTES_V21_1.md). Source publication is separate from installer releases; use the Releases page for the latest published installer. Test generated rosters on copied saves in-game before continuing a dynasty.
+Current source: [v22.5 draft patch notes](docs/RELEASE_NOTES_V22_5.md), [native schemes and multi-team configuration](docs/V22_5_NATIVE_SCHEMES.md), and [original EA roster player protection](docs/V22_5_ORIGINAL_EA_PROTECTION.md). The draft notes cover changes since [v22.0](docs/RELEASE_NOTES_V22_0.md). Source publication is separate from installer releases; use the Releases page for the latest published installer. Test generated rosters on copied saves in-game before continuing a dynasty.
 Previous update: [v20.1 Unlocked uniform passes and compatibility](docs/V20_1_UPDATE.md).
 Published v20.0: [v20.0 release notes](docs/RELEASE_NOTES_20_0.md) and [configuration, usability, and safety refinements](docs/V20_0_REFINEMENT.md).
 Previous update: [v19.1 user schedules, position-specific facemasks, configurable mod pools and Unlocked socks](docs/V19_1_UPDATE.md).

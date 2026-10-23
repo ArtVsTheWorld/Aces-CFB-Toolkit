@@ -143,7 +143,7 @@ test("team tape rolls are seeded, independent per player, shared within a loadou
 
 test("recolor respects NIL, exclusions, active-roster scope, and shared-row team conflicts", () => {
   for (const options of [{}, { unlockedRecolorFix: true }, { unlockedRecolorFix: true, tapeColorMode: "distribution", excludedTeamIndexes: new Set([1]) }, { unlockedRecolorFix: true, tapeColorMode: "distribution", activePlayerRows: new Set() }]) {
-    const p = player(0), v = visual(); if (options.unlockedRecolorFix && !options.excludedTeamIndexes && !options.activePlayerRows) p.IsNIL = true;
+    const p = player(0), v = visual(); if (options.unlockedRecolorFix && !options.excludedTeamIndexes && !options.activePlayerRows) Object.assign(p,{IsNIL:true,PLYR_ASSETNAME:'SmithJeremiah_8726'});
     const before = v.RawData; applyGlobalEquipmentFixes([p], [v], 10, options); assert.equal(v.RawData, before);
   }
   const p = [player(0, 1), { ...player(1, 2), CharacterVisuals: ref(0) }], v = [visual()], before = v[0].RawData;

@@ -2,7 +2,7 @@
 // (mustRenumberDuplicate = true) and provide a small helper to
 // check whether a number is free on a roster side.
 
-import { isProtectedNil } from "./nilPolicy.js";
+import { isProtectedPlayer } from "./playerProtection.js";
 
 // Only the fourth-rated QB or lower may share an offensive jersey number.
 // Rankings are recalculated every run, so progression automatically removes
@@ -10,7 +10,7 @@ import { isProtectedNil } from "./nilPolicy.js";
 export function getQuarterbackRank(player, roster) {
     if (player?.Position !== "QB") return null;
     const quarterbacks = roster
-        .filter(candidate => candidate?.Position === "QB" && !isProtectedNil(candidate))
+        .filter(candidate => candidate?.Position === "QB" && !isProtectedPlayer(candidate))
         .sort((a, b) => Number(b.OverallRating ?? 0) - Number(a.OverallRating ?? 0));
     const index = quarterbacks.indexOf(player);
     return index < 0 ? null : index + 1;
@@ -44,11 +44,11 @@ export function resolveDuplicates(roster) {
         if (players.length <= 1) continue;
         if (players.length === 2 && isAllowedExistingDuplicate(players[0], players[1], roster)) continue;
 
-        const nilPlayers = players.filter(isProtectedNil);
-        if (nilPlayers.length > 0) {
+        const protectedPlayers = players.filter(isProtectedPlayer);
+        if (protectedPlayers.length > 0) {
             for (const player of players) {
-                if (isProtectedNil(player)) continue;
-                if (nilPlayers.some(nilPlayer => !isAllowedExistingDuplicate(nilPlayer, player, roster))) {
+                if (isProtectedPlayer(player)) continue;
+                if (protectedPlayers.some(protectedPlayer => !isAllowedExistingDuplicate(protectedPlayer, player, roster))) {
                     player.mustRenumberDuplicate = true;
                 }
             }

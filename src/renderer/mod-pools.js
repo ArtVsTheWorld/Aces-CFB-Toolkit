@@ -42,6 +42,8 @@ function openModPoolEditor(origin, prepared) {
     categoryControl.value = active; chance.value = draft[active].chance;
     body.querySelector("[data-pool-help]").dataset.modelHelp = active === "facepaint" ? "Controls the chance these selected styles join the normal facepaint roll. 100% always includes them; 0% leaves vanilla styles only for this mod. The normal no-facepaint chance and position restrictions still apply."
       : active === "backplates" ? "Adds only to outfits without a flak jacket. A jacket in any on-field loadout blocks the addition."
+      : active === "waistPlaycalls" ? "Adds only to quarterbacks. Playcall bands and handwarmers use separate slots and can be worn together. White, Black, and Team Primary are supported."
+      : active === "handwarmers" ? "Disabled by default. Select the logo handwarmer and set a chance above 0% to allow it. This does not replace a waist playcall band."
       : ["cleats", "gloves"].includes(active) ? "Only selected items compatible with the player's apparel brand may be picked. No compatible items means this category is skipped."
       : "Chance for this category to receive an additional item. Selected items are equally likely when compatible; position and outfit safeguards still apply. 0% disables this category.";
     renderItems(); validate();
@@ -67,7 +69,7 @@ function bindModPoolWindows() {
   for (const entry of content.querySelectorAll("[data-mod-pool-entry]")) {
     const origin = entry.dataset.modPoolEntry, toggle = document.getElementById({ unlocked: "equipment-unlocked", raw: "equipment-raw-accessories", eljax: "equipment-truck" }[origin]);
     toggle.closest(".toggle-card").after(entry);
-    const refresh = () => { entry.hidden = !toggle.checked; entry.querySelector("button").disabled = !toggle.checked; entry.querySelector("[data-mod-pool-summary]").textContent = !modPoolOptions()[origin] ? `Toolkit defaults · ${document.getElementById("equipment-expanded-percent").value}% for most categories${origin === "unlocked" ? " · Jamo sleeves off" : ""} · Default items` : "Custom pool · " + (prepared.modPoolCategories[origin] ?? []).filter(category => (modPoolOptions()[origin][category.id]?.items.length ?? category.defaultItems.length) && (modPoolOptions()[origin][category.id]?.chance ?? category.defaultChance ?? 10)).length + " categories active"; };
+    const refresh = () => { entry.hidden = !toggle.checked; entry.querySelector("button").disabled = !toggle.checked; entry.querySelector("[data-mod-pool-summary]").textContent = !modPoolOptions()[origin] ? `Toolkit defaults · ${document.getElementById("equipment-expanded-percent").value}% for most categories${origin === "unlocked" ? " · Jamo sleeves off" : origin === "eljax" ? " · Logo handwarmer off" : ""} · Default items` : "Custom pool · " + (prepared.modPoolCategories[origin] ?? []).filter(category => (modPoolOptions()[origin][category.id]?.items.length ?? category.defaultItems.length) && (modPoolOptions()[origin][category.id]?.chance ?? category.defaultChance ?? 10)).length + " categories active"; };
     toggle.addEventListener("change", refresh); document.getElementById("equipment-mod-pools").addEventListener("change", refresh); document.getElementById("equipment-expanded-percent").addEventListener("change", refresh);
     entry.querySelector("button").addEventListener("click", () => openModPoolEditor(origin, prepared)); refresh();
   }

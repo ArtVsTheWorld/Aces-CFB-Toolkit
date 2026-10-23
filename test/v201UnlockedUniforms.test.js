@@ -84,7 +84,7 @@ test("Standard Pants override is off by default, explicit, uncapped, and never b
   assert.equal(get(on[1], "InnerPants"), "UnknownTights"); assert.equal(result.uniformPopulation[0].standardReplacements, 1);
 });
 test("shared visuals, excluded scope, and NIL stay protected from the new passes", () => {
-  const players = [player(0), player(1), player(2), player(3)]; players[1].CharacterVisuals = ref(0); players[2].IsNIL = true;
+  const players = [player(0), player(1), player(2), player(3)]; players[1].CharacterVisuals = ref(0); Object.assign(players[2],{IsNIL:true,PLYR_ASSETNAME:'SmithJeremiah_8726'});
   const visuals = players.map(() => visual(outfit())), before = structuredClone(visuals);
   run(players, visuals, { lowerRolledJerseyFix: true, cutoffPantsFix: true, cutoffPantsCaps: caps(100), eligiblePlayer: row => row.LastName !== "3" });
   assert.deepEqual(visuals, before);

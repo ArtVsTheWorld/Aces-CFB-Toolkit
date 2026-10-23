@@ -22,7 +22,7 @@ export function normalizeDistribution(input = DEFAULT_DISTRIBUTION) {
   const distribution = {};
   for (const value of ALLOWED_DEALBREAKERS) {
     const amount = Number(input[value]);
-    if (!Number.isFinite(amount) || amount < 0 || amount > 100) throw new Error(`${value} percentage must be from 0 through 100.`);
+    if (!Number.isInteger(amount) || amount < 0 || amount > 100) throw new Error(`${value} percentage must be a whole number from 0 through 100.`);
     distribution[value] = amount;
   }
   const total = Object.values(distribution).reduce((sum, value) => sum + value, 0);
@@ -45,13 +45,13 @@ export function hasYoungerHigherRatedQb(player, teamQbs) {
   return teamQbs.some(candidate => candidate !== player && numeric(read(candidate, "Age")) !== null && numeric(read(candidate, "Age")) < age && numeric(read(candidate, "OverallRating")) > overall);
 }
 
-export function contextualWeights(player, distribution, { teamQbs = [], forcePlayingStyleIneligible = false } = {}) {
+export function contextualWeights(player, distribution, { teamQbs = [], restrictPlayingStylePositions = false, forcePlayingStyleIneligible = false } = {}) {
   const weights = Object.fromEntries(ALLOWED_DEALBREAKERS.slice(1).map(value => [value, distribution[value]]));
   const context = [];
   const position = String(read(player, "Position") ?? "").toUpperCase();
   const overall = numeric(read(player, "OverallRating")) ?? 0;
   const year = classGroup(read(player, "SchoolYear"));
-  const styleEligible = PLAYING_STYLE_POSITIONS.has(position) && !forcePlayingStyleIneligible;
+  const styleEligible = (!restrictPlayingStylePositions || PLAYING_STYLE_POSITIONS.has(position)) && !forcePlayingStyleIneligible;
   if (!styleEligible) { weights.PlayingStyle = 0; context.push("Playing Style ineligible"); }
   const tier = overall >= 90 ? CONTEXT_MODIFIERS.overall90 : overall >= 85 ? CONTEXT_MODIFIERS.overall85 : null;
   if (tier) { for (const [value, multiplier] of Object.entries(tier)) weights[value] *= multiplier; context.push(overall >= 90 ? "Elite OVR (90+)" : "High OVR (85–89)"); }
@@ -70,7 +70,7 @@ export function weightedSelection(normalized, random) {
   return ALLOWED_DEALBREAKERS.slice(1).findLast(value => (normalized[value] ?? 0) > 0);
 }
 
-export function patchDealbreakers(records, { teamNames, distribution = DEFAULT_DISTRIBUTION, fixInvalidPlayingStyle = false, protectedValues = [], protectedRows = [], seed = 1, random = null, apply = false } = {}) {
+export function patchDealbreakers(records, { teamNames, distribution = DEFAULT_DISTRIBUTION, restrictPlayingStylePositions = false, fixInvalidPlayingStyle = false, protectedValues = [], protectedRows = [], seed = 1, random = null, apply = false } = {}) {
   const base = normalizeDistribution(distribution); const rng = random ?? mulberry32(seed); const qbs = new Map();
   const legitimate = records.filter(record => isRosteredPlayer(record, teamNames));
   const startingNone = legitimate.filter(record => String(read(record, DEALBREAKER_FIELD) ?? "") === "Invalid").length;
@@ -81,11 +81,11 @@ export function patchDealbreakers(records, { teamNames, distribution = DEFAULT_D
   records.forEach((record, row) => {
     if (!isRosteredPlayer(record, teamNames) || protectedRows.includes(String(row)) || protectedValues.includes(read(record, DEALBREAKER_FIELD))) return;
     const oldValue = String(read(record, DEALBREAKER_FIELD) ?? ""); const position = String(read(record, "Position") ?? "").toUpperCase();
-    const invalid = oldValue === "Invalid", invalidStyle = oldValue === "PlayingStyle" && !PLAYING_STYLE_POSITIONS.has(position);
+    const invalid = oldValue === "Invalid", invalidStyle = restrictPlayingStylePositions && oldValue === "PlayingStyle" && !PLAYING_STYLE_POSITIONS.has(position);
     if (!invalid && !(fixInvalidPlayingStyle && invalidStyle)) return;
     let newValue = "Invalid", reasons = [];
     if (rng() * 100 >= base.Invalid) {
-      const context = contextualWeights(record, base, { teamQbs: qbs.get(Number(read(record, "TeamIndex"))) ?? [], forcePlayingStyleIneligible: invalidStyle });
+      const context = contextualWeights(record, base, { teamQbs: qbs.get(Number(read(record, "TeamIndex"))) ?? [], restrictPlayingStylePositions, forcePlayingStyleIneligible: invalidStyle });
       newValue = weightedSelection(context.normalized, rng); reasons = context.context;
     } else reasons = ["None roll"];
     if (invalid && newValue !== "Invalid" && projectedNone - 1 < noneFloorCount) { newValue = "Invalid"; reasons = ["None population floor"]; floorLimited = true; }

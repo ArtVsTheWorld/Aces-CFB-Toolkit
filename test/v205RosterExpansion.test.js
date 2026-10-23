@@ -51,11 +51,11 @@ test('rare mental/execution profiles trade positional skill against reading the 
   }
 });
 
-test('six defensive options include soft run-defense preferences with stable preset round trips',()=>{
-  assert.equal(DEFENSIVE_SCHEMES.length,OFFENSIVE_SCHEMES.length);assert.equal(DEFENSIVE_SCHEMES.length,6);
-  const settings=normalizeGenerationSettings({defensiveScheme:'run-first'});assert.deepEqual(normalizeGenerationSettings(JSON.parse(JSON.stringify(settings))),settings);
-  for(const [position,archetype]of [['DT','DT_NoseTackle'],['DT','DT_PurePower'],['MLB','MLB_RunStopper'],['SS','S_RunSupport']])assert.equal(archetypeWeight(position,archetype,settings),3);
-  assert.equal(archetypeWeight('CB','CB_MantoMan',settings),1);assert.equal(archetypeWeight('QB','QB_Scrambler',settings),1);
+test('native scheme options replace handmade presets and preserve explicit preset settings',()=>{
+  assert.equal(DEFENSIVE_SCHEMES.length,12);assert.equal(OFFENSIVE_SCHEMES.length,13);
+  for(const defensiveScheme of DEFENSIVE_SCHEMES.map(s=>s.id)){const settings=normalizeGenerationSettings({defensiveScheme});assert.deepEqual(normalizeGenerationSettings(JSON.parse(JSON.stringify(settings))),settings);}
+  assert.throws(()=>normalizeGenerationSettings({defensiveScheme:'run-first'}),/Older handmade/);
+  const settings=normalizeGenerationSettings({defensiveScheme:'random'});assert.equal(archetypeWeight('CB','CB_MantoMan',settings),1);assert.equal(archetypeWeight('QB','QB_Scrambler',settings),1);
 });
 
 test('appearance distribution resolves specialist overrides without affecting other preset defaults',()=>{

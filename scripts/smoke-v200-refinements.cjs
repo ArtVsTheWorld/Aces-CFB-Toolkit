@@ -31,11 +31,11 @@ module.exports = async (window, root) => {
     for (const input of document.querySelectorAll('[data-helmet-id]')) { input.value = String(({ GearHelmet_Speed_Flex:80, GearHelmet_Axiom:10, GearHelmet_SchuttF7Pro:10 })[input.dataset.helmetId] ?? 0); input.dispatchEvent(new Event('input', { bubbles: true })); }
     document.querySelector('[data-copy-target="helmets"][value="QB"]').checked = true; document.querySelector('[data-copy-run="helmets"]').click();
     document.querySelector('[data-copy-target="facemasks"][value="WR"]').checked = true; document.querySelector('[data-copy-run="facemasks"]').click();
-    await delay(); check(document.querySelector('.dialog-section-links'), 'Long windows have section links');
+    await delay(); check(!document.querySelector('.dialog-section-links'), 'Configuration windows have no section jump links');
     change(document.querySelector('[data-helmet-position]'), 'HB'); check(document.querySelector('[data-effective-mix]').textContent.includes('80%'), 'Effective inherited mix is visible');
     save(); await delay(); check(equipmentOptions('equipment-patcher').helmetDistribution.positions.QB.GearHelmet_SchuttF7 === 0, 'Helmet copy commits exact mix');
     check(equipmentOptions('equipment-patcher').facemaskPools.positions.WR.GearHelmet_Speed_Flex.length > 0, 'Facemask copy creates override');
-    check(document.querySelector('[data-config-departures]').textContent.includes('Schutt F7'), 'Excluded helmet visible before Preview');
+    check(!document.querySelector('[data-affected-scope]'), 'Affected-player summary boxes are removed');
     if (!document.querySelector('#fix-visors').checked) document.querySelector('#fix-visors').click(); open('Visor Frequency'); await delay(); change(draft('visor-frequency-QB'), '22');
     change(document.querySelector('[data-copy-source]'), 'QB'); document.querySelector('[data-copy-target="visor"][value="WR"]').checked = true; document.querySelector('[data-copy-run="visor"]').click(); save();
     check(equipmentOptions('equipment-patcher').visorFrequencies.WR === 22, 'Visor copy');
@@ -44,7 +44,7 @@ module.exports = async (window, root) => {
     change(document.querySelector('[data-copy-source]'), 'QB'); document.querySelector('[data-copy-target="mouthpiece"][value="K/P"]').checked = true; document.querySelector('[data-copy-run="mouthpiece"]').click(); save();
     check(!equipmentOptions('equipment-patcher').mouthpiecePositions['K/P'].enabled, 'Mouthpiece copy includes disabled group');
     document.querySelector('#fix-unlocked-socks').click(); document.querySelector('#fix-socks').checked = true; document.querySelector('#fix-socks').dispatchEvent(new Event('change', { bubbles: true })); await delay();
-    check(document.querySelector('[data-overlap-note]').textContent.includes('takes priority'), 'Sock precedence shown before Preview');
+    check(!document.querySelector('[data-affected-scope]') && helpPage().includes('Unlocked Sock Styles takes priority'), 'Sock precedence remains in Help without an impact box');
     const legacy = presetCompatibility({ version: 1, values: {}, teamSelections: { 'equipment-excluded': ['Alabama'] } });
     check(!legacy.messages.length && legacy.values['equipment-included'].length < document.querySelector('#equipment-included').options.length, 'Legacy exclusion presets migrate without bypassing validation');
     const confirmation = appConfirm('UI Test', 'Check styled confirmation'); check(document.activeElement.textContent === 'Cancel', 'Safe initial confirmation focus'); document.querySelector('dialog').dispatchEvent(new Event('cancel', { cancelable: true })); check(await confirmation === false, 'Escape cancels confirmation');
@@ -87,7 +87,7 @@ module.exports = async (window, root) => {
     check(state.jerseyMode === numberDefault.jerseyMode, 'Personal jersey default restores its allocation mode');
     check(document.querySelector('#jersey-custom-summary').textContent.includes('1 player numbers locked'), 'Restored jersey summary reflects saved locks');
     navigate('nil-toggle'); await wait(() => document.querySelector('#nil-target')); await delay();
-    for(const id of ['nil-players','nil-positions','nil-classes','nil-redshirts'])pick(document.getElementById(id), []); change(document.getElementById('selection-mode-nil-teams'), 'all');
+    for(const id of ['nil-players','nil-positions','nil-classes'])pick(document.getElementById(id), []); change(document.getElementById('nil-redshirts'), 'all'); change(document.getElementById('selection-mode-nil-teams'), 'all');
     check(affectedScopeSummary().startsWith('ENTIRE DYNASTY'), 'Whole dynasty is unmistakable'); const nilRun = runTool('nil-toggle', 'preview'); await wait(() => document.querySelector('dialog[open]')); check(document.querySelector('.configuration-description').textContent.includes('equipment and commentary'), 'NIL warning explains protection impact'); cancel(); await nilRun;
     navigate('settings'); await wait(() => document.querySelector('#text-size')); change(document.querySelector('#text-size'), 'extra'); await wait(() => document.documentElement.dataset.textSize === 'extra'); check(state.bootstrap.settings.textSize === 'extra', 'Reading size persists through settings');
     navigate('help'); await wait(() => document.querySelector('#help-search')); change(document.querySelector('#help-tool'), 'Equipment Patcher'); const search = document.querySelector('#help-search'); search.value = 'why didn'; search.dispatchEvent(new Event('input')); check([...content.querySelectorAll('.help-tool')].filter(section => !section.hidden).length === 1, 'Searchable tool-specific help');

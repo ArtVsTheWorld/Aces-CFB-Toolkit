@@ -12,7 +12,7 @@ test("the stable shell and packaging no longer show experimental release labels"
   assert.doesNotMatch(index, /Experimental UI|EXPERIMENTAL UI|UI REDESIGN|\(Experimental\)/);
   assert.doesNotMatch(renderer, /\(Experimental\)|This experimental build/);
   assert.doesNotMatch(pkg.build.artifactName, /Experimental/);
-  assert.equal(pkg.version, "22.0.0");
+  assert.equal(pkg.version, "22.5.0");
 });
 
 test("sports operations navigation retains every registered primary tool", () => {
@@ -25,7 +25,7 @@ test("sports operations navigation retains every registered primary tool", () =>
 });
 
 test("equipment redesign retains the original option and preview/apply contract", () => {
-  for (const id of ["equipment-included", "equipment-positions", "equipment-classes", "equipment-redshirt-group", "equipment-min", "equipment-max", "equipment-skip-nil", "equipment-top", "equipment-donor", "equipment-cross-percent", "equipment-multiple-percent", "equipment-no-drip", "equipment-unlocked", "fix-pants", "fix-helmet", "fix-rolled", "fix-socks", "fix-sleeves", "fix-nike", "fix-visors", "fix-unlocked-mouthpieces", "fix-unlocked-recolor"]) {
+  for (const id of ["equipment-included", "equipment-positions", "equipment-classes", "equipment-redshirt-group", "equipment-min", "equipment-max", "equipment-protect-ea", "equipment-top", "equipment-donor", "equipment-cross-percent", "equipment-multiple-percent", "equipment-no-drip", "equipment-unlocked", "fix-pants", "fix-helmet", "fix-rolled", "fix-socks", "fix-sleeves", "fix-nike", "fix-visors", "fix-unlocked-mouthpieces", "fix-unlocked-recolor"]) {
     assert.match(renderer, new RegExp(id));
   }
   assert.match(renderer, /window\.cfbToolkit\.runTool\(\{ toolId, savePath: state\.activeSave\.path, mode, options \}\)/);
@@ -44,7 +44,7 @@ test("redesign supports both themes, dense previews, and narrow desktop layouts"
 
 test("Jersey redesign keeps both allocation cores and the exact cached-plan workflow", () => {
   assert.match(renderer, /state\.jerseyMode === "no-duplicates" \? "jersey-no-duplicates" : "jersey-renumber"/);
-  for (const id of ["jersey-skipped", "renumber-nil", "jersey-team-rules", "jersey-retired", "jersey-promotions", "jersey-preview", "jersey-apply"]) {
+  for (const id of ["jersey-skipped", "jersey-protect-ea", "jersey-team-rules", "jersey-retired", "jersey-promotions", "jersey-preview", "jersey-apply"]) {
     assert.match(renderer, new RegExp(id));
   }
   assert.match(renderer, /mode === "preview" \? jerseyOptions\(toolId\) : \{ planId: preview\?\.planId \}/);

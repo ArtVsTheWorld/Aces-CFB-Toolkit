@@ -21,9 +21,10 @@ export function correctBearsPadsSleeves(loadouts, bodyTypes, style, rng) {
 export function removeHandwarmers(loadouts) {
   const changes = [];
   for (const loadout of loadouts) for (const element of loadout.loadoutElements) {
-    if (element.slotType !== "WaistWear" || !["Handwarmer_Standard", "Handwarmer_Standard_Logo"].includes(element.itemAssetName)) continue;
-    changes.push({ slot: element.slotType, oldItem: element.itemAssetName, newItem: "Handwarmer_None" });
-    element.itemAssetName = "Handwarmer_None";
+    if (element.slotType !== "WaistWear" || !["Handwarmer_Standard", "Handwarmer_Standard_Logo", "handwarmer_standard_logo"].includes(element.itemAssetName)) continue;
+    const newItem = element.itemAssetName === "handwarmer_standard_logo" ? "waistband_none_v36" : "Handwarmer_None";
+    changes.push({ slot: element.slotType, oldItem: element.itemAssetName, newItem });
+    element.itemAssetName = newItem;
   }
   return changes;
 }

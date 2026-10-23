@@ -1,7 +1,8 @@
 function checkboxPicker(id, label, values, helper, defaults = []) {
-  const labelOf=value=>String(value.label??value.name??value);
-  if(/classes|class-year/i.test(id))values=[...values].sort((a,b)=>classYearCompare(labelOf(a),labelOf(b)));
-  else if(/positions/i.test(id))values=[...values].sort((a,b)=>positionCompare(a.value??a,b.value??b));
+  if(!/donor-players$/.test(id)&&!values.some(value=>value.position)) {
+    const grouped=values.some(value=>value.group);
+    values=grouped?[...values].sort((a,b)=>ToolkitSelectionOrder.alpha(a.group??'',b.group??'')||ToolkitSelectionOrder.comparator(id,values)(a,b)):ToolkitSelectionOrder.sortChoices(id,values);
+  }
   const selectedValues = new Set(defaults.map(String)), grouped = id === "equipment-donor-players" || values.length > 200 && values.some(value => value.position);
   const options = values.map((value, order) => ({ value: String(value.value ?? value.name ?? value), label: String(value.label ?? value.name ?? value), group: grouped ? localizedPosition(value.position ?? "Unknown") : "", section: id === "unlocked-tattoo-pool" ? String(value.group ?? "") : "", order, overall: grouped && value.overall !== null && Number.isFinite(Number(value.overall)) ? Number(value.overall) : null }));
   const groups = [...new Set(options.map(option => option.group).filter(Boolean))].sort(positionCompare);

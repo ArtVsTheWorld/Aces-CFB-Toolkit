@@ -5,6 +5,16 @@ import vm from 'node:vm';
 import TALENT from '../src/shared/rosterTalent.cjs';
 
 const page=fs.readFileSync(new URL('../src/renderer/roster-generator.js',import.meta.url),'utf8');
+test('shared and individual roster configuration place schemes and makeup before position strength',()=>{
+  const ids=['roster-build-config','roster-scheme-config','roster-strength-config','roster-appearance-config'];
+  const offsets=ids.map(id=>page.indexOf(`id="${id}"`));
+  assert.ok(offsets.every((offset,i)=>offset>=0&&(i===0||offset>offsets[i-1])));
+  assert.ok(page.indexOf('id="roster-makeup"')<offsets[2]);
+  const editor=fs.readFileSync(new URL('../src/renderer/roster-team-settings.js',import.meta.url),'utf8');
+  const sections=editor.match(/const sections=(\[.*\]);/)[1];
+  assert.deepEqual(JSON.parse(JSON.stringify(vm.runInNewContext(sections))).map(([id])=>id),ids);
+});
+
 test('position strength presents all groups in a compact, accessible table without redundant meters',()=>{
   const context=vm.createContext({RosterTalent:TALENT,modelHelpButton:(label,text)=>`<button data-model-help="${text}" aria-label="${label}">?</button>`});vm.runInContext(page,context);
   const markup=vm.runInContext('rosterStrengthMarkup()',context);

@@ -4,7 +4,7 @@ import TALENT from '../src/shared/rosterTalent.cjs';
 import {loadObservedCatalog} from '../src/main/tools/rosterGenerator/catalog.js';
 import {modelForPreset,rosterPreset,ROSTER_PRESETS} from '../src/main/tools/rosterGenerator/presets.js';
 import {normalizeGenerationSettings,ROSTER_AGES,ROSTER_POTENTIALS} from '../src/main/tools/rosterGenerator/settings.js';
-import {createRosterStrata} from '../src/main/tools/rosterGenerator/sampling.js';
+import {createRosterStrata,rosterSamplingPolicy} from '../src/main/tools/rosterGenerator/sampling.js';
 import {generateRosterPreview,validateRosterPreview} from '../src/main/tools/rosterGenerator/core.js';
 import {athleticVariant,appearancePoolForAthletics,potentialCandidates,ATHLETICISM_PROFILES} from '../src/main/tools/rosterGenerator/athletics.js';
 import {surnameVariant,makeSurname,validSurname} from '../src/main/tools/rosterGenerator/names.js';
@@ -44,10 +44,15 @@ test('all age/potential combinations generate valid rosters, including young sta
     assert.ok(preview.summary.targetAchieved,`${age.id}/${potential.id}: ${preview.summary.newAverage}`);assert.equal(preview.blocking.length,0);assert.ok(Math.abs(preview.summary.newAverage-preset.targetAverage)<.1);
     if(age.id==='seniors')for(const player of preview.players){assert.equal(player.fields.SchoolYear,'Senior');assert.equal(player.fields.RedshirtStatus,'Previous');}
     if(potential.id==='dead-end')assert.equal(preview.summary.developmentCounts.Normal,input.length);
-    const younger=preview.players.filter(p=>['Freshman','Sophomore'].includes(p.fields.SchoolYear)).length;if(age.id==='youth')assert.ok(younger/input.length>.85);if(age.id==='veteran')assert.ok(younger/input.length<.4);
+    const younger=preview.players.filter(p=>['Freshman','Sophomore'].includes(p.fields.SchoolYear)).length;if(age.id==='youth'){assert.ok(younger/input.length>.6&&younger/input.length<.8);assert.ok(preview.players.some(p=>p.fields.SchoolYear==='Senior'));}if(age.id==='veteran')assert.ok(younger/input.length<.4);
     assert.equal(validateRosterPreview(preview,input,model),true);
     const csv=rosterGeneratorCsv(preview);assert.equal(csv.headings.length,csv.rows[0].length);for(const column of ['PotentialSource','AthleticismProfile','SurnameEvidenceJSON'])assert.ok(csv.headings.includes(column));
   }
+});
+test('Youth Movement reverses Veteran Heavy class weights without excluding seniors',()=>{
+  const youth=rosterSamplingPolicy(base,normalizeGenerationSettings({rosterAge:'youth'})),veteran=rosterSamplingPolicy(base,normalizeGenerationSettings({rosterAge:'veteran'}));
+  assert.deepEqual(youth.classes,{Freshman:40,Sophomore:30,Junior:20,Senior:10});assert.deepEqual(Object.values(youth.classes),Object.values(veteran.classes).reverse());
+  assert.ok(Object.values(youth.redshirts.Senior).some(weight=>weight>0));
 });
 
 test('athletic profiles reshape ratings and observed builds without lowering unknown ability requirements',()=>{

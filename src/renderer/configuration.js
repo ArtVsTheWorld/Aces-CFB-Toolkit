@@ -35,6 +35,80 @@ function configurationSelectionSummary(control, empty = multiSelectEmptyMeaning(
 function configurationRead(root, id) { return root.querySelector(`[data-config-original="${id}"]`) ?? root.querySelector(`#${id}`); }
 function configurationLabel(root, id) { const control = configurationRead(root, id); return control?.selectedOptions?.[0]?.textContent.trim() ?? ""; }
 function configurationNumber(root, id) { const control = configurationRead(root, id); return control?.value.trim() === "" ? NaN : Number(control?.value); }
+const redshirtFilterIds = ['equipment-redshirt-group','commentary-redshirt','boost-redshirt','nil-redshirts'];
+function redshirtScopeValue(value) {
+  if (!Array.isArray(value)) return ['all','true','redshirt'].includes(value) ? value : 'all';
+  if (!value.length || value.includes('Previous') && value.some(status => status !== 'Previous')) return 'all';
+  return value.every(status => status === 'Previous') ? 'redshirt' : 'true';
+}
+function redshirtScopeStatuses(value) {
+  return ({ all: [], true: ['Eligible','Current'], redshirt: ['Previous'] })[redshirtScopeValue(value)];
+}
+function redshirtScopeSummary(root, id) {
+  return `Redshirt Scope: ${configurationLabel(root, id) || 'All Players'}`;
+}
+function redshirtScopeMarkup(id, value = 'all') {
+  return `<div class="redshirt-scope"><label for="${id}">Redshirt Scope ${modelHelpButton('Redshirt Scope','All Players includes every redshirt status. True includes players who have not previously redshirted, including those currently redshirting. Redshirt includes players who previously redshirted. Combine this with Class Years to choose, for example, redshirt sophomores.')}</label><select id="${id}" data-order="preserve">${[['all','All Players'],['true','True'],['redshirt','Redshirt']].map(([key,label])=>`<option value="${key}" ${key===value?'selected':''}>${label}</option>`).join('')}</select></div>`;
+}
+function migrateRedshirtFilterSettings(values) {
+  for (const id of redshirtFilterIds) if (Object.hasOwn(values,id)) values[id] = redshirtScopeValue(values[id]);
+  return values;
+}
+// Pages move existing draft controls rather than recreating them. Selection,
+// validation, Reset, Save and Cancel keep using the same isolated draft.
+function addConfigurationPages(dialog, host, pages) {
+  const available = pages.filter(page => page.nodes.length);
+  if (available.length < 2) return;
+  const nav = document.createElement('div'), panels = document.createElement('div');
+  nav.className = 'configuration-page-tabs'; nav.setAttribute('role', 'tablist'); nav.setAttribute('aria-label', 'Configuration Pages');
+  panels.className = 'configuration-pages';
+  const token = `config-pages-${++configurationSequence}`;
+  const activate = (index, focus = false) => {
+    [...nav.children].forEach((button, i) => { button.setAttribute('aria-selected', String(i === index)); button.tabIndex = i === index ? 0 : -1; });
+    [...panels.children].forEach((panel, i) => panel.hidden = i !== index);
+    if (focus) nav.children[index].focus();
+    dialog.dispatchEvent(new Event('toolkit-hide-help'));
+  };
+  available.forEach((page, index) => {
+    const button = document.createElement('button'), panel = document.createElement('section');
+    button.type = 'button'; button.className = 'button secondary'; button.textContent = page.title;
+    button.id = `${token}-tab-${index}`; button.setAttribute('role', 'tab'); button.setAttribute('aria-controls', `${token}-panel-${index}`);
+    panel.id = `${token}-panel-${index}`; panel.className = 'configuration-page'; panel.dataset.configPage = '';
+    panel.setAttribute('role', 'tabpanel'); panel.setAttribute('aria-labelledby', button.id);
+    const fields = document.createElement('div'); fields.className = 'configuration-page-fields';
+    page.nodes.forEach(node => fields.append(node)); panel.append(fields); panels.append(panel); nav.append(button);
+    button.addEventListener('click', () => activate(index));
+    button.addEventListener('keydown', event => {
+      const next = event.key === 'Home' ? 0 : event.key === 'End' ? available.length - 1 : event.key === 'ArrowRight' ? (index + 1) % available.length : event.key === 'ArrowLeft' ? (index + available.length - 1) % available.length : null;
+      if (next !== null) { event.preventDefault(); activate(next, true); }
+    });
+  });
+  host.append(nav, panels); activate(0);
+}
+function addPlayerFilterPages(dialog, root) {
+  const read = id => configurationRead(root, id);
+  const field = id => read(id)?.closest('.team-picker,.toggle-card,.redshirt-scope,.overall-range');
+  const page = (title, ids) => ({ title, nodes: [...new Set(ids.map(field).filter(Boolean))] });
+  let pages;
+  if (read('equipment-positions')) {
+    pages = [page('Positions', ['equipment-positions']), page('Class & Redshirt', ['equipment-classes','equipment-redshirt-group']), page('Build & Overall', ['equipment-bodies','equipment-min']), page('Player Protection', ['equipment-protect-ea'])];
+    root.querySelector('.ops-subheading')?.remove();
+  } else {
+    const prefix = ['commentary','boost','nil'].find(prefix => read(prefix + '-classes'));
+    if (!prefix) return;
+    pages = [page('Teams', [prefix + '-teams']), page('Positions', [prefix + '-positions']), page('Class & Redshirt', [prefix + '-classes',prefix + (prefix === 'nil' ? '-redshirts' : '-redshirt')]), page('Individual Players', [prefix + '-players'])];
+  }
+  addConfigurationPages(dialog, root, pages);
+  if (root.querySelector('[data-config-page]')) {
+    dialog.classList.add('player-filter-editor');
+    root.querySelectorAll('.compact-grid:empty').forEach(node => node.remove());
+  }
+}
+function configurationControlActive(control) {
+  if (control.disabled) return false;
+  for (let node = control; node; node = node.parentElement) if (node.hidden && !node.hasAttribute('data-config-page')) return false;
+  return true;
+}
 function commitConfigurationDraft(controls, draft, original, close) {
   const donor = configurationRead(draft, 'equipment-donor-players');
   if (donor) {
@@ -96,6 +170,7 @@ function openConfigurationEditor(source, defaults, specification, refresh) {
   for (const [id, value] of Object.entries(original)) setConfigurationValue(configurationRead(draft, id), value);
   dialog.querySelector(".configuration-body").append(draft);
   bindMultiSelectEnhancements(draft); bindTeamPickers(draft); bindTeamLogoFallbacks(draft); if (typeof addExplicitSelectionModes === "function") addExplicitSelectionModes(draft);
+  addPlayerFilterPages(dialog, draft);
   const update = () => {
     syncConfigurationDraft(draft);
     const error = validateConfigurationDraft(draft, specification), node = dialog.querySelector("[data-config-error]");
@@ -148,6 +223,7 @@ function openConfigurationEditor(source, defaults, specification, refresh) {
 }
 
 function syncConfigurationDraft(root) {
+  if (configurationRead(root, 'db-total')) syncDealbreakerEligibility(root);
   if (typeof syncRosterGeneratorDraft === "function") syncRosterGeneratorDraft(root);
   syncAdvancedDraft(root); syncDonorMouthpieceDraft(root);
   const control = id => configurationRead(root, id), show = (id, visible) => { const node = control(id); if (node) node.hidden = !visible; };
@@ -178,7 +254,7 @@ function syncConfigurationDraft(root) {
 function validateConfigurationDraft(root, specification) {
   const control = id => configurationRead(root, id);
   for (const select of root.querySelectorAll("select[data-explicit-selection]")) if (configurationRead(root, "selection-mode-" + (select.dataset.configOriginal ?? select.id))?.value === "selected" && !select.selectedOptions.length) return "Select at least one team, or choose All / None explicitly.";
-  const active = node => !node.disabled && !node.closest("[hidden]");
+  const active = configurationControlActive;
   for (const input of root.querySelectorAll('input[type="number"]')) {
     if (!active(input) || input.value.trim() === "" && !input.hasAttribute("value")) continue;
     if (input.value.trim() === "" || !input.checkValidity()) return "Check the highlighted numbers. Use values within the shown range and step size.";
@@ -204,7 +280,7 @@ function bindConfigurationWindows() {
   const feature = (selector, specification) => condenseConfiguration(get(selector), specification);
   if (get("#equipment-wizard")) {
     for (const [field, toggle] of [["bears-pads-style-field", "fix-bears-pads"]]) get("#" + toggle)?.closest(".toggle-card")?.after(get("#" + field));
-    feature(".player-filter-group", { title: "Player Filters", description: "These filters work together. Empty selections allow every option; NIL protection is configured here too.", summary: root => [["equipment-positions", "positions"], ["equipment-classes", "class years"], ["equipment-bodies", "body types"]].filter(([id]) => configurationRead(root, id)).map(([id, label]) => `${label}: ${configurationSelectionSummary(configurationRead(root, id))}`).join(" · ") + ` · ${configurationLabel(root, "equipment-redshirt-group")} · ${configurationRead(root, "equipment-skip-nil").checked ? "Skip NIL" : "Include NIL"} · OVR ${configurationRead(root, "equipment-min").value || "Any"}–${configurationRead(root, "equipment-max").value || "Any"}` });
+    feature(".player-filter-group", { title: "Player Filters", description: "These filters work together. Empty selections allow every option; original EA player protection is configured here too.", summary: root => [["equipment-positions", "positions"], ["equipment-classes", "class years"], ["equipment-bodies", "body types"]].filter(([id]) => configurationRead(root, id)).map(([id, label]) => `${label}: ${configurationSelectionSummary(configurationRead(root, id))}`).join(" · ") + ` · ${configurationLabel(root, "equipment-redshirt-group")} · ${configurationRead(root, "equipment-protect-ea").checked ? "EA Players Protected" : "EA Players Included"} · OVR ${configurationRead(root, "equipment-min").value || "Any"}–${configurationRead(root, "equipment-max").value || "Any"}` });
     const donor = get('[data-equipment-panel="1"]:has(#equipment-donor-mode)');
     if (donor && !donor.querySelector(".configuration-entry")) {
       const group = document.createElement("div"); group.className = "donor-settings-content";
@@ -216,7 +292,7 @@ function bindConfigurationWindows() {
     feature("#unlocked-color-field", { title: "Colors & Tape", description: "Choose accessory colors from a shared mix, fixed color, or team-by-team percentages. Tape can use that same result or its own team mix. Existing items are recolored, not added.", dependencies: ["fix-unlocked-recolor"], enabled: () => get("#fix-unlocked-recolor").checked, summary: root => `${configurationLabel(root, "unlocked-color-theme")} · ${configurationLabel(root, "tape-color-mode")}` });
     feature("#unlocked-tattoo-field", { title: "Tattoo Settings", description: "Choose a per-team population cap and the designs that may be added. Existing tattoos are kept. Japanese and Polynesian styles start unchecked.", dependencies: ["fix-unlocked-tattoos"], enabled: () => get("#fix-unlocked-tattoos").checked, summary: root => `${configurationRead(root, "unlocked-tattoo-cap").value}% per-team cap · ${configurationRead(root, "unlocked-tattoo-pool").selectedOptions.length} designs selected` });
   }
-  if (state.page === "nil-toggle") feature('.standard-config-workspace .ops-section:nth-of-type(2) .ops-section-body', { title: "Player Scope", description: "All filters work together. Leave every selection empty for the entire active dynasty roster. The preview lists every match before any flags change.", summary: root => ["nil-teams", "nil-players", "nil-positions", "nil-classes", "nil-redshirts"].map(id => `${configurationRead(root, id).selectedOptions.length || "All"} ${id.slice(4)}`).join(" · ") });
+  if (state.page === "nil-toggle") feature('.standard-config-workspace .ops-section:nth-of-type(2) .ops-section-body', { title: "Player Scope", description: "All filters work together. Leave every selection empty for the entire active dynasty roster. The preview lists every match before any flags change.", summary: root => [...["nil-teams", "nil-players", "nil-positions", "nil-classes"].map(id => `${configurationRead(root, id).selectedOptions.length || "All"} ${id.slice(4)}`), redshirtScopeSummary(root, "nil-redshirts")].join(" · ") });
   if (state.page === "dealbreaker-fixer") feature('.ops-section:nth-of-type(2) .ops-section-body', { title: "Starting Dealbreaker Mix", description: "These are starting weights, not guaranteed final results. Each player's situation still affects assignments; None sets a minimum population share.", summary: root => [...root.querySelectorAll(".db-percent")].filter(input => Number(input.value)).map(input => `${dealbreakerLabels[input.dataset.value]} ${input.value}%`).join(" · ") });
   // Large selectors use the same searchable window. Small year/body lists stay
   // as compact checkbox choices, and selectors already inside an editor expand.

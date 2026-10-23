@@ -4,13 +4,14 @@ import assert from "node:assert/strict";
 import { patchFreshmanEquipment, mulberry32 } from "../src/main/tools/equipment/core/patcher.js";
 import { applyGlobalEquipmentFixes } from "../src/main/tools/equipment/core/globalFixes.js";
 import { isBrandCompatibleItem, assignCompatibleBrandEquipment, guardBrandEquipment, BRAND_SLOTS } from "../src/main/tools/equipment/core/brandCompatibility.js";
-import { buildFacePaintPool, rollFacePaint, VANILLA_FACE_PAINT_OPTIONS } from "../src/main/tools/equipment/core/facepaint.js";
+import { buildFacePaintPool, rollFacePaint, VANILLA_FACE_PAINT_OPTIONS, MOD_FACE_PAINT_ITEMS } from "../src/main/tools/equipment/core/facepaint.js";
 import { buildTeamApparel, buildRosterPlayerApparel } from "../src/main/tools/equipment/shared.js";
 import { normalizeEquipmentOptions } from "../src/main/tools/equipment/runner.js";
 import { summarizeVisualChanges } from "../src/main/tools/equipment/preview.js";
 import { brandedEquipmentItems } from "../src/main/tools/equipment/catalog.js";
 
 const inventory = JSON.parse(fs.readFileSync(new URL("../src/main/tools/equipment/equipmentModInventory.json", import.meta.url), "utf8"));
+const offline = JSON.parse(fs.readFileSync(new URL("../src/main/tools/equipment/equipmentOfflineInventory.json", import.meta.url), "utf8"));
 const ref = (table, row) => table.toString(2).padStart(15, "0") + row.toString(2).padStart(17, "0");
 const shoes = { nike: "GearFootwear_shoe_low_NikeVaporEdge", adidas: "GearFootwear_shoe_low_AdidasAdizero_LTA58", underarmour: "GearFootwear_shoe_low_UnderArmourBlurPro2025", jordan: "GearFootwear_shoe_low_AirJordan1VaporEdge", newbalance: "GearFootwear_shoe_low_NewBalance_Prodigy" };
 const item = (slotType, itemAssetName) => ({ slotType, itemAssetName });
@@ -153,13 +154,13 @@ test("vanilla facepaint uses the exact original options, probabilities, and seed
 test("catalog mod pools combine without equipped donors and cannot be polluted by donor values", () => {
   const donors = [observedDonor("FaceMarks_RawNoseTape_DontBlink"), observedDonor("FaceMarks_RawEarringsCombo_NoseTape_dontblink"), observedDonor("FaceMarks_Unknown"), observedDonor("FaceMarks_NoseTape_c1")];
   const both = buildFacePaintPool(donors, { usingUnlockedMod: true, usingRawAccessoriesMod: true });
-  assert.deepEqual(both.options.slice(10), [...inventory.mods.unlocked.facepaintItemNames, ...inventory.mods.raw.facepaintItemNames]);
-  assert.equal(both.options.length, 40); assert.equal(new Set(both.options).size, 40);
-  assert.equal(both.diagnostics.unlocked.available, 13); assert.equal(both.diagnostics.raw.available, 17);
+  assert.deepEqual(both.options.slice(10), [...MOD_FACE_PAINT_ITEMS.unlocked, ...MOD_FACE_PAINT_ITEMS.raw]);
+  assert.equal(both.options.length, 70); assert.equal(new Set(both.options).size, 70);
+  assert.equal(both.diagnostics.unlocked.available, 13); assert.equal(both.diagnostics.raw.available, 47);
   assert.deepEqual(buildFacePaintPool([], { usingUnlockedMod: true, usingRawAccessoriesMod: true }), both);
   assert.equal(buildFacePaintPool([], { usingUnlockedMod: true }).options.length, 23);
-  assert.deepEqual(buildFacePaintPool([], { usingRawAccessoriesMod: true }).options.slice(10), inventory.mods.raw.facepaintItemNames);
-  for (const donor of donors) assert.ok(!both.options.includes(donor.visuals.loadouts[0].loadoutElements[0].itemAssetName));
+  assert.deepEqual(buildFacePaintPool([], { usingRawAccessoriesMod: true }).options.slice(10), MOD_FACE_PAINT_ITEMS.raw);
+  for (const donor of donors) { const asset=donor.visuals.loadouts[0].loadoutElements[0].itemAssetName; if (!offline.rawFacepaintItems.includes(asset)) assert.ok(!both.options.includes(asset)); }
 });
 
 test("every catalog ItemName matches the mod resource inventory, and save samples retain exact casing", () => {
@@ -168,7 +169,7 @@ test("every catalog ItemName matches the mod resource inventory, and save sample
     assert.deepEqual(mod.facepaintItemNames.map(asset => asset.toLowerCase()).sort(), [...mod.facepaintResourceKeys].sort());
     const result = buildFacePaintPool([], { usingUnlockedMod: id === "unlocked", usingRawAccessoriesMod: id === "raw" });
     for (const asset of mod.facepaintItemNames) assert.ok(result.options.includes(asset));
-    for (const key of mod.excludedResourceKeys) assert.ok(!result.options.some(asset => asset.toLowerCase() === key));
+    for (const key of mod.excludedResourceKeys) if(!offline.rawFacepaintItems.some(asset=>asset.toLowerCase()===key)) assert.ok(!result.options.some(asset => asset.toLowerCase() === key));
   }
   const both = buildFacePaintPool([], { usingUnlockedMod: true, usingRawAccessoriesMod: true });
   assert.deepEqual(inventory.saveEvidence.samples.map(item => item.itemAssetName), ["FaceMarks_NoseTape_C1", "FaceMarks_RawNoseTape_dontblink"]);
@@ -179,9 +180,9 @@ test("selected vanilla donors still generate catalog mod facepaint, seeded outpu
   const f = fixture(); const modPaint = "FaceMarks_RawNoseTape_dontblink";
   const before = structuredClone(f.visuals); let seen = false;
   for (let seed = 0; seed < 150; seed++) {
-    const options = { ...f.options, apply: false, usingRawAccessoriesMod: true, donorRows: [1], mixedChance: 0, crossMixedChance: 0, seed };
+    const options = { ...f.options, apply: false, usingRawAccessoriesMod: true, modPools: { raw: { facepaint: { chance: 100, items: [modPaint] } } }, donorRows: [1], mixedChance: 0, crossMixedChance: 0, seed };
     const result = patchFreshmanEquipment(f.players, f.visuals, 10, options);
-    assert.deepEqual(result.facePaintPools.raw.assets, inventory.mods.raw.facepaintItemNames); assert.deepEqual(f.visuals, before);
+    assert.deepEqual(result.facePaintPools.raw.assets, [modPaint]); assert.deepEqual(f.visuals, before);
     assert.deepEqual(result, patchFreshmanEquipment(f.players, f.visuals, 10, options));
     if (slotValue(result.changes[0].newRawData, "FacePaint") === modPaint) { seen = true; assert.equal(result.changes[0].facePaint[0].source, "RAW Accessories Equipment Pool"); }
   }
@@ -200,12 +201,12 @@ test("every enabled mod facepaint is reachable through the unchanged independent
   }
 });
 
-test("enabled catalogs leave NIL recipients and selected donors protected", () => {
-  const f = fixture(); f.players[0].IsNIL = true;
+test("enabled catalogs leave original EA recipients and selected donors protected", () => {
+  const f = fixture(); Object.assign(f.players[0],{IsNIL:true,PLYR_ASSETNAME:'SmithJeremiah_8726'});
   const before = structuredClone(f.visuals), flags = { usingUnlockedMod: true, usingRawAccessoriesMod: true };
   assert.equal(patchFreshmanEquipment(f.players, f.visuals, 10, { ...f.options, ...flags, donorRows: [1] }).changes.length, 0);
   assert.deepEqual(f.visuals, before);
-  const changed = patchFreshmanEquipment(f.players, f.visuals, 10, { ...f.options, ...flags, donorRows: [1], skipNilPlayers: false });
+  const changed = patchFreshmanEquipment(f.players, f.visuals, 10, { ...f.options, ...flags, donorRows: [1], protectOriginalEaPlayers: false });
   assert.equal(changed.changes.length, 1); assert.deepEqual(f.visuals[1], before[1]);
 });
 

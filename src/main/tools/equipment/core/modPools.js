@@ -25,7 +25,11 @@ export function modPoolDefinitions() {
       category("socks", "Sock Styles", UNLOCKED_POOLS.socks)
     ],
     raw: [category("neckwear", "Turtlenecks & Necklaces", RAW_ACCESSORIES_POOLS.neckwear), category("skullcaps", "Skullcaps", RAW_ACCESSORIES_POOLS.skullcaps), category("backplates", "Backplates — No Flak Jacket", RAW_ACCESSORIES_POOLS.backplates ?? [])],
-    eljax: [category("armSleeves", "Team & Brand Arm Sleeves", EQUIPMENT_TRUCK_POOLS.armSleeves), category("visors", "Team & Brand Visors", EQUIPMENT_TRUCK_POOLS.visors)]
+    eljax: [category("armSleeves", "Team & Brand Arm Sleeves", EQUIPMENT_TRUCK_POOLS.armSleeves), category("visors", "Team & Brand Visors", EQUIPMENT_TRUCK_POOLS.visors),
+      category("chinCovers", "Brand Logo Chin Covers", EQUIPMENT_TRUCK_POOLS.chinCovers),
+      category("waistPlaycalls", "Waist Playcall Bands — QBs Only", EQUIPMENT_TRUCK_POOLS.waistPlaycalls),
+      category("handwarmers", "Standard Logo Handwarmer", EQUIPMENT_TRUCK_POOLS.handwarmers, { defaultChance: 0, defaultItems: [] }),
+      category("thighPads", "Jersey Number + Cross Thigh Pads", EQUIPMENT_TRUCK_POOLS.thighPads)]
   };
   return Object.fromEntries(Object.entries(definitions).map(([origin, categories]) => [origin, [...categories, ...(MOD_FACE_PAINT_ITEMS[origin] ? [{
     id: "facepaint", label: "Facepaint & Eye Tape", defaultChance: 100,

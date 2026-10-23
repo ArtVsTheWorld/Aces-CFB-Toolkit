@@ -96,7 +96,7 @@ test("Dealbreaker population excludes placeholders and invalid Playing Style cle
   records.unshift(dealbreakerPlayer("style", { Position: "QB", RecruitingDealbreaker: "PlayingStyle" }));
   records.push({ ...dealbreakerPlayer("omar", { FirstName: "Omar", LastName: "Omar", Position: "QB", RecruitingDealbreaker: "Invalid" }) });
   let call = 0; const random = () => call++ === 0 ? 0 : 0.99;
-  const result = patchDealbreakers(records, { teamNames: new Map([[1, "Test"]]), distribution: distribution(15), fixInvalidPlayingStyle: true, random, apply: true });
+  const result = patchDealbreakers(records, { teamNames: new Map([[1, "Test"]]), distribution: distribution(15), restrictPlayingStylePositions: true, fixInvalidPlayingStyle: true, random, apply: true });
   assert.equal(result.population.total, 21); assert.equal(records[0].RecruitingDealbreaker, "Invalid"); assert.ok(result.population.projectedNone >= result.population.noneFloorCount);
   assert.equal(records.at(-1).RecruitingDealbreaker, "Invalid");
 });
@@ -112,7 +112,9 @@ test("completed plans remain searchable but cannot be applied twice", () => {
 
 test("v0.9.1 UI labels and full-result search controls are wired", () => {
   const renderer = fs.readFileSync(new URL("../src/renderer/renderer.js", import.meta.url), "utf8");
-  assert.match(renderer, />True<\/option>/); assert.match(renderer, />Redshirt<\/option>/); assert.match(renderer, />All Players<\/option>/);
-  assert.doesNotMatch(renderer, /equipment-redshirts/); assert.match(renderer, /Playing Style \(RB, WR, TE only\)/);
+  assert.match(renderer, /redshirtScopeMarkup\("equipment-redshirt-group"/);
+  const configuration=fs.readFileSync(new URL('../src/renderer/configuration.js',import.meta.url),'utf8');
+  assert.match(configuration,/\['all','All Players'\],\['true','True'\],\['redshirt','Redshirt'\]/);
+  assert.doesNotMatch(renderer, /equipment-redshirts/); assert.match(renderer, /db-restrict-style/); assert.match(renderer, /Playing Style \(All Positions\)/);
   assert.match(renderer, /#force-result-filter,#long-snap-result-filter/); assert.equal(FORCE_WIN_CONFIG.fcs.disparityMultiplier, 2.5);
 });

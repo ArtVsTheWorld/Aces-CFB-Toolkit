@@ -47,6 +47,18 @@ test("selection summaries are bounded but retain accurate counts", () => {
   const ui = context(), values = ["A", "B", "C", "D", "E"];
   assert.equal(ui.configurationSelectionSummary(select("positions", values, values)), "5 of 5 selected · A, B, C +2 more");
 });
+test("presets and Reset use the tool command bar, never nested feature actions", () => {
+  const renderer = fs.readFileSync(new URL("../src/renderer/renderer.js", import.meta.url), "utf8");
+  const definition = renderer.match(/^function toolCommandActions\(\) \{.*\}$/m)?.[0];
+  assert.ok(definition);
+  const nested = { closest: selector => selector.includes('.configuration-entry') ? {} : null }, toolbar = { closest: () => null };
+  const ui = vm.createContext({ content: { querySelector: () => null, querySelectorAll: () => [nested, toolbar] } });
+  vm.runInContext(definition, ui); assert.equal(ui.toolCommandActions(), toolbar);
+  const command = {}; ui.content.querySelector = () => command; assert.equal(ui.toolCommandActions(), command);
+  ui.content.querySelector = () => null; ui.content.querySelectorAll = () => [nested]; assert.equal(ui.toolCommandActions(), undefined);
+  assert.match(fs.readFileSync(new URL("../src/renderer/presets.js", import.meta.url), "utf8"), /const actions = toolCommandActions\(\)/);
+  assert.match(renderer, /function addResetDefaults\(\).*const actions=toolCommandActions\(\)/);
+});
 test("batch commit updates every value before observers see a change", () => {
   const ui = context(), first = input("first", "10"), second = input("second", "20"), draft = root({ first: input("first", "30"), second: input("second", "40") }), events = [];
   for (const control of [first, second]) control.dispatchEvent = event => { assert.equal(event.type, "change"); assert.equal(first.value, "30"); assert.equal(second.value, "40"); events.push(control.id); };

@@ -1,3 +1,4 @@
+import {originalEaProtectionEnabled,originalEaIdentity,originalEaProtectionAudit,isOriginalEaPlayer} from '../../services/originalEaPlayers.js';
 import { VALID_POSITIONS } from '../equipment/shared.js';
 import { OFFENSE } from './shared.js';
 import path from 'node:path';
@@ -36,9 +37,9 @@ export function attachJerseyLocks(records, names, options, noDuplicates = false,
     const name = rule.teamNames[0]; if (![...names.values()].includes(name)) throw new Error(`Custom tradition team ${name} is not in this save.`);
     if (options.enableRetiredNumbers && getRetiredNumbers(name, options.customRetired).has(rule.number)) throw new Error(`${name}: #${rule.number} is both a tradition and retired.`);
     if (records.some(record => record?.userNumberLocked && names.get(Number(record.TeamIndex)) === name && Number(record.JerseyNum) === rule.number)) throw new Error(`${name}: #${rule.number} is locked to a player and reserved by a tradition. Remove one rule.`);
-    if (!noDuplicates && !options.renumberNilPlayers && options.enableTeamRules !== false) {
-      const protectedHolder = records.find(record => record && !record.isEmpty && record.IsNIL && names.get(Number(record.TeamIndex)) === name && Number(record.JerseyNum) === rule.number && (!rule.side || (OFFENSE.has(record.Position) ? 'offense' : 'defense') === rule.side));
-      if (protectedHolder) throw new Error(`${name}: custom tradition #${rule.number} is held by protected NIL player ${protectedHolder.FirstName} ${protectedHolder.LastName}. Choose another number or explicitly allow NIL changes.`);
+    if (!noDuplicates && originalEaProtectionEnabled(options) && options.enableTeamRules !== false) {
+      const protectedHolder = records.find(record => record && !record.isEmpty && isOriginalEaPlayer(record) && names.get(Number(record.TeamIndex)) === name && Number(record.JerseyNum) === rule.number && (!rule.side || (OFFENSE.has(record.Position) ? 'offense' : 'defense') === rule.side));
+      if (protectedHolder) throw new Error(`${name}: custom tradition #${rule.number} is held by protected original EA roster player ${protectedHolder.FirstName} ${protectedHolder.LastName}. Choose another number or turn off Protect Original EA Roster Players.`);
     }
   }
 }

@@ -3,7 +3,7 @@ import {sf} from '../equipment/openSave.js';
 import {collectEquipmentDonors,patchFreshmanEquipment} from '../equipment/core/patcher.js';
 import {buildRosterPlayerRows,buildFcsTeamIndexes,buildTeamNames,buildTeamApparel,buildRosterPlayerApparel} from '../equipment/shared.js';
 
-export const ROSTER_EQUIPMENT_OPTIONS=Object.freeze({top:20,mixedChance:.30,crossMixedChance:.10,usingUnlockedMod:false,usingRawAccessoriesMod:false,noDripProfile:false,skipNilPlayers:false});
+export const ROSTER_EQUIPMENT_OPTIONS=Object.freeze({top:20,mixedChance:.30,crossMixedChance:.10,usingUnlockedMod:false,usingRawAccessoriesMod:false,noDripProfile:false,protectOriginalEaPlayers:false});
 
 // Snapshot source donors before any generated roster is applied. Receiver
 // records/visuals are plain, isolated objects: the active franchise is read-only.

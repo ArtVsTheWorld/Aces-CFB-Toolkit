@@ -1,0 +1,1116 @@
+{
+  "verification": "Read-only offline authenticated FBMod decoding with the installed MMC reader and CollegeFB27 SDK, 2026-10-22. These are item metadata, not redistributed textures, scripts, keys or decrypted payloads. Existing equipped-save/menu labels take precedence over generic definition labels. Visual rendering and combined-mod load order still require in-game testing.",
+  "sources": {
+    "unlocked": "0d2c7ba8f1a8237e6ffd2cf67cbfda92e1e079c5ac7277fee5990404c085d2b2",
+    "raw": "af113e09af9083d9fa52e570019c8215736ac0802028b86d719991b5c55f50fc",
+    "eljax": "0b4fe5fc01a11889ca2a07489700f1c2209b05bd5dcbb89437bff113dbf5d212"
+  },
+  "sourceVersions": { "unlocked": "0.97", "raw": "3.1.0", "eljax": "2.0" },
+  "displayNames": {
+    "ThighPad_Logo": "Logo Thigh Pad",
+    "v_Tattoos_Polynesian_Tongan_Arm_C_v01": "Tongan V",
+    "GearFootwear_shoe_mid_NikeAlphaMenacePro299Club": "Nike Vapor Edge Pro 360 2 Spat",
+    "ArmTattoo_Tattoos_Polynesian_Hawaiian_Arm_v02": "Polynesian Hawaiian II",
+    "G_CompressionT_Crew_LongSleeve_99Club_B_GOL": "Relaxed Tee Primary",
+    "GuardianCap_GuardianXT2": "Guardian Cap XT 2.0",
+    "ArmTattoo_Tattoos_Polynesian_Maori_Arm_A": "Polynesian Māori I",
+    "v_Tattoos_Japanese_07_ArmSleeve_v02": "Japanese VII",
+    "G_CompressionT_Crew_ShortSleeve_99Club_B_WHI": "Relaxed Tee Black",
+    "GearFootwear_shoe_low_AdidasAE1": "Adidas AE 1",
+    "Towel_South": "Towel - South",
+    "ArmTattoo_Tattoos_Polynesian_Maori_Arm_B": "Polynesian Māori II",
+    "GearFootwear_shoe_high_Adidas_LeatherTurf80s": "Adidas F50 Hyperfast Prototype",
+    "ArmTattoo_Tattoos_Polynesian_Tongan_Arm_A": "Polynesian Tongan I",
+    "ArmTattoo_Tattoos_Polynesian_Tongan_Arm_C_v01": "Polynesian Tongan III",
+    "G_CompressionT_Crew_LongSleeve_NikeHQ_B_BEI": "Nike HQ Core Long Sleeve Beige",
+    "ArmTattoo_Tattoos_Japanese_12_Arm_v02": "Japanese arm design 12",
+    "ArmTattoo_Tattoos_Japanese_08_ArmSleeve_v01": "Japanese arm sleeve — design 08",
+    "v_Tattoos_Japanese_09_ArmFloating_v02": "Japanese IX",
+    "ArmTattoo_Tattoos_Polynesian_Samoan_Arm_v01": "Polynesian Samoan III",
+    "GearFootwear_shoeLowVintage_nike": "Nike Foamposite Pro - School PE",
+    "GearMouthpiece_Mouthguard1_White": "Mouthguard White",
+    "ArmTattoo_Tattoos_Polynesian_Hawaiian_Arm": "Polynesian Hawaiian I",
+    "OakleyPrizmTorch_Visor": "Oakley Prizm Torch Visor",
+    "ArmTattoo_Tattoos_Japanese_07_ArmSleeve_v02": "Japanese arm sleeve — design 07",
+    "GearFootwear_shoe_low_NikeVaporEdge_zebra": "Nike Vapor Edge Speed FOTF PE",
+    "v_Tattoos_Japanese_05_ArmFloating_v01": "Japanese V",
+    "GearNeckpad_VintageSingleNeckRoll": "Balaclava White",
+    "GearFootwear_shoe_mid_NikeAlphaMenacePro": "Nike Vapor Edge Pro 360 VC",
+    "v_Tattoos_Polynesian_Hawaiian_Arm_v02": "Hawaiian III",
+    "GearMouthpiece_Mouthguard1_SecondaryColor": "Mouthguard Secondary Color",
+    "Socks_High": "High Socks (CFB27 Unlocked)",
+    "ArmTattoo_Tattoos_Polynesian_Tongan_Arm_B": "Polynesian Tongan II",
+    "v_Tattoos_Japanese_08_ArmSleeve_v01": "Japanese VIII",
+    "GearNeckpad_VintageNeckRoll": "Balaclava Black",
+    "ArmTattoo_Tattoos_Japanese_02_FullSleeveL": "Japanese full-arm sleeve — design 02",
+    "G_CompressionT_Crew_LongSleeve_NikeHQ_B_GRE": "Nike HQ Core Long Sleeve Green",
+    "GearFootwear_shoe_Mid_NikeVaporEdge360Untouchable": "Nike Vapor Edge 360 Untouchable",
+    "G_CompressionT_Crew_ShortSleeve_99Club_B_GOL": "Relaxed Tee White",
+    "GearMouthpiece_Mouthguard1_TeamColor": "Mouthguard Team Color",
+    "Socks_CrewCut": "Crew Cut (CFB27 Unlocked)",
+    "ArmTattoo_Tattoos_Japanese_01_FullSleeveR": "Japanese full-arm sleeve — design 01",
+    "ArmTattoo_Tattoos_Japanese_03_ForearmHalfSleeve": "Japanese forearm half-sleeve — design 03",
+    "OakleyPrizm60Gray_Visor": "Oakley Prizm 60 Gray Visor",
+    "G_CompressionT_Crew_LongSleeve_NikeHQ_B_NAV": "Nike HQ Core Long Sleeve Navy",
+    "GearFootwear_shoe_High_NikeForceSavageEliteTDW": "Nike Force Savage Elite",
+    "GearFootwear_shoe_Low_NikeVaporUntouchable": "Nike Vapor Untouchable",
+    "G_CompressionT_Crew_LongSleeve_99Club_B_WHI": "Relaxed Tee Secondary",
+    "GearFootwear_shoe_low_Jordan5_99Club": "Jordan Low 5",
+    "GearFootwear_shoe_mid_AirJordanRetro199": "Nike Mercurial Superfly XI Kobe",
+    "GearFootwear_shoe_low_AirJordanXI": "Jordan XI Low",
+    "G_Hoodie_Sleeveless_Ravens_ML_PUR": "Madden 24 Purple Hoodie",
+    "OakleyPrizm24K_Visor": "Oakley Prizm 24K Visor",
+    "v_Tattoos_Japanese_10_ArmFloating_v01": "Japanese X",
+    "GearFootwear_shoe_low_NikeVaporEdge": "Nike Vapor Edge",
+    "GearNeckpad_UnderPads": "Neck Band",
+    "Socks_Layered": "Layered Socks",
+    "v_Tattoos_Japanese_12_Arm_v02": "Japanese XII",
+    "GearFootwear_shoe_low_NikeVaporEdgePro3602": "Nike Vapor Edge Pro 360 2",
+    "GearFootwear_shoe_Mid_NikeAlphaPro34TD": "Nike Vapor Speed Kobe 5",
+    "ArmTattoo_Tattoos_Polynesian_Samoan_StickerB": "Polynesian Samoan II — sticker design",
+    "Socks_MiniCrewCut": "Mini Crew Cut",
+    "G_CompressionT_Crew_LongSleeve_NikeHQ_B_GLD": "Nike HQ Core Long Sleeve Gold",
+    "GearMouthpiece_Mouthguard1_Black": "Mouthguard Black",
+    "ArmTattoo_Tattoos_Polynesian_Samoan_StickerA": "Polynesian Samoan I — sticker design",
+    "ArmTattoo_Tattoos_Polynesian_Tongan_Arm_C_v02": "Polynesian Tongan IV",
+    "v_Tattoos_Polynesian_Samoan_Arm_v01": "Samoan IV",
+    "GearWrist_wristTapedMax_WhiteCross": "Taped Wrist with Cross",
+    "G_CompressionT_Crew_ShortSleeve_BasicJ_JER": "White Compression Tee",
+    "G_CompressionT_Crew_ShortSleeve_BasicJ_WHI": "Irish Jamo Sleeves White",
+    "G_CompressionT_Crew_ShortSleeve_BasicJ_SEC": "Irish Jamo Sleeves Secondary",
+    "G_CompressionT_Crew_ShortSleeve_BasicJ_PRI": "Irish Jamo Sleeves Primary",
+    "G_CompressionT_Crew_ShortSleeve_BasicJ_BLA": "Irish Jamo Sleeves Black",
+    "Gear_JerseyStyle_RolledLowest_Untucked": "Jersey Rolled Lowest Untucked",
+    "ElbowGear_RubberBands3": "Rubber Bands 3",
+    "ElbowGear_RubberBands2": "Rubber Bands 2",
+    "ElbowGear_RubberBands1": "Rubber Bands 1",
+    "GearMouthpiece_PacifierDualHanging_TeamColor10": "Nike Hanging Mouthpiece Secondary / White",
+    "GearMouthpiece_PacifierDualHanging_TeamColor9": "Nike Hanging Mouthpiece Secondary / Black",
+    "NeckWear_Turtleneck_Tight7": "NXTRND Turtleneck White / Primary Logo",
+    "NeckWear_Turtleneck_Tight6": "Battle Turtleneck White / Primary Logo",
+    "ThighPad_Shells": "Shell Thigh Pads",
+    "FaceMarks_NoseTape_T": "Nose Tape Trust God",
+    "FaceMarks_NoseTape_G": "Nose Tape GABOS",
+    "FaceMarks_NoseTape_KE": "Nose Tape Kill Everybody",
+    "GearMouthpiece_PacifierDualHanging_White7": "Hanging Mouthpiece Pacifier Neon Blue and Pink",
+    "GearSpats_overrides_custom": "Custom Color Cleats",
+    "GearSpats_override_secpri": "Secondary And Primary Color Cleats",
+    "GearSpats_override_prisec": "Primary And Secondary Color Cleats",
+    "GearFootwear_shoe_low_NikeVaporUntouchablePro_v3": "Nike Vapor Untouchable Pro Customs",
+    "GearNeckpad_SkiWhite": "Ski Mask White",
+    "Gear_JerseyStyle_LowTuckedBP": "Rolled Jersey Low",
+    "GearNeckpad_QCollar": "Q Collar",
+    "CujoMatty_ArmTats_41": "CujoMatty custom arm design 41",
+    "CujoMatty_ArmTats_40": "CujoMatty custom arm design 40",
+    "CujoMatty_ArmTats_39": "CujoMatty custom arm design 39",
+    "CujoMatty_ArmTats_38": "CujoMatty custom arm design 38",
+    "CujoMatty_ArmTats_37": "CujoMatty custom arm design 37",
+    "CujoMatty_ArmTats_36": "CujoMatty custom arm design 36",
+    "CujoMatty_ArmTats_35": "CujoMatty custom arm design 35",
+    "CujoMatty_ArmTats_34": "CujoMatty custom arm design 34",
+    "CujoMatty_ArmTats_33": "CujoMatty custom arm design 33",
+    "CujoMatty_ArmTats_32": "CujoMatty custom arm design 32",
+    "CujoMatty_ArmTats_31": "CujoMatty custom arm design 31",
+    "CujoMatty_ArmTats_30": "CujoMatty custom arm design 30",
+    "CujoMatty_ArmTats_29": "CujoMatty custom arm design 29",
+    "CujoMatty_ArmTats_28": "CujoMatty custom arm design 28",
+    "CujoMatty_ArmTats_26": "CujoMatty custom arm design 26",
+    "CujoMatty_ArmTats_27": "CujoMatty custom arm design 27",
+    "CujoMatty_ArmTats_25": "CujoMatty custom arm design 25",
+    "CujoMatty_ArmTats_24": "CujoMatty custom arm design 24",
+    "CujoMatty_ArmTats_23": "CujoMatty custom arm design 23",
+    "CujoMatty_ArmTats_22": "CujoMatty custom arm design 22",
+    "CujoMatty_ArmTats_21": "CujoMatty custom arm design 21",
+    "LegTattoo_Five": "Custom leg design 5",
+    "LegTattoo_Four": "Custom leg design 4",
+    "LegTattoo_Three": "Custom leg design 3",
+    "LegTattoo_Two": "Custom leg design 2",
+    "LegTattoo_One": "Custom leg design 1",
+    "GearLegBase_Socks_Under_NFL_Secondary": "NFL Style Undersock Secondary",
+    "GearLegBase_Socks_Under_NFL_Primary": "NFL Style Undersock Primary",
+    "GearLegBase_Socks_Under_NFL_White": "NFL Style Undersock White",
+    "GearLegBase_Socks_Under_NFL_Black": "NFL Style Undersock Black",
+    "Gear_JerseyStyle_SleeveTight_Untucked": "Tight Sleeves Untucked",
+    "Gear_Low_TuckedUndershirt": "Jersey Rolled Low Tucked Undershirt",
+    "GearNeckpad_TurtleSmooth2": "Turtleneck Smooth Large",
+    "GearNeckpad_Turtleneck_Wrinkle": "Turtleneck Wrinkle Small",
+    "GearNeckpad_Turtleneck_Smooth": "Turtleneck Smooth Small",
+    "GearNeckpad_Untucked": "Relaxed T Shirt",
+    "GearSpats_override_blabla": "Black Cleats",
+    "GearSpats_override_blawhi": "Black And White Cleats",
+    "GearSpats_override_whipri": "White And Primary Color Cleats",
+    "GearSpats_override_blapri": "Black And Primary Color Cleats",
+    "GearSpats_override_blasec": "Black And Secondary Color Cleats",
+    "GearSpats_override_whibla": "White And Black Cleats",
+    "GearSpats_override_whisec": "White And Secondary Color Cleats",
+    "GearSpats_override_whiwhi": "White Cleats",
+    "GearLegBase_Socks_Under_Both_White": "Compression Pants White",
+    "GearLegBase_Socks_Under_Both_Secondary": "Compression Pants Secondary",
+    "GearLegBase_Socks_Under_Both_Primary": "Compression Pants Primary",
+    "GearLegBase_Socks_Under_Both_Black": "Compression Pants Black",
+    "GearLegsBase_RightSleeve_Secondary": "Leg Sleeve Right Secondary",
+    "GearLegsBase_RightSleeve_Primary": "Leg Sleeve Right Primary",
+    "GearLegsBase_RightSleeve_Black": "Leg Sleeve Right Black",
+    "GearLegsBase_RightSleeve_White": "Leg Sleeve Right White",
+    "GearLegsBase_LeftSleeve_White": "Leg Sleeve Left White",
+    "GearLegsBase_LeftSleeve_Black": "Leg Sleeve Left Black",
+    "GearLegsBase_LeftSleeve_Secondary": "Leg Sleeve Left Secondary",
+    "GearLegsBase_LeftSleeve_Primary": "Leg Sleeve Left Primary",
+    "GearNeckpad_TurtleneckWrinkle2": "Turtleneck Wrinkle Large",
+    "GuardianCap_GuardianXT_Sleeve": "Guardian Cap Sleeve",
+    "GuardianCap_GuardianXT2_Sleeve": "Guardian Cap Sleeve XT2",
+    "GuardianCap_GuardianXT1": "Guardian Cap XT",
+    "GearArmSleeve_Elbow_armTape_normal_TeamColor": "Elbow Sleeve Primary",
+    "GearArmSleeve_Elbow_armTape_normal_SecondaryColor": "Elbow Sleeve Secondary",
+    "GearArmSleeve_Elbow_armTape_normal_Black": "Elbow Sleeve Black",
+    "GearArmSleeve_Bands_armTape_normal_OffWhite": "Arm Bands White",
+    "GearArmSleeve_Elbow_armTape_normal_OffWhite": "Elbow Sleeve White",
+    "GearWrist_wristBandLogo_TeamColor": "Wrist Band Logo Primary",
+    "GearWrist_wristBandLogo_SecondaryColor": "Wrist Band Logo Secondary",
+    "GearWrist_wristBandLogo_Black": "Wrist Band Logo Black",
+    "GearWrist_wristBandLogo_White": "Wrist Band Logo White",
+    "GearBicepBand_White": "Bicep Band White",
+    "GearBicepBand_TeamColor": "Bicep Band Primary",
+    "GearBicepBand_SecondaryColor": "Bicep Band Secondary",
+    "GearBicepBand_Black": "Bicep Band Black",
+    "GearNeckpad_SkiSecondary": "Vintage Single Neck Roll",
+    "GearNeckpad_SkiPrimary": "Vintage Single Neck Roll",
+    "GearNeckpad_SkiBlack": "Ski Mask Black",
+    "ArmTattoo_Tattoos_Japanese_01_FullSleeveR2": "Japanese full-arm sleeve — design 01, alternate",
+    "ArmTattoo_Tattoos_Japanese_08_ArmSleeve_v03": "Japanese Sleeve IV",
+    "ArmTattoo_Tattoos_Japanese_08_ArmSleeve_v02": "Japanese arm sleeve — design 08, alternate",
+    "ArmTattoo_Tattoos_Japanese_07_ArmSleeve_v03": "Japanese arm sleeve — design 07, alternate",
+    "ArmTattoo_Tattoos_Japanese_03_ForearmHalfSleeve2": "Japanese forearm half-sleeve — design 03, alternate",
+    "ArmTattoo_Tattoos_Japanese_02_FullSleeveL2": "Japanese full-arm sleeve — design 02, alternate",
+    "GearMouthpiece_PacifierDualHanging_Black2": "Battle Hanging Mouthpiece Pacifier Black",
+    "GearMouthpiece_PacifierDualHanging_Black3": "NXTRND Hanging Mouthpiece Pacifier Black",
+    "GearMouthpiece_PacifierDualHanging_Blue2": "Battle Hanging Mouthpiece Pacifier Blue",
+    "GearMouthpiece_PacifierDualHanging_Blue3": "NXTRND Hanging Mouthpiece Pacifier Blue",
+    "GearMouthpiece_PacifierDualHanging_Green2": "Battle Hanging Mouthpiece Pacifier Green",
+    "GearMouthpiece_PacifierDualHanging_Green3": "NXTRND Hanging Mouthpiece Pacifier Green",
+    "GearMouthpiece_PacifierDualHanging_LightBlue2": "Battle Hanging Mouthpiece Pacifier Light Blue",
+    "GearMouthpiece_PacifierDualHanging_LightBlue3": "NXTRND Hanging Mouthpiece Pacifier Light Blue",
+    "GearMouthpiece_PacifierDualHanging_Neon2": "Battle Mouthpiece Pacifier Neon",
+    "GearMouthpiece_PacifierDualHanging_Neon3": "NXTRND Mouthpiece Pacifier Neon",
+    "GearMouthpiece_PacifierDualHanging_Orange2": "Battle Hanging Mouthpiece Pacifier Orange",
+    "GearMouthpiece_PacifierDualHanging_Orange3": "NXTRND Hanging Mouthpiece Pacifier Orange",
+    "GearMouthpiece_PacifierDualHanging_Pink2": "Battle Hanging Mouthpiece Pacifier Pink",
+    "GearMouthpiece_PacifierDualHanging_Pink3": "NXTRND Hanging Mouthpiece Pacifier Pink",
+    "GearMouthpiece_PacifierDualHanging_Purple2": "Battle Hanging Mouthpiece Pacifier Purple",
+    "GearMouthpiece_PacifierDualHanging_Purple3": "NXTRND Hanging Mouthpiece Pacifier Purple",
+    "GearMouthpiece_PacifierDualHanging_Red2": "Battle Hanging Mouthpiece Pacifier Red",
+    "GearMouthpiece_PacifierDualHanging_Red3": "NXTRND Hanging Mouthpiece Pacifier Red",
+    "GearMouthpiece_PacifierDualHanging_SecondaryColor2": "Battle Hanging Mouthpiece Pacifier Secondary Color",
+    "GearMouthpiece_PacifierDualHanging_SecondaryColor3": "NXTRND Hanging Mouthpiece Pacifier Secondary Color",
+    "GearMouthpiece_PacifierDualHanging_TeamColor2": "Battle Hanging Mouthpiece Pacifier Team Color",
+    "GearMouthpiece_PacifierDualHanging_TeamColor3": "NXTRND Hanging Mouthpiece Pacifier Team Color",
+    "GearMouthpiece_PacifierDualHanging_White2": "Battle Hanging Mouthpiece Pacifier White",
+    "GearMouthpiece_PacifierDualHanging_White3": "NXTRND Hanging Mouthpiece Pacifier White",
+    "GearMouthpiece_PacifierDualHanging_Yellow2": "Battle Hanging Mouthpiece Pacifier Yellow",
+    "GearMouthpiece_PacifierDualHanging_Yellow3": "NXTRND Hanging Mouthpiece Pacifier Yellow",
+    "GearMouthpiece_PacifierDualHanging_Black4": "Nike Hanging Mouthpiece — Light Blue / Pink",
+    "Handwarmer_Standard_Logo": "Handwarmer Standard Logo",
+    "GearFootwear_shoe_low_Jordan5_99Club2": "Mercurial Superfly",
+    "GearArmSleeve_NikeProDriFitSleeve2_TeamColor": "Double Sleeve Primary and Secondary",
+    "GearArmSleeve_NikeProDriFitSleeve2_SecondaryColor": "Double Sleeve Secondary and Primary",
+    "GearArmSleeve_NikeProDriFitSleeve2_Black": "Double Sleeve Black and Primary",
+    "GearArmSleeve_NikeProDriFitSleeve2a_Black": "Double Sleeve Black and Secondary",
+    "GearMouthpiece_PacifierDualHanging_White4": "Hanging Mouthpiece Pacifier Black and Green",
+    "GearMouthpiece_PacifierDualHanging_White5": "Hanging Mouthpiece Pacifier Smoke Blue and Pink",
+    "GearMouthpiece_PacifierDualHanging_White6": "Hanging Mouthpiece Pacifier Cosmic Peach",
+    "GearMouthpiece_PacifierDualHanging_White8": "Hanging Mouthpiece Pacifier Smoke Blue",
+    "GearMouthpiece_PacifierDualHanging_White9": "Hanging Mouthpiece Pacifier Pink and Green",
+    "GearMouthpiece_PacifierDualHanging_White10": "Hanging Mouthpiece Pacifier Smoke Green",
+    "GearMouthpiece_PacifierDualHanging_White11": "Hanging Mouthpiece Pacifier Pure Gray",
+    "GearMouthpiece_PacifierDualHanging_White12": "Hanging Mouthpiece Pacifier Purple and Green",
+    "GearVisor_visorOakley_Mirror": "Oakley Visor Mirror",
+    "GearMouthpiece_PacifierDualHanging_TeamColor4": "Battle Hanging Mouthpiece Primary / Secondary",
+    "GearMouthpiece_PacifierDualHanging_TeamColor5": "Nike Hanging Mouthpiece Primary / Black",
+    "GearMouthpiece_PacifierDualHanging_TeamColor7": "Shock Hanging Mouthpiece Primary / Secondary",
+    "GearMouthpiece_PacifierDualHanging_SecondaryColor4": "Battle Hanging Mouthpiece Secondary / Primary",
+    "GearMouthpiece_PacifierDualHanging_TeamColor6": "Nike Hanging Mouthpiece Primary / White",
+    "GearMouthpiece_PacifierDualHanging_TeamColor8": "Shock Hanging Mouthpiece Primary / White",
+    "NeckWear_Turtleneck_Tight2": "Battle Turtleneck Primary / White Logo",
+    "NeckWear_Turtleneck_Tight3": "Battle Turtleneck Primary / Black Logo",
+    "NeckWear_Turtleneck_Tight4": "NXTRND Turtleneck Primary / White Logo",
+    "NeckWear_Turtleneck_Tight5": "NXTRND Turtleneck Primary / Black Logo",
+    "ThighPad_BeastMode_Logo": "Beast Mode Thigh Pads",
+    "ThighPad_CheatCode_Logo": "Cheat Code Thigh Pads",
+    "ThighPad_Chosen_Logo": "Chosen 1 Thigh Pads",
+    "ThighPad_Joker_Logo": "Joker Thigh Pads",
+    "ThighPad_Lion_Logo": "Lion Thigh Pads",
+    "FaceGear_BalaclavaNone": "Remove Balaclava",
+    "Towel2_South": "String Towel",
+    "GearLegBase_Socks_Under_Both_Black2": "Compression Pants — variant 2 Black",
+    "GearLegBase_Socks_Under_Both_White2": "Compression Pants — variant 2 White",
+    "GearLegBase_Socks_Under_Both_Secondary2": "Compression Pants — variant 2 Secondary",
+    "GearLegBase_Socks_Under_Both_Primary2": "Compression Pants — variant 2 Primary",
+    "FaceMarks_NoseTape_C1": "Nose Tape Custom 1",
+    "FaceMarks_NoseTape_C2": "Nose Tape Custom 2",
+    "FaceMarks_NoseTape_C3": "Nose Tape Custom 3",
+    "FaceMarks_NoseTape_C4": "Nose Tape Custom 4",
+    "FaceMarks_NoseTape_C5": "Nose Tape Custom 5",
+    "FaceMarks_NoseTape_C6": "Nose Tape Custom 6",
+    "FaceMarks_NoseTape_C7": "Nose Tape Custom 7",
+    "FaceMarks_NoseTape_C8": "Nose Tape Custom 8",
+    "FaceMarks_NoseTape_C9": "Nose Tape Custom 9",
+    "FaceMarks_NoseTape_C10": "Nose Tape Custom 10",
+    "GearPants_Cutoff": "Pants Cutoff",
+    "GearPants_OnKnee": "Pants Standard",
+    "Gear_JerseyStyle_RolledLowest": "Jersey Rolled Lowest",
+    "EarAccessory_None": "No Earrings",
+    "Gear_JerseyStyle_RawShoulderCaps_Both_JerseyStyle_Tucked": "Shoulder Caps: Both — Tucked",
+    "Gear_JerseyStyle_RawShoulderCaps_Right_JerseyStyle_Tucked": "Shoulder Caps: Right — Tucked",
+    "Gear_JerseyStyle_RawShoulderCaps_Left_JerseyStyle_Tucked": "Shoulder Caps: Left — Tucked",
+    "Gear_JerseyStyle_RawShoulderCaps_Both_JerseyStyle_Rolled": "Shoulder Caps: Both — Rolled",
+    "Gear_JerseyStyle_RawShoulderCaps_Right_JerseyStyle_Rolled": "Shoulder Caps: Right — Rolled",
+    "Gear_JerseyStyle_RawShoulderCaps_Left_JerseyStyle_Rolled": "Shoulder Caps: Left — Rolled",
+    "Gear_JerseyStyle_RawShoulderCaps_Both_Gear_Low_TuckedUndershirt": "Shoulder Caps: Both — Low Tucked Undershirt",
+    "Gear_JerseyStyle_RawShoulderCaps_Right_Gear_Low_TuckedUndershirt": "Shoulder Caps: Right — Low Tucked Undershirt",
+    "Gear_JerseyStyle_RawShoulderCaps_Left_Gear_Low_TuckedUndershirt": "Shoulder Caps: Left — Low Tucked Undershirt",
+    "Gear_JerseyStyle_RawShoulderCaps_Both_Gear_JerseyStyle_SleeveTight_Untucked": "Shoulder Caps: Both — Sleeve Tight Untucked",
+    "Gear_JerseyStyle_RawShoulderCaps_Right_Gear_JerseyStyle_SleeveTight_Untucked": "Shoulder Caps: Right — Sleeve Tight Untucked",
+    "Gear_JerseyStyle_RawShoulderCaps_Left_Gear_JerseyStyle_SleeveTight_Untucked": "Shoulder Caps: Left — Sleeve Tight Untucked",
+    "Gear_JerseyStyle_RawShoulderCaps_Both_Gear_JerseyStyle_SleeveTight": "Shoulder Caps: Both — Sleeve Tight",
+    "Gear_JerseyStyle_RawShoulderCaps_Right_Gear_JerseyStyle_SleeveTight": "Shoulder Caps: Right — Sleeve Tight",
+    "Gear_JerseyStyle_RawShoulderCaps_Left_Gear_JerseyStyle_SleeveTight": "Shoulder Caps: Left — Sleeve Tight",
+    "Gear_JerseyStyle_RawShoulderCaps_Both_Gear_JerseyStyle_SleeveStandard": "Shoulder Caps: Both — Sleeve Standard",
+    "Gear_JerseyStyle_RawShoulderCaps_Right_Gear_JerseyStyle_SleeveStandard": "Shoulder Caps: Right — Sleeve Standard",
+    "Gear_JerseyStyle_RawShoulderCaps_Left_Gear_JerseyStyle_SleeveStandard": "Shoulder Caps: Left — Sleeve Standard",
+    "Gear_JerseyStyle_RawShoulderCaps_Both_Gear_JerseyStyle_SleeveLong": "Shoulder Caps: Both — Sleeve Long",
+    "Gear_JerseyStyle_RawShoulderCaps_Right_Gear_JerseyStyle_SleeveLong": "Shoulder Caps: Right — Sleeve Long",
+    "Gear_JerseyStyle_RawShoulderCaps_Left_Gear_JerseyStyle_SleeveLong": "Shoulder Caps: Left — Sleeve Long",
+    "Gear_JerseyStyle_RawShoulderCaps_Both_Gear_JerseyStyle_Rolled": "Shoulder Caps: Both — Rolled",
+    "Gear_JerseyStyle_RawShoulderCaps_Right_Gear_JerseyStyle_Rolled": "Shoulder Caps: Right — Rolled",
+    "Gear_JerseyStyle_RawShoulderCaps_Left_Gear_JerseyStyle_Rolled": "Shoulder Caps: Left — Rolled",
+    "Gear_JerseyStyle_RawShoulderCaps_Both_Gear_JerseyStyle_LowTuckedBP": "Shoulder Caps: Both — Low Tucked BP",
+    "Gear_JerseyStyle_RawShoulderCaps_Right_Gear_JerseyStyle_LowTuckedBP": "Shoulder Caps: Right — Low Tucked BP",
+    "Gear_JerseyStyle_RawShoulderCaps_Left_Gear_JerseyStyle_LowTuckedBP": "Shoulder Caps: Left — Low Tucked BP",
+    "Gear_JerseyStyle_RawShoulderCaps_Both_Gear_JerseyStyle_RolledLow": "Shoulder Caps: Both — Rolled Low",
+    "Gear_JerseyStyle_RawShoulderCaps_Right_Gear_JerseyStyle_RolledLow": "Shoulder Caps: Right — Rolled Low",
+    "Gear_JerseyStyle_RawShoulderCaps_Left_Gear_JerseyStyle_RolledLow": "Shoulder Caps: Left — Rolled Low",
+    "Gear_JerseyStyle_RawShoulderCaps_Both": "Shoulder Caps: Both",
+    "Gear_JerseyStyle_RawShoulderCaps_Right": "Shoulder Caps: Right",
+    "Gear_JerseyStyle_RawShoulderCaps_Left": "Shoulder Caps: Left",
+    "Gear_JerseyStyle_RawShoulderCaps_None": "Shoulder Caps: None",
+    "GuardianCap_RawLongDreadlocksNone": "No Long Dreadlocks",
+    "GuardianCap_RawLongDreadlocksCombo_RawBattleSkullCapWhiteV87": "Long Dreadlocks + White Battle Skullcap",
+    "GuardianCap_RawLongDreadlocksCombo_RawNikeSkullCapWhiteV87": "Long Dreadlocks + White Nike Skullcap",
+    "GuardianCap_RawLongDreadlocksCombo_RawBattleSkullCap": "Long Dreadlocks + Black Battle Skullcap",
+    "GuardianCap_RawLongDreadlocks": "Long Dreadlocks",
+    "GuardianCap_RawLongDreadlocksCombo_RawNikeSkullCap": "Long Dreadlocks + Black Nike Skullcap",
+    "GuardianCap_RawBattleSkullCapWhiteV87": "White Battle Skullcap",
+    "GuardianCap_RawNikeSkullCapWhiteV87": "White Nike Skullcap",
+    "GearBackplate_RawXTech": "X Tech Backplate (RAW)",
+    "GearBackplate_RawXenith": "Xenith Backplate (RAW)",
+    "GearBackplate_RawGoldRush": "Gold Rush Backplate (RAW)",
+    "GearBackplate_RawBattle": "Battle Backplate (RAW)",
+    "GearBackplate_RawGearProTec": "Gear Pro-Tec Backplate (RAW)",
+    "neckwear_raw_turtleneck": "Slim Turtleneck Team Color",
+    "neckwear_raw_turtleneck_secondary": "Slim Turtleneck Secondary Team Color",
+    "neckwear_raw_turtleneck_black": "Slim Turtleneck Black",
+    "neckwear_raw_turtleneck_white": "Slim Turtleneck White",
+    "FaceMarks_NoseTape_DP": "Nose Tape — DP",
+    "FaceMarks_RawEarringsCombo_EyePaint2": "Diamond Stud Earrings + Eye Paint 2",
+    "GearNeckpad_Raw_SilverCrossNecklace": "Raw silver cross necklace",
+    "GearNeckpad_Raw_GoldCrossNecklace": "Raw gold cross necklace",
+    "FaceMarks_RawDiamondStudEarrings": "Diamond Stud Earrings",
+    "FaceMarks_RawEarringsCombo_EyePaint3": "Diamond Stud Earrings + Eye Paint 3",
+    "FaceMarks_RawEarringsCombo_EyePaint": "Diamond Stud Earrings + Eye Paint",
+    "FaceMarks_RawEarringsCombo_EyePaintCross": "Diamond Stud Earrings + Eye Paint Cross",
+    "FaceMarks_RawEarringsCombo_EyeTape": "Diamond Stud Earrings + Eye Tape",
+    "FaceMarks_RawEarringsCombo_EyeTapeLeft": "Diamond Stud Earrings + Eye Tape Right",
+    "FaceMarks_RawEarringsCombo_EyeTapeRight": "Diamond Stud Earrings + Eye Tape Left",
+    "FaceMarks_RawEarringsCombo_NoseEyeTape": "Diamond Stud Earrings + Nose and Eye Tape",
+    "FaceMarks_RawEarringsCombo_NoseTape": "Diamond Stud Earrings + Nose Tape",
+    "FaceMarks_RawEarringsCombo_NoseTapeEyePaint": "Diamond Stud Earrings + Nose Tape Eye Paint",
+    "FaceMarks_RawEarringsCombo_NoseTape_DP": "Diamond Stud Earrings + Nose Tape — DP",
+    "FaceMarks_RawEarringsCombo_NoseTape_G": "Diamond Stud Earrings + Nose Tape GABOS",
+    "FaceMarks_RawEarringsCombo_NoseTape_T": "Diamond Stud Earrings + Nose Tape Trust God",
+    "FaceMarks_RawEarringsCombo_NoseTape_KE": "Diamond Stud Earrings + Nose Tape Kill Everybody",
+    "GuardianCap_RawBattleSkullCap": "Black Battle Skullcap",
+    "GuardianCap_RawNikeSkullCap": "Black Nike Skullcap",
+    "FaceMarks_RawNoseEyeTape": "Raw Nose and Eye Tape",
+    "FaceMarks_RawEarringsCombo_RawNoseEyeTape": "Diamond Stud Earrings + Raw Nose and Eye Tape",
+    "FaceMarks_RawEarringsCombo_NoseTape_nolove": "Diamond Stud Earrings + Nose and Eye Tape — No Love",
+    "FaceMarks_RawNoseTape_nolove": "Nose and Eye Tape — No Love",
+    "FaceMarks_RawEarringsCombo_NoseTape_dontblink": "Diamond Stud Earrings + Nose and Eye Tape — Don't Blink",
+    "FaceMarks_RawNoseTape_dontblink": "Nose and Eye Tape — Don't Blink",
+    "FaceMarks_RawEarringsCombo_NoseTape_builtdiff": "Diamond Stud Earrings + Nose and Eye Tape — Built Different",
+    "FaceMarks_RawNoseTape_builtdiff": "Nose and Eye Tape — Built Different",
+    "FaceMarks_RawEarringsCombo_NoseTape_talkcrazy": "Diamond Stud Earrings + Nose and Eye Tape — Talk Crazy",
+    "FaceMarks_RawNoseTape_talkcrazy": "Nose and Eye Tape — Talk Crazy",
+    "FaceMarks_RawEarringsCombo_NoseTape_notsorry": "Diamond Stud Earrings + Nose and Eye Tape — Not Sorry",
+    "FaceMarks_RawNoseTape_notsorry": "Nose and Eye Tape — Not Sorry",
+    "FaceMarks_RawEarringsCombo_NoseTape_imfnopen": "Diamond Stud Earrings + Nose and Eye Tape — I'm F'n Open",
+    "FaceMarks_RawNoseTape_imfnopen": "Nose and Eye Tape — I'm F'n Open",
+    "FaceMarks_RawEarringsCombo_NoseTape_killall": "Diamond Stud Earrings + Nose and Eye Tape — Kill All",
+    "FaceMarks_RawNoseTape_killall": "Nose and Eye Tape — Kill All",
+    "FaceMarks_RawEarringsCombo_NoseTape_540baby": "Diamond Stud Earrings + Nose and Eye Tape — 540 Baby",
+    "FaceMarks_RawNoseTape_540baby": "Nose and Eye Tape — 540 Baby",
+    "FaceMarks_RawEarringsCombo_NoseTape_john316": "Diamond Stud Earrings + Nose and Eye Tape — John 3:16",
+    "FaceMarks_RawNoseTape_john316": "Nose and Eye Tape — John 3:16",
+    "FaceMarks_RawEarringsCombo_NoseTape_luke137": "Diamond Stud Earrings + Nose and Eye Tape — Luke 1:37",
+    "FaceMarks_RawNoseTape_luke137": "Nose and Eye Tape — Luke 1:37",
+    "FaceMarks_RawEarringsCombo_NoseTape_1hitta": "Diamond Stud Earrings + Nose and Eye Tape — 1 Hitta",
+    "FaceMarks_RawNoseTape_sickem": "Nose and Eye Tape — Sick 'Em",
+    "FaceMarks_RawNoseTape_1hitta": "Nose and Eye Tape — 1 Hitta",
+    "FaceMarks_RawNoseTape_watchme": "Nose and Eye Tape — Watch Me",
+    "FaceMarks_RawNoseTape_theproblem": "Nose and Eye Tape — The Problem",
+    "FaceMarks_RawEarringsCombo_NoseTape_theproblem": "Diamond Stud Earrings + Nose and Eye Tape — The Problem",
+    "FaceMarks_RawNoseTape_fearnone": "Nose and Eye Tape — Fear None",
+    "FaceMarks_RawEarringsCombo_NoseTape_sickem": "Diamond Stud Earrings + Nose and Eye Tape — Sick 'Em",
+    "FaceMarks_RawEarringsCombo_NoseTape_watchme": "Diamond Stud Earrings + Nose and Eye Tape — Watch Me",
+    "FaceMarks_RawEarringsCombo_NoseTape_fearnone": "Diamond Stud Earrings + Nose and Eye Tape — Fear None",
+    "Handwarmer_None": "No Handwarmer",
+    "Waist_PlaycallSheet_White": "Waist Playcall Band White",
+    "Waist_PlaycallSheet_TeamColor": "Waist Playcall Band Team Color",
+    "Handwarmer_Standard": "Handwarmer Standard",
+    "Waist_PlaycallSheet_Black": "Waist Playcall Band Black",
+    "gear_y27_waistworncallsheet_brandlogo_v22_white": "Team Brand Waist Play Call Band White",
+    "gear_y27_waistworncallsheet_brandlogo_v22_black": "Team Brand Waist Play Call Band Black",
+    "gear_y27_waistworncallsheet_brandlogo_v22_teamcolor": "Team Brand Waist Play Call Band Team Color",
+    "gear_y27_waistworncallsheet_teamlogo_v22_teamcolor": "Team Logo Waist Play Call Band Team Color",
+    "gear_y27_waistworncallsheet_teamlogo_v22_black": "Team Logo Waist Play Call Band Black",
+    "gear_y27_waistworncallsheet_teamlogo_v22_white": "Team Logo Waist Play Call Band White",
+    "gearhelmet_speedflex_ext": "Riddell SpeedFlex EXT",
+    "gear_undershirt_irishjamo_jer": "Irish Jamo Sleeves Jersey Color",
+    "gear_undershirt_irishjamo_whi": "Irish Jamo Sleeves White",
+    "gear_undershirt_irishjamo_sec": "Irish Jamo Sleeves Secondary",
+    "gear_undershirt_irishjamo_pri": "Irish Jamo Sleeves Primary",
+    "gear_undershirt_irishjamo_bla": "Irish Jamo Sleeves Black",
+    "gearmouthpiece_brandlogochincover_none": "None - Brand Logo Chin Cover",
+    "gearmouthpiece_brandlogochincover_secondarycolor": "Brand Logo Chin Cover Secondary Color",
+    "gearmouthpiece_brandlogochincover_teamcolor": "Brand Logo Chin Cover Team Color",
+    "gearmouthpiece_brandlogochincover_white": "Brand Logo Chin Cover White",
+    "gearmouthpiece_brandlogochincover_black": "Brand Logo Chin Cover Black",
+    "gearvisor_visorbrandvisors_clear": "Team Brand Visor",
+    "GearVisor_visorTeamOakley_clear": "Team Logo Visor",
+    "geararmsleeve_teambrandarmsleeveshooter_secondarycolor": "Team Brand Arm Sleeve Shooter Secondary",
+    "geararmsleeve_teambrandarmsleeveshooter_teamcolor": "Team Brand Arm Sleeve Shooter Primary",
+    "geararmsleeve_teambrandarmsleeveshooter_black": "Team Brand Arm Sleeve Shooter Black",
+    "geararmsleeve_teambrandarmsleeveshooter_white": "Team Brand Arm Sleeve Shooter White",
+    "geararmsleeve_teambrandlogoarmsleeve_secondarycolor": "Team Brand Logo Arm Sleeve Secondary",
+    "geararmsleeve_teambrandlogoarmsleeve_teamcolor": "Team Brand Logo Arm Sleeve Primary",
+    "geararmsleeve_teambrandlogoarmsleeve_black": "Team Brand Logo Arm Sleeve Black",
+    "geararmsleeve_teambrandlogoarmsleeve_white": "Team Brand Logo Arm Sleeve White",
+    "geararmsleeve_brandxteamlogoarmsleeve_secondarycolor": "Brand x Team Logo Arm Sleeve Secondary",
+    "geararmsleeve_brandxteamlogoarmsleeve_teamcolor": "Brand x Team Logo Arm Sleeve Primary",
+    "geararmsleeve_brandxteamlogoarmsleeve_black": "Brand x Team Logo Arm Sleeve Black",
+    "geararmsleeve_brandxteamlogoarmsleeve_white": "Brand x Team Logo Arm Sleeve White",
+    "waistband_none_v36": "None - Handwarmer Standard",
+    "handwarmer_standard_logo": "Handwarmer Standard Logo",
+    "thighpad_numbercross_v57": "Jersey Number + Cross Thigh Pads"
+  },
+  "items": [
+    {
+      "itemName": "waistband_none_v36",
+      "displayName": "No Handwarmer",
+      "category": "Handwarmer",
+      "slots": ["WaistWear"],
+      "tags": [],
+      "origin": "eljax",
+      "displayOnly": true
+    },
+    {
+      "itemName": "gearmouthpiece_brandlogochincover_none",
+      "displayName": "No Brand Logo Chin Cover",
+      "category": "Chin Cover",
+      "slots": ["Reserved"],
+      "tags": [],
+      "origin": "eljax",
+      "displayOnly": true
+    },
+    {
+      "itemName": "Waist_PlaycallSheet_White",
+      "displayName": "Waist Playcall Band White",
+      "category": "Waist Playcall Band",
+      "slots": [
+        "HeadBand"
+      ],
+      "tags": [
+        "Gender_All"
+      ],
+      "origin": "eljax",
+      "allowedPositions": [
+        "QB"
+      ]
+    },
+    {
+      "itemName": "Waist_PlaycallSheet_TeamColor",
+      "displayName": "Waist Playcall Band Team Color",
+      "category": "Waist Playcall Band",
+      "slots": [
+        "HeadBand"
+      ],
+      "tags": [
+        "Gender_All"
+      ],
+      "origin": "eljax",
+      "allowedPositions": [
+        "QB"
+      ]
+    },
+    {
+      "itemName": "Waist_PlaycallSheet_Black",
+      "displayName": "Waist Playcall Band Black",
+      "category": "Waist Playcall Band",
+      "slots": [
+        "HeadBand"
+      ],
+      "tags": [
+        "Gender_All"
+      ],
+      "origin": "eljax",
+      "allowedPositions": [
+        "QB"
+      ]
+    },
+    {
+      "itemName": "gear_y27_waistworncallsheet_brandlogo_v22_white",
+      "displayName": "Team Brand Waist Play Call Band White",
+      "category": "Waist Playcall Band",
+      "slots": [
+        "HeadBand"
+      ],
+      "tags": [
+        "Gender_All"
+      ],
+      "origin": "eljax",
+      "allowedPositions": [
+        "QB"
+      ]
+    },
+    {
+      "itemName": "gear_y27_waistworncallsheet_brandlogo_v22_black",
+      "displayName": "Team Brand Waist Play Call Band Black",
+      "category": "Waist Playcall Band",
+      "slots": [
+        "HeadBand"
+      ],
+      "tags": [
+        "Gender_All"
+      ],
+      "origin": "eljax",
+      "allowedPositions": [
+        "QB"
+      ]
+    },
+    {
+      "itemName": "gear_y27_waistworncallsheet_brandlogo_v22_teamcolor",
+      "displayName": "Team Brand Waist Play Call Band Team Color",
+      "category": "Waist Playcall Band",
+      "slots": [
+        "HeadBand"
+      ],
+      "tags": [
+        "Gender_All"
+      ],
+      "origin": "eljax",
+      "allowedPositions": [
+        "QB"
+      ]
+    },
+    {
+      "itemName": "gear_y27_waistworncallsheet_teamlogo_v22_teamcolor",
+      "displayName": "Team Logo Waist Play Call Band Team Color",
+      "category": "Waist Playcall Band",
+      "slots": [
+        "HeadBand"
+      ],
+      "tags": [
+        "Gender_All"
+      ],
+      "origin": "eljax",
+      "allowedPositions": [
+        "QB"
+      ]
+    },
+    {
+      "itemName": "gear_y27_waistworncallsheet_teamlogo_v22_black",
+      "displayName": "Team Logo Waist Play Call Band Black",
+      "category": "Waist Playcall Band",
+      "slots": [
+        "HeadBand"
+      ],
+      "tags": [
+        "Gender_All"
+      ],
+      "origin": "eljax",
+      "allowedPositions": [
+        "QB"
+      ]
+    },
+    {
+      "itemName": "gear_y27_waistworncallsheet_teamlogo_v22_white",
+      "displayName": "Team Logo Waist Play Call Band White",
+      "category": "Waist Playcall Band",
+      "slots": [
+        "HeadBand"
+      ],
+      "tags": [
+        "Gender_All"
+      ],
+      "origin": "eljax",
+      "allowedPositions": [
+        "QB"
+      ]
+    },
+    {
+      "itemName": "gearmouthpiece_brandlogochincover_secondarycolor",
+      "displayName": "Brand Logo Chin Cover Secondary Color",
+      "category": "Chin Cover",
+      "slots": [
+        "Reserved"
+      ],
+      "tags": [],
+      "origin": "eljax"
+    },
+    {
+      "itemName": "gearmouthpiece_brandlogochincover_teamcolor",
+      "displayName": "Brand Logo Chin Cover Team Color",
+      "category": "Chin Cover",
+      "slots": [
+        "Reserved"
+      ],
+      "tags": [],
+      "origin": "eljax"
+    },
+    {
+      "itemName": "gearmouthpiece_brandlogochincover_white",
+      "displayName": "Brand Logo Chin Cover White",
+      "category": "Chin Cover",
+      "slots": [
+        "Reserved"
+      ],
+      "tags": [],
+      "origin": "eljax"
+    },
+    {
+      "itemName": "gearmouthpiece_brandlogochincover_black",
+      "displayName": "Brand Logo Chin Cover Black",
+      "category": "Chin Cover",
+      "slots": [
+        "Reserved"
+      ],
+      "tags": [],
+      "origin": "eljax"
+    },
+    {
+      "itemName": "handwarmer_standard_logo",
+      "displayName": "Handwarmer Standard Logo",
+      "category": "Handwarmer",
+      "slots": [
+        "WaistWear"
+      ],
+      "tags": [],
+      "origin": "eljax"
+    },
+    {
+      "itemName": "thighpad_numbercross_v57",
+      "displayName": "Jersey Number + Cross Thigh Pads",
+      "category": "Thigh Pads",
+      "slots": [
+        "LeftThighWear",
+        "RightThighWear"
+      ],
+      "tags": [
+        "Gender_All"
+      ],
+      "origin": "eljax"
+    },
+    {
+      "itemName": "GearNeckpad_VintageNeckRoll",
+      "displayName": "Balaclava Black",
+      "category": "Face Wear",
+      "slots": [
+        "FaceWear"
+      ],
+      "tags": [],
+      "authenticity": "LoadoutAuthenticity_All",
+      "origin": "unlocked",
+      "displayOnly": true
+    },
+    {
+      "itemName": "GearNeckpad_SkiWhite",
+      "displayName": "Ski Mask White",
+      "category": "Face Wear",
+      "slots": [
+        "FaceWear"
+      ],
+      "tags": [
+        "Gender_All"
+      ],
+      "authenticity": "LoadoutAuthenticity_All",
+      "origin": "unlocked",
+      "displayOnly": true
+    },
+    {
+      "itemName": "GearNeckpad_QCollar",
+      "displayName": "Q Collar",
+      "category": "Neckwear",
+      "slots": [
+        "NeckWear"
+      ],
+      "tags": [
+        "Gender_All"
+      ],
+      "authenticity": "LoadoutAuthenticity_All",
+      "origin": "unlocked",
+      "displayOnly": true
+    },
+    {
+      "itemName": "GearNeckpad_TurtleSmooth2",
+      "displayName": "Turtleneck Smooth Large",
+      "category": "Neckwear",
+      "slots": [
+        "NeckWear"
+      ],
+      "tags": [],
+      "authenticity": "LoadoutAuthenticity_Pro",
+      "origin": "unlocked",
+      "displayOnly": true
+    },
+    {
+      "itemName": "GearNeckpad_Turtleneck_Wrinkle",
+      "displayName": "Turtleneck Wrinkle Small",
+      "category": "Neckwear",
+      "slots": [
+        "NeckWear"
+      ],
+      "tags": [],
+      "authenticity": "LoadoutAuthenticity_Pro",
+      "origin": "unlocked",
+      "displayOnly": true
+    },
+    {
+      "itemName": "GearNeckpad_Turtleneck_Smooth",
+      "displayName": "Turtleneck Smooth Small",
+      "category": "Neckwear",
+      "slots": [
+        "NeckWear"
+      ],
+      "tags": [],
+      "authenticity": "LoadoutAuthenticity_Pro",
+      "origin": "unlocked",
+      "displayOnly": true
+    },
+    {
+      "itemName": "GearNeckpad_Untucked",
+      "displayName": "Relaxed T Shirt",
+      "category": "Undershirt",
+      "slots": [
+        "InnerShirt"
+      ],
+      "tags": [],
+      "authenticity": "LoadoutAuthenticity_Pro",
+      "origin": "unlocked",
+      "displayOnly": true
+    },
+    {
+      "itemName": "GearNeckpad_TurtleneckWrinkle2",
+      "displayName": "Turtleneck Wrinkle Large",
+      "category": "Neckwear",
+      "slots": [
+        "NeckWear"
+      ],
+      "tags": [],
+      "authenticity": "LoadoutAuthenticity_Pro",
+      "origin": "unlocked",
+      "displayOnly": true
+    },
+    {
+      "itemName": "GearNeckpad_SkiBlack",
+      "displayName": "Ski Mask Black",
+      "category": "Face Wear",
+      "slots": [
+        "FaceWear"
+      ],
+      "tags": [
+        "Gender_All"
+      ],
+      "authenticity": "LoadoutAuthenticity_All",
+      "origin": "unlocked",
+      "displayOnly": true
+    }
+  ],
+  "tattoos": [
+    {
+      "asset": "v_Tattoos_Polynesian_Tongan_Arm_C_v01",
+      "label": "Polynesian Tongan V",
+      "slots": [
+        "LeftArmTattoo",
+        "RightArmTattoo"
+      ]
+    },
+    {
+      "asset": "v_Tattoos_Japanese_07_ArmSleeve_v02",
+      "label": "Japanese arm design — VII",
+      "slots": [
+        "LeftArmTattoo",
+        "RightArmTattoo"
+      ]
+    },
+    {
+      "asset": "v_Tattoos_Japanese_09_ArmFloating_v02",
+      "label": "Japanese arm design — IX",
+      "slots": [
+        "LeftArmTattoo",
+        "RightArmTattoo"
+      ]
+    },
+    {
+      "asset": "v_Tattoos_Japanese_05_ArmFloating_v01",
+      "label": "Japanese arm design — V",
+      "slots": [
+        "LeftArmTattoo",
+        "RightArmTattoo"
+      ]
+    },
+    {
+      "asset": "v_Tattoos_Polynesian_Hawaiian_Arm_v02",
+      "label": "Polynesian Hawaiian III",
+      "slots": [
+        "LeftArmTattoo",
+        "RightArmTattoo"
+      ]
+    },
+    {
+      "asset": "v_Tattoos_Japanese_08_ArmSleeve_v01",
+      "label": "Japanese arm design — VIII",
+      "slots": [
+        "LeftArmTattoo",
+        "RightArmTattoo"
+      ]
+    },
+    {
+      "asset": "v_Tattoos_Japanese_10_ArmFloating_v01",
+      "label": "Japanese arm design — X",
+      "slots": [
+        "LeftArmTattoo",
+        "RightArmTattoo"
+      ]
+    },
+    {
+      "asset": "v_Tattoos_Japanese_12_Arm_v02",
+      "label": "Japanese arm design — XII",
+      "slots": [
+        "LeftArmTattoo",
+        "RightArmTattoo"
+      ]
+    },
+    {
+      "asset": "v_Tattoos_Polynesian_Samoan_Arm_v01",
+      "label": "Polynesian Samoan IV",
+      "slots": [
+        "LeftArmTattoo",
+        "RightArmTattoo"
+      ]
+    },
+    {
+      "asset": "ArmTattoo_Tattoos_Japanese_08_ArmSleeve_v03",
+      "label": "Japanese arm design — Sleeve IV",
+      "slots": [
+        "LeftArmTattoo",
+        "RightArmTattoo"
+      ]
+    }
+  ],
+  "tattooSlots": {
+    "v_Tattoos_Polynesian_Tongan_Arm_C_v01": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "ArmTattoo_Tattoos_Polynesian_Hawaiian_Arm_v02": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "ArmTattoo_Tattoos_Polynesian_Maori_Arm_A": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "v_Tattoos_Japanese_07_ArmSleeve_v02": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "ArmTattoo_Tattoos_Polynesian_Maori_Arm_B": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "ArmTattoo_Tattoos_Polynesian_Tongan_Arm_A": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "ArmTattoo_Tattoos_Polynesian_Tongan_Arm_C_v01": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "ArmTattoo_Tattoos_Japanese_12_Arm_v02": [
+      "RightArmTattoo"
+    ],
+    "ArmTattoo_Tattoos_Japanese_08_ArmSleeve_v01": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "v_Tattoos_Japanese_09_ArmFloating_v02": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "ArmTattoo_Tattoos_Polynesian_Samoan_Arm_v01": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "ArmTattoo_Tattoos_Polynesian_Hawaiian_Arm": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "ArmTattoo_Tattoos_Japanese_07_ArmSleeve_v02": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "v_Tattoos_Japanese_05_ArmFloating_v01": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "v_Tattoos_Polynesian_Hawaiian_Arm_v02": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "ArmTattoo_Tattoos_Polynesian_Tongan_Arm_B": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "v_Tattoos_Japanese_08_ArmSleeve_v01": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "ArmTattoo_Tattoos_Japanese_02_FullSleeveL": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "ArmTattoo_Tattoos_Japanese_01_FullSleeveR": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "ArmTattoo_Tattoos_Japanese_03_ForearmHalfSleeve": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "v_Tattoos_Japanese_10_ArmFloating_v01": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "v_Tattoos_Japanese_12_Arm_v02": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "ArmTattoo_Tattoos_Polynesian_Samoan_StickerB": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "ArmTattoo_Tattoos_Polynesian_Samoan_StickerA": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "ArmTattoo_Tattoos_Polynesian_Tongan_Arm_C_v02": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "v_Tattoos_Polynesian_Samoan_Arm_v01": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "CujoMatty_ArmTats_41": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "CujoMatty_ArmTats_40": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "CujoMatty_ArmTats_39": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "CujoMatty_ArmTats_38": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "CujoMatty_ArmTats_37": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "CujoMatty_ArmTats_36": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "CujoMatty_ArmTats_35": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "CujoMatty_ArmTats_34": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "CujoMatty_ArmTats_33": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "CujoMatty_ArmTats_32": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "CujoMatty_ArmTats_31": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "CujoMatty_ArmTats_30": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "CujoMatty_ArmTats_29": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "CujoMatty_ArmTats_28": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "CujoMatty_ArmTats_26": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "CujoMatty_ArmTats_27": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "CujoMatty_ArmTats_25": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "CujoMatty_ArmTats_24": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "CujoMatty_ArmTats_23": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "CujoMatty_ArmTats_22": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "CujoMatty_ArmTats_21": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "LegTattoo_Five": [
+      "LeftLegTattoo",
+      "RightLegTattoo"
+    ],
+    "LegTattoo_Four": [
+      "LeftLegTattoo",
+      "RightLegTattoo"
+    ],
+    "LegTattoo_Three": [
+      "LeftLegTattoo",
+      "RightLegTattoo"
+    ],
+    "LegTattoo_Two": [
+      "LeftLegTattoo",
+      "RightLegTattoo"
+    ],
+    "LegTattoo_One": [
+      "LeftLegTattoo",
+      "RightLegTattoo"
+    ],
+    "ArmTattoo_Tattoos_Japanese_01_FullSleeveR2": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "ArmTattoo_Tattoos_Japanese_08_ArmSleeve_v03": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "ArmTattoo_Tattoos_Japanese_08_ArmSleeve_v02": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "ArmTattoo_Tattoos_Japanese_07_ArmSleeve_v03": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "ArmTattoo_Tattoos_Japanese_03_ForearmHalfSleeve2": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ],
+    "ArmTattoo_Tattoos_Japanese_02_FullSleeveL2": [
+      "LeftArmTattoo",
+      "RightArmTattoo"
+    ]
+  },
+  "rawFacepaintItems": [
+    "FaceMarks_RawEarringsCombo_EyePaint2",
+    "FaceMarks_RawEarringsCombo_EyePaint3",
+    "FaceMarks_RawEarringsCombo_EyePaint",
+    "FaceMarks_RawEarringsCombo_EyePaintCross",
+    "FaceMarks_RawEarringsCombo_EyeTape",
+    "FaceMarks_RawEarringsCombo_EyeTapeLeft",
+    "FaceMarks_RawEarringsCombo_EyeTapeRight",
+    "FaceMarks_RawEarringsCombo_NoseEyeTape",
+    "FaceMarks_RawEarringsCombo_NoseTape",
+    "FaceMarks_RawEarringsCombo_NoseTapeEyePaint",
+    "FaceMarks_RawEarringsCombo_NoseTape_DP",
+    "FaceMarks_RawEarringsCombo_NoseTape_G",
+    "FaceMarks_RawEarringsCombo_NoseTape_T",
+    "FaceMarks_RawEarringsCombo_NoseTape_KE",
+    "FaceMarks_RawEarringsCombo_RawNoseEyeTape",
+    "FaceMarks_RawEarringsCombo_NoseTape_nolove",
+    "FaceMarks_RawEarringsCombo_NoseTape_dontblink",
+    "FaceMarks_RawEarringsCombo_NoseTape_builtdiff",
+    "FaceMarks_RawEarringsCombo_NoseTape_talkcrazy",
+    "FaceMarks_RawEarringsCombo_NoseTape_notsorry",
+    "FaceMarks_RawEarringsCombo_NoseTape_imfnopen",
+    "FaceMarks_RawEarringsCombo_NoseTape_killall",
+    "FaceMarks_RawEarringsCombo_NoseTape_540baby",
+    "FaceMarks_RawEarringsCombo_NoseTape_john316",
+    "FaceMarks_RawEarringsCombo_NoseTape_luke137",
+    "FaceMarks_RawEarringsCombo_NoseTape_1hitta",
+    "FaceMarks_RawEarringsCombo_NoseTape_theproblem",
+    "FaceMarks_RawEarringsCombo_NoseTape_sickem",
+    "FaceMarks_RawEarringsCombo_NoseTape_watchme",
+    "FaceMarks_RawEarringsCombo_NoseTape_fearnone"
+  ],
+  "facepaintBaseAssets": {
+    "FaceMarks_RawEarringsCombo_EyePaint2": "FaceMarks_EyePaint2",
+    "FaceMarks_RawEarringsCombo_EyePaint3": "FaceMarks_EyePaint3",
+    "FaceMarks_RawEarringsCombo_EyePaint": "FaceMarks_EyePaint",
+    "FaceMarks_RawEarringsCombo_EyePaintCross": "FaceMarks_EyePaintCross",
+    "FaceMarks_RawEarringsCombo_EyeTape": "FaceMarks_EyeTape",
+    "FaceMarks_RawEarringsCombo_EyeTapeLeft": "FaceMarks_EyeTapeLeft",
+    "FaceMarks_RawEarringsCombo_EyeTapeRight": "FaceMarks_EyeTapeRight",
+    "FaceMarks_RawEarringsCombo_NoseEyeTape": "FaceMarks_NoseEyeTape",
+    "FaceMarks_RawEarringsCombo_NoseTape": "FaceMarks_NoseTape",
+    "FaceMarks_RawEarringsCombo_NoseTapeEyePaint": "FaceMarks_NoseTapeEyePaint",
+    "FaceMarks_RawEarringsCombo_NoseTape_DP": "FaceMarks_NoseTape_DP",
+    "FaceMarks_RawEarringsCombo_NoseTape_G": "FaceMarks_NoseTape_G",
+    "FaceMarks_RawEarringsCombo_NoseTape_T": "FaceMarks_NoseTape_T",
+    "FaceMarks_RawEarringsCombo_NoseTape_KE": "FaceMarks_NoseTape_KE",
+    "FaceMarks_RawEarringsCombo_RawNoseEyeTape": "FaceMarks_RawNoseEyeTape",
+    "FaceMarks_RawEarringsCombo_NoseTape_nolove": "FaceMarks_RawNoseTape_nolove",
+    "FaceMarks_RawEarringsCombo_NoseTape_dontblink": "FaceMarks_RawNoseTape_dontblink",
+    "FaceMarks_RawEarringsCombo_NoseTape_builtdiff": "FaceMarks_RawNoseTape_builtdiff",
+    "FaceMarks_RawEarringsCombo_NoseTape_talkcrazy": "FaceMarks_RawNoseTape_talkcrazy",
+    "FaceMarks_RawEarringsCombo_NoseTape_notsorry": "FaceMarks_RawNoseTape_notsorry",
+    "FaceMarks_RawEarringsCombo_NoseTape_imfnopen": "FaceMarks_RawNoseTape_imfnopen",
+    "FaceMarks_RawEarringsCombo_NoseTape_killall": "FaceMarks_RawNoseTape_killall",
+    "FaceMarks_RawEarringsCombo_NoseTape_540baby": "FaceMarks_RawNoseTape_540baby",
+    "FaceMarks_RawEarringsCombo_NoseTape_john316": "FaceMarks_RawNoseTape_john316",
+    "FaceMarks_RawEarringsCombo_NoseTape_luke137": "FaceMarks_RawNoseTape_luke137",
+    "FaceMarks_RawEarringsCombo_NoseTape_1hitta": "FaceMarks_RawNoseTape_1hitta",
+    "FaceMarks_RawEarringsCombo_NoseTape_theproblem": "FaceMarks_RawNoseTape_theproblem",
+    "FaceMarks_RawEarringsCombo_NoseTape_sickem": "FaceMarks_RawNoseTape_sickem",
+    "FaceMarks_RawEarringsCombo_NoseTape_watchme": "FaceMarks_RawNoseTape_watchme",
+    "FaceMarks_RawEarringsCombo_NoseTape_fearnone": "FaceMarks_RawNoseTape_fearnone"
+  }
+}

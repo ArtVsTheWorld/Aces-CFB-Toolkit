@@ -20,7 +20,7 @@ const runRandomizer = options => {
 const read = file => fs.readFileSync(new URL(file, import.meta.url), "utf8");
 
 test("v20.7.0 and v5.6 Randomizer and v6.0 Patcher retain all original chance defaults", () => {
-  assert.equal(JSON.parse(read("../package.json")).version, "22.0.0");
+  assert.equal(JSON.parse(read("../package.json")).version, "22.5.0");
   for (const id of ["freshman-equipment", "equipment-patcher"]) assert.equal(tools.find(tool => tool.id === id).version, undefined);
   const normalized = normalizeEquipmentOptions({}, true);
   assert.equal(normalized.crossPositionPercent, 10); assert.equal(normalized.multipleDonorPercent, 30);
@@ -106,7 +106,7 @@ test("Oakley conversion leaves missing, none, existing Oakley, and unknown visor
 
 test("Oakley conversion preserves NIL, team and shared-record protection without consuming random rolls", () => {
   const gear = [{ slotType: "Visor", itemAssetName: "GearVisor_visorDark" }];
-  for (const setup of [players => { players[0].IsNIL = true; return {}; }, () => ({ excludedTeamIndexes: new Set([1]) }), players => { const second = player(1); second.CharacterVisuals = ref(0); second.IsNIL = true; players.push(second); return {}; }]) {
+  for (const setup of [players => { Object.assign(players[0],{IsNIL:true,PLYR_ASSETNAME:'SmithJeremiah_8726'}); return {}; }, () => ({ excludedTeamIndexes: new Set([1]) }), players => { const second = player(1); second.CharacterVisuals = ref(0); Object.assign(second,{IsNIL:true,PLYR_ASSETNAME:'SmithJeremiah_8726'}); players.push(second); return {}; }]) {
     const players = [player(0)], visuals = [visual(gear)], before = visuals[0].RawData;
     const options = setup(players); applyGlobalEquipmentFixes(players, visuals, 10, { oakleyVisorFix: true, ...options }); assert.equal(visuals[0].RawData, before);
   }

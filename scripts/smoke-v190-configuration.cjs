@@ -30,6 +30,20 @@ app.whenReady().then(async () => {
   const window = new BrowserWindow({ show: false, width: 1480, height: 1000, webPreferences: { preload: path.join(uiRoot, "src/main/preload.cjs"), contextIsolation: true, sandbox: true, offscreen: true, backgroundThrottling: false } });
   const errors = []; window.webContents.on("console-message", details => { const { level, message } = details; if (message.startsWith('[v200]')) console.log(message); if (level === "error" && !message.includes("ERR_FILE_NOT_FOUND") && !message.includes("'frame-ancestors' is ignored")) errors.push(message); });
   await window.loadFile(path.join(uiRoot, "src/renderer/index.html"));
+  if (process.argv.includes('--scope-force-alignment-only')) {
+    await window.webContents.executeJavaScript(`new Promise(resolve=>{const ready=()=>state.bootstrap?resolve():setTimeout(ready,20);ready()})`);
+    await require('./lib/v225-scope-force-alignment.cjs')(window,root);
+    if (errors.length) throw Error(errors.join('\n'));
+    if (runs.length) throw Error('Alignment checks must not run any tool.');
+    window.destroy();app.quit();return;
+  }
+  if (process.argv.includes('--filter-polish-only')) {
+    await window.webContents.executeJavaScript(`new Promise(resolve=>{const ready=()=>state.bootstrap?resolve():setTimeout(ready,20);ready()})`);
+    await require('./lib/v225-filter-polish.cjs')(window,root);
+    if(process.argv.includes('--tooltip-redshirt'))await require('./lib/v225-tooltip-redshirt.cjs')(window,root);
+    if (errors.length) throw Error(errors.join('\n'));
+    window.destroy();app.quit();return;
+  }
   const result = await window.webContents.executeJavaScript(`(async () => {
     const check = (value, message) => { if (!value) throw new Error(message); };
     const delay = () => new Promise(resolve => setTimeout(resolve, 40));
@@ -45,12 +59,12 @@ app.whenReady().then(async () => {
     navigate("equipment-patcher"); await wait(() => document.querySelector("#configure-helmet-mix"));
     check([...document.querySelectorAll("[data-equipment-panel]")].filter(node => !node.hidden).length === 3, "One equipment control center exposes all primary sections");
     check(document.querySelectorAll("[data-equipment-step]").length === 2, "Only Configure and Review stages");
-    check(document.querySelector("#equipment-skip-nil").checked, "NIL protection defaults preserved");
+    check(document.querySelector("#equipment-protect-ea").checked, "Original EA protection defaults preserved");
     check([...document.querySelectorAll('input[id^="fix-"]')].every(control=>!control.checked), "Every Patcher pass starts off");
     for(const id of ["fix-helmet","fix-rolled","fix-socks","fix-sleeves","fix-nike","fix-visors"])document.getElementById(id).click();
     const teamEntry=document.querySelector(".team-scope-group .configuration-entry"), filterEntry=[...document.querySelectorAll(".player-pool-layout .configuration-entry")].find(node=>node.querySelector("strong").textContent==="Player Filters");
     check(Math.abs(teamEntry.getBoundingClientRect().top-filterEntry.getBoundingClientRect().top)<2,"Player Pool columns align");
-    check(document.querySelector("#equipment-skip-nil").closest(".configuration-source"),"Skip NIL is inside hidden Player Filters source, not inline");
+    check(document.querySelector("#equipment-protect-ea").closest(".configuration-source"),"Protect Original EA is inside hidden Player Filters source, not inline");
     check([...document.querySelector("#equipment-included").options].find(option=>option.textContent==="LSU").dataset.user==="true","Controlled team marker retained on source");
     const filterControl = document.querySelector("#equipment-min"), helmetButton = document.querySelector("#configure-helmet-mix");
     showError({ message: "UI-only diagnostic", details: "No save changed" });
@@ -160,7 +174,7 @@ app.whenReady().then(async () => {
     change(document.querySelector("[data-pool-chance]"), "100"); document.querySelector("[data-pool-clear]").click(); document.querySelector("[data-pool-item]").click();
     const rawChoice = document.querySelector("[data-pool-item]:checked").dataset.poolItem; save();
     check(equipmentOptions("freshman-equipment").modPools.raw.backplates.chance === 100 && equipmentOptions("freshman-equipment").modPools.raw.backplates.items.length === 1, "Pool choices and chances commit atomically");
-    document.querySelector("#equipment-unlocked").click(); open("Unlocked Pool Settings"); change(document.querySelector("[data-pool-category]"), "socks");
+    document.querySelector("#equipment-unlocked").click(); open("CFB27 Unlocked Pool Settings"); change(document.querySelector("[data-pool-category]"), "socks");
     check([...document.querySelectorAll("[data-pool-item]")].every(input => input.dataset.poolItem.startsWith("Socks_")), "Unlocked socks do not contain RAW gear");
     save(); check(equipmentOptions("freshman-equipment").modPools.raw.backplates.items[0] === rawChoice, "Saving the second mod does not overwrite the first");
     const poolPreset = presetConfiguration(); check(poolPreset.values["equipment-mod-pools"] === document.querySelector("#equipment-mod-pools").value, "Pool JSON is included in configuration presets");
@@ -179,13 +193,13 @@ app.whenReady().then(async () => {
     change(document.querySelector("#rating-mode"), "specific"); open("Attributes"); const attribute = [...draft("boost-attributes").options].find(option => option.textContent === "Speed"); pick(draft("boost-attributes"), [attribute.value]); save();
     check(collectOptions("team-boost").positions.length === 2 && collectOptions("team-boost").attributes.length === 1, "Team Boost composes scope, positions, attributes unchanged");
     navigate("nil-toggle"); await wait(() => document.querySelector("#nil-target")); open("Player Scope"); unique();
-    pick(draft("nil-positions"), ["QB"]); pick(draft("nil-classes"), ["Sophomore"]); pick(draft("nil-redshirts"), ["Previous"]); save();
+    pick(draft("nil-positions"), ["QB"]); pick(draft("nil-classes"), ["Sophomore"]); change(draft("nil-redshirts"), "redshirt"); save();
     check(collectOptions("nil-toggle").positions[0] === "QB", "NIL scope commits combined filters");
     const nil = JSON.stringify(collectOptions("nil-toggle")); open("Player Scope"); document.querySelector("[data-config-reset]").click(); cancel(); check(JSON.stringify(collectOptions("nil-toggle")) === nil, "NIL Cancel/reset leaves composition unchanged");
     navigate("jersey-renumber"); await wait(() => document.querySelector("#jersey-skipped")); open("Teams to Skip"); document.querySelector("dialog [data-team-none]").click(); save();
     check(jerseyOptions("jersey-renumber").skippedTeams.length === 0, "Jersey empty=protect none preserved");
     document.querySelector('[name="jersey-mode"][value="no-duplicates"]').click();
-    await wait(() => document.querySelector("#jersey-preview") && !document.querySelector("#renumber-nil"));
+    await wait(() => document.querySelector("#jersey-preview") && !document.querySelector("#jersey-protect-ea"));
     open("Teams to Skip"); check(draft("jersey-skipped").selectedOptions.length === 0, "Team selection survives switching to No Duplicates mode"); cancel();
     navigate("automatic-force-win"); await wait(() => document.querySelector("#force-action"));
     check(!document.querySelector("#force-user-only").checked && !document.querySelector("#force-user-only").disabled, "User Schedule Only defaults off and detects user teams");
@@ -257,6 +271,7 @@ app.whenReady().then(async () => {
     return "All nine tool pages, Settings, draft Save/Cancel/Escape, defaults, unique IDs, validation, selectors/search/donor shift-click, scope semantics, previews, sessions, presets, and no-save guards passed.";
   })()`);
   if (process.argv.includes('--refinements')) console.log(await require('./smoke-v200-refinements.cjs')(window, root));
+  if (process.argv.includes('--alignment')) console.log(await require('./smoke-v225-alignment.cjs')(window, root));
   if (process.argv.includes('--uniforms')) console.log(await require('./smoke-v201-uniforms.cjs')(window, root));
   if (process.argv.includes('--colors')) console.log(await require('./smoke-v201-team-colors.cjs')(window, root));
   fs.mkdirSync(path.join(root, "outputs"), { recursive: true });
@@ -331,6 +346,9 @@ app.whenReady().then(async () => {
     await new Promise(resolve => setTimeout(resolve, 100));
     fs.writeFileSync(path.join(root,`outputs/v191-mod-pool-${origin}-${theme}-${width}.png`),(await window.webContents.capturePage()).toPNG());
   }
+  if (process.argv.includes('--paged-filters')) await require('./lib/v225-filter-polish.cjs')(window,root);
+  if (process.argv.includes('--tooltip-redshirt')) await require('./lib/v225-tooltip-redshirt.cjs')(window,root);
+  if (process.argv.includes('--scope-force-alignment')) await require('./lib/v225-scope-force-alignment.cjs')(window,root);
   if (errors.length) throw new Error("Renderer errors: " + errors.join("\n"));
   if (runs.length !== 1) throw new Error("Configuration windows must never run tools on their own.");
   console.log(result); console.log("Light/dark 1480px screenshots, 760px helmet view, and 760px/520px selection, filter, mouthpiece, tattoo and tape window overflow checks passed.");

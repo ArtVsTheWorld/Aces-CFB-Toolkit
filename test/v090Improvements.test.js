@@ -80,7 +80,7 @@ test("v0.9 UI keeps new defaults, scope controls, and backend search", () => {
   assert.match(renderer, /id="equipment-top"[^>]+value="50"/);
   assert.match(renderer, /equipment-redshirt-group/);
   assert.match(renderer, /Below Position-Room Average/);
-  assert.match(renderer, /Playing Style \(RB, WR, TE only\)/);
+  assert.match(renderer, /Playing Style \(All Positions\)/);
   assert.match(renderer, /User-controlled teams are selected by default/);
   assert.match(renderer, /searchPreview/);
   assert.match(main, /IPC\.searchPreview/);

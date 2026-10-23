@@ -16,7 +16,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const fixture = path.resolve(here, "../../EXAMPLE SAVES VANILLA GAME/DYNASTY-LSUTESTSAVEPRESZN");
 const schemaPath = path.resolve(here, "../resources/engine-data/C27_486_6.gz");
 const hash = file => crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex");
-const options = { seed: 707070, fixInvalidPlayingStyle: true, distribution: DEFAULT_DISTRIBUTION };
+const options = { seed: 707070, restrictPlayingStylePositions: true, fixInvalidPlayingStyle: true, distribution: DEFAULT_DISTRIBUTION };
 
 async function loadPlayers(savePath) {
   const opened = await openCfb27Save(savePath, schemaPath); const tables = await readTables(opened.franchise, { players: PLAYER_TABLE_UID, teams: TEAM_TABLE_UID }); const names = new Map();

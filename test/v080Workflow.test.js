@@ -20,7 +20,7 @@ test("Standard Jersey Preview excludes blank allocated rows and never leaks temp
   assert.ok(preview.details.totalPreviewRows > 0);
   assert.equal(preview.details.changes.some(change => change.newNumber < 0 || change.newNumber > 99), false);
   assert.equal(preview.details.changes.some(change => !change.player), false);
-  for (const field of ["team", "player", "position", "classYear", "overall", "nil", "oldNumber", "newNumber", "reason", "fallback"]) assert.ok(field in preview.details.changes[0], field);
+  for (const field of ["team", "player", "position", "classYear", "overall", "identity", "oldNumber", "newNumber", "reason", "fallback"]) assert.ok(field in preview.details.changes[0], field);
   assert.equal(fs.statSync(savePath).mtimeMs, before);
 });
 
@@ -39,7 +39,7 @@ test("v0.8 user-facing copy, themes, versions, review scope, and report schemas 
   assert.match(equipment, /equipmentSkipReporting/); assert.match(fs.readFileSync(new URL("../src/main/tools/equipment/skipReporting.js", import.meta.url), "utf8"), /skippedReasons/); assert.match(renderer, /Why eligible players were skipped/);
   assert.match(index, /layout-fixes\.css/); assert.match(layout, /#tool-navigation[\s\S]+overflow-y: auto/); assert.match(layout, /\.sidebar-bottom[\s\S]+flex: none/);
   assert.match(layout, /\[data-theme="dark"\][\s\S]+custom-tool-icon[\s\S]+filter: invert\(1\)/);
-  assert.match(renderer, /Playing Style \(RB, WR, TE only\)/); assert.doesNotMatch(renderer, /By default, only legitimate rostered players/);
+  assert.match(renderer, /Playing Style \(All Positions\)/); assert.doesNotMatch(renderer, /By default, only legitimate rostered players/);
 });
 
 test("Team Boost previews and applies one cached multi-team plan with a backup", async () => {

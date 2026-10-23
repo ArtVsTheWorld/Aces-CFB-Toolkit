@@ -49,7 +49,7 @@ test('tattoo clearing preserves head/skin, layer metadata, sleeves, socks and al
   const cleared = JSON.stringify(parsed); assert.equal(clearPlayerTattoos(parsed), null); assert.equal(JSON.stringify(parsed), cleared);
 });
 test('clear-only correction works on OL and preserves excluded/NIL/shared players', () => {
-  const players = [player(0),player(1,{IsNIL:true}),player(2),player(3,{CharacterVisuals:ref(2),TeamIndex:2})];
+  const players = [player(0),player(1,{IsNIL: true, PLYR_ASSETNAME:'SmithJeremiah_8726'}),player(2),player(3,{CharacterVisuals:ref(2),TeamIndex:2})];
   const visuals = Array.from({length:3},()=>({isEmpty:false,RawData:JSON.stringify(appearance())})), before = visuals.map(record=>record.RawData);
   const result = applyGlobalEquipmentFixes(players, visuals, 10, {clearTattoos:true,teamNames:new Map([[1,'Test'],[2,'Excluded']]),activePlayerRows:new Set([0,1,2,3]),eligiblePlayer:record=>record.TeamIndex===1});
   assert.equal(result.clearedTattooPlayers,1); assert.equal(result.clearedTattooChanges.length,1); assert.equal(result.visualsChanged,1);
@@ -59,7 +59,7 @@ test('clear-only correction works on OL and preserves excluded/NIL/shared player
 test('no-op settings restoration emits no change event, while real restored edits still do', () => {
   let changes=0;
   const controls = {scope:{value:'default',type:'text',dataset:{},dispatchEvent:()=>changes++},nil:{checked:true,type:'checkbox',dataset:{},dispatchEvent:()=>changes++}};
-  const context = vm.createContext({state:{page:'tool',bootstrap:{registry:{tools:[{id:'tool'}]}},toolSettings:new Map([['tool',{scope:'default',nil:true}]])},document:{getElementById:id=>controls[id]},migrateEquipmentSessionSettings:()=>{},Event:class{}});
+  const context = vm.createContext({state:{page:'tool',bootstrap:{registry:{tools:[{id:'tool'}]}},toolSettings:new Map([['tool',{scope:'default',nil:true}]])},document:{getElementById:id=>controls[id]},migrateOriginalEaProtectionSettings:()=>{},migrateEquipmentSessionSettings:()=>{},Event:class{}});
   vm.runInContext(fn('restoreToolSettings'),context); vm.runInContext('restoreToolSettings()',context); assert.equal(changes,0);
   controls.scope.dataset={};context.state.toolSettings.get('tool').scope='changed';vm.runInContext('restoreToolSettings()',context);assert.equal(changes,1);
   vm.runInContext('restoreToolSettings()',context);assert.equal(changes,1);

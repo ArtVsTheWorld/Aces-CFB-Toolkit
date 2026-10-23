@@ -1,3 +1,4 @@
+import {isOriginalEaPlayer,originalEaIdentity} from '../../services/originalEaPlayers.js';
 import { matchesPlayerScope } from "../playerScope.js";
 import { createCommentaryMatcher } from "./matcher.js";
 
@@ -11,12 +12,12 @@ export function patchPlayerCommentary(records, commentaryMap, {
   scope = {}
 } = {}) {
   const matchPlayer = createCommentaryMatcher(commentaryMap, { allowPhonetic, allowFirstName });
-  const result = { changes: [], players: [], summary: { scanned: 0, skippedNil: 0, skippedNoTeam: 0, skippedPlaceholder: 0, skippedFreshmanFilter: 0, preservedUnmatched: 0, correct: 0, exact: 0, suffix: 0, hyphen: 0, phonetic: 0, first: 0, unmatched: 0 } };
+  const result = { changes: [], players: [], summary: { scanned: 0, skippedOriginalEa: 0, skippedNoTeam: 0, skippedPlaceholder: 0, skippedFreshmanFilter: 0, preservedUnmatched: 0, correct: 0, exact: 0, suffix: 0, hyphen: 0, phonetic: 0, first: 0, unmatched: 0 } };
   records.forEach((record, row) => {
     if (!record || record.isEmpty) return;
     if (!matchesPlayerScope(record, row, scope, teamNames)) return;
-    if (record.IsNIL === true || String(record.IsNIL).toLowerCase() === "true") {
-      result.summary.skippedNil += 1;
+    if (isOriginalEaPlayer(record)) {
+      result.summary.skippedOriginalEa += 1;
       return;
     }
     if (freshmenOnly) {
@@ -39,7 +40,7 @@ export function patchPlayerCommentary(records, commentaryMap, {
     const oldId = Number(record.PLYR_COMMENT) || 0;
     const match = matchPlayer(firstName, lastName);
     const preserved = preserveUnmatched && match.method === "none";
-    const item = { record, row, firstName, lastName, teamIndex, teamName, oldId, newId: preserved ? oldId : match.id, match, preserved };
+    const item = { record, row, firstName, lastName, teamIndex, teamName, identity: originalEaIdentity(record), oldId, newId: preserved ? oldId : match.id, match, preserved };
     result.players.push(item); result.summary.scanned += 1;
     if (match.source === "first") result.summary.first += 1;
     else if (match.method === "none") result.summary.unmatched += 1;

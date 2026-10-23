@@ -9,7 +9,7 @@ import { normalizeAccentColor } from "../src/main/services/settings.js";
 const rng = () => { let seed = 123456; return () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; }; };
 const visual = covered => ({ loadouts: [{ loadoutType: "PlayerOnField", loadoutElements: [{ slotType: "LeftArmWear", itemAssetName: covered ? "GearArmSleeve_Baggy_Black" : "LeftArm_None" }, { slotType: "RightArmWear", itemAssetName: covered ? "GearArmSleeve_Baggy_Black" : "RightArm_None" }] }] });
 test("tattoo selection keeps the existing default pool while optional styles validate only when enabled", () => {
-  assert.equal(UNLOCKED_TATTOO_POOL.length, 51); assert.equal(DEFAULT_UNLOCKED_TATTOO_SELECTION.length, 26);
+  assert.equal(UNLOCKED_TATTOO_POOL.length, 61); assert.equal(DEFAULT_UNLOCKED_TATTOO_SELECTION.length, 26);
   assert.ok(DEFAULT_UNLOCKED_TATTOO_SELECTION.every(value => !/Japanese|Polynesian/.test(value)));
   assert.deepEqual(normalizeTattooSelection(), [...DEFAULT_UNLOCKED_TATTOO_SELECTION]);
   assert.deepEqual(normalizeTattooSelection([]), []);

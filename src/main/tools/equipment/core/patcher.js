@@ -1,3 +1,4 @@
+import {isOriginalEaPlayer,originalEaProtectionEnabled} from '../../../services/originalEaPlayers.js';
 import { parseRef, sf } from "../openSave.js";
 import { brandedEquipmentItems, canGenerateItem, equipmentDisplayName, equipmentItem, isInvalidMouthpieceAsset, recolorEquipmentItem, recolorMouthpieceItem, UNLOCKED_POOLS, RAW_ACCESSORIES_POOLS, EQUIPMENT_TRUCK_POOLS } from "../catalog.js";
 import { enforceArmSleeveCompatibility } from "./compatibility.js";
@@ -227,9 +228,13 @@ export function applyRawRandomizerEquipment(loadouts, rng, perCategoryChance = 0
 
 export function applyEquipmentTruckRandomizerEquipment(loadouts, rng, perCategoryChance = 0.10, state = createGeneratedEquipmentState(loadouts), position = "", configuration) {
   const changes = [];
-  for (const [category, label, slots] of [["armSleeves", "Equipment Truck arm sleeves", ["LeftArmWear", "RightArmWear"]], ["visors", "Equipment Truck visor", ["Visor"]]]) {
+  for (const [category, label, slots] of [
+    ["armSleeves", "Equipment Truck arm sleeves", ["LeftArmWear", "RightArmWear"]], ["visors", "Equipment Truck visor", ["Visor"]],
+    ["chinCovers", "Brand logo chin cover", ["Reserved"]], ["waistPlaycalls", "Waist playcall band", ["HeadBand"]],
+    ["handwarmers", "Standard logo handwarmer", ["WaistWear"]], ["thighPads", "Jersey number + cross thigh pads", ["LeftThighWear", "RightThighWear"]]
+  ]) {
     const pool = configuredModItems(EQUIPMENT_TRUCK_POOLS[category], configuration, category).filter(item => slots.every(slot => item.slots.includes(slot)) && canGenerateEquipment(loadouts, item, slots, position));
-    if (!pool.length || rng() >= modCategoryChance(configuration, category, perCategoryChance)) continue;
+    if (!pool.length || rng() >= modCategoryChance(configuration, category, category === "handwarmers" ? 0 : perCategoryChance)) continue;
     applyCatalogItem(loadouts, label, choose(pool, rng), slots, changes, state, true);
   }
   return changes;
@@ -337,7 +342,7 @@ function shuffle(items, rng) {
 }
 
 export function patchFreshmanEquipment(playerRecords, visualsRecords, visualsTableId, options = {}) {
-  const { teamNames = new Map(), teamApparel = new Map(), donorPlayerRecords = playerRecords, donorVisualRecords = visualsRecords, donorVisualsTableId = visualsTableId, donorTeamNames = teamNames, donorTeamApparel = teamApparel, recipientRosterRows = null, donorRosterRows = null, fcsTeamIndexes = new Set(), excludedRecipientTeamIndexes = new Set(), eligiblePlayer = isTrueFreshman, top = 125, mixedChance = 0.30, crossMixedChance = 0.10, forceCrossPosition = false, usingUnlockedMod = false, noDripProfile = false, skipNilPlayers = true, unlockedItemChance = 0.10, seed = 1, apply = false } = options;
+  const { teamNames = new Map(), teamApparel = new Map(), donorPlayerRecords = playerRecords, donorVisualRecords = visualsRecords, donorVisualsTableId = visualsTableId, donorTeamNames = teamNames, donorTeamApparel = teamApparel, recipientRosterRows = null, donorRosterRows = null, fcsTeamIndexes = new Set(), excludedRecipientTeamIndexes = new Set(), eligiblePlayer = isTrueFreshman, top = 125, mixedChance = 0.30, crossMixedChance = 0.10, forceCrossPosition = false, usingUnlockedMod = false, noDripProfile = false, protectOriginalEaPlayers = originalEaProtectionEnabled(options), unlockedItemChance = 0.10, seed = 1, apply = false } = options;
   const disableCrossPosition = options.disableCrossPosition === true;
   const crossDonorGroups = options.crossDonorGroups ? normalizeCrossDonorGroups(options.crossDonorGroups) : null;
   if (disableCrossPosition && forceCrossPosition) throw new Error("Disable cross-position mixing and forced mixing cannot both be enabled.");
@@ -372,7 +377,7 @@ export function patchFreshmanEquipment(playerRecords, visualsRecords, visualsTab
   const changes = [];
   let sleeveCompatibilityCorrections = 0;
   playerRecords.forEach((record, row) => {
-    if (!record || record.isEmpty || (skipNilPlayers && Boolean(sf(record, "IsNIL"))) || !eligiblePlayer(record)) return;
+    if (!record || record.isEmpty || (protectOriginalEaPlayers && isOriginalEaPlayer(record)) || !eligiblePlayer(record)) return;
     if (recipientRosterRows && !recipientRosterRows.has(row)) return;
     const teamIndex = Number(sf(record, "TeamIndex"));
     const isFcs = fcsTeamIndexes.has(teamIndex);

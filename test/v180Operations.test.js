@@ -65,7 +65,7 @@ for (const frequency of [0, 25, 75, 100]) test(`added and rerolled mouthpieces u
   }
 });
 test("mouthpiece rerolls preserve mask restrictions, NIL and player scope", () => {
-  const players = [player(0), { ...player(1), IsNIL: true }, player(2)], visuals = players.map(() => visual([item("FaceWear", "FaceGear_BalaclavaOverNose_White"), item("MouthWear", "GearMouthpiece_Mouthguard1_White")])), before = structuredClone(visuals);
+  const players = [player(0), { ...player(1), IsNIL: true, PLYR_ASSETNAME:'SmithJeremiah_8726' }, player(2)], visuals = players.map(() => visual([item("FaceWear", "FaceGear_BalaclavaOverNose_White"), item("MouthWear", "GearMouthpiece_Mouthguard1_White")])), before = structuredClone(visuals);
   const result = applyGlobalEquipmentFixes(players, visuals, 10, { unlockedMouthpieceFix: true, rerollExistingMouthpieces: true, brandedMouthpieceFrequency: 0, eligiblePlayer: record => record !== players[2] });
   assert.equal(result.existingMouthpieceColorsChanged, 1); assert.match(get(parsed(visuals[0]), "MouthWear"), /PacifierDualHanging/); assert.deepEqual(visuals.slice(1), before.slice(1));
 });
@@ -91,7 +91,7 @@ for (const allowVicis of [false, true]) test(`helmet balancing is minimal, sprea
   }
 });
 test("helmet balancing integrates with the Patcher, masks, scope, OL protection and before/after diagnostics", () => {
-  const players = Array.from({ length: 102 }, (_, row) => player(row, row === 100 ? "LT" : row % 5 === 0 ? "QB" : "WR", row % 10 + 1)); players[101].IsNIL = true;
+  const players = Array.from({ length: 102 }, (_, row) => player(row, row === 100 ? "LT" : row % 5 === 0 ? "QB" : "WR", row % 10 + 1)); Object.assign(players[101],{IsNIL:true,PLYR_ASSETNAME:'SmithJeremiah_8726'});
   const original = players.map(() => visual([item("HeadWear", "GearHelmet_Speed_Flex"), item("FaceMask", "GearFaceMask_SpeedflexRobot")]));
   const unchanged = structuredClone(original), noBalance = applyGlobalEquipmentFixes(players, unchanged, 10, { helmetFix: true }); assert.equal(noBalance.helmetPlayersChanged, 0);
   for (const allowVicisZero2 of [false, true]) {
@@ -108,13 +108,13 @@ test("helmet balancing spreads FCS swaps by actual roster team even when TeamInd
   assert.deepEqual(Object.values(result.helmetBalance.fcs.changesByTeam).sort(), [6, 6, 6, 6, 6]);
 });
 test("new equipment settings validate and migrate the former mouthpiece-color option", () => {
-  const defaults = normalizeEquipmentOptions({}, false); assert.equal(defaults.allowVicisZero2, false); assert.equal(defaults.balanceExistingHelmets, false); assert.equal(defaults.tapeColorMode, "accessory"); assert.equal(defaults.brandedMouthpieceFrequency, 75); assert.equal(defaults.skipNilPlayers, true);
+  const defaults = normalizeEquipmentOptions({}, false); assert.equal(defaults.allowVicisZero2, false); assert.equal(defaults.balanceExistingHelmets, false); assert.equal(defaults.tapeColorMode, "accessory"); assert.equal(defaults.brandedMouthpieceFrequency, 75); assert.equal(defaults.protectOriginalEaPlayers, true);
   assert.equal(normalizeEquipmentOptions({ unlockedMouthpieceFix: true, randomizeExistingMouthpieceColors: true }, false).rerollExistingMouthpieces, true);
   for (const value of [-1, 101, 1.5, ""]) assert.throws(() => normalizeEquipmentOptions({ brandedMouthpieceFrequency: value }, false), /whole percentage/);
   assert.throws(() => normalizeEquipmentOptions({ tapeColorMode: "unknown" }, false), /tape/);
 });
 test("NIL Toggle composes player/team/position/class/redshirt filters and includes unchanged matches", () => {
-  const records = [player(0, "QB"), { ...player(1, "QB"), OverallRating: 80, IsNIL: true }, { ...player(2, "WR"), SchoolYear: "Sophomore", RedshirtStatus: "Previous" }, player(3, "WR", 2)], initial = structuredClone(records), teamNames = new Map([[1, "Alabama"], [2, "East Point"]]);
+  const records = [player(0, "QB"), { ...player(1, "QB"), OverallRating: 80, IsNIL: true, PLYR_ASSETNAME:'SmithJeremiah_8726' }, { ...player(2, "WR"), SchoolYear: "Sophomore", RedshirtStatus: "Previous" }, player(3, "WR", 2)], initial = structuredClone(records), teamNames = new Map([[1, "Alabama"], [2, "East Point"]]);
   const run = options => planNilToggle(records, { targetValue: true, ...options }, { teamNames });
   assert.equal(run({}).length, 4); assert.equal(run({}).filter(row => row.changed).length, 3);
   assert.deepEqual(run({ teams: ["Alabama"], positions: ["QB"] }).map(row => row.row), [0, 1]);
@@ -138,6 +138,6 @@ test("Team Boost specific attributes reject empty/unknown fields and retain rati
   assert.equal(result.ratingChanges.length, 1); assert.equal(result.ratingChanges[0].newRating, 99); assert.deepEqual(records, initial);
 });
 test("release versions match the requested increments", () => {
-  assert.equal(JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url))).version, "22.0.0");
+  assert.equal(JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url))).version, "22.5.0");
   assert.equal(tools.find(tool => tool.id === "freshman-equipment").version, undefined); assert.equal(tools.find(tool => tool.id === "equipment-patcher").version, undefined); assert.equal(tools.find(tool => tool.id === "team-boost").version, undefined);
 });

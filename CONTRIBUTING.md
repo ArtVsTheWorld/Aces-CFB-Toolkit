@@ -4,7 +4,7 @@
 
 Use Node.js 24 and Windows. Run `npm ci`, `npm run test:source`, and `npm start` from the repository root. The lockfile pins the dependency graph; do not commit `node_modules`, `dist`, or local caches.
 
-The v20.5 source passes 610 portable source tests. The maintainer also ran five copied-save integration checks and packaged Roster Generator UI, installer-resource and updater checks. A public checkout does not include private dynasty fixtures; this does not claim that the full `npm test` suite runs without them. In-game validation of newly generated rosters is still recommended.
+The v22.5 source passes 771 portable source tests. The maintainer also runs copied-save integration checks, packaged configuration/UI checks, and installer-resource and updater checks. A public checkout does not include private dynasty fixtures; this does not claim that the full `npm test` suite runs without them. In-game validation of newly generated rosters is still recommended.
 
 ## Full-save checks
 
@@ -24,7 +24,7 @@ Use authorized disposable local fixtures. Some checks assert the original fixtur
 - Equipment writes must retain fixed CharacterVisuals storage and the original packed-container size. Never bypass validation to make a test pass.
 - Reopen and verify the temporary candidate, including unplanned equipment and unrelated tables, before publishing it.
 - A failed validation must leave the user's original save unchanged and clean up its candidate.
-- Keep shared/NIL/donor protections and seeded behavior unless a change explicitly requires otherwise.
+- Keep shared-row, original EA player, and donor protections and seeded behavior unless a change explicitly requires otherwise. Original EA protection uses the bundled identity reference, not the current NIL flag.
 
 Add focused tests for new behavior. Synthetic structural fixtures are preferred for public regression cases; private save diagnosis should remain outside version control. All optional mod pools should remain separated from vanilla equipment, and item IDs must be verified rather than guessed.
 

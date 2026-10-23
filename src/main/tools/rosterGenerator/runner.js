@@ -25,6 +25,9 @@ import {snapshotProtectedPlayers,verifyProtectedPlayers} from './safety.js';
 import {playerMeasurements} from '../../../shared/playerMeasurements.js';
 import {readTeamGeography} from './geography.js';
 import {ARCHETYPE_WEIGHTS,RATING_LABELS} from '../teamBoost/ratingWeights.js';
+import {NATIVE_SCHEMES,inspectTeamSchemes,resolveSchemeContext,schemeSchema,recruitingNeeds,schemeFitAudit} from './schemes.js';
+import {composeRosterTargets,compositionAudit} from './composition.js';
+import {mulberry32} from '../longSnap/core.js';
 
 import {rosterFile,loadRosterGenerationSource,saveRosterGeneration,buildRosterGenerationCandidate,ROSTER_WARNINGS} from './rosterSource.js';
 const loadGenerationSource=async(savePath,schemaPath)=>rosterFile(savePath)?loadRosterGenerationSource(savePath,schemaPath):loadEquipmentTables(savePath,schemaPath,true,false);
@@ -33,7 +36,7 @@ const TOOL_ID='roster-generator',TOOL_NAME='Roster Generator';
 export function teamGenerationConfigurations(options,teams){
   const overrides=options.teamConfigurations??{};
   if(!overrides||typeof overrides!=='object'||Array.isArray(overrides)||Object.keys(overrides).some(name=>!teams.includes(name)))throw new Error('Team overrides must belong to selected teams.');
-  const allowed=new Set(['preset','positionStrength','talentShares','rosterAge','rosterPotential','offensiveScheme','defensiveScheme','skinTonePreset','reorderDepthChart']);
+  const allowed=new Set(['preset','positionStrength','talentShares','talentMix','rosterAge','rosterPotential','offensiveScheme','defensiveScheme','skinTonePreset','reorderDepthChart','rosterMakeup','requirementsSource']);
   return Object.fromEntries(teams.map(name=>{const override=overrides[name]??{};if(!override||typeof override!=='object'||Array.isArray(override)||Object.keys(override).some(key=>!allowed.has(key)))throw new Error('Invalid team generation settings.');const merged={...options,...override};return[name,{preset:rosterPreset(merged.preset).id,settings:normalizeGenerationSettings(merged)}];}));
 }
 function teamModelFactory(base,preset,settings){
@@ -74,7 +77,13 @@ function visualOwners(loaded) {
 export async function prepareRosterGenerator({savePath,schemaPath}) {
   const loaded=await loadGenerationSource(savePath,schemaPath);
   const season=await rosterGeneratorSeason(loaded);
-  return {season,fileKind:loaded.kind??'dynasty',warnings:loaded.kind==='roster'?ROSTER_WARNINGS:[],agePresets:ROSTER_AGES,potentialPresets:ROSTER_POTENTIALS,positionGroups:POSITION_GROUPS,offensiveSchemes:OFFENSIVE_SCHEMES,defensiveSchemes:DEFENSIVE_SCHEMES,tonePresets:TONE_PRESETS,teams:teamsWithRosters(loaded).map(team=>({name:team.name,teamIndex:team.teamIndex,positionCounts:rosterPositionCounts(loaded,team)})),presets:ROSTER_PRESETS,catalogVersion:loadObservedCatalog().catalog.version};
+  const teams=[];
+  for(const team of teamsWithRosters(loaded)){
+    const ref=parseRef(sf(team.record,'Roster')),roster=loaded.rosters.records[ref.row],ratings=[];
+    for(let i=0;i<Number(roster.arraySize);i++){const player=parseRef(sf(roster,`Player${i}`));if(player?.tableId===loaded.players.header.tableId){const value=Number(sf(loaded.players.records[player.row],'OverallRating'));if(Number.isFinite(value))ratings.push(value);}}
+    teams.push({name:team.name,teamIndex:team.teamIndex,positionCounts:rosterPositionCounts(loaded,team),rosterSize:ratings.length,averageOverall:ratings.length?ratings.reduce((a,b)=>a+b,0)/ratings.length:null,schemes:await inspectTeamSchemes(loaded,team,schemaPath)});
+  }
+  return {season,fileKind:loaded.kind??'dynasty',warnings:loaded.kind==='roster'?ROSTER_WARNINGS:[],agePresets:ROSTER_AGES,potentialPresets:ROSTER_POTENTIALS,positionGroups:POSITION_GROUPS,nativeSchemes:NATIVE_SCHEMES,offensiveSchemes:OFFENSIVE_SCHEMES.filter(item=>loaded.kind!=='roster'||item.id!=='auto'),defensiveSchemes:DEFENSIVE_SCHEMES.filter(item=>loaded.kind!=='roster'||item.id!=='auto'),tonePresets:TONE_PRESETS,teams,presets:ROSTER_PRESETS,catalogVersion:loadObservedCatalog().catalog.version};
 }
 function previewRow(player,preview) {
   const fields=player.fields;
@@ -87,7 +96,7 @@ function previewRow(player,preview) {
 }
 function reportFor(rosters) {
   const parts=rosters.map(roster=>rosterGeneratorCsv(roster));
-  return {prefix:'roster-generator-report',headings:[...parts[0].headings,'CalibrationJSON','OldNILCost','NewNILCost','BrotherRow'],rows:parts.flatMap((part,i)=>part.rows.map((row,j)=>[...row,JSON.stringify(rosters[i].players[j].provenance.calibration),rosters[i].players[j].before.CurrentNILCompensation,rosters[i].players[j].fields.CurrentNILCompensation,rosters[i].players[j].provenance.brother??'']))};
+  return {prefix:'roster-generator-report',headings:[...parts[0].headings,'CalibrationJSON','OldNILCost','NewNILCost','BrotherRow','OriginalPosition','GeneratedPosition','NativeSchemeAuditJSON','RosterCompositionAuditJSON','RecruitingNeedsAuditJSON','SchemeFitAuditJSON'],rows:parts.flatMap((part,i)=>part.rows.map((row,j)=>[...row,JSON.stringify(rosters[i].players[j].provenance.calibration),rosters[i].players[j].before.CurrentNILCompensation,rosters[i].players[j].fields.CurrentNILCompensation,rosters[i].players[j].provenance.brother??'',rosters[i].players[j].before.Position,rosters[i].players[j].position,j===0?JSON.stringify(rosters[i].summary.settings.schemeContext):'',j===0?JSON.stringify(rosters[i].summary.composition):'',j===0?JSON.stringify(rosters[i].summary.recruitingNeeds):'',j===0?JSON.stringify(rosters[i].summary.schemeFit):'']))};
 }
 
 export async function runRosterGenerator(context) {
@@ -99,18 +108,25 @@ export async function runRosterGenerator(context) {
   const fingerprint=saveFingerprint(context.savePath),loaded=await loadGenerationSource(context.savePath,context.schemaPath),available=teamsWithRosters(loaded);
   const teams=selected.map(name=>{const matches=available.filter(team=>team.name===name);if(matches.length!==1)throw new Error(`Team selection is unavailable or ambiguous: ${name}.`);return matches[0];}).sort((a,b)=>a.teamIndex-b.teamIndex);
   await rosterGeneratorSeason(loaded);
-  const equipmentGenerator=makeRosterEquipmentGenerator(loaded),baseModel=loadObservedCatalog(),modelForTeam=teamModelFactory(baseModel,preset,settings),owners=visualOwners(loaded),rosters=[],used=new Set(),reservedPresentationIds=allPresentationIds(loaded);
+  const equipmentGenerator=makeRosterEquipmentGenerator(loaded),baseModel=loadObservedCatalog(),owners=visualOwners(loaded),rosters=[],used=new Set(),reservedPresentationIds=allPresentationIds(loaded);
   const names=loaded.players.records.filter(record=>record&&!record.isEmpty).map(record=>`${sf(record,'FirstName')??''} ${sf(record,'LastName')??''}`);
   const mapFile=context.defaultMapPath??path.resolve(path.dirname(context.schemaPath),'../commentary-data/PlayerCommentaryidMap.txt');
   const matchCommentary=createCommentaryMatcher(loadCommentaryMap(mapFile),{allowPhonetic:false,allowFirstName:true});
   for(const team of teams) {
-    const targets=extractTargets(loaded,team,owners);for(const target of targets){if(used.has(target.row))throw new Error('Two selected teams share a roster player. No write is permitted.');used.add(target.row);}
+    const originals=extractTargets(loaded,team,owners);for(const target of originals){if(used.has(target.row))throw new Error('Two selected teams share a roster player. No write is permitted.');used.add(target.row);}
     const teamSeed=(seed^Math.imul(team.teamIndex+1,2654435761))>>>0;
-    const configuration=configurations[team.name],teamPreset=rosterPreset(configuration.preset),model=teamModelFactory(baseModel,teamPreset,configuration.settings)(targets);
+    const configuration=configurations[team.name];
+    configuration.settings.schemeContext=resolveSchemeContext(configuration.settings,await inspectTeamSchemes(loaded,team,context.schemaPath),schemeSchema(context.schemaPath),mulberry32(teamSeed^0x534348));
+    const targets=composeRosterTargets(originals,configuration.settings),teamPreset=rosterPreset(configuration.preset),model=teamModelFactory(baseModel,teamPreset,configuration.settings)(targets);
     const geography=await readTeamGeography(loaded,team,baseModel.catalog);
     const roster=generateRosterPreview({team:{name:team.name,teamIndex:team.teamIndex,branding:team.branding,captainCount:team.captainCount,geography},targets,model,seed:teamSeed,preset:teamPreset,unavailableNames:names,matchCommentary,equipmentGenerator,reservedPresentationIds});
     for(const player of roster.players)reservedPresentationIds.add(player.fields.PresentationId);
     roster.summary.caliber=teamPreset.name;
+    roster.summary.composition=compositionAudit(targets,originals,configuration.settings.schemeContext);
+    roster.summary.recruitingNeeds=recruitingNeeds(roster.players,configuration.settings.schemeContext);
+    roster.summary.schemeFit=schemeFitAudit(roster.players,configuration.settings.schemeContext,model);
+    roster.warnings.push(...configuration.settings.schemeContext.warnings);
+    if(configuration.settings.rosterMakeup==='scheme')roster.warnings.push(`${team.name}: ${roster.summary.composition.changed} roster slots change position to fit scheme requirements. Player rows and roster size are preserved.`);
     if(loaded.kind==='roster'){roster.warnings.push(...ROSTER_WARNINGS);for(const player of roster.players){player.rosterPlayerId=loaded.players.records[player.row].RosterPlayerId;player.changes=player.changes.filter(change=>loaded.available.has(change.field));player.persistedFields=[...loaded.available];}}
     roster.source={file:path.basename(context.savePath),sha256:fingerprint,unchanged:true};
     roster.applicationCanApply=!roster.blocking.length;
@@ -124,7 +140,7 @@ export async function runRosterGenerator(context) {
   const rosterCandidate=loaded.kind==='roster'&&!rosters.some(roster=>roster.blocking.length)?buildRosterGenerationCandidate(loaded,rosters):null;
   const rows=rosters.flatMap(roster=>roster.players.map(player=>previewRow(player,roster))),blocking=rosters.flatMap(roster=>roster.blocking.map(item=>({...item,team:roster.team.name}))),report=reportFor(rosters);
   if(rosterCandidate){report.headings.push('FileKind','PersistedFieldsJSON','RosterBeforeJSON','RosterAfterJSON','RosterVisualBeforeJSON','RosterVisualAfterJSON');const generated=rosters.flatMap(roster=>roster.players);report.rows.forEach((row,index)=>{const player=generated[index],wire=rosterCandidate.changes.find(change=>change.playerId===player.rosterPlayerId);row.push('roster',JSON.stringify(player.persistedFields),JSON.stringify(wire.before),JSON.stringify(wire.after),JSON.stringify(wire.beforeVisual),JSON.stringify(wire.afterVisual));});}
-  const result={resultKind:TOOL_ID,mode:'preview',status:'preview',savePath:loaded.savePath,backupPath:null,reportPath:context.reports.create({...report,toolId:TOOL_ID,toolName:TOOL_NAME}),summary:[{label:'Teams to regenerate',value:rosters.length},{label:'Players to replace',value:rows.length},{label:'Original NIL identities',value:rosters.reduce((sum,roster)=>sum+roster.summary.nilReplacements,0)},{label:'Apply blockers',value:blocking.length}],historySummary:[{label:'Players regenerated',value:rows.length}],details:{fileKind:loaded.kind??'dynasty',canApply:!blocking.length,preset,seed,blocking,warnings:[...new Set(rosters.flatMap(roster=>roster.warnings))],teams:rosters.map(roster=>({team:roster.team.name,...roster.summary})),totalPreviewRows:rows.length,changes:rows.slice(0,1000)}};
+  const result={resultKind:TOOL_ID,mode:'preview',status:'preview',savePath:loaded.savePath,backupPath:null,reportPath:context.reports.create({...report,toolId:TOOL_ID,toolName:TOOL_NAME}),summary:[{label:'Teams to regenerate',value:rosters.length},{label:'Players to replace',value:rows.length},{label:'Original EA roster players',value:rosters.reduce((sum,roster)=>sum+roster.summary.originalEaReplacements,0)},{label:'Apply blockers',value:blocking.length}],historySummary:[{label:'Players regenerated',value:rows.length}],details:{fileKind:loaded.kind??'dynasty',canApply:!blocking.length,preset,seed,blocking,warnings:[...new Set(rosters.flatMap(roster=>roster.warnings))],teams:rosters.map(roster=>({team:roster.team.name,...roster.summary})),totalPreviewRows:rows.length,changes:rows.slice(0,1000)}};
   const planId=storePlan({toolId:TOOL_ID,toolName:TOOL_NAME,savePath:loaded.savePath,saveFingerprint:fingerprint,previewRows:rows,report,result,rosters,presetId:preset.id,settings,configurations,depthCharts});
   return {...result,planId};
 }
@@ -132,16 +148,19 @@ export async function runRosterGenerator(context) {
 async function applyRosterGenerator(context) {
   const plan=takePlan(context.options?.planId);
   if(plan.toolId!==TOOL_ID||path.resolve(plan.savePath)!==path.resolve(context.savePath))throw new Error('This preview does not belong to Roster Generator and the Active Save.');
-  if(context.options?.confirmRegeneration!==true)throw new Error('Confirm that the selected rosters and NIL identities will be replaced before Apply.');
+  if(context.options?.confirmRegeneration!==true)throw new Error('Confirm that the selected rosters and original EA roster players will be replaced before Apply.');
   if(!plan.result.details.canApply)throw new Error('Resolve the appearance/roster blockers before Apply. No save was written.');
   if(saveFingerprint(context.savePath)!==plan.saveFingerprint)throw new Error('The save changed after Preview. Run Preview again.');
   const loaded=await loadGenerationSource(context.savePath,context.schemaPath),baseModel=loadObservedCatalog(),preset=rosterPreset(plan.presetId),owners=visualOwners(loaded),available=teamsWithRosters(loaded),assignments=[],reservedPresentationIds=allPresentationIds(loaded);
   await rosterGeneratorSeason(loaded);
-  const modelForTeam=teamModelFactory(baseModel,preset,plan.settings),equipmentGenerator=makeRosterEquipmentGenerator(loaded);
+  const equipmentGenerator=makeRosterEquipmentGenerator(loaded);
   for(const roster of plan.rosters) {
     const team=available.find(team=>team.teamIndex===roster.team.teamIndex&&team.name===roster.team.name);if(!team)throw new Error('A selected team changed after Preview.');
     if(!isDeepStrictEqual(roster.team.geography,await readTeamGeography(loaded,team,baseModel.catalog)))throw new Error('School location or pipeline evidence changed after Preview. Run Preview again.');
-    const configuration=plan.configurations[team.name],teamPreset=rosterPreset(configuration.preset),targets=extractTargets(loaded,team,owners),model=teamModelFactory(baseModel,teamPreset,configuration.settings)(targets);if(!isDeepStrictEqual(roster.preset,teamPreset)||!isDeepStrictEqual(roster.summary.settings,configuration.settings))throw new Error('Team settings changed after Preview.');validateRosterPreview(roster,targets,model,equipmentGenerator,reservedPresentationIds);
+    const configuration=plan.configurations[team.name],teamPreset=rosterPreset(configuration.preset);
+    const currentContext=resolveSchemeContext(configuration.settings,await inspectTeamSchemes(loaded,team,context.schemaPath),schemeSchema(context.schemaPath),mulberry32(roster.seed^0x534348));
+    if(!isDeepStrictEqual(currentContext,configuration.settings.schemeContext))throw new Error('Native scheme or roster requirements changed after Preview.');
+    const targets=composeRosterTargets(extractTargets(loaded,team,owners),configuration.settings),model=teamModelFactory(baseModel,teamPreset,configuration.settings)(targets);if(!isDeepStrictEqual(roster.preset,teamPreset)||!isDeepStrictEqual(roster.summary.settings,configuration.settings))throw new Error('Team settings changed after Preview.');validateRosterPreview(roster,targets,model,equipmentGenerator,reservedPresentationIds);
     for(const player of roster.players)reservedPresentationIds.add(player.fields.PresentationId);
     for(const player of roster.players) {
       for(const [field,newValue]of Object.entries(player.fields))assignments.push({table:'players',row:player.row,field,oldValue:player.before[field],newValue});

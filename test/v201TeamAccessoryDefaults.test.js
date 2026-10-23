@@ -56,7 +56,7 @@ test("independent tape distribution remains independent, while roster-owned team
 test("team color rolls are seeded per player, and NIL/shared/excluded protections remain enforced",()=>{
   const records=Array.from({length:60},(_,row)=>player(row)),a=records.map(visual),b=structuredClone(a),opts={unlockedRecolorFix:true,unlockedColorTheme:"team",tapeColorMode:"accessory",teamNames:new Map([[1,"East Point"]]),seed:701};
   const first=applyGlobalEquipmentFixes(records,a,10,opts);applyGlobalEquipmentFixes(records,b,10,opts);assert.deepEqual(a,b);assert.ok(first.unlockedRecolorChanges.every(change=>change.colorTheme===change.tapeColor));
-  const protectedRows=[player(0),player(1),player(2),player(3)];protectedRows[1].CharacterVisuals=ref(0);protectedRows[1].IsNIL=true;protectedRows[2].IsNIL=true;
+  const protectedRows=[player(0),player(1),player(2),player(3)];protectedRows[1].CharacterVisuals=ref(0);Object.assign(protectedRows[1],{IsNIL:true,PLYR_ASSETNAME:'SmithJeremiah_8726'});Object.assign(protectedRows[2],{IsNIL:true,PLYR_ASSETNAME:'SmithJeremiah_8726'});
   const protectedVisuals=protectedRows.map(visual),before=structuredClone(protectedVisuals);
   applyGlobalEquipmentFixes(protectedRows,protectedVisuals,10,{...opts,eligiblePlayer:record=>record.LastName!=="3"});assert.deepEqual(protectedVisuals,before);
 });

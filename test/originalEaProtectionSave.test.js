@@ -1,0 +1,34 @@
+// Private EXAMPLE SAVES: read original examples; write temporary copies only.
+import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import path from 'node:path';import os from 'node:os';
+import {createHash} from 'node:crypto';
+import {loadEquipmentTables,buildRosterPlayerRows,buildRosterTeamNames} from '../src/main/tools/equipment/shared.js';
+import {originalEaIdentity,isOriginalEaPlayer} from '../src/main/services/originalEaPlayers.js';
+import {runNilToggle} from '../src/main/tools/nilToggle/runner.js';
+import {prepareCommentary,runCommentary} from '../src/main/tools/commentary/runner.js';
+import {runEquipmentPatcher,runFreshmanEquipment} from '../src/main/tools/equipment/runner.js';
+import {runJerseyRenumber} from '../src/main/tools/jersey/standardRunner.js';
+import {writeCsv} from '../src/main/services/files.js';import {parseRef} from '../src/main/tools/equipment/openSave.js';import {searchPlanRows} from '../src/main/tools/jersey/planStore.js';
+const folder='C:/Users/Art/Documents/EA SPORTS College Football 27/saves/10-17 saves',schemaPath=path.resolve('resources/engine-data/C27_486_6.gz'),official=path.join(folder,'DYNASTY-2026EXAMPLEROSTER'),hash=file=>createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+test('original and six-/twelve-year examples distinguish all real players, fillers and recycled generated IDs',{timeout:60000,skip:!fs.existsSync(official)},async()=>{
+ for(const [name,expected]of [['DYNASTY-2026EXAMPLEROSTER',10932],['DYNASTY-2032EXAMPLEROSTER',0],['DYNASTY-2038EXAMPLE',0]]){
+  const file=path.join(folder,name),before=hash(file),loaded=await loadEquipmentTables(file,schemaPath,true,false),active=buildRosterPlayerRows(loaded.players,loaded.teams,loaded.rosters),counts={original:0,fictional:0,conflict:0,unknown:0};
+  for(const row of active)counts[originalEaIdentity(loaded.players.records[row]).status]++;
+  assert.equal(counts.original,expected);assert.equal(counts.conflict,0);if(expected)assert.equal(counts.fictional,798);assert.equal(hash(file),before);
+ }
+});
+test('NIL Toggle remains flag-only; equipment/commentary/jersey protect real identities after flag edits, exact Apply/reopen and backups',{timeout:240000,skip:!fs.existsSync(official)},async t=>{
+ const directory=fs.mkdtempSync(path.join(os.tmpdir(),'cfb-ea-reference-'));t.after(()=>{if(path.dirname(directory)!==path.resolve(os.tmpdir())||!path.basename(directory).startsWith('cfb-ea-reference-'))throw Error('Unsafe cleanup');fs.rmSync(directory,{recursive:true,force:true});});
+ const originalHash=hash(official),savePath=path.join(directory,'DYNASTY-TEST');fs.copyFileSync(official,savePath);let n=0;const context={savePath,schemaPath,defaultMapPath:path.resolve('resources/commentary-data/PlayerCommentaryidMap.txt'),reports:{create:report=>writeCsv(path.join(directory,'report-'+n+++'.csv'),report.headings,report.rows)}};
+ let loaded=await loadEquipmentTables(savePath,schemaPath,true,false);const real=loaded.players.records.find(p=>!p.isEmpty&&p.PLYR_ASSETNAME==='SmithJeremiah_8726'),fake=loaded.players.records.find(p=>!p.isEmpty&&p.PLYR_ASSETNAME==='PittmanJeanSedrick_4963');assert.ok(real&&fake);const realRow=real.index,fakeRow=fake.index,originalPlayers=loaded.players.records.map(p=>Buffer.from(p.hexData));
+ for(const [row,value]of [[realRow,false],[fakeRow,true]]){const before=hash(savePath),preview=await runNilToggle({...context,mode:'preview',options:{playerRows:[String(row)],targetValue:value}});assert.equal(hash(savePath),before);const applied=await runNilToggle({...context,mode:'apply',options:{planId:preview.planId}});assert.equal(hash(applied.backupPath),before);}
+ loaded=await loadEquipmentTables(savePath,schemaPath,true,false);assert.equal(loaded.players.records[realRow].IsNIL,false);assert.equal(loaded.players.records[fakeRow].IsNIL,true);assert.equal(originalEaIdentity(loaded.players.records[realRow]).status,'original');assert.equal(originalEaIdentity(loaded.players.records[fakeRow]).status,'fictional');
+ for(const [row,p]of loaded.players.records.entries()){if([realRow,fakeRow].includes(row))continue;assert.deepEqual(Buffer.from(p.hexData),originalPlayers[row]);}
+ const names=buildRosterTeamNames(loaded.players,loaded.teams,loaded.rosters),team=names.get(realRow),protectedVisuals=new Map(loaded.players.records.filter(p=>!p.isEmpty&&isOriginalEaPlayer(p)).map(p=>{const r=parseRef(p.CharacterVisuals);return[r.row,loaded.visuals.records[r.row].RawData];})),afterFlags=loaded.players.records.map(p=>Buffer.from(p.hexData)),baseline=hash(savePath);
+ const patch=await runEquipmentPatcher({...context,mode:'preview',options:{includedTeams:[team],positions:['WR'],pantsFix:true,helmetFix:true,protectOriginalEaPlayers:true}});assert.ok(patch.details.protection.protectedPlayers>0);assert.ok(patch.details.protection.counts.fictional>0);assert.ok(searchPlanRows(patch.planId,'',1000).changes.every(row=>!isOriginalEaPlayer(loaded.players.records[row.row])));assert.equal(hash(savePath),baseline);
+ const applied=await runEquipmentPatcher({...context,mode:'apply',options:{planId:patch.planId}});if(applied.backupPath)assert.equal(hash(applied.backupPath),baseline);
+ loaded=await loadEquipmentTables(savePath,schemaPath,true,false);for(const [row,raw]of protectedVisuals)assert.equal(loaded.visuals.records[row].RawData,raw);for(const [row,p]of loaded.players.records.entries())assert.deepEqual(Buffer.from(p.hexData),afterFlags[row]);assert.match(fs.readFileSync(applied.reportPath,'utf8'),/OriginalEAProtectionAuditJSON/);
+ const commentaryOptions={phonetic:false,firstName:false,preserveUnmatched:false,freshmenOnly:false,scope:{playerRows:[String(realRow),String(fakeRow)]}},analysis=await prepareCommentary({...context,options:commentaryOptions});assert.equal(analysis.summary.skippedOriginalEa,1);const commentary=await runCommentary({...context,mode:'preview',options:{...commentaryOptions,analysisSignature:analysis.analysisSignature,decisions:{}}});assert.ok(commentary.details.changes.every(p=>p.row!==realRow));
+ const jersey=await runJerseyRenumber({...context,mode:'preview',options:{skippedTeams:loaded.teams.records.filter(p=>!p.isEmpty&&p.DisplayName&&p.DisplayName!==team).map(p=>p.DisplayName),protectOriginalEaPlayers:true}});assert.ok(searchPlanRows(jersey.planId,'',2000).changes.every(p=>!isOriginalEaPlayer(loaded.players.records[p.row])));assert.equal(jersey.details.protection.enabled,true);
+ const randomizer=await runFreshmanEquipment({...context,mode:'preview',options:{includedTeams:[team],classes:[],positions:['WR'],top:2,protectOriginalEaPlayers:true,crossPositionPercent:0,multipleDonorPercent:0}});assert.ok(searchPlanRows(randomizer.planId,'',1000).changes.every(row=>!isOriginalEaPlayer(loaded.players.records[row.row])));assert.ok(randomizer.details.protection.protectedPlayers>0);
+ assert.equal(hash(official),originalHash);
+});

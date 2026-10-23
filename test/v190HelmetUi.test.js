@@ -16,7 +16,7 @@ function ui(settings = {}) {
 const custom = { mode: "custom", global: { ...DEFAULT_HELMET_WEIGHTS, GearHelmet_SchuttF7: 0, GearHelmet_SchuttF7Pro: 20 }, positions: {} };
 
 test("v19.0 integrates the two helmet actions without changing tool versions or saved control IDs", () => {
-  assert.equal(JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url))).version, "22.0.0");
+  assert.equal(JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url))).version, "22.5.0");
   const { context } = ui();
   const markup = context.helmetEditorControls();
   for (const id of ["helmet-distribution-json", "helmet-balance", "helmet-allow-vicis"]) assert.ok(markup.includes(`id="${id}"`));
@@ -158,7 +158,7 @@ test("Repair Only does not rebalance positive models, while balancing still coun
 });
 
 test("zero-weight repairs preserve NIL, OL, team/player scope and partially selected shared-row safeguards", () => {
-  const players = [playerRecord(0), playerRecord(1, "WR", { IsNIL: true }), playerRecord(2, "LT"), playerRecord(3, "WR", { TeamIndex: 2 }), playerRecord(4), playerRecord(5), playerRecord(6, "WR", { CharacterVisuals: playerRecord(5).CharacterVisuals })];
+  const players = [playerRecord(0), playerRecord(1, "WR", { IsNIL: true, PLYR_ASSETNAME:'SmithJeremiah_8726' }), playerRecord(2, "LT"), playerRecord(3, "WR", { TeamIndex: 2 }), playerRecord(4), playerRecord(5), playerRecord(6, "WR", { CharacterVisuals: playerRecord(5).CharacterVisuals })];
   const visuals = players.map(() => loadout()), before = structuredClone(visuals);
   applyGlobalEquipmentFixes(players, visuals, 10, { helmetFix: true, helmetDistribution: allWeight("GearHelmet_Speed_Flex"), excludedTeamIndexes: new Set([2]), eligiblePlayer: record => !["Player4", "Player6"].includes(record.LastName) });
   assert.equal(head(visuals[0]), "GearHelmet_Speed_Flex"); assert.equal(head(visuals[2]), "GearHelmet_Speed_Flex");

@@ -59,7 +59,7 @@ test("a shared QB/WR equipment record cannot receive Vicis", () => {
   }
 });
 test("known cleats in MouthWear are repaired by Add Mouthpieces, without changing shoes or other slots", () => {
-  const players = [player(0, "RE"), { ...player(1), IsNIL: true }, player(2, "QB"), player(3), player(4)];
+  const players = [player(0, "RE"), { ...player(1), IsNIL: true, PLYR_ASSETNAME:'SmithJeremiah_8726' }, player(2, "QB"), player(3), player(4)];
   const visuals = players.map(() => visual([item("MouthWear", cleat), item("LeftShoe", cleat), item("RightShoe", cleat), item("LeftWristWear", "GearWrist_wristBandNormal_White")]));
   const before = structuredClone(visuals);
   const result = applyGlobalEquipmentFixes(players, visuals, 10, { unlockedMouthpieceFix: true, rerollExistingMouthpieces: false, seed: 35, eligiblePlayer: record => record !== players[3] });

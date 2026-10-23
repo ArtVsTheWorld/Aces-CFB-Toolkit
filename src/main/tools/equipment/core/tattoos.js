@@ -1,3 +1,6 @@
+import fs from "node:fs";
+const offlineInventory = JSON.parse(fs.readFileSync(new URL("../equipmentOfflineInventory.json", import.meta.url), "utf8"));
+
 const BODY_TATTOO_SLOTS = Object.freeze([
   "LeftArmTattoo",
   "RightArmTattoo",
@@ -46,7 +49,7 @@ const OPTIONAL_ARM_TATTOOS = Object.freeze([
   ["ArmTattoo_Tattoos_Polynesian_Tongan_Arm_B", "Polynesian Tongan II"],
   ["ArmTattoo_Tattoos_Polynesian_Tongan_Arm_C_v01", "Polynesian Tongan III"],
   ["ArmTattoo_Tattoos_Polynesian_Tongan_Arm_C_v02", "Polynesian Tongan IV"]
-].map(([asset, label]) => Object.freeze({ asset, label, weight: 1, defaultSelected: false, group: asset.includes("Japanese") ? "Japanese arm designs (off by default)" : "Polynesian arm designs (off by default)" })));
+].concat(offlineInventory.tattoos.map(item => [item.asset, item.label])).map(([asset, label]) => Object.freeze({ asset, label, weight: 1, defaultSelected: false, group: asset.includes("Japanese") ? "Japanese arm designs (off by default)" : "Polynesian arm designs (off by default)" })).sort((a, b) => a.group.localeCompare(b.group) || a.label.localeCompare(b.label, undefined, { numeric: true })));
 
 const ARM_TATTOOS = Object.freeze([
   { asset: "CujoMatty_ArmTats_35", weight: 4, label: "Arm Tattoo 35" },
@@ -220,7 +223,8 @@ export function rollUnlockedTattoo(rng, parsed, selection) {
   const selected = new Set(normalizeTattooSelection(selection)), arms = ARM_TATTOOS.filter(item => selected.has(item.asset)), legs = LEG_TATTOOS.filter(item => selected.has(item.asset));
   // Tattoos are a separate Base layer. Sleeves may hide them visually but do
   // not prevent assignment; never remove or recolor sleeves to expose tattoos.
-  const availableArms = ["left", "right"];
+  const allowedOnSide = (item, side) => !offlineInventory.tattooSlots[item.asset] || offlineInventory.tattooSlots[item.asset].includes(`${side === "left" ? "Left" : "Right"}ArmTattoo`);
+  const availableArms = ["left", "right"].filter(side => arms.some(item => allowedOnSide(item, side)));
   const canArm = availableArms.length > 0 && arms.length > 0, canLeg = legs.length > 0;
   if (!canArm && !canLeg) return null;
   const kind = canArm
@@ -232,13 +236,15 @@ export function rollUnlockedTattoo(rng, parsed, selection) {
     const sides = preferred === "both" && availableArms.length === 2
       ? ["left", "right"]
       : [availableArms.includes(preferred) ? preferred : availableArms[Math.floor(rng() * availableArms.length)]];
-    const first = weightedChoice(arms, rng);
+    const first = weightedChoice(arms.filter(item => allowedOnSide(item, sides[0])), rng);
     plan.arms[sides[0]] = first;
     if (sides.length === 2) {
       const different = rng() < 0.35;
-      plan.arms.right = different && arms.length > 1
-        ? weightedChoice(arms.filter(item => item.asset !== first.asset), rng)
-        : first;
+      const right = arms.filter(item => allowedOnSide(item, "right"));
+      const alternatives = right.filter(item => item.asset !== first.asset);
+      plan.arms.right = different && alternatives.length
+        ? weightedChoice(alternatives, rng)
+        : allowedOnSide(first, "right") ? first : weightedChoice(right, rng);
     }
   }
   if (kind === "leg" || kind === "both") plan.legs = weightedChoice(legs, rng);

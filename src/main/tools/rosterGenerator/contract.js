@@ -1,7 +1,7 @@
 // Explicit generation/write contract. Age, identity bindings and references
 // outside this allowlist must never be changed by Roster Generator.
 import {STATE_FIELDS} from './playerState.js';
-import {NIL_FIELD} from './nilBudget.js';
+import {NIL_FIELDS} from './nilBudget.js';
 import {RATING_LABELS} from '../teamBoost/ratingWeights.js';
 
 export const CATALOG_VERSION = 1;
@@ -18,7 +18,7 @@ export const STYLE_FIELDS = Object.freeze(['PLYR_QBSTYLE','PLYR_STYLE','RunningS
 // PresentationId is separately allocated; never copy a source player's ID.
 export const PORTRAIT_FIELDS = Object.freeze(['PLYR_PORTRAIT','PortraitForceSilhouette','PortraitSwappableLibraryPath']);
 export const APPEARANCE_FIELDS = Object.freeze(['GenericHeadAssetName','PLYR_GENERICHEAD','CharacterBodyType','Height','Weight',...PORTRAIT_FIELDS]);
-export const WRITE_FIELDS = Object.freeze(['FirstName','LastName','JerseyNum','IsNIL',NIL_FIELD,'PLYR_ASSETNAME','PLYR_COMMENT','PlayerType','SchoolYear','RedshirtStatus','TraitDevelopment','OverallRating','ExperiencePoints','SkillPoints','Personality','RecruitingDealbreaker','ProspectStarRating',...STATE_FIELDS,...RATING_FIELDS,...CAP_FIELDS,...PHYSICAL_FIELDS,...MENTAL_FIELDS,...MENTAL_RANK_FIELDS,...STYLE_FIELDS,...APPEARANCE_FIELDS]);
+export const WRITE_FIELDS = Object.freeze(['Position','FirstName','LastName','JerseyNum','IsNIL',...NIL_FIELDS,'PLYR_ASSETNAME','PLYR_COMMENT','PlayerType','SchoolYear','RedshirtStatus','TraitDevelopment','OverallRating','ExperiencePoints','SkillPoints','Personality','RecruitingDealbreaker','ProspectStarRating',...STATE_FIELDS,...RATING_FIELDS,...CAP_FIELDS,...PHYSICAL_FIELDS,...MENTAL_FIELDS,...MENTAL_RANK_FIELDS,...STYLE_FIELDS,...APPEARANCE_FIELDS]);
 export const BUILDING_BLOCKS = Object.freeze({id:'building-blocks',name:'Building Blocks',minimumAverage:68,maximumAverage:70,targetAverage:69,spread:8});
 
 export function validateFootballProfile(profile) {

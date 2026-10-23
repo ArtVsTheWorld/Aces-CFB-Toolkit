@@ -105,7 +105,7 @@ app.whenReady().then(async () => {
     check(!document.querySelector("#boost-attributes-field").hidden, "Specific Attributes exposes checkbox picker");
     const boost = JSON.stringify(collectOptions("team-boost")); navigate("long-snap"); navigate("team-boost"); await wait(() => document.querySelector("#boost-attributes")); check(JSON.stringify(collectOptions("team-boost")) === boost, "Team Boost combination survives tool switching");
     navigate("nil-toggle"); await wait(() => document.querySelector("#nil-target"));
-    pick("#nil-positions", ["QB"]); pick("#nil-classes", ["Sophomore"]); pick("#nil-redshirts", ["Previous"]); pick("#nil-players", [document.querySelector("#nil-players").options[0].value]); change("#nil-target", "true");
+    pick("#nil-positions", ["QB"]); pick("#nil-classes", ["Sophomore"]); change("#nil-redshirts", "redshirt"); pick("#nil-players", [document.querySelector("#nil-players").options[0].value]); change("#nil-target", "true");
     const nil = JSON.stringify(collectOptions("nil-toggle")); navigate("long-snap"); navigate("nil-toggle"); await wait(() => document.querySelector("#nil-target")); check(JSON.stringify(collectOptions("nil-toggle")) === nil, "NIL scope survives tool switching");
     await runTool("nil-toggle", "preview"); check(document.querySelector(".generic-player-card-list") && document.querySelector(".standard-config-workspace").hidden, "NIL preview uses a separate Cards page");
     document.querySelector('[data-generic-view="table"]').click(); check(!document.querySelector(".generic-player-table-view").hidden, "NIL Table view switches correctly");

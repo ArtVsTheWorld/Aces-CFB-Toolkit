@@ -9,12 +9,13 @@ const ref = (table, row) => table.toString(2).padStart(15, "0") + row.toString(2
 const visual = asset => ({ isEmpty: false, RawData: JSON.stringify({ loadouts: [{ loadoutType: "PlayerOnField", loadoutElements: [{ slotType: "Visor", itemAssetName: asset }, { slotType: "MouthWear", itemAssetName: `Mouth_${asset}` }] }] }) });
 const player = (row, overall, teamIndex = 1) => ({ isEmpty: false, FirstName: `Player${row}`, LastName: "Donor", Position: "WR", SchoolYear: "Senior", RedshirtStatus: "Previous", CharacterBodyType: "Thin", CharacterVisuals: ref(10, row), IsNIL: false, TeamIndex: teamIndex, OverallRating: overall, JerseyNum: row });
 
-test("the rendered and prepared Playing Style field title includes its position restriction", async () => {
+test("Playing Style labels are unrestricted by default, with an explicit opt-in position control", async () => {
   const prepared = await prepareDealbreaker();
-  assert.equal(prepared.values.find(item => item.value === "PlayingStyle").label, "Playing Style (RB, WR, TE only)");
+  assert.equal(prepared.values.find(item => item.value === "PlayingStyle").label, "Playing Style");
   const renderer = fs.readFileSync(new URL("../src/renderer/renderer.js", import.meta.url), "utf8");
   assert.match(renderer, /dealbreakerLabels\[item\.value\] \?\? item\.label/);
-  assert.match(renderer, /PlayingStyle: "Playing Style \(RB, WR, TE only\)"/);
+  assert.match(renderer, /PlayingStyle: "Playing Style"/);
+  assert.match(renderer, /id="db-restrict-style" type="checkbox">/);
 });
 
 test("same-save top-N donors are protected from Equipment Randomizer recipient changes", () => {

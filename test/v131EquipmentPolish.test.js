@@ -10,29 +10,29 @@ const ref = (table, row) => table.toString(2).padStart(15, "0") + row.toString(2
 const raw = item => JSON.stringify({ loadouts: [{ loadoutType: "PlayerOnField", loadoutElements: item }] });
 const player = (row, extra = {}) => ({ isEmpty: false, FirstName: `Player${row}`, LastName: "Scope", Position: "WR", SchoolYear: "Freshman", RedshirtStatus: "Eligible", CharacterBodyType: "Thin", CharacterVisuals: ref(10, row), IsNIL: false, TeamIndex: 1, OverallRating: 80, JerseyNum: row, ...extra });
 
-test("NIL skipping is an explicit default-on option for both equipment tools", () => {
-  assert.equal(normalizeEquipmentOptions({}, true).skipNilPlayers, true);
-  assert.equal(normalizeEquipmentOptions({}, false).skipNilPlayers, true);
-  assert.equal(normalizeEquipmentOptions({ skipNilPlayers: false }, true).skipNilPlayers, false);
-  assert.equal(normalizeEquipmentOptions({ skipNilPlayers: false }, false).skipNilPlayers, false);
+test("Original EA protection is an explicit default-on option for both equipment tools", () => {
+  assert.equal(normalizeEquipmentOptions({}, true).protectOriginalEaPlayers, true);
+  assert.equal(normalizeEquipmentOptions({}, false).protectOriginalEaPlayers, true);
+  assert.equal(normalizeEquipmentOptions({ protectOriginalEaPlayers: false }, true).protectOriginalEaPlayers, false);
+  assert.equal(normalizeEquipmentOptions({ protectOriginalEaPlayers: false }, false).protectOriginalEaPlayers, false);
   const renderer = fs.readFileSync(new URL("../src/renderer/renderer.js", import.meta.url), "utf8");
-  assert.match(renderer, /id="equipment-skip-nil" type="checkbox" checked> Skip NIL players/);
+  assert.match(renderer, /id="equipment-protect-ea" type="checkbox" checked> <span>Protect Original EA Roster Players/);
 });
 
-test("Equipment Randomizer skips NIL recipients by default and includes them when requested", () => {
-  const players = [player(0, { IsNIL: true }), player(1, { SchoolYear: "Senior", RedshirtStatus: "Previous", OverallRating: 99 })];
+test("Equipment Randomizer skips original EA recipients by default and includes them when requested", () => {
+  const players = [player(0, { IsNIL: true, PLYR_ASSETNAME:'SmithJeremiah_8726' }), player(1, { SchoolYear: "Senior", RedshirtStatus: "Previous", OverallRating: 99 })];
   const visuals = [{ isEmpty: false, RawData: raw([{ slotType: "MouthWear", itemAssetName: "GearMouthpiece_White" }]) }, { isEmpty: false, RawData: raw([{ slotType: "MouthWear", itemAssetName: "GearMouthpiece_Black" }]) }];
   const options = { eligiblePlayer: record => record.FirstName === "Player0", top: 1, mixedChance: 0, crossMixedChance: 0, seed: 4, apply: true };
   assert.equal(patchFreshmanEquipment(structuredClone(players), structuredClone(visuals), 10, options).changes.length, 0);
-  assert.equal(patchFreshmanEquipment(structuredClone(players), structuredClone(visuals), 10, { ...options, skipNilPlayers: false }).changes.length, 1);
+  assert.equal(patchFreshmanEquipment(structuredClone(players), structuredClone(visuals), 10, { ...options, protectOriginalEaPlayers: false }).changes.length, 1);
 });
 
-test("Equipment Patcher skips NIL visuals by default and includes them when requested", () => {
-  const players = [player(0, { IsNIL: true })], visuals = [{ isEmpty: false, RawData: raw([{ slotType: "OuterPants", itemAssetName: "GearPants_Standard" }]) }];
+test("Equipment Patcher skips original EA visuals by default and includes them when requested", () => {
+  const players = [player(0, { IsNIL: true, PLYR_ASSETNAME:'SmithJeremiah_8726' })], visuals = [{ isEmpty: false, RawData: raw([{ slotType: "OuterPants", itemAssetName: "GearPants_Standard" }]) }];
   const protectedVisuals = structuredClone(visuals);
   assert.equal(applyGlobalEquipmentFixes(players, protectedVisuals, 10, { pantsFix: true }).pantsPlayersChanged, 0);
   const includedVisuals = structuredClone(visuals);
-  assert.equal(applyGlobalEquipmentFixes(players, includedVisuals, 10, { pantsFix: true, skipNilPlayers: false }).pantsPlayersChanged, 1);
+  assert.equal(applyGlobalEquipmentFixes(players, includedVisuals, 10, { pantsFix: true, protectOriginalEaPlayers: false }).pantsPlayersChanged, 1);
 });
 
 test("mouthpiece pools and recoloring reject misleading numbered multicolor assets", () => {

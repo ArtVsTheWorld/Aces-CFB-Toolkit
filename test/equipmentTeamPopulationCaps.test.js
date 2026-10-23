@@ -48,7 +48,7 @@ test("tattoo limits round down within each team and retain player/NIL/shared-row
   const result = run(tiny, { unlockedTattooFix: true, unlockedTattooCap: 40 });
   assert.equal(result.unlockedTattooPlayersChanged, 0);
   assert.equal(result.unlockedTattooPopulation.capCount, 0, "fractional places cannot be pooled between teams");
-  const scoped = fixture([10, 10], ({ player, teamIndex, number }) => { if (number === 0) player.IsNIL = true; if (teamIndex === 2 && number === 2) player.CharacterVisuals = ref(1); });
+  const scoped = fixture([10, 10], ({ player, teamIndex, number }) => { if (number === 0) Object.assign(player,{IsNIL:true,PLYR_ASSETNAME:'SmithJeremiah_8726'}); if (teamIndex === 2 && number === 2) player.CharacterVisuals = ref(1); });
   const before = scoped.visuals.map(row => row.RawData);
   run(scoped, { unlockedTattooFix: true, unlockedTattooCap: 100, activePlayerRows: new Set([0, 1, 2, 10, 11, 12]) });
   for (const row of [0, 1, 10, 12]) assert.equal(scoped.visuals[row].RawData, before[row]);

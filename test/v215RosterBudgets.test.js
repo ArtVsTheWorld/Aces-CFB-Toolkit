@@ -1,14 +1,17 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {rosterNilBudget,NIL_MAX} from '../src/main/tools/rosterGenerator/nilBudget.js';
+import {rosterNilBudget,NIL_MAX,NIL_INCREMENT,NIL_ALLOCATION_MAX} from '../src/main/tools/rosterGenerator/nilBudget.js';
 import {planBrothers} from '../src/main/tools/rosterGenerator/brothers.js';
 const players=Array.from({length:85},(_,row)=>({row,position:row<3?'QB':'WR',fields:{OverallRating:75}})),targets=players.map(player=>({row:player.row,original:{CurrentNILCompensation:20}}));
 test('NIL budget is exact, deterministic, bounded and favors quarterbacks',()=>{
   const plan=rosterNilBudget(players,targets,215);assert.equal([...plan.byRow.values()].reduce((a,b)=>a+b,0),1700);assert.deepEqual(plan,rosterNilBudget([...players].reverse(),targets,215));assert.ok(plan.byRow.get(0)>plan.byRow.get(40));assert.deepEqual(plan.summary,{before:1700,after:1700});
 });
-test('zero, single-player, tiny and fully saturated NIL budgets retain every unit',()=>{
-  for(const amount of [0,1,10,NIL_MAX]){const plan=rosterNilBudget(players.slice(0,1),[{original:{CurrentNILCompensation:amount}}],1);assert.equal(plan.byRow.get(0),amount);}
-  const plan=rosterNilBudget(players,targets.map(()=>({original:{CurrentNILCompensation:NIL_MAX}})),1);assert.ok([...plan.byRow.values()].every(value=>value===NIL_MAX));
+test('zero, tiny, legacy and saturated budgets use five-unit blocks without exceeding original funding',()=>{
+  for(const amount of [0,1,3,5,10,18,27,59,NIL_MAX]){const plan=rosterNilBudget(players.slice(0,1),[{original:{CurrentNILCompensation:amount}}],1),expected=Math.floor(amount/5)*5;assert.equal(plan.byRow.get(0),expected);assert.equal(plan.summary.before-plan.summary.after,amount-expected);}
+  const plan=rosterNilBudget(players,targets.map(()=>({original:{CurrentNILCompensation:NIL_MAX}})),1);assert.ok([...plan.byRow.values()].every(value=>value===NIL_ALLOCATION_MAX));assert.equal(plan.summary.unallocated,255);
   assert.throws(()=>rosterNilBudget(players,[{original:{CurrentNILCompensation:1024}}],1),/invalid/);
+});
+test('all recipients use whole increments across seeds, while ordinary team budgets remain exact',()=>{
+  for(let seed=0;seed<100;seed++){const plan=rosterNilBudget(players,targets,seed);assert.equal(plan.summary.after,1700);assert.ok([...plan.byRow.values()].every(value=>Number.isInteger(value)&&value%NIL_INCREMENT===0&&value<=NIL_ALLOCATION_MAX));}
 });
 test('brothers are rare, seeded, same-tone, same surname/hometown, and retain distinct first names',()=>{
   const model={catalog:{names:{last:['Smith','Jones']},appearances:[{id:'a',skinTone:4,fields:{}}]}},roster=Array.from({length:10},(_,row)=>({row,fields:{FirstName:`Name${row}`,LastName:row%2?'Jones':'Smith',PLYR_HOME_TOWN:`Town${row}`,PLYR_HOME_STATE:'Georgia',HomePipeline:'SouthGeorgia'},provenance:{skinTone:row%2?4:7,appearance:'a',surname:{parts:[row%2?'Jones':'Smith'],suffix:''}}}));

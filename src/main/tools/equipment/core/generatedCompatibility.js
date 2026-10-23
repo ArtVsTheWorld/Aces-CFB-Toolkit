@@ -57,7 +57,9 @@ export function generatedItemConflict(elements, item, slots = item.slots, positi
   return null;
 }
 
-export const canGenerateEquipment = (loadouts, item, slots = item.slots, position = "") => loadouts.every(loadout => !generatedItemConflict(loadout.loadoutElements, item, slots, position));
+// Pool-only targeting must not restrict deliberate Equipment Mapper edits.
+const allowedPoolPosition = (item, position) => Boolean(item) && (!item.allowedPositions || item.allowedPositions.includes(String(position).toUpperCase()));
+export const canGenerateEquipment = (loadouts, item, slots = item?.slots, position = "") => allowedPoolPosition(item, position) && loadouts.every(loadout => !generatedItemConflict(loadout.loadoutElements, item, slots, position));
 
 // Provenance is local to one recipient, not stored in a global cache. Only new
 // pool additions may be restored. Existing donor items are never removed here.
@@ -76,7 +78,7 @@ export function enforceGeneratedEquipmentCompatibility(loadouts, state, position
     for (const [slot, asset] of state.added[index]) {
       const elements = loadout.loadoutElements;
       if (get(elements, slot) !== asset) continue;
-      const item = equipmentItem(asset), reason = item && generatedItemConflict(elements, item, [slot], position);
+      const item = equipmentItem(asset), reason = item && (!allowedPoolPosition(item, position) ? "Item is not generated for this position" : generatedItemConflict(elements, item, [slot], position));
       // A paired band/cleat shares a type on two sides but is not a conflict.
       if (!reason) continue;
       const at = elements.findIndex(element => element.slotType === slot);

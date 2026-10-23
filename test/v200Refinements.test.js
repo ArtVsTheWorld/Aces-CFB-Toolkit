@@ -29,10 +29,10 @@ test('composable scope intersects team, position, class, redshirt and individual
   assert.throws(() => normalizePlayerScope({ playerRows: ['-1'] }), /Choose players/);
   assert.throws(() => normalizePlayerScope({ positions: ['NOPE'] }), /valid positions/);
 });
-test('Commentary scopes retain automatic NIL protection and do not mutate excluded players', () => {
-  const rows = [player(), player({ IsNIL: true }), player({ SchoolYear: 'Senior' })];
+test('Commentary scopes retain automatic original EA protection and do not mutate excluded players', () => {
+  const rows = [player(), player({ IsNIL: true, PLYR_ASSETNAME:'SmithJeremiah_8726' }), player({ SchoolYear: 'Senior' })];
   const result = patchPlayerCommentary(rows, new Map([['James', 91]]), { apply: true, teamNames: teams, scope: normalizePlayerScope({ classes: ['Freshman'], positions: ['WR'] }) });
-  assert.deepEqual(rows.map(row => row.PLYR_COMMENT), [91,0,0]); assert.equal(result.summary.skippedNil, 1);
+  assert.deepEqual(rows.map(row => row.PLYR_COMMENT), [91,0,0]); assert.equal(result.summary.skippedOriginalEa, 1);
 });
 test('Team Boost position ranges and class/redshirt/player filters retain whole-room averages', () => {
   const records = [player({ OverallRating: 60, RedshirtStatus: 'Previous' }), player({ OverallRating: 90, SchoolYear: 'Senior' }), player({ Position: 'QB' })];

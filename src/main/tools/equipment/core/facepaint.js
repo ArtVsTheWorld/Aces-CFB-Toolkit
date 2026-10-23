@@ -1,11 +1,12 @@
 import fs from "node:fs";
 
 const inventory = JSON.parse(fs.readFileSync(new URL("../equipmentModInventory.json", import.meta.url), "utf8"));
+const offline = JSON.parse(fs.readFileSync(new URL("../equipmentOfflineInventory.json", import.meta.url), "utf8"));
 export const VANILLA_FACE_PAINT_OPTIONS = Object.freeze(["FaceMarks_EyePaint", "FaceMarks_EyePaint2", "FaceMarks_EyePaint3", "FaceMarks_EyePaintCross", "FaceMarks_EyeTape", "FaceMarks_EyeTapeLeft", "FaceMarks_EyeTapeRight", "FaceMarks_NoseEyeTape", "FaceMarks_NoseTape", "FaceMarks_NoseTapeEyePaint"]);
 // These exact-case names come from the live menu catalog, with equipped-save
 // samples confirming the FacePaint slot. Donor ranking/NIL filters must not
 // decide whether an installed mod's catalog is available for generation.
-const modItems = Object.fromEntries(Object.entries(inventory.mods).map(([id, mod]) => [id, Object.freeze([...mod.facepaintItemNames])]));
+const modItems = Object.fromEntries(Object.entries(inventory.mods).map(([id, mod]) => [id, Object.freeze([...new Set([...mod.facepaintItemNames, ...(id === "raw" ? offline.rawFacepaintItems : [])])])]));
 export const MOD_FACE_PAINT_ITEMS = Object.freeze(modItems);
 const positionRules = new Map(inventory.facepaintPositionRules.map(rule => [rule.itemName, new Set(rule.positions)]));
 
@@ -16,7 +17,8 @@ export function buildFacePaintPool(_donors, { usingUnlockedMod = false, usingRaw
   for (const [id, values] of Object.entries(modItems)) {
     const selected = modPools?.[id]?.facepaint?.items ?? values, chance = modPools?.[id]?.facepaint?.chance ?? 100;
     const assets = values.filter(value => selected.includes(value));
-    diagnostics[id] = { enabled: enabled[id], chance, available: values.length, assets, inventoryCount: inventory.mods[id].facepaintResourceKeys.length, source: "catalog" };
+    const resourceKeys = [...inventory.mods[id].facepaintResourceKeys, ...(id === "raw" ? offline.rawFacepaintItems.map(value => value.toLowerCase()) : [])];
+    diagnostics[id] = { enabled: enabled[id], chance, available: values.length, assets, inventoryCount: new Set(resourceKeys).size, source: "catalog" };
     if (enabled[id] && chance > 0) for (const asset of assets) if (!options.includes(asset)) options.push(asset);
   }
   return { options, diagnostics };
@@ -25,7 +27,10 @@ export function buildFacePaintPool(_donors, { usingUnlockedMod = false, usingRaw
 export function facePaintOptionsForPosition(pool, position) {
   if (position === undefined) return pool;
   const value = String(position).toUpperCase();
-  return pool.filter(asset => !positionRules.has(asset) || positionRules.get(asset).has(value));
+  return pool.filter(asset => {
+    const base = offline.facepaintBaseAssets[asset] ?? asset;
+    return !positionRules.has(base) || positionRules.get(base).has(value);
+  });
 }
 
 export function rollFacePaint(rng, pool = VANILLA_FACE_PAINT_OPTIONS, position, diagnostics) {
