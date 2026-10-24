@@ -1,3 +1,4 @@
+import {progressRange} from '../../services/toolProgress.js';
 import path from 'node:path';
 import {planRosterDepthCharts,applyRosterDepthCharts,verifyRosterDepthCharts} from './depthCharts.js';
 import {makeRosterEquipmentGenerator} from './equipment.js';
@@ -112,14 +113,14 @@ export async function runRosterGenerator(context) {
   const names=loaded.players.records.filter(record=>record&&!record.isEmpty).map(record=>`${sf(record,'FirstName')??''} ${sf(record,'LastName')??''}`);
   const mapFile=context.defaultMapPath??path.resolve(path.dirname(context.schemaPath),'../commentary-data/PlayerCommentaryidMap.txt');
   const matchCommentary=createCommentaryMatcher(loadCommentaryMap(mapFile),{allowPhonetic:false,allowFirstName:true});
-  for(const team of teams) {
+  for(const [teamProgressIndex,team] of teams.entries()) {
     const originals=extractTargets(loaded,team,owners);for(const target of originals){if(used.has(target.row))throw new Error('Two selected teams share a roster player. No write is permitted.');used.add(target.row);}
     const teamSeed=(seed^Math.imul(team.teamIndex+1,2654435761))>>>0;
     const configuration=configurations[team.name];
     configuration.settings.schemeContext=resolveSchemeContext(configuration.settings,await inspectTeamSchemes(loaded,team,context.schemaPath),schemeSchema(context.schemaPath),mulberry32(teamSeed^0x534348));
     const targets=composeRosterTargets(originals,configuration.settings),teamPreset=rosterPreset(configuration.preset),model=teamModelFactory(baseModel,teamPreset,configuration.settings)(targets);
     const geography=await readTeamGeography(loaded,team,baseModel.catalog);
-    const roster=generateRosterPreview({team:{name:team.name,teamIndex:team.teamIndex,branding:team.branding,captainCount:team.captainCount,geography},targets,model,seed:teamSeed,preset:teamPreset,unavailableNames:names,matchCommentary,equipmentGenerator,reservedPresentationIds});
+    const roster=progressRange(25 + teamProgressIndex / teams.length * 55,25 + (teamProgressIndex + 1) / teams.length * 55,()=>generateRosterPreview({team:{name:team.name,teamIndex:team.teamIndex,branding:team.branding,captainCount:team.captainCount,geography},targets,model,seed:teamSeed,preset:teamPreset,unavailableNames:names,matchCommentary,equipmentGenerator,reservedPresentationIds}));
     for(const player of roster.players)reservedPresentationIds.add(player.fields.PresentationId);
     roster.summary.caliber=teamPreset.name;
     roster.summary.composition=compositionAudit(targets,originals,configuration.settings.schemeContext);

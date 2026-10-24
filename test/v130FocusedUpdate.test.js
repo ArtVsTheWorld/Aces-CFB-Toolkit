@@ -69,6 +69,6 @@ test("app starts without a persisted active save and displays the app version to
   const main = fs.readFileSync(new URL("../src/main/main.js", import.meta.url), "utf8");
   const index = fs.readFileSync(new URL("../src/renderer/index.html", import.meta.url), "utf8");
   const renderer = fs.readFileSync(new URL("../src/renderer/renderer.js", import.meta.url), "utf8");
-  assert.match(main, /let sessionActiveSave = null/); assert.match(main, /activeSave: saveInfo\(sessionActiveSave\)/); assert.match(main, /settings\.update\(\{ activeSave: null \}\)/);
+  assert.match(main, /let sessionActiveSave = null/); assert.match(main, /activeSave: await saveInfo\(sessionActiveSave\)/); assert.match(main, /settings\.update\(\{ activeSave: null \}\)/);
   assert.match(index, /id="app-version" class="app-version"/); assert.match(renderer, /#app-version/);
 });

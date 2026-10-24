@@ -21,6 +21,7 @@ export const IPC = Object.freeze({
   chooseTeamArtwork: "settings:choose-team-artwork",
   clearTeamArtwork: "settings:clear-team-artwork",
   runTool: "tools:run",
+  toolProgress: 'tools:progress',
   prepareTool: "tools:prepare",
   prepareEquipmentDonors: "equipment:prepare-donors",
   clearQuickstartMemory: 'equipment:clear-quickstart-memory',

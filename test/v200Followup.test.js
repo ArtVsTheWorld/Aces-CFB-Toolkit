@@ -59,14 +59,14 @@ test('clear-only correction works on OL and preserves excluded/NIL/shared player
 test('no-op settings restoration emits no change event, while real restored edits still do', () => {
   let changes=0;
   const controls = {scope:{value:'default',type:'text',dataset:{},dispatchEvent:()=>changes++},nil:{checked:true,type:'checkbox',dataset:{},dispatchEvent:()=>changes++}};
-  const context = vm.createContext({state:{page:'tool',bootstrap:{registry:{tools:[{id:'tool'}]}},toolSettings:new Map([['tool',{scope:'default',nil:true}]])},document:{getElementById:id=>controls[id]},migrateOriginalEaProtectionSettings:()=>{},migrateEquipmentSessionSettings:()=>{},Event:class{}});
+  const context = vm.createContext({toolLoading: message => message, state:{page:'tool',bootstrap:{registry:{tools:[{id:'tool'}]}},toolSettings:new Map([['tool',{scope:'default',nil:true}]])},document:{getElementById:id=>controls[id]},migrateOriginalEaProtectionSettings:()=>{},migrateEquipmentSessionSettings:()=>{},Event:class{}});
   vm.runInContext(fn('restoreToolSettings'),context); vm.runInContext('restoreToolSettings()',context); assert.equal(changes,0);
   controls.scope.dataset={};context.state.toolSettings.get('tool').scope='changed';vm.runInContext('restoreToolSettings()',context);assert.equal(changes,1);
   vm.runInContext('restoreToolSettings()',context);assert.equal(changes,1);
 });
 test('Commentary waits for scope restoration before snapshotting options and starting analysis', async () => {
   let ready, calls=0, scope=[]; const events=[], output={innerHTML:'',isConnected:true},button={dataset:{},isConnected:true};
-  const context = vm.createContext({state:{page:'commentary-id',activeSave:{path:'SAVE'}},document:{querySelector:id=>id==='#analysis-output'?output:button},ensureCommentaryScope:()=>new Promise(resolve=>ready=resolve),commentaryOptionsFromForm:()=>({scope:{classes:scope}}),beginToolRun:()=>1,currentToolRun:()=>true,window:{cfbToolkit:{prepareTool:async request=>{calls++;assert.deepEqual(request.options.scope.classes,['Freshman']);return {proposals:[]};}}},render:()=>events.push('render'),runCommentaryReview:async()=>events.push('preview'),readableError:error=>error,showError:error=>{throw error;}});
+  const context = vm.createContext({toolLoading: message => message, state:{page:'commentary-id',activeSave:{path:'SAVE'}},document:{querySelector:id=>id==='#analysis-output'?output:button},ensureCommentaryScope:()=>new Promise(resolve=>ready=resolve),commentaryOptionsFromForm:()=>({scope:{classes:scope}}),beginToolRun:()=>1,currentToolRun:()=>true,window:{cfbToolkit:{prepareTool:async request=>{calls++;assert.deepEqual(request.options.scope.classes,['Freshman']);return {proposals:[]};}}},render:()=>events.push('render'),runCommentaryReview:async()=>events.push('preview'),readableError:error=>error,showError:error=>{throw error;}});
   vm.runInContext('async '+fn('analyzeCommentary'),context);
   const pending=vm.runInContext('analyzeCommentary()',context);assert.equal(calls,0);assert.equal(button.disabled,true);
   await vm.runInContext('analyzeCommentary()',context);assert.equal(calls,0);
@@ -74,6 +74,6 @@ test('Commentary waits for scope restoration before snapshotting options and sta
 });
 test('Commentary aborts a pending scope load when the active save changes', async () => {
   let ready,calls=0;const output={innerHTML:'',isConnected:true},button={dataset:{},isConnected:true};
-  const context=vm.createContext({state:{page:'commentary-id',activeSave:{path:'OLD'}},document:{querySelector:id=>id==='#analysis-output'?output:button},ensureCommentaryScope:()=>new Promise(resolve=>ready=resolve),window:{cfbToolkit:{prepareTool:()=>calls++}}});
+  const context=vm.createContext({toolLoading: message => message, state:{page:'commentary-id',activeSave:{path:'OLD'}},document:{querySelector:id=>id==='#analysis-output'?output:button},ensureCommentaryScope:()=>new Promise(resolve=>ready=resolve),window:{cfbToolkit:{prepareTool:()=>calls++}}});
   vm.runInContext('async '+fn('analyzeCommentary'),context);const pending=vm.runInContext('analyzeCommentary()',context);context.state.activeSave.path='NEW';ready(true);await pending;assert.equal(calls,0);assert.equal(button.disabled,false);
 });

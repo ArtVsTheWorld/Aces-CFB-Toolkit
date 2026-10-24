@@ -1,3 +1,4 @@
+import {toolProgressCount} from '../../../services/toolProgress.js';
 import {isOriginalEaPlayer,originalEaProtectionEnabled} from '../../../services/originalEaPlayers.js';
 import { shuffledFrequencyCandidates } from './frequency.js';
 import { helmetPopulationAudit } from "./helmetPopulation.js";
@@ -447,7 +448,9 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
   let unlockedTattooPlayersRepaired = 0;
   const frequencyOrder = options.visorFix || options.unlockedMouthpieceFix || options.unlockedTattooFix || options.lowerRolledJerseyFix || options.cutoffPantsFix
     ? shuffledFrequencyCandidates(playersByVisualRow, mulberry32(seed ^ 0x5f3759df)) : playersByVisualRow;
+  let progressRows = 0;
   for (const [visualsRow, players] of frequencyOrder) {
+    toolProgressCount(++progressRows, playersByVisualRow.size, 'Checking equipment corrections…');
     // A shared record cannot be edited without also changing every player who
     // references it, so protect the whole row if any linked player is NIL or excluded.
     if (allPlayerReferences.get(visualsRow) !== players.length || players.some(player => (protectOriginalEaPlayers && player.eaProtected) || player.excluded) || new Set(players.map(player => player.isFcs)).size > 1) continue;

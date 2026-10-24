@@ -1,0 +1,31 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import {createHash, randomUUID} from 'node:crypto';
+import {ToolWorkerClient} from '../src/main/services/toolWorkerClient.js';
+const hash=file=>createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+
+test('background Preview, full search, exact Apply, review and tracking keep the parent event loop responsive', {timeout:180000}, async t=>{
+  const directory=fs.mkdtempSync(path.join(os.tmpdir(),'tool-worker-save-'));
+  const client=new ToolWorkerClient({memoryFile:path.join(directory,'memory.json'),reportsDirectory:path.join(directory,'reports'),reviewsDirectory:path.join(directory,'reviews')});
+  t.after(async()=>{await client.close();fs.rmSync(directory,{recursive:true,force:true});});
+  const source=path.resolve('../EXAMPLE SAVES VANILLA GAME/DYNASTY-LSUTESTSAVEPRESZN'),originalHash=hash(source),savePath=path.join(directory,'DYNASTY-TEST');fs.copyFileSync(source,savePath);
+  const context={toolId:'equipment-patcher',savePath,schemaPath:path.resolve('resources/engine-data/C27_486_6.gz'),defaultMapPath:path.resolve('resources/commentary-data/PlayerCommentaryidMap.txt')};
+  const ticks=[];const timer=setInterval(()=>ticks.push(Date.now()),20);t.after(()=>clearInterval(timer));
+  const prepared=await client.request('prepare',context);assert.ok(prepared.teams.length);
+  const updates=[],runId=randomUUID();
+  const preview=await client.request('run',{...context,mode:'preview',options:{pantsFix:true,protectOriginalEaPlayers:false,includedTeams:['LSU'],seed:1776},audit:{runId,appVersion:'23.1.0',mode:'preview',savePath}},update=>updates.push(update));
+  assert.equal(hash(savePath),originalHash);assert.ok(preview.result.details.totalPreviewRows>0);assert.ok(preview.reviewAvailable);
+  assert.ok(updates.length>10);assert.ok(updates.some(update=>update.percent>25&&update.percent<90));assert.ok(updates.every((update,index)=>update.percent<100&&(!index||update.percent>=updates[index-1].percent)));
+  const searched=await client.request('search',{planId:preview.result.planId,query:'LSU'});assert.equal(searched.totalMatches,preview.result.details.totalPreviewRows);
+  const applied=await client.request('run',{...context,mode:'apply',options:{planId:preview.result.planId},audit:{runId:randomUUID(),appVersion:'23.1.0',mode:'apply',savePath}});
+  assert.equal(applied.result.status,'completed');assert.equal(hash(applied.result.backupPath),originalHash);assert.equal(fs.statSync(savePath).size,fs.statSync(source).size);
+  const review=await client.request('review',{id:runId});assert.equal(review.rows.length,searched.totalMatches);
+  await assert.rejects(client.request('run',{...context,mode:'apply',options:{planId:preview.result.planId},audit:{runId:randomUUID()}}),/already been applied/);
+  await client.request('prepare',{...context,toolId:'equipment-quickstart'});assert.equal(fs.existsSync(path.join(directory,'memory.json')),false);
+  assert.ok(ticks.length>50,'Parent thread keeps ticking during save processing');
+  const maxGap=Math.max(...ticks.slice(1).map((time,index)=>time-ticks[index]));assert.ok(maxGap<1500,`Parent event loop gap ${maxGap} ms`);
+  assert.equal(hash(source),originalHash);
+});

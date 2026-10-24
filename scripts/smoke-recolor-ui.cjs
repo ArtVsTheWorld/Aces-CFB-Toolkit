@@ -293,10 +293,14 @@ app.whenReady().then(async () => {
     const result=${JSON.stringify(preview)};
     state.equipmentPreviews.set("freshman-equipment",result);state.equipmentView="cards";renderResult(document.querySelector("#run-output"),result);showEquipmentPreviewWorkspace(true);
     if(!document.querySelector("#equipment-config-workspace").hidden||document.querySelector("#equipment-preview-workspace").hidden)throw new Error("Preview must have its own workspace");
-    const cards=document.querySelector(".equipment-card-list");if(cards.hidden||!cards.querySelector(".randomizer-gear-details"))throw new Error("Cards must immediately show gear detail controls");
-    cards.querySelector(".randomizer-gear-details").open=true;
+    const cards=document.querySelector(".equipment-card-list");if(cards.hidden||!cards.querySelector(".equipment-preview-row"))throw new Error("Player dropdowns must be available");
+    if(cards.querySelector('.equipment-preview-row').open)throw new Error('Player details start collapsed');
+    cards.querySelector('.equipment-preview-row>summary').click();await new Promise(resolve=>setTimeout(resolve,20));
+    if(!cards.querySelector('.equipment-preview-body .equipment-change-detail'))throw new Error('Opening a player reveals gear details');
     document.querySelector('[data-equipment-view="table"]').click();
-    if(document.querySelector(".equipment-table-view").hidden||!document.querySelector(".equipment-table-view .randomizer-gear-details"))throw new Error("Table must also show gear details");
+    if(document.querySelector(".equipment-table-view").hidden||!document.querySelector(".equipment-table-details"))throw new Error("Table must also show details controls");
+    document.querySelector('.equipment-table-details>summary').click();await new Promise(resolve=>setTimeout(resolve,20));
+    if(!document.querySelector('.equipment-table-details .equipment-change-detail'))throw new Error('Table dropdown reveals gear details');
     document.querySelector('[data-equipment-view="cards"]').click();document.querySelector(".equipment-result-switch").scrollIntoView({block:"start"});
   })()`);
   await window.webContents.executeJavaScript('new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))');

@@ -3,6 +3,7 @@ import path from "node:path";
 import maddenPkg from "madden-franchise";
 import { validateSavePath } from "./files.js";
 import {isRosterContainer} from '../tools/equipment/rosterCodec.js';
+import {toolProgress} from './toolProgress.js';
 
 const Franchise = maddenPkg.default || maddenPkg;
 export const PLAYER_TABLE_UID = 1612938518;
@@ -42,9 +43,11 @@ export function inspectSaveSchema(savePath, schemaDirectory) {
 }
 
 export async function openCfb27Save(savePath, schemaPath) {
+  toolProgress(5, 'Reading save data…');
   const input = validateSavePath(savePath);
   const detected = detectSaveSchema(input, path.dirname(schemaPath));
   const franchise = await Franchise.create(input, { schemaDirectory: path.dirname(detected.path), schemaOverride: { major: detected.major, minor: detected.minor, gameYear: detected.gameYear, path: detected.path } });
+  toolProgress(15, 'Save data loaded');
   return { franchise, savePath: input };
 }
 
@@ -56,7 +59,8 @@ export function tableByUniqueId(franchise, uniqueId) {
 
 export async function readTables(franchise, uniqueIds) {
   const tables = Object.fromEntries(Object.entries(uniqueIds).map(([name, uid]) => [name, tableByUniqueId(franchise, uid)]));
-  await Promise.all(Object.values(tables).map(table => table.readRecords()));
+  const values = Object.values(tables); let completed = 0;
+  await Promise.all(values.map(async table => { await table.readRecords(); completed++; toolProgress(15 + completed / values.length * 10, 'Reading player and team records…'); }));
   return tables;
 }
 

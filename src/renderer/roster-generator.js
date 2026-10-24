@@ -2,7 +2,7 @@
 async function rosterGeneratorPage(tool) {
   if (!state.activeSave?.exists) { content.innerHTML = `${toolHeader(tool)}${inputCard()}`; bindCommon(); return; }
   const savePath = state.activeSave.path;
-  content.innerHTML = `${toolHeader(tool)}<section class="card"><div class="status"><span class="spinner"></span>Reading rosters…</div></section>`;
+  content.innerHTML = `${toolHeader(tool)}<section class="card">${toolLoading(`Reading rosters…`)}</section>`;
   try {
     const key = `${tool.id}|${savePath}`;
     let prepared = state.prepared.get(key);

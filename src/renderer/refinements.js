@@ -22,7 +22,7 @@ content.addEventListener('change', event => {
   content.querySelectorAll('#run-output,#analysis-output,#force-review-status').forEach(output => { output.dataset.runToken = String(++toolRunSequence); });
   content.querySelectorAll('#preview,#equipment-preview,#force-preview,#jersey-preview').forEach(button => button.disabled = false);
   const analysis = content.querySelector('#analysis-output');
-  if (analysis?.querySelector('.spinner')) {
+  if (analysis?.querySelector('.tool-progress,.spinner')) {
     analysis.innerHTML = '<div class="notice">Settings changed. Analyze Matches again to use the current filters.</div>';
     const button = content.querySelector('#analyze-commentary');
     if (button && document.getElementById('commentary-classes')) { button.disabled = false; button.textContent = 'Analyze Matches →'; }
@@ -87,7 +87,7 @@ function extraScope(prefix) { return { teams: selected('#' + prefix + '-teams'),
 let commentaryScopeRequest;
 function showPlayerFilterLoading(parent) {
   const node=document.createElement('section');node.className='configuration-entry additional-filter-loading';
-  node.innerHTML='<div><strong>Additional Player Filters</strong><div class="status" role="status"><span class="spinner" aria-hidden="true"></span>Reading players and filters…</div></div>';
+  node.innerHTML=`<div><strong>Additional Player Filters</strong>${toolLoading('Reading players and filters…')}</div>`;
   parent.append(node);return node;
 }
 async function prepareBoostPlayerFilters(prepared) {
@@ -379,7 +379,6 @@ renderResult = (output, result) => {
   output.dataset.previewRequestVersion = String(Number(output.dataset.previewRequestVersion ?? 0) + 1); output.dataset.resultKey = key;
   originalRenderResult(output, result);
   if (result.resultKind === 'equipment-patcher') { output.insertAdjacentHTML('beforeend', helmetPopulationMarkup(result.details?.helmetPopulation) + uniformPopulationMarkup(result.details)); output.querySelector('[data-helmet-audit-dimension]')?.addEventListener('change', event => output.querySelectorAll('[data-helmet-audit-group]').forEach(section => section.hidden = section.dataset.helmetAuditGroup !== event.target.value)); }
-  if (['freshman-equipment','equipment-quickstart'].includes(result.resultKind)) { const cards = output.querySelectorAll('.equipment-change-card'), cells = output.querySelectorAll('.equipment-table-view tbody tr td:last-child'); previewChanges(result).forEach((change, index) => {const details=donorProvenanceMarkup(change);cards[index]?.insertAdjacentHTML('beforeend',details);cells[index]?.insertAdjacentHTML('beforeend',details);}); }
   if (result.resultKind === 'automatic-force-win') installMatchupDecisions(output, result);
   const stored = previewPresentation.get(key); if (stored) { for (const [id, value] of stored.filters) { const node = output.querySelector('#' + CSS.escape(id)); if (!node) continue; if (node.type === 'checkbox') node.checked = value; else node.value = value; if (!node.dataset.previewFacet && /^force-(?:schedule|week|team|outcome|mismatch|rivalry)-/.test(id)) node.dispatchEvent(new Event(node.tagName === 'INPUT' && node.type !== 'checkbox' ? 'input' : 'change', { bubbles: true })); } output.querySelectorAll('details').forEach(node => node.open = stored.expanded.includes(node.querySelector('summary')?.textContent)); const main = document.querySelector('main'); if (main) main.scrollTop = stored.scroll; }
   while (previewPresentation.size > 30) previewPresentation.delete(previewPresentation.keys().next().value);

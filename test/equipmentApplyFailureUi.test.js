@@ -9,7 +9,7 @@ const runTool = renderer.match(/^async function runTool\(toolId, mode\).*$/m)?.[
 for (const expired of [false, true]) test(`failed equipment Apply ${expired ? 'discards an expired plan' : 'restores its reviewed preview above the error'}`, async () => {
   const preview = {planId: 'reviewed-plan', details: {canApply: true}}, output = {innerHTML: ''}, buttons = {preview: {}, apply: {}}, events = [];
   const state = {activeSave: {path: 'save'}, page: 'equipment-quickstart', genericPreviews: new Map([['equipment-quickstart', preview]])};
-  const context = vm.createContext({
+  const context = vm.createContext({toolLoading: message => message,
     state,
     document: {querySelector: selector => selector === '#run-output' ? output : buttons[selector.slice(1)], querySelectorAll: () => Object.values(buttons)},
     window: {cfbToolkit: {runTool: async () => {throw new Error(expired ? 'This cached result expired.' : 'Equipment cannot fit.');}}},

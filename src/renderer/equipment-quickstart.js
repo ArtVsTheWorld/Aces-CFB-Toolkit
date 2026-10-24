@@ -19,7 +19,7 @@ async function refreshQuickstartCounts() {
 async function equipmentQuickstartPage(tool) {
   if (!state.activeSave?.exists) { content.innerHTML=toolHeader(tool)+inputCard(); bindCommon(); return; }
   const savePath=state.activeSave.path;
-  content.innerHTML=toolHeader(tool)+'<section class="card"><div class="status"><span class="spinner"></span>Checking players and Quickstart memory…</div></section>';
+  content.innerHTML=toolHeader(tool)+`<section class="card">${toolLoading('Checking players and Quickstart memory…')}</section>`;
   try {
     const prepared=await window.cfbToolkit.prepareTool({toolId:tool.id,savePath});
     if(state.page!==tool.id || state.activeSave?.path!==savePath)return;

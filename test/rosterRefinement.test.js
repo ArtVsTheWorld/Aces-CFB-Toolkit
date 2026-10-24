@@ -54,7 +54,7 @@ test('Unlocked owns GABOS, Kill Everybody, Trust God and custom 1-10, not the di
 test('completion notification is central, apply-only and cannot turn success into failure',async()=>{
   let api;
   const listeners=new Map(),electron={contextBridge:{exposeInMainWorld:(_,value)=>api=value},ipcRenderer:{invoke:async()=>({status:'completed'}),on:(name,fn)=>listeners.set(name,fn),removeListener:()=>{}}};
-  const context=vm.createContext({require:()=>electron});
+  const context=vm.createContext({require:()=>electron,crypto:globalThis.crypto});
   vm.runInContext(fs.readFileSync(new URL('../src/main/preload.cjs',import.meta.url),'utf8'),context);
   let count=0;const remove=api.onToolApplied(()=>count++);api.onToolApplied(()=>{throw Error('Audio unavailable');});await api.runTool({mode:'preview'});assert.equal(count,0);assert.equal((await api.runTool({mode:'apply'})).status,'completed');assert.equal(count,1);remove();await api.runTool({mode:'apply'});assert.equal(count,1);
 });

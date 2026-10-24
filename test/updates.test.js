@@ -118,8 +118,8 @@ test("installer metadata preserves persistence IDs and publishes only Windows re
   assert.equal(pkg.build.nsis.deleteAppDataOnUninstall, false); assert.notEqual(pkg.build.nsis.artifactName, pkg.build.artifactName);
   assert.match(pkg.scripts.build, /nsis.*--publish never/); assert.match(pkg.scripts.release, /nsis.*--publish always/);
   const main = fs.readFileSync(new URL("../src/main/main.js", import.meta.url), "utf8");
-  assert.match(main, /IPC.prepareTool, async \(_event, request\) => toolOperation/);
-  assert.match(main, /IPC.runTool, async \(_event, request\) => toolOperation/);
+  assert.match(main, /IPC.prepareTool, async \(event, request\) => toolOperation/);
+  assert.match(main, /IPC.runTool, async \(event, request\) => toolOperation/);
   assert.match(fs.readFileSync(new URL('../src/renderer/updates.js',import.meta.url),'utf8'), /Unapplied previews and review decisions will be discarded/);
   assert.doesNotMatch(main,/dialog\.showMessageBox/);
   const preload = fs.readFileSync(new URL("../src/main/preload.cjs", import.meta.url), "utf8");

@@ -5,7 +5,7 @@ function mapperScopeSummary(rule){return [rule.teams?.length?rule.teams.join(', 
 const mapperMatchLabel=mode=>({exact:'Exact Configuration',asset:'Same Item',item:'Same Item · Any Color'})[mode]??'Same Item';
 async function equipmentMapperPage(tool){
   const save=state.activeSave?.path;if(!save){content.innerHTML=toolHeader(tool)+inputCard();bindCommon();return;}
-  content.innerHTML=toolHeader(tool)+'<section class="card section status"><span class="spinner"></span>Reading saved equipment…</section>';
+  content.innerHTML=toolHeader(tool)+`<section class="card section">${toolLoading('Reading saved equipment…')}</section>`;
   try{
     const prepared=await window.cfbToolkit.prepareTool({toolId:tool.id,savePath:save});if(state.page!==tool.id||state.activeSave?.path!==save)return;
     state.prepared.set(`${tool.id}|${save}`,prepared);
@@ -22,7 +22,7 @@ async function equipmentMapperPage(tool){
     control.addEventListener('change',update);bindCommon();restoreToolSettings();update();
     const run=async mode=>{
       const output=mode==='preview'?document.getElementById('mapper-status'):document.getElementById('run-output'),token=beginToolRun(output),page=state.page;
-      document.getElementById('mapper-preview').disabled=true;document.getElementById('mapper-apply').disabled=true;output.innerHTML='<div class="status"><span class="spinner"></span>Checking equipment changes…</div>';
+      document.getElementById('mapper-preview').disabled=true;document.getElementById('mapper-apply').disabled=true;output.innerHTML=toolLoading('Checking equipment changes…');
       try{const result=await window.cfbToolkit.runTool({toolId:tool.id,savePath:save,mode,options:mode==='preview'?{fingerprint:prepared.fingerprint,rules:read()}:{planId:state.genericPreviews.get(tool.id)?.planId}});if(!currentToolRun(output,save,page,token))return;
         if(mode==='preview'){state.genericPreviews.set(tool.id,result);output.innerHTML='';showStandardPreviewStage(true);}else state.genericPreviews.delete(tool.id);
         renderResult(document.getElementById('run-output'),result);document.getElementById('mapper-apply').disabled=mode!=='preview'||!result.details.canApply;await refreshHistory();

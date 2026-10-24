@@ -10,15 +10,16 @@ const renderer = fs.readFileSync(new URL("../src/renderer/renderer.js", import.m
 
 test("Randomizer gear details show readable, escaped before/after values in both Cards and Table", () => {
   const context = vm.createContext({ escapeHtml: value => String(value).replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]) });
-  const declaration = renderer.split(/\r?\n/).find(line => line.startsWith("function randomizerGearDetails("));
+  context.equipmentCorrectionTitle = value => value;
+  const declaration = renderer.match(/function equipmentPlayerDetails\([\s\S]*?\n}/)[0];
   vm.runInContext(declaration, context);
-  assert.equal(context.randomizerGearDetails([]), "");
-  const html = context.randomizerGearDetails([{ type: "Mouthpiece", currentValue: "None", proposedValue: "Nike Hanging Mouthpiece Primary / White" }, { type: "Neckwear", currentValue: "<test>", proposedValue: "Battle Turtleneck White / Primary Logo" }]);
-  assert.match(html, /<details class="randomizer-gear-details"><summary>Equipment Changes \(2\)/);
+  assert.match(context.equipmentPlayerDetails({changes:[]}, false), /No equipment slot changes/);
+  const html = context.equipmentPlayerDetails({changes:[{ type: "Mouthpiece", currentValue: "None", proposedValue: "Nike Hanging Mouthpiece Primary / White" }, { type: "Neckwear", currentValue: "<test>", proposedValue: "Battle Turtleneck White / Primary Logo" }]}, false);
+  assert.match(html, /equipment-change-detail/);
   assert.match(html, /None → Nike Hanging Mouthpiece Primary \/ White/);
   assert.match(html, /&lt;test&gt;/);
   assert.doesNotMatch(html, /<test>/);
-  assert.equal((renderer.match(/randomizerGearDetails\(corrections\)/g) ?? []).length, 2);
+  assert.equal((renderer.match(/data-equipment-details="\$\{index\}"/g) ?? []).length, 2);
 });
 
 test("presentation deduplicates matching loadout changes without dropping distinct changed slots", () => {

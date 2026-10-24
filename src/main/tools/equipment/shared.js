@@ -1,3 +1,4 @@
+import {toolProgress, toolProgressCount, progressRange} from '../../services/toolProgress.js';
 import {isOriginalEaPlayer,originalEaProtectionEnabled} from '../../services/originalEaPlayers.js';
 import path from "node:path";
 import { createBackup } from "../../services/files.js";
@@ -107,12 +108,14 @@ export async function applyEquipmentPlan({ toolId, savePath, options, schemaPath
     const table = change.table === "players" ? loaded.players : loaded.visuals, record = table.records[change.row];
     if (!record || record.isEmpty || String(record[change.field]) !== String(change.oldValue)) throw new Error(`Source row ${change.row} changed after Preview. Run Preview again.`);
   }
-  const reportPath = reports.create({ ...plan.report, toolId, toolName: plan.toolName });
+  const reportPath = progressRange(25, 28, () => reports.create({ ...plan.report, toolId, toolName: plan.toolName }));
   let backupPath = null;
   if (plan.assignments.length) {
     const before = loaded.visuals ? snapshotVisualsForVerification(loaded.visuals, snapshotVisualRawData(loaded.visuals.records)) : null;
+    toolProgress(28, "Creating a backup…");
     backupPath = createBackup(loaded.savePath);
-    for (const change of plan.assignments) (change.table === "players" ? loaded.players : loaded.visuals).records[change.row][change.field] = change.newValue;
+    let written = 0;
+    progressRange(30, 65, () => { for (const change of plan.assignments) { (change.table === "players" ? loaded.players : loaded.visuals).records[change.row][change.field] = change.newValue; toolProgressCount(++written, plan.assignments.length, "Encoding equipment changes…"); } });
     if (loaded.visuals) await saveEquipmentCandidate(loaded, schemaPath, before, plan.assignments, plan.saveFingerprint);
     else await loaded.franchise.save();
   }

@@ -2,11 +2,13 @@ import fs from "node:fs";
 import path from "node:path";
 import { auditReport, parseCsv } from "./reportAudit.js";
 import { writeCsv } from "./files.js";
+import {toolProgress} from './toolProgress.js';
 
 export class ReportService {
   constructor(directory, audit = null) { this.directory = directory; this.audit = audit; }
   forRun(audit) { return new ReportService(this.directory, structuredClone(audit)); }
   create(report) {
+    toolProgress(this.audit?.mode === 'apply' ? 28 : 90, 'Preparing the change report…');
     const { toolId, toolName, prefix, headings, rows } = auditReport(report, this.audit);
     const createdAt = new Date().toISOString();
     const mode = ['preview','apply'].includes(this.audit?.mode ?? report.mode) ? `-${this.audit?.mode ?? report.mode}` : '';

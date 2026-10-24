@@ -1,0 +1,10 @@
+.tool-progress{width:100%;padding:16px 0;color:var(--text)}
+.tool-progress-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:10px}
+.tool-progress-heading strong{font-size:13px;line-height:1.4;overflow-wrap:anywhere}
+.tool-progress-heading>[data-progress-percent]{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;flex:none}
+.tool-progress progress{display:block;width:100%;height:10px;border:0;border-radius:6px;overflow:hidden;appearance:none;background:var(--border);accent-color:var(--green2)}
+.tool-progress progress::-webkit-progress-bar{background:var(--border);border-radius:6px}
+.tool-progress progress::-webkit-progress-value{background:var(--green2);border-radius:6px;transition:width .15s linear}
+#tool-progress-tray{position:fixed;right:24px;bottom:24px;width:min(380px,calc(100vw - 48px));display:grid;gap:8px;z-index:900}
+#tool-progress-tray>.tool-progress{padding:16px;background:var(--surface,var(--panel));border:1px solid var(--border);border-radius:7px;box-shadow:0 6px 24px #0002}
+@media(prefers-reduced-motion:reduce){.tool-progress progress::-webkit-progress-value{transition:none}}

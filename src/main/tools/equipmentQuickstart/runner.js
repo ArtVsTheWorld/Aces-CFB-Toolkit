@@ -1,3 +1,4 @@
+import {progressRange} from '../../services/toolProgress.js';
 import {randomBytes} from 'node:crypto';
 import path from 'node:path';
 import {isOriginalEaPlayer,originalEaProtectionAudit} from '../../services/originalEaPlayers.js';
@@ -43,9 +44,9 @@ async function preview(context){
   // separate donor-record array lets generated top donors be recipients too;
   // original record identity still excludes copying a player's own outfit.
   const recordRows=new Map(loaded.players.records.map((record,row)=>[record,row]));
-  const randomized=patchFreshmanEquipment(loaded.players.records,loaded.visuals.records,loaded.visuals.header.tableId,{...settings.randomizer,seed,teamNames,teamApparel,playerApparel,donorPlayerRecords:[...loaded.players.records],preparedDonors,recipientRosterRows:null,eligiblePlayer:record=>s.pending.has(recordRows.get(record)),fcsTeamIndexes:fcs,top:15,mixedChance:.30,crossMixedChance:.10,unlockedItemChance:.10,apply:true});
+  const randomized=progressRange(25, 55, () => patchFreshmanEquipment(loaded.players.records,loaded.visuals.records,loaded.visuals.header.tableId,{...settings.randomizer,seed,teamNames,teamApparel,playerApparel,donorPlayerRecords:[...loaded.players.records],preparedDonors,recipientRosterRows:null,eligiblePlayer:record=>s.pending.has(recordRows.get(record)),fcsTeamIndexes:fcs,top:15,mixedChance:.30,crossMixedChance:.10,unlockedItemChance:.10,apply:true}));
   const processed=new Set(randomized.changes.map(change=>change.target.row));
-  const fixes=applyGlobalEquipmentFixes(loaded.players.records,loaded.visuals.records,loaded.visuals.header.tableId,{...settings.patcher,teamNames,recolorTeamNames:buildRosterTeamNames(loaded.players,loaded.teams,loaded.rosters),fcsTeamIndexes:fcs,activePlayerRows:s.roster,eligiblePlayer:record=>processed.has(recordRows.get(record))});
+  const fixes=progressRange(55, 82, () => applyGlobalEquipmentFixes(loaded.players.records,loaded.visuals.records,loaded.visuals.header.tableId,{...settings.patcher,teamNames,recolorTeamNames:buildRosterTeamNames(loaded.players,loaded.teams,loaded.rosters),fcsTeamIndexes:fcs,activePlayerRows:s.roster,eligiblePlayer:record=>processed.has(recordRows.get(record))}));
   const assignments=[],rows=[],donorAudits=new Map();
   for(const change of randomized.changes){
     const {newRawData,...audit}=change;donorAudits.set(change.target.row,audit);

@@ -1,3 +1,4 @@
+import {toolProgressCount} from '../../../services/toolProgress.js';
 import {isOriginalEaPlayer,originalEaProtectionEnabled} from '../../../services/originalEaPlayers.js';
 import { parseRef, sf } from "../openSave.js";
 import { brandedEquipmentItems, canGenerateItem, equipmentDisplayName, equipmentItem, isInvalidMouthpieceAsset, recolorEquipmentItem, recolorMouthpieceItem, UNLOCKED_POOLS, RAW_ACCESSORIES_POOLS, EQUIPMENT_TRUCK_POOLS } from "../catalog.js";
@@ -385,6 +386,7 @@ export function patchFreshmanEquipment(playerRecords, visualsRecords, visualsTab
   const changes = [];
   let sleeveCompatibilityCorrections = 0;
   playerRecords.forEach((record, row) => {
+    toolProgressCount(row + 1, playerRecords.length, 'Randomizing player equipment…');
     if (!record || record.isEmpty || (protectOriginalEaPlayers && isOriginalEaPlayer(record)) || !eligiblePlayer(record)) return;
     if (recipientRosterRows && !recipientRosterRows.has(row)) return;
     const teamIndex = Number(sf(record, "TeamIndex"));

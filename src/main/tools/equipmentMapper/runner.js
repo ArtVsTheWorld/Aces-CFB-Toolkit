@@ -1,3 +1,4 @@
+import {toolProgress} from '../../services/toolProgress.js';
 import {loadEquipmentTables,buildTeamNames,buildRosterPlayerRows,buildTeamApparel,buildRosterPlayerApparel,buildRosterTeamNames,cacheEquipmentPlan,applyEquipmentPlan} from '../equipment/shared.js';
 import {parseRef,sf} from '../equipment/openSave.js';
 import {mapperLibrary,buildMapperPreview} from './core.js';
@@ -47,7 +48,8 @@ export async function runEquipmentMapper(context){
   const assignments=preview.changes.map(player=>({table:'visuals',row:player.visualRow,field:'RawData',oldValue:player.rawData,newValue:player.newRawData}));
   // Exercise the same encoding/overflow guards as the other equipment tools
   // during Preview, before any disk write or backup is attempted.
-  for(const assignment of assignments)loaded.visuals.records[assignment.row].RawData=assignment.newValue;
+  let encodedCount=0;
+  for(const assignment of assignments){loaded.visuals.records[assignment.row].RawData=assignment.newValue;toolProgress(30 + 50 * ++encodedCount / assignments.length,'Encoding equipment mappings…');}
   const rows=preview.changes.map(({rawData,newRawData,branding,...player})=>{
     const slots=new Map();for(const edit of player.edits){const key=`${edit.loadout}|${edit.slot}`;slots.set(key,{...edit,before:slots.has(key)?slots.get(key).before:edit.before});}
     const changes=[...slots.values()].map(edit=>({type:({HeadWear:'Helmet',FaceMask:'Facemask',InnerShirt:'Undershirt',OuterShirt:'Jersey',InnerSocks:'Socks',WaistWear:'Waist Gear'})[edit.slot]??edit.slot.replace(/([a-z])([A-Z])/g,'$1 $2'),currentValue:edit.before?mapperItemName(edit.before.itemAssetName):'Not Equipped',proposedValue:edit.after?mapperItemName(edit.after.itemAssetName)+(edit.before?.itemAssetName===edit.after.itemAssetName?' (configuration updated)':''):'Not Equipped'}));

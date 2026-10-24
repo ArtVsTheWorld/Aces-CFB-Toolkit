@@ -1,3 +1,4 @@
+import {toolProgress, toolProgressCount, progressRange} from '../../services/toolProgress.js';
 import fs from "node:fs";
 import path from "node:path";
 import { randomUUID, createHash } from "node:crypto";
@@ -59,7 +60,9 @@ export function verifyVisualSnapshot(before, table, assignments) {
     const bytes = field && table.data?.subarray(table.header.table3StartIndex + field.index, table.header.table3StartIndex + field.index + field.maxLength + 2);
     if (!record || record.isEmpty || sf(record, "Overflow") !== opaque.overflow || !bytes?.equals(opaque.bytes)) throw new Error(`Unplanned change to unreadable equipment row ${row}. The original save was kept unchanged.`);
   }
+  let verifiedRows = 0;
   for (const [row, oldRaw] of before) {
+    toolProgressCount(++verifiedRows, before.size, "Verifying saved equipment…");
     if (before.overflowOwners?.has(row) && expected.has(before.overflowOwners.get(row))) continue;
     if (typeof oldRaw !== "string") continue;
     const actual = sf(table.records[row], "RawData"), wanted = expected.get(row) ?? oldRaw;
@@ -96,6 +99,7 @@ export function snapshotVisualsForVerification(table, snapshot) {
 // Save/reopen a temporary candidate before replacing the user's file. Backups
 // are still made by Apply before mutations; a failed validation never publishes.
 export async function saveEquipmentCandidate(loaded, schemaPath, before, assignments, expectedSaveHash, verifyCandidate) {
+  toolProgress(68, 'Checking equipment storage…');
   const temporary = path.join(path.dirname(loaded.savePath), `.ace-equipment-${randomUUID()}.tmp`);
   const originalHash = hash(fs.readFileSync(loaded.savePath));
   if (expectedSaveHash && originalHash !== expectedSaveHash) throw new Error("The Active Save changed during Apply. The original save was not overwritten.");
@@ -107,16 +111,19 @@ export async function saveEquipmentCandidate(loaded, schemaPath, before, assignm
   try {
     validateVisualStorageLayout(loaded.visuals, before.storageLayout);
     const containerLength = loaded.franchise.strategy?.file?.postPackFile ? validateSaveContainer(fs.readFileSync(loaded.savePath)).fileLength : null;
+    toolProgress(72, 'Writing the candidate save…');
     await writeFixedSaveCandidate(loaded.franchise, temporary);
     if (containerLength !== null) validateSaveContainer(fs.readFileSync(temporary), containerLength);
+    toolProgress(80, 'Reopening the candidate save…');
     const opened = await openCfb27Save(temporary, schemaPath);
     const { visuals } = await readTables(opened.franchise, { visuals: loaded.visuals.header.uniqueId });
-    verifyVisualSnapshot(before, visuals, assignments);
+    progressRange(84, 93, () => verifyVisualSnapshot(before, visuals, assignments));
     for (const table of opened.franchise.tables) if (otherTables.has(table.header.tableId) && hash(table.data) !== otherTables.get(table.header.tableId)) throw new Error(`Unexpected change to ${table.name}. The original save was kept unchanged.`);
     // Cross-table tools may require additional semantic checks. These run on
     // the candidate, before the source file can be atomically replaced.
     if (verifyCandidate) await verifyCandidate(opened);
     if (hash(fs.readFileSync(loaded.savePath)) !== originalHash) throw new Error("The Active Save changed during Apply. The verified candidate was not published.");
+    toolProgress(96, 'Publishing the verified save…');
     fs.renameSync(temporary, loaded.savePath);
   } finally { if (fs.existsSync(temporary)) fs.unlinkSync(temporary); }
 }

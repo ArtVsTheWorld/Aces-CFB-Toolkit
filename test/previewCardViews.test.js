@@ -19,7 +19,7 @@ function rendererFunction(name) {
 }
 
 function createRendererContext() {
-  const context = vm.createContext({
+  const context = vm.createContext({toolLoading: message => message,
     state: { commentaryReview: null, genericResultViews: new Map() },
     escapeHtml: value => String(value ?? "").replace(/[&<>'"]/g, character => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[character]),
     forceLogoUrl: team => `logo/${team}.png`
@@ -74,7 +74,7 @@ test("all active tools have a card-based preview and deprecated White Helmet is 
 test("Commentary Analyze opens final Preview directly when no decisions are needed", async () => {
   for (const proposals of [[], [{ row: 3, requiresDecision: false }]]) {
     const events = [], output = { innerHTML: "" };
-    const context = vm.createContext({
+    const context = vm.createContext({toolLoading: message => message,
       state: { commentaryReview: null, activeSave: { path: "test-save" } },
       document: { querySelector: () => output },
       window: { cfbToolkit: { prepareTool: async () => ({ analysisSignature: "test", proposals }) } },
@@ -94,7 +94,7 @@ test("Commentary Analyze opens final Preview directly when no decisions are need
 
 test("Commentary Analyze keeps decision review when a phonetic choice is needed", async () => {
   const events = [], output = { innerHTML: "" };
-  const context = vm.createContext({
+  const context = vm.createContext({toolLoading: message => message,
     state: { commentaryReview: null, activeSave: { path: "test-save" } },
     document: { querySelector: () => output },
     window: { cfbToolkit: { prepareTool: async () => ({ analysisSignature: "test", proposals: [{ row: 3, requiresDecision: true }] }) } },
@@ -113,7 +113,7 @@ test("Commentary Analyze keeps decision review when a phonetic choice is needed"
 
 test("Edit Settings bypasses an empty Commentary review page", () => {
   let click;
-  const context = vm.createContext({
+  const context = vm.createContext({toolLoading: message => message,
     state: { page: "commentary-id", commentaryReview: { autoSkipped: true } },
     document: { querySelectorAll: () => [{ addEventListener: (event, handler) => { if (event === "click") click = handler; } }] },
     render: () => { context.rendered = true; },

@@ -13,6 +13,7 @@ if(process.argv.includes('--roster-review'))checks.push(['scripts/smoke-v190-con
 if(process.argv.includes('--quickstart'))checks.push(['scripts/smoke-v190-configuration.cjs','--quickstart-only']);
 if(process.argv.includes('--frequency'))checks.push(['scripts/smoke-v190-configuration.cjs','--frequency-only']);
 if(process.argv.includes('--equipment-pages'))checks.push(['scripts/smoke-v190-configuration.cjs','--equipment-pages-only']);
+if(process.argv.includes('--compact-progress'))checks.push(['scripts/smoke-v190-configuration.cjs','--compact-progress-only']);
 let status=0;
 for(const [script,...flags]of checks){
  const result=spawnSync(require('electron'),[path.resolve(script),'--ui-root='+extracted,...flags],{stdio:'inherit',timeout:240000});

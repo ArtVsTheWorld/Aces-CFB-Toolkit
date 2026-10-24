@@ -15,7 +15,7 @@ function bindNilTargetChoices() {
 async function nilTogglePage(tool) {
   if (!state.activeSave?.exists) { content.innerHTML = `${toolHeader(tool)}${inputCard()}`; bindCommon(); return; }
   const savePath = state.activeSave.path;
-  content.innerHTML = `${toolHeader(tool)}<section class="card"><div class="status"><span class="spinner"></span>Reading active player rosters…</div></section>`;
+  content.innerHTML = `${toolHeader(tool)}<section class="card">${toolLoading(`Reading active player rosters…`)}</section>`;
   try {
     const key = `${tool.id}|${savePath}`;
     let prepared = state.prepared.get(key);

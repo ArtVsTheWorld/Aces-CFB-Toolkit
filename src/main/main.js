@@ -8,23 +8,18 @@ import { UpdateService, updateAvailability } from "./services/updates.js";
 import { IPC, RUN_MODES } from "../shared/contracts.js";
 import { displayAppVersion } from "../shared/appVersion.js";
 import { getTool, registrySnapshot } from "../shared/toolRegistry.js";
-import { prepareEquipmentDonors } from './tools/equipment/donorSource.js';
+import {ToolWorkerClient} from './services/toolWorkerClient.js';
 import { validateReportLocation } from "./services/reportLocations.js";
 import { appPaths, commentaryMapPath, schemaDirectory, schemaPath } from "./services/paths.js";
-import { inspectSaveSchema, SUPPORTED_SCHEMAS, openCfb27Save } from "./services/save.js";
+import { SUPPORTED_SCHEMAS } from "./services/save.js";
 import { SettingsStore, normalizeAccentColor } from "./services/settings.js";
-import {QuickstartMemory,equipmentDynastyId} from './services/quickstartMemory.js';
 import { validatePresetConfiguration, ToolPresets } from "./services/toolPresets.js";
 import { AppLogger } from "./services/logger.js";
 import { ReportService } from "./services/reports.js";
 import { HistoryStore } from "./services/history.js";
-import { ReviewSnapshots } from "./services/reviewSnapshots.js";
-import { readHomeContext } from "./services/homeContext.js";
 import { readTeamArtwork, saveTeamArtwork, teamArtworkKey } from "./services/teamArtwork.js";
 import { validateSavePath } from "./services/files.js";
 import { executableToolIds, getToolHandler } from "./tools/handlers.js";
-import { searchPlanRows, snapshotPlanRows, planAudit, setPlanAudit } from "./tools/jersey/planStore.js";
-import { readSeasonLines } from "./tools/forceWin/runner.js";
 import { saveCustomMatchupModel } from "./services/customMatchupModel.js";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -39,8 +34,7 @@ let logger;
 let paths;
 let reports;
 let history;
-let reviews;
-let quickstartMemory;
+let toolWorker;
 let sessionActiveSave = null;
 let updates;
 const updatePrompts=new UpdatePrompts();
@@ -65,9 +59,9 @@ function initializeUpdates() {
   });
 }
 
-const saveInfo = savePath => savePath ? { path: savePath, name: path.basename(savePath), exists: fs.existsSync(savePath), modifiedAt: fs.existsSync(savePath) ? fs.statSync(savePath).mtime.toISOString() : null, schema: fs.existsSync(savePath) ? inspectSaveSchema(savePath, schemaDirectory()) : null } : null;
-const assertToolSaveCompatibility = (toolId, savePath) => {
-  const schema = inspectSaveSchema(savePath, schemaDirectory());
+const saveInfo = async savePath => savePath ? { path: savePath, name: path.basename(savePath), exists: fs.existsSync(savePath), modifiedAt: fs.existsSync(savePath) ? fs.statSync(savePath).mtime.toISOString() : null, schema: fs.existsSync(savePath) ? await toolWorker.request('inspect', {savePath,schemaDirectory:schemaDirectory()}) : null } : null;
+const assertToolSaveCompatibility = async (toolId, savePath) => {
+  const schema = await toolWorker.request('inspect', {savePath,schemaDirectory:schemaDirectory()});
   if (!schema.supported) throw new Error(schema.error);
   if(schema.kind==='roster'&&!['roster-generator','home'].includes(toolId))throw new Error('This is a Play Now roster file. Select Roster Generator, or choose a Dynasty save for this tool.');
   if (toolId === "automatic-force-win" && /-AUTOSAVE/i.test(path.basename(savePath))) throw new Error("Smart Force Win does not support autosaves because their schedule/game data can differ from a manual save. Select a manual Dynasty save for this tool.");
@@ -94,7 +88,10 @@ function createWindow() {
 }
 
 function registerIpc() {
-  ipcMain.handle(IPC.clearQuickstartMemory,async()=>{if(!sessionActiveSave)throw Error('Select an Active Save first.');const savePath=validateSavePath(sessionActiveSave),schema=assertToolSaveCompatibility('equipment-quickstart',savePath),{franchise}=await openCfb27Save(savePath,schema.path);return quickstartMemory.clear(await equipmentDynastyId(franchise));});
+  const progressFor = (event, request) => update => {
+    if (!event.sender.isDestroyed() && typeof request?.operationId === 'string') event.sender.send(IPC.toolProgress, {operationId:request.operationId, ...update});
+  };
+  ipcMain.handle(IPC.clearQuickstartMemory,async(event,request)=>toolOperation(async()=>{if(!sessionActiveSave)throw Error('Select an Active Save first.');const savePath=validateSavePath(sessionActiveSave),schema=await assertToolSaveCompatibility('equipment-quickstart',savePath);return toolWorker.request('clearMemory',{savePath,schemaPath:schema.path},progressFor(event,request));}));
   ipcMain.handle(IPC.respondUpdatePrompt,(event,request)=>updatePrompts.respond(event.sender,request));
   ipcMain.handle(IPC.getUpdateStatus, () => updates.snapshot());
   ipcMain.handle(IPC.checkUpdates, () => updates.check());
@@ -110,7 +107,7 @@ function registerIpc() {
   });
   ipcMain.handle(IPC.savePreset, (_event, request) => { if (!getTool(request?.toolId)) throw new Error("Unknown tool."); return presets.save(request); });
   ipcMain.handle(IPC.deletePreset, (_event, request) => { if (!getTool(request?.toolId)) throw new Error("Unknown tool."); return presets.delete(request); });
-  ipcMain.handle(IPC.bootstrap, () => ({ app: { name: "Ace's CFB Toolkit", version: displayAppVersion(app.getVersion()), schemas: SUPPORTED_SCHEMAS.map(schema => schema.version) }, registry: registrySnapshot(), settings: settings.get(), activeSave: saveInfo(sessionActiveSave), paths: { reports: paths.reports, logs: paths.logs } }));
+  ipcMain.handle(IPC.bootstrap, async () => ({ app: { name: "Ace's CFB Toolkit", version: displayAppVersion(app.getVersion()), schemas: SUPPORTED_SCHEMAS.map(schema => schema.version) }, registry: registrySnapshot(), settings: settings.get(), activeSave: await saveInfo(sessionActiveSave), paths: { reports: paths.reports, logs: paths.logs } }));
   ipcMain.handle(IPC.chooseSave, async (_event, purpose) => { const result = await dialog.showOpenDialog({ title: purpose === "equipment-donor" ? "Select a CFB 27 donor save or roster" : "Select a CFB 27 Save or Roster", properties: ["openFile"], filters: [{ name: "CFB 27 Saves", extensions: ["*" ] }] }); return result.canceled ? null : result.filePaths[0]; });
   ipcMain.handle(IPC.chooseFile, async () => { const result = await dialog.showOpenDialog({ title: "Select a file", properties: ["openFile"], filters: [{ name: "All files", extensions: ["*"] }, { name: "Text files", extensions: ["txt"] }] }); return result.canceled ? null : result.filePaths[0]; });
   ipcMain.handle(IPC.setActiveSave, (_event, candidate) => {
@@ -124,24 +121,24 @@ function registerIpc() {
   ipcMain.handle(IPC.updateReadingSize, (_event, value) => { if (!["standard", "large", "extra"].includes(value)) throw new Error("Choose Standard, Large, or Extra Large text."); return settings.update({ textSize: value }); });
   ipcMain.handle(IPC.updateTheme, (_event, theme) => { if (!["light", "dark"].includes(theme)) throw new Error("Theme must be light or dark."); return settings.update({ theme }); });
   ipcMain.handle(IPC.updateAccent, (_event, color) => settings.update({ accentColor: normalizeAccentColor(color) }));
-  ipcMain.handle(IPC.homeContext, async () => {
+  ipcMain.handle(IPC.homeContext, async (event, request) => {
     if (!sessionActiveSave) return null;
-    const schema = assertToolSaveCompatibility("home", sessionActiveSave);
-    const context = await readHomeContext(sessionActiveSave, schema.path);
+    const schema = await assertToolSaveCompatibility("home", sessionActiveSave);
+    const context = await toolWorker.request('home', {savePath:sessionActiveSave, schemaPath:schema.path}, progressFor(event,request));
     return { ...context, artwork: readTeamArtwork(paths.data, settings.get().teamArtwork, context.teams.map(team => team.name)) };
   });
   ipcMain.handle(IPC.saveCustomMatchupModel, (_event, model) => saveCustomMatchupModel(settings, model));
-  ipcMain.handle(IPC.homeLines, async (_event, request) => {
+  ipcMain.handle(IPC.homeLines, async (event, request) => {
     if (!sessionActiveSave) throw new Error("Select an Active Dynasty first.");
     const savePath = validateSavePath(sessionActiveSave);
-    const schema = assertToolSaveCompatibility("home", savePath);
-    return readSeasonLines({ savePath, schemaPath: schema.path, modelProfile: request?.modelProfile, customModel: settings.get().customMatchupModel });
+    const schema = await assertToolSaveCompatibility("home", savePath);
+    return toolWorker.request('lines', { savePath, schemaPath: schema.path, modelProfile: request?.modelProfile, customModel: settings.get().customMatchupModel }, progressFor(event,request));
   });
   ipcMain.handle(IPC.chooseTeamArtwork, async (_event, request) => {
     if (!sessionActiveSave) throw new Error("Select an Active Dynasty first.");
     const kind = request?.kind, teamName = String(request?.teamName ?? "");
-    const schema = assertToolSaveCompatibility("home", sessionActiveSave);
-    const context = await readHomeContext(sessionActiveSave, schema.path);
+    const schema = await assertToolSaveCompatibility("home", sessionActiveSave);
+    const context = await toolWorker.request('home', {savePath:sessionActiveSave, schemaPath:schema.path});
     if (!["logo", "header"].includes(kind) || !context.teams.some(team => team.name === teamName)) throw new Error("Choose a team from the Active Dynasty.");
     const chosen = await dialog.showOpenDialog({ title: kind === "logo" ? "Select a 1024 × 1024 team logo" : "Select a team header image", properties: ["openFile"], filters: [{ name: "Images", extensions: ["png", "jpg", "jpeg", "webp"] }] });
     if (chosen.canceled) return null;
@@ -153,46 +150,39 @@ function registerIpc() {
   ipcMain.handle(IPC.clearTeamArtwork, async (_event, request) => {
     if (!sessionActiveSave) throw new Error("Select an Active Dynasty first.");
     const kind = request?.kind, teamName = String(request?.teamName ?? "");
-    const schema = assertToolSaveCompatibility("home", sessionActiveSave);
-    const context = await readHomeContext(sessionActiveSave, schema.path);
+    const schema = await assertToolSaveCompatibility("home", sessionActiveSave);
+    const context = await toolWorker.request('home', {savePath:sessionActiveSave, schemaPath:schema.path});
     if (!["logo", "header"].includes(kind) || !context.teams.some(team => team.name === teamName)) throw new Error("Choose a team from the Active Dynasty.");
     const key = teamArtworkKey(teamName), artwork = { ...(settings.get().teamArtwork ?? {}) }, entry = { ...(artwork[key] ?? {}) };
     delete entry[kind]; if (Object.keys(entry).length) artwork[key] = entry; else delete artwork[key];
     settings.update({ teamArtwork: artwork });
     return { teamName, kind, image: null };
   });
-  ipcMain.handle(IPC.prepareEquipmentDonors, async (_event, request) => toolOperation(() => prepareEquipmentDonors({ savePath: request?.savePath, schemaPath: schemaPath() })));
-  ipcMain.handle(IPC.prepareTool, async (_event, request) => toolOperation(async () => {
+  ipcMain.handle(IPC.prepareEquipmentDonors, async (event, request) => toolOperation(() => toolWorker.request('donors', { savePath: request?.savePath, schemaPath: schemaPath() }, progressFor(event,request))));
+  ipcMain.handle(IPC.prepareTool, async (event, request) => toolOperation(async () => {
     const tool = getTool(request?.toolId); const handler = getToolHandler(request?.toolId);
     if (!tool || tool.status !== "available" || !handler?.prepare) return {};
     const savePath = validateSavePath(request.savePath || sessionActiveSave);
-    const schema = assertToolSaveCompatibility(tool.id, savePath);
-    const [prepared, home] = await Promise.all([handler.prepare({ quickstartMemory, savePath, options: request.options ?? {}, schemaPath: schema.path, defaultMapPath: commentaryMapPath() }), readHomeContext(savePath, schema.path).catch(error => { logger.write("warn", "optional-user-team-context-unavailable", { toolId: tool.id, message: error.message }); return null; })]);
-    if (!home) return prepared; // Optional markers must not prevent a supported tool from opening.
-    const controlled = new Map([...(prepared.userControlledTeams ?? []), ...(home.controlledTeams ?? [])].map(team => [team.name ?? team, team]));
-    return { ...prepared, userControlledTeams: [...controlled.values()] };
+    const schema = await assertToolSaveCompatibility(tool.id, savePath);
+    return toolWorker.request('prepare', {toolId:tool.id, savePath, options:request.options ?? {}, schemaPath:schema.path, defaultMapPath:commentaryMapPath()}, progressFor(event,request));
   }));
-  ipcMain.handle(IPC.searchPreview, (_event, request) => searchPlanRows(request?.planId, request?.query, 1000, request?.filters));
-  ipcMain.handle(IPC.runTool, async (_event, request) => toolOperation(async () => {
+  ipcMain.handle(IPC.searchPreview, (_event, request) => toolWorker.request('search', request));
+  ipcMain.handle(IPC.runTool, async (event, request) => toolOperation(async () => {
     const tool = getTool(request?.toolId);
     const handler = getToolHandler(request?.toolId);
     if (!tool || tool.status !== "available" || !handler?.run) throw new Error("This tool has not been migrated yet.");
     if (!RUN_MODES.includes(request.mode)) throw new Error("Invalid run mode.");
     const savePath = validateSavePath(request.savePath || sessionActiveSave);
-    const schema = assertToolSaveCompatibility(tool.id, savePath);
+    const schema = await assertToolSaveCompatibility(tool.id, savePath);
     const runId = crypto.randomUUID();
     logger.write("info", "tool-started", { runId, toolId: tool.id, appVersion: app.getVersion(), mode: request.mode, savePath });
     try {
-      const previousAudit = request.mode === "apply" && request.options?.planId ? planAudit(request.options.planId) : null;
-      const audit = { runId, appVersion: app.getVersion(), mode: request.mode, savePath, schemaVersion: schema.version, options: previousAudit?.options ?? request.options ?? {}, previewRunId: previousAudit?.runId ?? null };
-      const result = await handler.run({ quickstartMemory, savePath, mode: request.mode, options: request.options ?? {}, schemaPath: schema.path, defaultMapPath: commentaryMapPath(), reports: reports.forRun(audit) });
-      if (request.mode === "preview" && result.planId) setPlanAudit(result.planId, audit);
+      const audit = { runId, appVersion: app.getVersion(), mode: request.mode, savePath, schemaVersion: schema.version };
+      const {result, reviewAvailable, reviewError} = await toolWorker.request('run', {toolId:tool.id, savePath, mode:request.mode, options:request.options ?? {}, schemaPath:schema.path, defaultMapPath:commentaryMapPath(), audit}, progressFor(event,request));
       logger.write("info", "tool-completed", { runId, toolId: tool.id, status: result.status, outputPath: result.savePath, reportPath: result.reportPath, backupPath: result.backupPath, summary: result.historySummary });
-      let reviewAvailable = false;
-      try { reviewAvailable = reviews.save(runId, result, result.planId ? snapshotPlanRows(result.planId) : null); }
-      catch (error) { logger.write("error", "review-snapshot-failed", { runId, toolId: tool.id, message: error.message }); }
+      if (reviewError) logger.write("error", "review-snapshot-failed", {runId, toolId:tool.id, message:reviewError});
       const historyEntry = history.add({ id: runId, timestamp: new Date().toISOString(), toolId: tool.id, toolName: tool.name, appVersion: app.getVersion(), inputPath: result.savePath, mode: request.mode, status: result.status, summary: result.historySummary, backupPath: result.backupPath, reportPath: result.reportPath, reviewAvailable, logReference: runId });
-      try { reviews.prune(history.entries.map(entry => entry.id)); }
+      try { await toolWorker.request('pruneReviews', {ids:history.entries.map(entry => entry.id)}); }
       catch (error) { logger.write("error", "review-snapshot-prune-failed", { runId, message: error.message }); }
       return { ...result, executionId: historyEntry.id };
     } catch (error) { logger.write("error", "tool-failed", { runId, toolId: tool.id, message: error.message, stack: error.stack }); throw error; }
@@ -200,7 +190,7 @@ function registerIpc() {
   ipcMain.handle(IPC.listReports, () => reports.list());
   ipcMain.handle(IPC.listHistory, () => history.list(250));
   ipcMain.handle(IPC.getHistory, (_event, id) => history.get(id));
-  ipcMain.handle(IPC.getReview, (_event, id) => history.get(id)?.reviewAvailable ? reviews.get(id) : null);
+  ipcMain.handle(IPC.getReview, (event, request) => history.get(request?.id)?.reviewAvailable ? toolWorker.request('review', {id:request.id}, progressFor(event,request)) : null);
   ipcMain.handle(IPC.listLogs, () => logger.list());
   ipcMain.handle(IPC.clearLogs, () => { logger.clear(); return []; });
   ipcMain.handle(IPC.revealReport, (_event, target) => { const report = validateReportLocation(target, paths.reports); shell.showItemInFolder(report); return true; });
@@ -209,8 +199,9 @@ function registerIpc() {
 
 app.whenReady().then(() => {
   if (!ownsInstance) return;
-  paths = appPaths(); quickstartMemory=new QuickstartMemory(path.join(paths.data,"equipment-quickstart-memory.json")); settings = new SettingsStore(paths.settings); settings.load(); if (settings.get().activeSave) settings.update({ activeSave: null }); logger = new AppLogger(paths.logs); reports = new ReportService(paths.reports); history = new HistoryStore(paths.history); history.load(); reviews = new ReviewSnapshots(path.join(paths.data, "review-snapshots")); initializeUpdates(); registerIpc();
+  paths = appPaths(); toolWorker=new ToolWorkerClient({memoryFile:path.join(paths.data,'equipment-quickstart-memory.json'),reportsDirectory:paths.reports,reviewsDirectory:path.join(paths.data,'review-snapshots')}); settings = new SettingsStore(paths.settings); settings.load(); if (settings.get().activeSave) settings.update({ activeSave: null }); logger = new AppLogger(paths.logs); reports = new ReportService(paths.reports); history = new HistoryStore(paths.history); history.load(); initializeUpdates(); registerIpc();
   if (process.argv.includes("--smoke-test")) { const snapshot = registrySnapshot(); const available = snapshot.tools.filter(tool => tool.status === "available").map(tool => tool.id).sort(), schemasPresent = SUPPORTED_SCHEMAS.every(schema => fs.existsSync(schemaPath(schema.version))); if (snapshot.tools.length !== 13 || JSON.stringify(available) !== JSON.stringify(executableToolIds().sort()) || !schemasPresent || !fs.existsSync(commentaryMapPath())) process.exitCode = 1; app.quit(); return; }
   createWindow(); app.on("activate", () => { if (BrowserWindow.getAllWindows().length === 0) createWindow(); });
 });
 app.on("window-all-closed", () => { if (process.platform !== "darwin") app.quit(); });
+app.on('will-quit', () => { void toolWorker?.close(); });

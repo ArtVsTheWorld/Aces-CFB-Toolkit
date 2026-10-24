@@ -1,3 +1,4 @@
+import {toolProgressCount} from '../../services/toolProgress.js';
 import {isOriginalEaPlayer} from '../../services/originalEaPlayers.js';
 import {isGeneratedProfile} from './cohorts.js';
 import {ALLOWED_DEALBREAKERS} from '../dealbreaker/core.js';
@@ -108,7 +109,8 @@ export function generateRosterPreview({team,targets,model,seed=1,preset=BUILDING
   const ordered=[...targets].sort((a,b)=>a.row-b.row),solved=solveFootballProfiles(ordered,model,seed,preset),names=new Set(unavailableNames.map(normalizedName)),warnings=[...(solved.strata?.warnings??[])],blocking=[];
   const presentations=rosterPresentations(ordered,seed,reservedPresentationIds);
   const homePlan=planRosterHomes(ordered,model.catalog,team.geography,seed);
-  const players=solved.selected.map(item=>{
+  const players=solved.selected.map((item,index)=>{
+    toolProgressCount(index,solved.selected.length,'Generating '+team.name+' players…');
     const {target,profile}=item,rng=stream(seed,`appearance:${target.row}`),selectedAppearance=selectAppearance(model,target.position,team.branding,rng,item.athleticProfile,preset.id),{appearance,sameBrand,tone,outlierSize}=selectedAppearance;
     const [firstName,lastName,surname]=generateName(model.catalog.names,names,stream(seed,`name:${target.row}`),observedFirstNames(model.catalog,appearance),observedSurnamePool(model.catalog,appearance));
     const potential=model.potentialByPosition?choose(potentialCandidates(model,target.position,profile.archetype,item.development),stream(seed,`potential:${target.row}`)):profile;
