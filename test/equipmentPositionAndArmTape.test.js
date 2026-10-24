@@ -95,7 +95,16 @@ test("seeded team tape rolls remain shared across long/short arms, wrists, spats
   for (const record of a) {
     const raw = JSON.parse(record.RawData), elements = raw.loadouts.filter(loadout => loadout.loadoutType === "PlayerOnField").flatMap(loadout => loadout.loadoutElements);
     const color = elements[0].itemAssetName.split("_").at(-1); seen.add(color);
-    assert.ok(elements.every(item => item.itemAssetName.endsWith(color === "OffWhite" && /Spat|Wrist/.test(item.slotType) ? "White" : color)));
+    // RAW 3.1.4 preserves short black tape under this alias; its old stock ID
+    // now means Jamo Sleeves Primary. The actual tape color still matches.
+    const wristColor = color === "OffWhite" ? "White" : color;
+    assert.deepEqual(elements.map(item => item.itemAssetName), [
+      `GearArmSleeve_Undershirt_armTape_normal_${color}`,
+      color === "Black" ? "GearArmSleeve_RawJamo_TeamColor" : `GearArmSleeve_Quarter_armTape_normal_${color}`,
+      `GearWrist_wristTapedLite_${wristColor}`,
+      `GearSpats_spatThin_${wristColor}`,
+      `GearArmSleeve_Undershirt_armTape_normal_${color}`
+    ]);
     assert.equal(raw.loadouts[2].loadoutElements[0].itemAssetName, "Keep");
   }
   assert.equal(seen.size, 4);

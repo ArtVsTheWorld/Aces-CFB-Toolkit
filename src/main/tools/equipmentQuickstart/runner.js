@@ -23,7 +23,6 @@ export function quickstartSettings(input){
   const mods=quickstartOptions(input);
   const randomizer=normalizeEquipmentOptions({top:15,classes:[],redshirtGroup:'all',protectOriginalEaPlayers:true,noDripProfile:mods.noDrip,usingUnlockedMod:mods.unlocked,usingRawAccessoriesMod:mods.raw,usingEquipmentTruckMod:mods.gameday},true);
   const patcher=normalizeEquipmentOptions({protectOriginalEaPlayers:true,helmetFix:true,visorFix:true,oakleyVisorFix:true,usingEquipmentTruckMod:mods.gameday,pantsFix:true,rolledJerseyFix:true,sleeveCompatibilityFix:true,unlockedTattooFix:mods.unlocked,unlockedMouthpieceFix:mods.unlocked,unlockedRecolorFix:mods.unlocked,unlockedColorTheme:'team',tapeColorMode:'accessory',lowerRolledJerseyFix:mods.unlocked,cutoffPantsFix:mods.unlocked,unlockedSocksFix:mods.unlocked},false);
-  patcher.usingRawAccessoriesMod=mods.raw;
   return {mods,randomizer,patcher};
 }
 async function scope(loaded,memory,savePath){

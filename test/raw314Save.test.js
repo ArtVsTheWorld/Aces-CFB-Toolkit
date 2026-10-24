@@ -34,7 +34,7 @@ test('RAW 3.1.4 equipment and both Jamo arm slots survive fixed-save write, reop
         put(elements, 'Neckpad', 'GearNeckpad_Raw_DiamondNecklace');
         put(elements, 'GuardianCap', index % 2 ? 'GuardianCap_RawBattleSkullCapTeamColorV190' : 'GuardianCap_RawNikeSkullCapTeamColorV190');
       }
-      else recolorPlayerAccessories(equipmentLoadouts(data), 'primary', 'white', {usingRawAccessoriesMod:true});
+      else recolorPlayerAccessories(equipmentLoadouts(data), 'primary', 'white');
       const newValue = JSON.stringify(data);
       loaded.visuals.records[row].RawData = newValue;
       return {table:'visuals', row, newValue};

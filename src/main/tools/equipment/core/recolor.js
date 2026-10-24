@@ -1,5 +1,9 @@
 import { equipmentTags, recolorEquipmentItem, isRawJamoItem, rawStockOriginal } from "../catalog.js";
 
+// The recolor pass supports known mod families automatically. Pool toggles
+// decide which new items may be generated, never how worn items are recolored.
+export const ACCESSORY_RECOLOR_CONTEXT = Object.freeze({usingRawAccessoriesMod:true});
+
 export const DEFAULT_ACCESSORY_COLOR_WEIGHTS = Object.freeze({ white: 65, black: 20, primary: 10, secondary: 5 });
 export const DEFAULT_TAPE_COLOR_WEIGHTS = Object.freeze({ white: 95, black: 5, primary: 0, secondary: 0 });
 const key = name => String(name ?? "").toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -65,13 +69,14 @@ export function recolorTapeItem(itemName, color, slot, options) {
   if (/^G_WristTaped_Max_/i.test(stock)) return recolorEquipmentItem("GearWrist_wristTapedMax_TeamColor", color, options);
   return recolorEquipmentItem(item, color, options);
 }
-export function recolorPlayerAccessories(loadouts, theme, tapeColor, options) {
+export function recolorPlayerAccessories(loadouts, theme, tapeColor) {
+  const options = ACCESSORY_RECOLOR_CONTEXT;
   const replacements = new Map();
   for (const loadout of loadouts) for (const element of loadout.loadoutElements) {
     const slot = element.slotType ?? element.slot, oldItem = element.itemAssetName;
     if (slot === "MouthWear") continue;
-    const stock = options?.usingRawAccessoriesMod ? rawStockOriginal(oldItem) : oldItem;
-    const jamo = options?.usingRawAccessoriesMod && isRawJamoItem(oldItem);
+    const stock = rawStockOriginal(oldItem);
+    const jamo = isRawJamoItem(oldItem);
     const newItem = !jamo && (["LeftSpat", "RightSpat"].includes(slot) || isWristTape(stock, slot) || isArmTape(stock, slot))
       ? recolorTapeItem(oldItem, tapeColor, slot, options) : recolorEquipmentItem(oldItem, theme, options);
     if (newItem !== oldItem) { element.itemAssetName = newItem; replacements.set(oldItem, newItem); }

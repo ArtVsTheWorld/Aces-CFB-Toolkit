@@ -1,17 +1,24 @@
 ### Release Notes
 
-Equipment
-
-- Fixed equipment changes that could cause a crash or freeze when quitting a dynasty game back to the hub.
-- Improved equipment storage so Quickstart can apply Unlocked, RAW Accessories and GameDay Gear together on affected saves without dropping equipment changes or expanding the save.
-- Saves must fit using normal game-save compression. Backups, storage limits and exact saved-equipment verification remain in place.
-- Added RAW Accessories v3.1.4's diamond necklace and team-primary Nike/Battle skullcaps.
-- Added RAW Jamo sleeve support on both arms. New pool additions start disabled in Randomizer and Quickstart; accessory recoloring supports their four colors when RAW v3.1.4 is selected.
-- Condensed Randomizer, Quickstart and Patcher previews into expandable player rows. Team logos match Jersey Renumber previews; sources and exact changes stay inside the dropdowns.
-- Kept Compatibility & Fallbacks panels inside their cards, with wrapping for long entries.
-
 General
 
-- Failed Apply attempts keep the reviewed preview visible alongside the error.
-- Added percentage progress bars for tool loading, Preview and Apply, using processing stages and record counts.
-- Moved long-running save and tool processing into a background worker to keep the application window responsive.
+- Fixed equipment-related crashes and freezes when exiting a game back to the dynasty hub
+- Replaced loading spinners with percentage-based progress bars for tool loading, previews, and applying changes
+- Improved app responsiveness while tools are running to reduce "Not Responding" behavior
+- Continued UI/UX improvements, including more compact equipment previews, team logos matching Jersey Renumber sizing, and better-contained Compatibility & Fallbacks dropdowns
+- Failed Apply attempts now keep the reviewed preview available alongside the error
+
+Equipment Quickstart
+
+- Improved save handling when using Unlocked, RAW Accessories, and GameDay Gear together, allowing more equipment changes to fit without dropping changes or expanding the save
+- Updated the RAW Accessories pool to include the new v3.1.4 additions
+
+Equipment Randomizer
+
+- Added RAW Accessories v3.1.4's diamond necklace and primary team-color Nike/Battle skullcaps to its equipment pool
+- Added RAW's Jamo Sleeves for both arms. These are disabled by default in both Randomizer and Quickstart
+
+Equipment Patcher
+
+- "Recolor Accessories" now automatically supports all four colors of RAW's Jamo Sleeves, with no additional setting required
+- Expanded skullcap recoloring to support the new primary team-color variants while preserving long-dreadlock combinations

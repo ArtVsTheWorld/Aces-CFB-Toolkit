@@ -4,7 +4,7 @@ import { shuffledFrequencyCandidates } from './frequency.js';
 import { helmetPopulationAudit } from "./helmetPopulation.js";
 import { parseRef, sf } from "../openSave.js";
 import { EQUIPMENT_COLOR_THEMES, equipmentDisplayName, isInvalidMouthpieceAsset, mouthpieceColorVariants, UNLOCKED_POOLS } from "../catalog.js";
-import { normalizeAccessoryColorWeights, normalizeTeamTapeColors, normalizeTeamAccessoryColors, teamAccessoryWeights, recolorPlayerAccessories, rollAccessoryColorTheme, teamTapeWeights } from "./recolor.js";
+import { ACCESSORY_RECOLOR_CONTEXT, normalizeAccessoryColorWeights, normalizeTeamTapeColors, normalizeTeamAccessoryColors, teamAccessoryWeights, recolorPlayerAccessories, rollAccessoryColorTheme, teamTapeWeights } from "./recolor.js";
 import { mulberry32 } from "./patcher.js";
 import { enforceArmSleeveCompatibility, enforceMouthpieceCompatibility, equippedMask } from "./compatibility.js";
 import { applyUnlockedTattooPlan, buildUnlockedTattooPopulationPlan, clearPlayerTattoos, repairUnlockedTattooLoadout, UNLOCKED_TATTOO_ELIGIBLE_POSITIONS } from "./tattoos.js";
@@ -719,11 +719,11 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
       && (!(activePlayerRows instanceof Set) || players.every(player => activePlayerRows.has(player.row)))) {
       const theme = unlockedColorTheme === "team" ? rollAccessoryColorTheme(recolorRng, teamAccessoryWeights(recolorTeams[0], accessoryTeamColors)) : unlockedColorTheme === "weighted" ? rollAccessoryColorTheme(recolorRng, colorWeights) : unlockedColorTheme === "random" ? EQUIPMENT_COLOR_THEMES[Math.floor(recolorRng() * EQUIPMENT_COLOR_THEMES.length)] : unlockedColorTheme;
       const tapeColor = (options.tapeColorMode ?? "accessory") === "accessory" ? theme : rollAccessoryColorTheme(tapeRng, teamTapeWeights(recolorTeams[0], tapeColors));
-      const replacements = recolorPlayerAccessories(loadouts, theme, tapeColor, options);
+      const replacements = recolorPlayerAccessories(loadouts, theme, tapeColor);
       if (replacements.size) {
         unlockedRecolorPlayersChanged += players.length;
-        const oldItem = [...replacements.keys()].map(item => equipmentDisplayName(item, options)).join(", ");
-        const newItem = [...replacements.values()].map(item => equipmentDisplayName(item, options)).join(", ");
+        const oldItem = [...replacements.keys()].map(item => equipmentDisplayName(item, ACCESSORY_RECOLOR_CONTEXT)).join(", ");
+        const newItem = [...replacements.values()].map(item => equipmentDisplayName(item, ACCESSORY_RECOLOR_CONTEXT)).join(", ");
         for (const player of players) unlockedRecolorChanges.push(playerLogInfo(player, teamNames, fcsTeamIndexes, { team: recolorTeams[0], oldItem, newItem, colorTheme: theme, tapeColor, displayValues: true }));
         changed = true;
       }

@@ -43,7 +43,7 @@ test("team accessory mode plus matching tape rolls once and applies the same the
     const correction=result.unlockedRecolorChanges[0];assert.ok(correction);assert.equal(correction.colorTheme,theme);assert.equal(correction.tapeColor,theme);
     const token={white:"OffWhite",black:"Black",primary:"TeamColor",secondary:"SecondaryColor"}[theme];
     assert.equal(gear(visuals[0],"LeftSpat"),`GearSpats_spatThin_${theme==="white"?"White":token}`);
-    assert.equal(gear(visuals[0],"RightArmWear"),`GearArmSleeve_Quarter_armTape_normal_${token}`);
+    assert.equal(gear(visuals[0],"RightArmWear"),theme==="black"?"GearArmSleeve_RawJamo_TeamColor":`GearArmSleeve_Quarter_armTape_normal_${token}`);
     assert.equal(gear(visuals[0],"MouthWear"),gear({RawData:JSON.stringify(before)},"MouthWear"));
     assert.deepEqual(JSON.parse(visuals[0].RawData).loadouts[1],before.loadouts[1]);
   }

@@ -33,7 +33,7 @@ test('actual RAW Jamo IDs form a mod-specific family while generic vanilla and d
 
 test('Jamo pool additions are off in Randomizer, old presets and Quickstart, including the direct fallback path',()=>{
   assert.deepEqual(normalizeModPools().raw.armSleeves,{chance:0,items:[]});assert.deepEqual(normalizeModPools({raw:{neckwear:{chance:10,items:[]}}}).raw.armSleeves,{chance:0,items:[]});
-  const settings=quickstartSettings({raw:true,unlocked:true,gameday:true});assert.deepEqual(settings.randomizer.modPools.raw.armSleeves,{chance:0,items:[]});assert.equal(settings.patcher.usingRawAccessoriesMod,true);
+  const settings=quickstartSettings({raw:true,unlocked:true,gameday:true});assert.deepEqual(settings.randomizer.modPools.raw.armSleeves,{chance:0,items:[]});assert.equal(settings.patcher.usingRawAccessoriesMod,false);
   for(let seed=0;seed<30;seed++){const loadouts=outfit();applyRawRandomizerEquipment(loadouts,mulberry32(seed),1,undefined,'WR');assert.ok(loadouts[0].loadoutElements.filter(e=>e.slotType.endsWith('ArmWear')).every(e=>e.itemAssetName==='ArmSleeve_None'));}
 });
 
@@ -46,17 +46,17 @@ test('explicitly selected RAW Jamo sleeves support left and right arm slots',()=
 test('accessory recoloring keeps Jamo style on both arms and uses accessory color even for its arm-tape ID',()=>{
   for(const input of Object.values(jamo))for(const [color,target]of Object.entries(jamo)){
     const loadouts=outfit();for(const item of loadouts[0].loadoutElements)item.itemAssetName=input;loadouts[0].loadoutElements.push({slotType:'MouthWear',itemAssetName:'GearMouthpiece_None'});
-    recolorPlayerAccessories(loadouts,color,color==='white'?'black':'white',raw);
+    recolorPlayerAccessories(loadouts,color,color==='white'?'black':'white');
     for(const item of loadouts[0].loadoutElements.filter(e=>e.slotType.endsWith('ArmWear')))assert.equal(item.itemAssetName,target);
     assert.equal(loadouts[0].loadoutElements.at(-1).itemAssetName,'GearMouthpiece_None');
   }
   const stock=[{loadoutType:'PlayerOnField',loadoutElements:[{slotType:'LeftArmWear',itemAssetName:'GearArmSleeve_RawJamo_TeamColor'}]}];
-  recolorPlayerAccessories(stock,'primary','white',raw);assert.equal(stock[0].loadoutElements[0].itemAssetName,'GearArmSleeve_Quarter_armTape_normal_OffWhite');
+  recolorPlayerAccessories(stock,'primary','white');assert.equal(stock[0].loadoutElements[0].itemAssetName,'GearArmSleeve_Quarter_armTape_normal_OffWhite');
 });
 
 test('Patcher recolors RAW Jamo with readable reporting and stable repeated runs',()=>{
   const ref=row=>(10).toString(2).padStart(15,'0')+row.toString(2).padStart(17,'0'),players=Object.values(jamo).map((_,row)=>({isEmpty:false,FirstName:'Player'+row,LastName:'Example',Position:'WR',SchoolYear:'Senior',RedshirtStatus:'Previous',TeamIndex:1,CharacterVisuals:ref(row)})),visuals=Object.values(jamo).map(asset=>({isEmpty:false,RawData:JSON.stringify({loadouts:[{loadoutType:'PlayerOnField',loadoutElements:[{slotType:'LeftArmWear',itemAssetName:asset}]}]})}));
-  const options={...raw,unlockedRecolorFix:true,unlockedColorTheme:'black',teamNames:new Map([[1,'Example Team']])},result=applyGlobalEquipmentFixes(players,visuals,10,options);
+  const options={unlockedRecolorFix:true,unlockedColorTheme:'black',teamNames:new Map([[1,'Example Team']])},result=applyGlobalEquipmentFixes(players,visuals,10,options);
   assert.equal(result.unlockedRecolorPlayersChanged,3);assert.ok(result.unlockedRecolorChanges.every(c=>c.newItem.includes('RAW Jamo Sleeves')));
   for(const v of visuals)assert.equal(JSON.parse(v.RawData).loadouts[0].loadoutElements[0].itemAssetName,jamo.black);
   assert.equal(applyGlobalEquipmentFixes(players,visuals,10,options).unlockedRecolorPlayersChanged,0);
