@@ -3,15 +3,15 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import {QuickstartMemory,quickstartPlayerKey} from '../src/main/services/quickstartMemory.js';
+import {createHash} from 'node:crypto';
+import {QuickstartMemory,quickstartPlayerKey,legacyQuickstartPlayerKey,equipmentDynastyId} from '../src/main/services/quickstartMemory.js';
 import {quickstartOptions,quickstartSettings} from '../src/main/tools/equipmentQuickstart/runner.js';
 import {normalizeEquipmentOptions} from '../src/main/tools/equipment/runner.js';
 
 function fixture(t){
   const directory=fs.mkdtempSync(path.join(os.tmpdir(),'cfb-quickstart-memory-'));
   t.after(()=>fs.rmSync(directory,{recursive:true,force:true}));
-  const saves=['DYNASTY-A','DYNASTY-B'].map(name=>path.join(directory,name));
-  saves.forEach(file=>fs.writeFileSync(file,'test save'));
+  const saves=[101,-202];
   return {memory:new QuickstartMemory(path.join(directory,'tracking.json')),saves};
 }
 const player={PLYR_ASSETNAME:'GeneratedPlayer1',FirstName:'Gage',LastName:'Jones',PresentationId:0,SchoolYear:'Freshman',TeamIndex:1,Position:'QB',JerseyNum:4};
@@ -22,7 +22,7 @@ test('Quickstart identity survives progression, renumbering and transfers, but n
   assert.notEqual(quickstartPlayerKey({...player,LastName:'Smith'},3),key);
   assert.notEqual(quickstartPlayerKey({...player,PLYR_ASSETNAME:'NewPlayer'},3),key);
 });
-test('Quickstart tracking persists after commit, stays separate per save and deduplicates players',t=>{
+test('Quickstart tracking persists after commit, stays separate per dynasty and deduplicates players',t=>{
   const {memory,saves}=fixture(t),key=quickstartPlayerKey(player,3);
   const snapshot=memory.snapshot(saves[0]);assert.equal(snapshot.keys.size,0);
   const staged=memory.stage(saves[0],[key,key],snapshot.revision);
@@ -32,7 +32,7 @@ test('Quickstart tracking persists after commit, stays separate per save and ded
   assert.equal(memory.snapshot(saves[1]).keys.size,0);
   const fresh=memory.snapshot(saves[1]);memory.stage(saves[1],[key],fresh.revision).commit();
   memory.clear(saves[0]);assert.equal(memory.snapshot(saves[0]).keys.size,0);
-  assert.equal(memory.snapshot(saves[1]).keys.size,1,'clearing one save never clears another');
+  assert.equal(memory.snapshot(saves[1]).keys.size,1,'clearing one dynasty never clears another');
 });
 test('failed Apply staging and stale previews never mark players',t=>{
   const {memory,saves}=fixture(t),key=quickstartPlayerKey(player,3),snapshot=memory.snapshot(saves[0]);
@@ -72,4 +72,50 @@ test('Quickstart mod switches enable the correct default pools and Unlocked corr
   assert.equal(patcher.allowRandomMouthpieceColors,false);assert.equal(patcher.unlockedTattooCap,40);
   assert.equal(quickstartSettings({raw:true,gameday:true}).patcher.unlockedMouthpieceFix,false);
   assert.throws(()=>quickstartOptions({unlocked:'yes'}),/checkboxes/);
+});
+
+test('native dynasty identity reads signed LeagueID and rejects missing or ambiguous identity',async()=>{
+  const franchise=id=>({tables:[{header:{uniqueId:2226370608},readRecords:async()=>{},records:[{LeagueID:id}]}]});
+  assert.equal(await equipmentDynastyId(franchise(-431592168)),-431592168);
+  for(const id of [0,undefined,'123',NaN,2147483648])await assert.rejects(equipmentDynastyId(franchise(id)),/valid dynasty identifier/);
+  await assert.rejects(equipmentDynastyId({tables:[]}),/supported dynasty identifier/);
+  const ambiguous=franchise(12);ambiguous.tables[0].records.push({LeagueID:13});
+  await assert.rejects(equipmentDynastyId(ambiguous),/valid dynasty identifier/);
+});
+
+test('player identities separate duplicate names, assets and presentation IDs by row',()=>{
+  assert.notEqual(quickstartPlayerKey(player,3),quickstartPlayerKey(player,4));
+  const generic={...player,PLYR_ASSETNAME:'',CharacterVisuals:'old'};
+  assert.notEqual(quickstartPlayerKey(generic,3),quickstartPlayerKey(generic,4));
+  assert.equal(quickstartPlayerKey(generic,3),quickstartPlayerKey({...generic,CharacterVisuals:'new'},3));
+  assert.notEqual(quickstartPlayerKey(player,3),quickstartPlayerKey({...player,PresentationId:999},3));
+  assert.throws(()=>quickstartPlayerKey(player),/valid player row/);
+});
+
+test('legacy path history recovers completed players by dynasty without marking new or ambiguous players',t=>{
+  const {memory,saves}=fixture(t),directory=path.dirname(memory.filePath),savePath=path.join(directory,'DYNASTY-OLD');
+  fs.writeFileSync(savePath,'legacy file');
+  const canonical=fs.realpathSync(savePath);
+  const oldScope=createHash('sha256').update(process.platform==='win32'?canonical.toLowerCase():canonical).digest('hex');
+  const duplicate={...player,FirstName:'Duplicate'},records=[player,duplicate,{...duplicate}];
+  const old={version:1,saves:{[oldScope]:{revision:'old-revision',keys:[legacyQuickstartPlayerKey(player,0),legacyQuickstartPlayerKey(duplicate,1)]}}};
+  fs.writeFileSync(memory.filePath,JSON.stringify(old));
+  const snapshot=memory.snapshot(saves[0],{savePath,players:{records}});
+  assert.equal(snapshot.keys.size,1);
+  assert.ok(snapshot.keys.has(quickstartPlayerKey(player,0)));
+  assert.equal(memory.snapshot(saves[0]).keys.size,1);
+  const stored=JSON.parse(fs.readFileSync(memory.filePath,'utf8'));
+  assert.equal(stored.version,2);assert.equal(Object.keys(stored.legacySaves).length,0);
+  assert.equal(memory.snapshot(saves[1]).keys.size,0);
+});
+
+test('clearing dynasty memory suppresses legacy history across filenames and invalidates other copies’ previews',t=>{
+  const {memory,saves}=fixture(t),savePath=path.join(path.dirname(memory.filePath),'DYNASTY-OLD');
+  fs.writeFileSync(savePath,'legacy file');
+  const canonical=fs.realpathSync(savePath),oldScope=createHash('sha256').update(process.platform==='win32'?canonical.toLowerCase():canonical).digest('hex');
+  fs.writeFileSync(memory.filePath,JSON.stringify({version:1,saves:{[oldScope]:{revision:'old',keys:[legacyQuickstartPlayerKey(player,0)]}}}));
+  const snapshot=memory.snapshot(saves[0],{savePath,players:{records:[player]}});
+  memory.clear(saves[0]);
+  assert.equal(memory.snapshot(saves[0],{savePath,players:{records:[player]}}).keys.size,0);
+  assert.throws(()=>memory.stage(saves[0],[],snapshot.revision,snapshot),/changed after Preview/);
 });

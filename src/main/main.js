@@ -11,9 +11,9 @@ import { getTool, registrySnapshot } from "../shared/toolRegistry.js";
 import { prepareEquipmentDonors } from './tools/equipment/donorSource.js';
 import { validateReportLocation } from "./services/reportLocations.js";
 import { appPaths, commentaryMapPath, schemaDirectory, schemaPath } from "./services/paths.js";
-import { inspectSaveSchema, SUPPORTED_SCHEMAS } from "./services/save.js";
+import { inspectSaveSchema, SUPPORTED_SCHEMAS, openCfb27Save } from "./services/save.js";
 import { SettingsStore, normalizeAccentColor } from "./services/settings.js";
-import {QuickstartMemory} from './services/quickstartMemory.js';
+import {QuickstartMemory,equipmentDynastyId} from './services/quickstartMemory.js';
 import { validatePresetConfiguration, ToolPresets } from "./services/toolPresets.js";
 import { AppLogger } from "./services/logger.js";
 import { ReportService } from "./services/reports.js";
@@ -94,7 +94,7 @@ function createWindow() {
 }
 
 function registerIpc() {
-  ipcMain.handle(IPC.clearQuickstartMemory,()=>{if(!sessionActiveSave)throw Error('Select an Active Save first.');return quickstartMemory.clear(validateSavePath(sessionActiveSave));});
+  ipcMain.handle(IPC.clearQuickstartMemory,async()=>{if(!sessionActiveSave)throw Error('Select an Active Save first.');const savePath=validateSavePath(sessionActiveSave),schema=assertToolSaveCompatibility('equipment-quickstart',savePath),{franchise}=await openCfb27Save(savePath,schema.path);return quickstartMemory.clear(await equipmentDynastyId(franchise));});
   ipcMain.handle(IPC.respondUpdatePrompt,(event,request)=>updatePrompts.respond(event.sender,request));
   ipcMain.handle(IPC.getUpdateStatus, () => updates.snapshot());
   ipcMain.handle(IPC.checkUpdates, () => updates.check());

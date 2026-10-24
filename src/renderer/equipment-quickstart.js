@@ -30,22 +30,22 @@ async function equipmentQuickstartPage(tool) {
         ${mod('raw','RAW Accessories v3.1.0+','Requires v3.1.0 or newer, by Delonte RAW. Enables its default equipment pool.')}
         ${mod('gameday','GameDay Gear v2.0+','Requires v2.0 or newer, by ElJax YT (Equipment Truck). Enables its default pool and Team Logo / Team Brand clear visors. Other visor tints are preserved.')}
       </div></section>
-      <section class="ops-section"><header class="ops-section-header"><span class="step-number">2</span><div><h2>Players in This Save ${modelHelpButton('Quickstart Player Memory','Only successful Equipment Quickstart runs are tracked, separately for each save file on this computer. Preview does not mark players. Standalone Randomizer and Patcher runs do not add to this memory. Renaming or copying a save starts a separate history.')}</h2><p>Original EA roster players stay unchanged. Players completed by Quickstart are skipped.</p></div></header><div class="ops-section-body configuration-stack">
+      <section class="ops-section"><header class="ops-section-header"><span class="step-number">2</span><div><h2>Players in This Dynasty ${modelHelpButton('Quickstart Player Memory','Successful Quickstart and Randomizer runs share player memory for this dynasty on this computer. Renamed saves, manual saves, autosaves and copies keep the same memory. Preview does not mark players.')}</h2><p>Original EA roster players stay unchanged. Previously randomized players are skipped.</p></div></header><div class="ops-section-body configuration-stack">
         <div class="metric-grid"><div class="metric"><strong data-quickstart-count="newPlayers"></strong><small>New players</small></div><div class="metric"><strong data-quickstart-count="remembered"></strong><small>Already equipped</small></div><div class="metric"><strong data-quickstart-count="protectedPlayers"></strong><small>Original EA players protected</small></div></div>
-        <div><button type="button" class="button secondary" id="quickstart-clear">Clear This Save’s Memory</button></div>
-        <div><strong>Included Corrections ${modelHelpButton('Included Corrections','No Drip is built in. Randomizes untracked players using the top 15 donors, then applies Improve Helmets and Facemasks, Hand Out Visors, Brand Existing Visors, Above-Knee Pants, Rolled-Jersey Undershirts and Equipment Compatibility. Additional Unlocked passes run only when selected. Use Randomizer or Patcher afterward if you want more control; successful Randomizer runs share this save’s player memory with Quickstart.')}</strong><p class="quickstart-included-summary">Randomized gear, No Drip, helmet and visor fixes, uniform adjustments, and compatibility repairs.</p></div>
+        <div><button type="button" class="button secondary" id="quickstart-clear">Clear This Dynasty’s Memory</button></div>
+        <div><strong>Included Corrections ${modelHelpButton('Included Corrections','No Drip is built in. Randomizes untracked players using the top 15 donors, then applies Improve Helmets and Facemasks, Hand Out Visors, Brand Existing Visors, Above-Knee Pants, Rolled-Jersey Undershirts and Equipment Compatibility. Additional Unlocked passes run only when selected. Use Randomizer or Patcher afterward if you want more control; successful Randomizer runs share this dynasty’s player memory with Quickstart.')}</strong><p class="quickstart-included-summary">Randomized gear, No Drip, helmet and visor fixes, uniform adjustments, and compatibility repairs.</p></div>
       </div></section><div class="actions"><button class="button" id="preview">Preview New Players’ Equipment →</button></div>
     </div>${standardPreviewWorkspace('Quickstart Equipment Preview','Review all equipment changes before applying.','apply')}`;
     bindCommon();restoreToolSettings();bindModelHelp(content);updateQuickstartCounts(prepared);bindRun(tool.id);
     document.getElementById('quickstart-clear').onclick=async()=>{
-      if(!await appConfirm('Clear Quickstart Memory?','This only clears tracking for the active save. It does not undo any equipment changes. Previously completed players can be randomized again on the next run.','Clear Memory','Only Quickstart tracking changes. Your save stays untouched.'))return;
+      if(!await appConfirm('Clear Dynasty Equipment Memory?','This clears shared Quickstart and Randomizer tracking for this dynasty, including its other saved copies. It does not undo any equipment changes. Previously completed players can be randomized again on the next run.','Clear Memory','Equipment memory is stored on this computer. Your save stays untouched.'))return;
       if(state.page!==tool.id||state.activeSave?.path!==savePath)return;
       const button=document.getElementById('quickstart-clear');button.disabled=true;
       try {
         await window.cfbToolkit.clearQuickstartMemory();
         if(state.page!==tool.id||state.activeSave?.path!==savePath)return;
         state.genericPreviews.delete(tool.id);document.getElementById('apply').disabled=true;
-        await refreshQuickstartCounts();toast('Quickstart memory cleared for this save.');
+        await refreshQuickstartCounts();toast('Equipment memory cleared for this dynasty.');
       }catch(error){if(state.page===tool.id&&state.activeSave?.path===savePath){button.disabled=false;toast(readableError(error).message);}}
     };
     const cached=state.genericPreviews.get(tool.id);

@@ -1,7 +1,7 @@
 import {randomBytes} from 'node:crypto';
 import path from 'node:path';
 import {isOriginalEaPlayer,originalEaProtectionAudit} from '../../services/originalEaPlayers.js';
-import {quickstartPlayerKey} from '../../services/quickstartMemory.js';
+import {quickstartPlayerKey,equipmentDynastyId} from '../../services/quickstartMemory.js';
 import {saveFingerprint,takePlan} from '../jersey/planStore.js';
 import {normalizeEquipmentOptions} from '../equipment/runner.js';
 import {collectEquipmentDonors,patchFreshmanEquipment} from '../equipment/core/patcher.js';
@@ -24,17 +24,17 @@ export function quickstartSettings(input){
   const patcher=normalizeEquipmentOptions({protectOriginalEaPlayers:true,helmetFix:true,visorFix:true,oakleyVisorFix:true,usingEquipmentTruckMod:mods.gameday,pantsFix:true,rolledJerseyFix:true,sleeveCompatibilityFix:true,unlockedTattooFix:mods.unlocked,unlockedMouthpieceFix:mods.unlocked,unlockedRecolorFix:mods.unlocked,unlockedColorTheme:'team',tapeColorMode:'accessory',lowerRolledJerseyFix:mods.unlocked,cutoffPantsFix:mods.unlocked,unlockedSocksFix:mods.unlocked},false);
   return {mods,randomizer,patcher};
 }
-function scope(loaded,memory,savePath){
-  const roster=buildRosterPlayerRows(loaded.players,loaded.teams,loaded.rosters),snapshot=memory.snapshot(savePath),keys=new Map(),pending=new Set();let protectedPlayers=0,remembered=0;
+async function scope(loaded,memory,savePath){
+  const roster=buildRosterPlayerRows(loaded.players,loaded.teams,loaded.rosters),snapshot=memory.snapshot(await equipmentDynastyId(loaded.franchise),{savePath,players:loaded.players}),keys=new Map(),pending=new Set();let protectedPlayers=0,remembered=0;
   for(const row of roster){const record=loaded.players.records[row];if(!record||record.isEmpty)continue;if(isOriginalEaPlayer(record)){protectedPlayers++;continue;}const key=quickstartPlayerKey(record,row);keys.set(row,key);if(snapshot.keys.has(key))remembered++;else pending.add(row);}
   return {roster,snapshot,keys,pending,protectedPlayers,remembered};
 }
 export async function prepareEquipmentQuickstart(context){
-  const loaded=await loadEquipmentTables(context.savePath,context.schemaPath),s=scope(loaded,memoryFor(context),context.savePath);
-  return {newPlayers:s.pending.size,remembered:s.remembered,protectedPlayers:s.protectedPlayers,memoryScope:'save-file'};
+  const loaded=await loadEquipmentTables(context.savePath,context.schemaPath),s=await scope(loaded,memoryFor(context),context.savePath);
+  return {newPlayers:s.pending.size,remembered:s.remembered,protectedPlayers:s.protectedPlayers,memoryScope:'dynasty'};
 }
 async function preview(context){
-  const memory=memoryFor(context),fingerprint=saveFingerprint(context.savePath),loaded=await loadEquipmentTables(context.savePath,context.schemaPath),s=scope(loaded,memory,context.savePath),settings=quickstartSettings(context.options),seed=randomBytes(4).readUInt32LE();
+  const memory=memoryFor(context),fingerprint=saveFingerprint(context.savePath),loaded=await loadEquipmentTables(context.savePath,context.schemaPath),s=await scope(loaded,memory,context.savePath),settings=quickstartSettings(context.options),seed=randomBytes(4).readUInt32LE();
   settings.randomizer.seed=seed;settings.patcher.seed=seed;
   const teamNames=buildTeamNames(loaded.teams.records),teamApparel=buildTeamApparel(loaded.teams.records),playerApparel=buildRosterPlayerApparel(loaded.players,loaded.teams,loaded.rosters),fcs=buildFcsTeamIndexes(loaded.teams.records),before=snapshotVisualRawData(loaded.visuals.records);
   const preparedDonors=collectEquipmentDonors(loaded.players.records,loaded.visuals.records,loaded.visuals.header.tableId,{rosterRows:s.roster,fcsTeamIndexes:fcs,teamNames,teamApparel,playerApparel});
@@ -60,9 +60,9 @@ async function preview(context){
   const warnings=randomized.skipped.length?[`${randomized.skipped.length} players could not be randomized. They remain untracked so a later run can retry them.`]:[];
   const previewRows=rows.map(({oldRaw,newRaw,...row})=>row);
   const details={seed,mods:settings.mods,top:15,totalPreviewRows:rows.length,changes:limitEquipmentPreview(previewRows),newPlayers:s.pending.size,remembered:s.remembered,protectedPlayers:s.protectedPlayers,skipped:randomized.skipped.length,skippedPlayers:randomized.skipped,warnings,protection:originalEaProtectionAudit([...s.roster].map(row=>loaded.players.records[row]),true),populationSafeguards:fixes.populationSafeguards,unlockedTattooPopulation:fixes.unlockedTattooPopulation,canApply:processed.size>0};
-  const report={prefix:'equipment-quickstart-report',headings:['Team','Player','Position','ClassYear','RedshirtStatus','Overall','PlayerRow','CharacterVisualsRow','ChangedSlotsAndMetadata','BeforeRawData','AfterRawData','DonorAuditJSON','Seed','QuickstartOptionsJSON','RandomizerOptionsJSON','PatcherOptionsJSON','PopulationCapsAuditJSON','TrackingAuditJSON','SkippedPlayersJSON'],rows:rows.map((row,i)=>[row.team,row.player,row.position,row.classYear,row.redshirtStatus,row.overall,row.row,row.visualRow,summarizeVisualChanges(row.oldRaw,row.newRaw),row.oldRaw,row.newRaw,JSON.stringify(donorAudits.get(row.row)),seed,i===0?JSON.stringify(settings.mods):'',i===0?JSON.stringify(settings.randomizer):'',i===0?JSON.stringify(settings.patcher):'',i===0?JSON.stringify({equipment:fixes.populationSafeguards,tattoos:fixes.unlockedTattooPopulation}):'',i===0?JSON.stringify({scope:'save-file',alreadyRemembered:s.remembered,newPlayers:s.pending.size,playersToRemember:keys.length}):'',i===0?JSON.stringify(randomized.skipped):''])};
+  const report={prefix:'equipment-quickstart-report',headings:['Team','Player','Position','ClassYear','RedshirtStatus','Overall','PlayerRow','CharacterVisualsRow','ChangedSlotsAndMetadata','BeforeRawData','AfterRawData','DonorAuditJSON','Seed','QuickstartOptionsJSON','RandomizerOptionsJSON','PatcherOptionsJSON','PopulationCapsAuditJSON','TrackingAuditJSON','SkippedPlayersJSON'],rows:rows.map((row,i)=>[row.team,row.player,row.position,row.classYear,row.redshirtStatus,row.overall,row.row,row.visualRow,summarizeVisualChanges(row.oldRaw,row.newRaw),row.oldRaw,row.newRaw,JSON.stringify(donorAudits.get(row.row)),seed,i===0?JSON.stringify(settings.mods):'',i===0?JSON.stringify(settings.randomizer):'',i===0?JSON.stringify(settings.patcher):'',i===0?JSON.stringify({equipment:fixes.populationSafeguards,tattoos:fixes.unlockedTattooPopulation}):'',i===0?JSON.stringify({scope:'dynasty',leagueId:s.snapshot.dynastyId,playerIdentityVersion:2,alreadyRemembered:s.remembered,newPlayers:s.pending.size,playersToRemember:keys.length}):'',i===0?JSON.stringify(randomized.skipped):''])};
   const result={status:'preview',mode:'preview',resultKind:QUICKSTART_ID,savePath:loaded.savePath,backupPath:null,reportPath:context.reports.create({...report,toolId:QUICKSTART_ID,toolName:QUICKSTART_NAME}),summary:[{label:'Players ready',value:rows.length},{label:'Already equipped',value:s.remembered},{label:'Original EA players protected',value:s.protectedPlayers},{label:'Players skipped',value:randomized.skipped.length}],historySummary:[{label:'Players equipped',value:rows.length}],details};
-  const planId=cacheEquipmentPlan({toolId:QUICKSTART_ID,toolName:QUICKSTART_NAME,savePath:loaded.savePath,assignments,previewRows,report,result,needsVisuals:true,quickstartTracking:{revision:s.snapshot.revision,keys}});
+  const planId=cacheEquipmentPlan({toolId:QUICKSTART_ID,toolName:QUICKSTART_NAME,savePath:loaded.savePath,assignments,previewRows,report,result,needsVisuals:true,quickstartTracking:{...s.snapshot,keys}});
   return {...result,planId};
 }
 export async function runEquipmentQuickstart(context){
@@ -73,7 +73,7 @@ export async function runEquipmentQuickstart(context){
     const plan=takePlan(context.options?.planId);if(plan.toolId!==QUICKSTART_ID||!plan.quickstartTracking)throw Error('This preview does not belong to Equipment Quickstart.');
     if(path.resolve(plan.savePath)!==path.resolve(context.savePath))throw Error('This preview does not belong to the Active Save.');
     if(!plan.result.details.canApply)throw Error('There are no new players to equip.');
-    const staged=memory.stage(context.savePath,plan.quickstartTracking.keys,plan.quickstartTracking.revision);
+    const staged=memory.stage(plan.quickstartTracking.dynastyId,plan.quickstartTracking.keys,plan.quickstartTracking.revision,plan.quickstartTracking);
     try{
       const result=await applyEquipmentPlan({...context,toolId:QUICKSTART_ID});
       try{const count=staged.commit();return {...result,details:{...result.details,trackingSaved:true,rememberedAfter:count}};}
