@@ -7,8 +7,8 @@ import { getTool } from '../src/shared/toolRegistry.js';
 const read = file => fs.readFileSync(new URL('../' + file, import.meta.url), 'utf8');
 const renderer = read('src/renderer/renderer.js');
 
-test('Equipment parent header uses the shared helmet icon', () => {
-  assert.ok(renderer.includes('${toolIcon("helmet")}</span><span class="nav-label">Equipment</span>'));
+test('Equipment parent header uses the shared cleats icon', () => {
+  assert.ok(renderer.includes('${toolIcon("cleats")}</span><span class="nav-label">Equipment</span>'));
 });
 
 test('Jersey Renumber and Team Boost use distinct shared stroke icons, not text glyphs', () => {
