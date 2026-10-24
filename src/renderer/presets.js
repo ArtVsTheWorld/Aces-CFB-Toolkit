@@ -1,6 +1,7 @@
 // Preserve the user's protection intent, including the inverse old jersey
 // "Allow NIL Changes" checkbox. Never reinterpret a stored false as a default.
 function migrateOriginalEaProtectionSettings(values) {
+  delete values['quickstart-noDrip']; // Quickstart now always includes No Drip.
   if(Object.hasOwn(values,'equipment-skip-nil')){values['equipment-protect-ea']??=values['equipment-skip-nil'];delete values['equipment-skip-nil'];}
   if(Object.hasOwn(values,'renumber-nil')){values['jersey-protect-ea']??=!values['renumber-nil'];delete values['renumber-nil'];}
   return values;
@@ -20,6 +21,7 @@ function presetConfiguration() {
 
 function presetValues(configuration) {
   const values = { ...configuration.values };
+  if(typeof migrateMouthpieceLimitSettings==='function')migrateMouthpieceLimitSettings(values);
   migrateOriginalEaProtectionSettings(values);
   if (typeof migrateRedshirtFilterSettings === 'function') migrateRedshirtFilterSettings(values);
   delete values['roster-seed']; // Older Roster Generator presets cannot pin a new run's seed.

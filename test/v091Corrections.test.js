@@ -37,7 +37,7 @@ test("redshirt groups expose only True, Redshirt, and All Players semantics", ()
   assert.deepEqual(normalizeEquipmentOptions({ seed: 1, redshirtGroup: "true" }, false).redshirtStatuses, ["Eligible", "Current"]);
   assert.deepEqual(normalizeEquipmentOptions({ seed: 1, redshirtGroup: "redshirt" }, false).redshirtStatuses, ["Previous"]);
   assert.deepEqual(normalizeEquipmentOptions({ seed: 1, redshirtGroup: "all" }, false).redshirtStatuses, []);
-  assert.deepEqual(normalizeEquipmentOptions({ seed: 1 }, true).redshirtStatuses, ["Eligible", "Current"]);
+  assert.deepEqual(normalizeEquipmentOptions({ seed: 1 }, true).redshirtStatuses, []);
   assert.deepEqual(normalizeEquipmentOptions({ seed: 1 }, false).redshirtStatuses, []);
 });
 

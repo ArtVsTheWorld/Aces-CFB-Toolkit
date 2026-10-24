@@ -39,7 +39,7 @@ test("CFB27 Unlocked tattoos are disabled by default with a validated 40% cap", 
   const defaults = normalizeEquipmentOptions({}, false);
   assert.equal(defaults.unlockedTattooFix, false);
   assert.equal(defaults.unlockedTattooCap, 40);
-  assert.equal(normalizeEquipmentOptions({ unlockedTattooFix: true, unlockedTattooCap: 25 }, false).unlockedTattooCap, 25);
+  assert.equal(normalizeEquipmentOptions({ fillFrequencies: {tattoos:true}, unlockedTattooFix: true, unlockedTattooCap: 25 }, false).unlockedTattooCap, 25);
   assert.throws(() => normalizeEquipmentOptions({ unlockedTattooCap: 15.5 }, false), /whole percentage/);
   assert.throws(() => normalizeEquipmentOptions({ unlockedTattooCap: 101 }, false), /whole percentage/);
 });
@@ -48,7 +48,7 @@ test("tattoo pass adds only enough players to reach the exact population cap", (
   const players = Array.from({ length: 20 }, (_, row) => player(row));
   const visuals = Array.from({ length: 20 }, () => visual());
   const result = applyGlobalEquipmentFixes(players, visuals, 10, {
-    unlockedTattooFix: true,
+    fillFrequencies: {tattoos:true}, unlockedTattooFix: true,
     unlockedTattooCap: 15,
     seed: 20260923,
     activePlayerRows: activeRows(20),
@@ -61,12 +61,38 @@ test("tattoo pass adds only enough players to reach the exact population cap", (
   assert.equal(result.unlockedTattooPopulation.fbs.projectedPrevalence, 0.15);
 });
 
+test("all five offensive-line positions can receive tattoos; kickers and punters stay excluded", () => {
+  const positions = ['LT', 'LG', 'C', 'RG', 'RT', 'K', 'P'];
+  const players = positions.map((position, row) => player(row, position));
+  const visuals = positions.map(() => visual());
+  const result = applyGlobalEquipmentFixes(players, visuals, 10, {
+    fillFrequencies: {tattoos:true}, unlockedTattooFix: true, unlockedTattooCap: 100, seed: 225,
+    activePlayerRows: activeRows(positions.length), teamNames: new Map([[1, 'Test Team']])
+  });
+  assert.equal(result.unlockedTattooPlayersChanged, 5);
+  assert.equal(result.unlockedTattooPopulation.eligiblePlayers, 5);
+  positions.forEach((position, row) => assert.equal(hasUnlockedBodyTattoo(JSON.parse(visuals[row].RawData)), !['K', 'P'].includes(position), position));
+});
+
+test("OL and their existing tattoos count toward each team's tattoo cap", () => {
+  const players = Array.from({length: 40}, (_, row) => player(row, row % 20 < 10 ? 'LT' : 'WR', row, row < 20 ? 1 : 2));
+  const visuals = players.map((p, row) => visual(row < 5 ? `Existing_OL_${row}` : null));
+  const result = applyGlobalEquipmentFixes(players, visuals, 10, {
+    fillFrequencies: {tattoos:true}, unlockedTattooFix: true, unlockedTattooCap: 40, seed: 225,
+    activePlayerRows: activeRows(40), teamNames: new Map([[1, 'First Team'], [2, 'Second Team']])
+  });
+  const teams = result.unlockedTattooPopulation.teams;
+  assert.deepEqual(teams.map(t => [t.eligiblePlayers, t.existingTattooPlayers, t.addedTattooPlayers, t.projectedTattooPlayers]), [[20, 5, 3, 8], [20, 0, 8, 8]]);
+  assert.equal(tattooedCount(visuals.slice(0, 20)), 8);assert.equal(tattooedCount(visuals.slice(20)), 8);
+  for(let row=0;row<5;row++)assert.equal(JSON.parse(visuals[row].RawData).loadouts.flatMap(l=>l.loadoutElements??[]).find(e=>e.slotType==='LeftArmTattoo').itemAssetName, `Existing_OL_${row}`);
+});
+
 test("existing tattoos count toward the cap, keep their assets, and repair malformed loadouts", () => {
   const players = Array.from({ length: 20 }, (_, row) => player(row));
   const visuals = Array.from({ length: 20 }, (_, row) => visual(row < 2 ? `ExistingTattoo_${row}` : null));
   const before = visuals.slice(0, 2).map(item => JSON.parse(item.RawData).loadouts.map(loadout => loadout.loadoutElements));
   const result = applyGlobalEquipmentFixes(players, visuals, 10, {
-    unlockedTattooFix: true,
+    fillFrequencies: {tattoos:true}, unlockedTattooFix: true,
     unlockedTattooCap: 15,
     seed: 17,
     activePlayerRows: activeRows(20),
@@ -88,7 +114,7 @@ test("already valid Base tattoo loadouts are left untouched", () => {
   ] });
   const before = visuals[0].RawData;
   const result = applyGlobalEquipmentFixes(players, visuals, 10, {
-    unlockedTattooFix: true, unlockedTattooCap: 5, seed: 17,
+    fillFrequencies: {tattoos:true}, unlockedTattooFix: true, unlockedTattooCap: 5, seed: 17,
     activePlayerRows: activeRows(20), teamNames: new Map([[1, "Test Team"]])
   });
   assert.equal(result.unlockedTattooPlayersChanged, 0);
@@ -100,7 +126,7 @@ test("FBS and directional FCS tattoo prevalence are capped independently", () =>
   const players = Array.from({ length: 20 }, (_, row) => player(row, "WR", row, row < 10 ? 1 : 2));
   const visuals = Array.from({ length: 20 }, () => visual());
   const result = applyGlobalEquipmentFixes(players, visuals, 10, {
-    unlockedTattooFix: true,
+    fillFrequencies: {tattoos:true}, unlockedTattooFix: true,
     unlockedTattooCap: 15,
     seed: 99,
     activePlayerRows: activeRows(20),
@@ -118,7 +144,7 @@ test("tattoo pass protects inactive, unsupported, and shared CharacterVisuals pl
   players[1].Position = "K";
   const visuals = Array.from({ length: 20 }, () => visual());
   const result = applyGlobalEquipmentFixes(players, visuals, 10, {
-    unlockedTattooFix: true,
+    fillFrequencies: {tattoos:true}, unlockedTattooFix: true,
     unlockedTattooCap: 100,
     seed: 5,
     activePlayerRows: new Set(Array.from({ length: 10 }, (_, row) => row)),

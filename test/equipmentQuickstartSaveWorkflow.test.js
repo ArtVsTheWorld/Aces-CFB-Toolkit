@@ -1,0 +1,75 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import {createHash} from 'node:crypto';
+import {QuickstartMemory,quickstartPlayerKey} from '../src/main/services/quickstartMemory.js';
+import {isOriginalEaPlayer} from '../src/main/services/originalEaPlayers.js';
+import {ReportService} from '../src/main/services/reports.js';
+import {parseCsv} from '../src/main/services/reportAudit.js';
+import {prepareEquipmentQuickstart,runEquipmentQuickstart} from '../src/main/tools/equipmentQuickstart/runner.js';
+import {loadEquipmentTables,snapshotVisualRawData} from '../src/main/tools/equipment/shared.js';
+import {sf} from '../src/main/tools/equipment/openSave.js';
+import {takePlan} from '../src/main/tools/jersey/planStore.js';
+
+const fixture=path.resolve('../EXAMPLE SAVES VANILLA GAME/DYNASTY-LSUTESTSAVEPRESZN');
+const schemaPath=path.resolve('resources/engine-data/C27_486_6.gz');
+const hash=file=>createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+test('Quickstart has one exact backed-up write, protects EA players and tracks only successful players per save',{timeout:240000},async t=>{
+  const directory=fs.mkdtempSync(path.join(os.tmpdir(),'cfb-quickstart-save-'));
+  t.after(()=>fs.rmSync(directory,{recursive:true,force:true}));
+  const savePath=path.join(directory,'DYNASTY-QUICKSTART'),otherPath=path.join(directory,'DYNASTY-OTHER');
+  fs.copyFileSync(fixture,savePath);fs.copyFileSync(fixture,otherPath);
+  const sourceHash=hash(fixture),memory=new QuickstartMemory(path.join(directory,'tracking.json')),reports=new ReportService(path.join(directory,'reports'));
+  const context={savePath,schemaPath,quickstartMemory:memory,reports};
+  const before=await loadEquipmentTables(savePath,schemaPath),rawBefore=snapshotVisualRawData(before.visuals.records);
+  const prepared=await prepareEquipmentQuickstart(context);
+  assert.ok(prepared.newPlayers>0);assert.ok(prepared.protectedPlayers>0);
+  const preview=await runEquipmentQuickstart({...context,mode:'preview',options:{unlocked:true,raw:true,gameday:true}});
+  assert.equal(hash(savePath),sourceHash);assert.equal(memory.snapshot(savePath).keys.size,0);
+  const plan=takePlan(preview.planId),rows=plan.previewRows;
+  assert.ok(rows.length>100);assert.equal(rows.length+preview.details.skipped,prepared.newPlayers);
+  assert.ok(rows.every(row=>!isOriginalEaPlayer(before.players.records[row.row])));
+  assert.ok(rows.every(row=>!Object.hasOwn(row,'newRaw')&&!Object.hasOwn(row,'oldRaw')),'large raw gear is kept in the CSV, not IPC preview');
+  const pending=plan.quickstartTracking.keys;assert.equal(pending.length,rows.length);
+  const expected=new Map(plan.assignments.map(change=>[change.row,change.newValue]));assert.ok(expected.size>0);
+  // Clearing memory invalidates an older Preview without writing the save.
+  memory.clear(savePath);
+  await assert.rejects(runEquipmentQuickstart({...context,mode:'apply',options:{planId:preview.planId}}),/tracking changed/);
+  assert.equal(hash(savePath),sourceHash);assert.equal(memory.snapshot(savePath).keys.size,0);
+  // Restore only the revision token for this private in-memory test plan so the
+  // already-generated exact plan can exercise Apply without another full run.
+  plan.quickstartTracking.revision=memory.snapshot(savePath).revision;
+  await assert.rejects(runEquipmentQuickstart({...context,savePath:otherPath,mode:'apply',options:{planId:preview.planId}}),/Active Save/);
+  const applied=await runEquipmentQuickstart({...context,mode:'apply',options:{planId:preview.planId}});
+  assert.equal(applied.status,'completed');assert.equal(applied.details.trackingSaved,true);assert.equal(hash(applied.backupPath),sourceHash);
+  assert.equal(memory.snapshot(savePath).keys.size,rows.length);assert.equal(memory.snapshot(otherPath).keys.size,0);
+  const reopened=await loadEquipmentTables(savePath,schemaPath);
+  for(const [row,raw]of rawBefore)if(typeof raw==='string')assert.equal(sf(reopened.visuals.records[row],'RawData'),expected.get(row)??raw,'every changed and unchanged visual row matches Preview');
+  const remembered=memory.snapshot(savePath).keys;
+  for(const row of rows)assert.ok(remembered.has(quickstartPlayerKey(reopened.players.records[row.row],row.row)));
+  const next=await prepareEquipmentQuickstart(context);assert.equal(next.remembered,rows.length);assert.equal(next.newPlayers,preview.details.skipped);
+  const repeat=await runEquipmentQuickstart({...context,mode:'preview',options:{unlocked:true,raw:true,gameday:true}});
+  assert.equal(repeat.details.totalPreviewRows,0);assert.equal(repeat.details.canApply,false);
+  assert.equal(repeat.details.remembered,rows.length);
+  const [headings,first]=parseCsv(fs.readFileSync(applied.reportPath,'utf8'));assert.equal(first.length,headings.length);
+  assert.equal(JSON.parse(first[headings.indexOf('RandomizerOptionsJSON')]).top,15);
+  const patcher=JSON.parse(first[headings.indexOf('PatcherOptionsJSON')]);assert.equal(patcher.unlockedColorTheme,'team');assert.equal(patcher.tapeColorMode,'accessory');
+  assert.equal(JSON.parse(first[headings.indexOf('TrackingAuditJSON')]).scope,'save-file');
+  assert.equal(hash(fixture),sourceHash);
+});
+test('a tracking commit failure does not misreport a successfully written save as a failed Apply',{timeout:180000},async t=>{
+  const directory=fs.mkdtempSync(path.join(os.tmpdir(),'cfb-quickstart-tracking-failure-'));
+  t.after(()=>fs.rmSync(directory,{recursive:true,force:true}));
+  const savePath=path.join(directory,'DYNASTY-TRACKING-FAILURE');fs.copyFileSync(fixture,savePath);
+  const memory=new QuickstartMemory(path.join(directory,'tracking.json')),context={savePath,schemaPath,quickstartMemory:memory,reports:new ReportService(path.join(directory,'reports'))};
+  const preview=await runEquipmentQuickstart({...context,mode:'preview',options:{}}),before=hash(savePath);
+  const stage=memory.stage.bind(memory);memory.stage=(...args)=>{const staged=stage(...args);return {...staged,commit:()=>{throw Error('Simulated tracking disk failure');}};};
+  const result=await runEquipmentQuickstart({...context,mode:'apply',options:{planId:preview.planId}});
+  assert.equal(result.status,'completed');assert.equal(result.details.trackingSaved,false);
+  assert.match(result.details.warnings.join(' '),/Equipment was applied.*memory could not be saved/);
+  assert.notEqual(hash(savePath),before);assert.equal(hash(result.backupPath),before);
+  assert.equal(memory.snapshot(savePath).keys.size,0);
+  assert.ok(!fs.readdirSync(directory).some(name=>name.includes('.pending-')));
+});

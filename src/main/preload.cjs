@@ -44,6 +44,7 @@ contextBridge.exposeInMainWorld("cfbToolkit", Object.freeze({
   onToolApplied: callback => { if (typeof callback !== 'function') throw new TypeError('Apply listener must be a function.'); applyListeners.add(callback); return () => applyListeners.delete(callback); },
   prepareTool: request => ipcRenderer.invoke(channels.prepareTool, request),
   prepareEquipmentDonors: request => ipcRenderer.invoke(channels.prepareEquipmentDonors, request),
+  clearQuickstartMemory: () => ipcRenderer.invoke('equipment:clear-quickstart-memory'),
   searchPreview: request => ipcRenderer.invoke(channels.searchPreview, request),
   listReports: () => ipcRenderer.invoke(channels.listReports),
   listHistory: () => ipcRenderer.invoke(channels.listHistory),

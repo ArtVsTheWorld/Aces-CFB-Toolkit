@@ -26,9 +26,9 @@ test('story eligibility rejects contradictory age, talent, size, skill and posit
   for(const story of BACKSTORIES)assert.equal(storyEligible(story,veteran),['any','veteran','rs-senior','redshirted','high-overall','high-potential','technical','fast','strong','large-build','ol','reserved','driven','experienced'].includes(story.rule),story.id);
   assert.throws(()=>storyEligible({rule:'invented'},freshman));
 });
-test('Balanced is 75% and Outlier is 1%, with no hidden rating boost for outliers',()=>{
-  assert.equal(ATHLETICISM_PROFILES.reduce((sum,p)=>sum+p.weight,0),100);assert.equal(ATHLETICISM_PROFILES.find(p=>p.id==='balanced').weight,75);assert.equal(ATHLETICISM_PROFILES.find(p=>p.id==='outlier').weight,1);
-  const rng=mulberry32(205),counts={};for(let n=0;n<100000;n++){let roll=rng()*100;const picked=ATHLETICISM_PROFILES.find(p=>(roll-=p.weight)<0);counts[picked.id]=(counts[picked.id]??0)+1;}assert.ok(counts.balanced>74000&&counts.balanced<76000);assert.ok(counts.outlier>850&&counts.outlier<1150);
+test('Balanced fills 85% and Outlier is 1%, with no hidden rating boost for outliers',()=>{
+  assert.equal(ATHLETICISM_PROFILES.reduce((sum,p)=>sum+p.weight,0),100);assert.equal(ATHLETICISM_PROFILES.find(p=>p.id==='balanced').weight,85);assert.equal(ATHLETICISM_PROFILES.find(p=>p.id==='outlier').weight,1);
+  const rng=mulberry32(205),counts={};for(let n=0;n<100000;n++){let roll=rng()*100;const picked=ATHLETICISM_PROFILES.find(p=>(roll-=p.weight)<0);counts[picked.id]=(counts[picked.id]??0)+1;}assert.ok(counts.balanced>84000&&counts.balanced<86000);assert.ok(counts.outlier>850&&counts.outlier<1150);
   const model=modelForPreset(base,rosterPreset()),source=model.profiles[0];assert.deepEqual(athleticVariant(model,source,'outlier').ratings,source.ratings);
 });
 test('lower-caliber builds are smaller within each position; outliers use both observed size tails',()=>{

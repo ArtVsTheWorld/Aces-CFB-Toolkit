@@ -23,7 +23,7 @@ const slotValue = (raw, slot) => loadouts(raw)[0].loadoutElements.find(element =
 function fixture(brand = "underarmour") {
   const players = [player(0, "WR", "Freshman", 1), player(1), player(2, "CB"), player(3, "WR", "Senior", 2)];
   const visuals = [visual(kit(shoes[brand], "GearPants_AboveKnee")), visual(kit(shoes.nike)), visual(kit(shoes.nike)), visual(kit(shoes[brand]))];
-  return { players, visuals, options: { teamNames: new Map([[1, "Team"], [2, "Other"]]), teamApparel: new Map([[1, brand], [2, brand]]), top: 10, seed: 400, apply: true } };
+  return { players, visuals, options: { eligiblePlayer:record=>record.SchoolYear==='Freshman', teamNames: new Map([[1, "Team"], [2, "Other"]]), teamApparel: new Map([[1, brand], [2, brand]]), top: 10, seed: 400, apply: true } };
 }
 
 test("explicit team indexes cannot be overwritten by another team's row fallback", () => {
@@ -215,6 +215,6 @@ test("GUI mod toggles, warnings, help, and option serialization stay explicit an
   assert.ok(!renderer.includes('"Expanded Equipment Pool"')); assert.ok(renderer.includes('"Equipment Options"'));
   assert.match(renderer, /optionalPass\("equipment-raw-accessories", "RAW Accessories Equipment Pool"/);
   assert.match(renderer, /usingRawAccessoriesMod: freshman && document.querySelector\("#equipment-raw-accessories"\).checked/);
-  assert.match(renderer, /Requires RAW Accessories by Delonte RAW/); assert.match(renderer, /Custom facepaint does not need to be worn by a donor/);
+  assert.match(renderer, /Requires RAW Accessories v3\.1\.0\+ by Delonte RAW/); assert.match(renderer, /Custom facepaint does not need to be worn by a donor/);
   assert.ok(!renderer.includes("eligible donors must already wear it"));
 });

@@ -29,7 +29,7 @@ import {NATIVE_SCHEMES,inspectTeamSchemes,resolveSchemeContext,schemeSchema,recr
 import {composeRosterTargets,compositionAudit} from './composition.js';
 import {mulberry32} from '../longSnap/core.js';
 
-import {rosterFile,loadRosterGenerationSource,saveRosterGeneration,buildRosterGenerationCandidate,ROSTER_WARNINGS} from './rosterSource.js';
+import {rosterFile,loadRosterGenerationSource,saveRosterGeneration,buildRosterGenerationCandidate,ROSTER_WARNINGS,ROSTER_FORMAT_NOTES} from './rosterSource.js';
 const loadGenerationSource=async(savePath,schemaPath)=>rosterFile(savePath)?loadRosterGenerationSource(savePath,schemaPath):loadEquipmentTables(savePath,schemaPath,true,false);
 const allPresentationIds=loaded=>new Set(loaded.players.records.filter(record=>record&&!record.isEmpty).map(record=>sf(record,'PresentationId')));
 const TOOL_ID='roster-generator',TOOL_NAME='Roster Generator';
@@ -92,11 +92,11 @@ function previewRow(player,preview) {
   const highlights=[...physical,...relevant].filter(field=>Number.isFinite(fields[field])).map(field=>({field,label:RATING_LABELS[field],value:fields[field]}));
   const equipment=JSON.parse(player.rawData).loadouts.filter(loadout=>loadout.loadoutType==='PlayerOnField').flatMap(loadout=>loadout.loadoutElements).map(element=>({slot:element.slotType??equipmentItem(element.itemAssetName)?.slots?.[0]??'Default slot',name:equipmentDisplayName(element.itemAssetName)}));
   const brother=preview.players.find(other=>other.row===player.provenance.brother);
-  return {...player,highlights,brother:brother?`${brother.fields.FirstName} ${brother.fields.LastName}`:null,measurements:{before:playerMeasurements(player.before),after:playerMeasurements(fields)},team:preview.team.name,player:`${fields.FirstName} ${fields.LastName}`,oldPlayer:`${player.before.FirstName} ${player.before.LastName}`,position:displayPosition(player.position),classYear:fields.SchoolYear,overall:fields.OverallRating,equipment};
+  return {...player,highlights,brother:brother?`${brother.fields.FirstName} ${brother.fields.LastName}`:null,measurements:{before:playerMeasurements(player.before),after:playerMeasurements(fields)},team:preview.team.name,player:`${fields.FirstName} ${fields.LastName}`,oldPlayer:`${player.before.FirstName} ${player.before.LastName}`,originalPosition:displayPosition(player.before.Position),positionChanged:displayPosition(player.before.Position)!==displayPosition(player.position),position:displayPosition(player.position),classYear:fields.SchoolYear,overall:fields.OverallRating,equipment};
 }
 function reportFor(rosters) {
   const parts=rosters.map(roster=>rosterGeneratorCsv(roster));
-  return {prefix:'roster-generator-report',headings:[...parts[0].headings,'CalibrationJSON','OldNILCost','NewNILCost','BrotherRow','OriginalPosition','GeneratedPosition','NativeSchemeAuditJSON','RosterCompositionAuditJSON','RecruitingNeedsAuditJSON','SchemeFitAuditJSON'],rows:parts.flatMap((part,i)=>part.rows.map((row,j)=>[...row,JSON.stringify(rosters[i].players[j].provenance.calibration),rosters[i].players[j].before.CurrentNILCompensation,rosters[i].players[j].fields.CurrentNILCompensation,rosters[i].players[j].provenance.brother??'',rosters[i].players[j].before.Position,rosters[i].players[j].position,j===0?JSON.stringify(rosters[i].summary.settings.schemeContext):'',j===0?JSON.stringify(rosters[i].summary.composition):'',j===0?JSON.stringify(rosters[i].summary.recruitingNeeds):'',j===0?JSON.stringify(rosters[i].summary.schemeFit):'']))};
+  return {prefix:'roster-generator-report',headings:[...parts[0].headings,'CalibrationJSON','OldNILCost','NewNILCost','BrotherRow','OriginalPosition','GeneratedPosition','PositionChanged','NativeSchemeAuditJSON','RosterCompositionAuditJSON','RecruitingNeedsAuditJSON','SchemeFitAuditJSON'],rows:parts.flatMap((part,i)=>part.rows.map((row,j)=>[...row,JSON.stringify(rosters[i].players[j].provenance.calibration),rosters[i].players[j].before.CurrentNILCompensation,rosters[i].players[j].fields.CurrentNILCompensation,rosters[i].players[j].provenance.brother??'',rosters[i].players[j].before.Position,rosters[i].players[j].position,displayPosition(rosters[i].players[j].before.Position)!==displayPosition(rosters[i].players[j].position),j===0?JSON.stringify(rosters[i].summary.settings.schemeContext):'',j===0?JSON.stringify(rosters[i].summary.composition):'',j===0?JSON.stringify(rosters[i].summary.recruitingNeeds):'',j===0?JSON.stringify(rosters[i].summary.schemeFit):'']))};
 }
 
 export async function runRosterGenerator(context) {
@@ -126,21 +126,25 @@ export async function runRosterGenerator(context) {
     roster.summary.recruitingNeeds=recruitingNeeds(roster.players,configuration.settings.schemeContext);
     roster.summary.schemeFit=schemeFitAudit(roster.players,configuration.settings.schemeContext,model);
     roster.warnings.push(...configuration.settings.schemeContext.warnings);
-    if(configuration.settings.rosterMakeup==='scheme')roster.warnings.push(`${team.name}: ${roster.summary.composition.changed} roster slots change position to fit scheme requirements. Player rows and roster size are preserved.`);
-    if(loaded.kind==='roster'){roster.warnings.push(...ROSTER_WARNINGS);for(const player of roster.players){player.rosterPlayerId=loaded.players.records[player.row].RosterPlayerId;player.changes=player.changes.filter(change=>loaded.available.has(change.field));player.persistedFields=[...loaded.available];}}
+    roster.generationNotes.push(...(configuration.settings.schemeContext.notes??[]));
+    if(configuration.settings.rosterMakeup==='scheme')roster.generationNotes.push(`${team.name}: ${roster.summary.composition.changed} roster slots change position to fit scheme requirements. Player rows and roster size are preserved.`);
+    if(loaded.kind==='roster'){roster.generationNotes.push(...ROSTER_FORMAT_NOTES);for(const player of roster.players){player.rosterPlayerId=loaded.players.records[player.row].RosterPlayerId;player.changes=player.changes.filter(change=>loaded.available.has(change.field));player.persistedFields=[...loaded.available];}}
     roster.source={file:path.basename(context.savePath),sha256:fingerprint,unchanged:true};
     roster.applicationCanApply=!roster.blocking.length;
-        roster.warnings.push('Long-snap and dealbreaker fixes run before final jersey numbering. Team traditions and retired-number protection are off.');
+    roster.generationNotes.push('Long-snap and dealbreaker fixes run before final jersey numbering. Team traditions and retired-number protection are off.');
     names.push(...roster.players.map(player=>`${player.fields.FirstName} ${player.fields.LastName}`));rosters.push(roster);
     await new Promise(resolve=>setImmediate(resolve));
   }
   if(saveFingerprint(context.savePath)!==fingerprint)throw new Error('The Active Save changed during Preview. Run Preview again.');
   const depthCharts=await planRosterDepthCharts(loaded,rosters);
-  for(const roster of rosters){const chart=depthCharts.find(chart=>chart.team===roster.team.name);roster.summary.depthChart=chart;roster.warnings.push(`${roster.team.name}: ${chart.reason}`);}
+  for(const roster of rosters){const chart=depthCharts.find(chart=>chart.team===roster.team.name);roster.summary.depthChart=chart;(chart.status==='reordered'?roster.generationNotes:roster.warnings).push(`${roster.team.name}: ${chart.status==='reordered'?'':'Depth chart unchanged. '}${chart.reason}`);}
   const rosterCandidate=loaded.kind==='roster'&&!rosters.some(roster=>roster.blocking.length)?buildRosterGenerationCandidate(loaded,rosters):null;
   const rows=rosters.flatMap(roster=>roster.players.map(player=>previewRow(player,roster))),blocking=rosters.flatMap(roster=>roster.blocking.map(item=>({...item,team:roster.team.name}))),report=reportFor(rosters);
   if(rosterCandidate){report.headings.push('FileKind','PersistedFieldsJSON','RosterBeforeJSON','RosterAfterJSON','RosterVisualBeforeJSON','RosterVisualAfterJSON');const generated=rosters.flatMap(roster=>roster.players);report.rows.forEach((row,index)=>{const player=generated[index],wire=rosterCandidate.changes.find(change=>change.playerId===player.rosterPlayerId);row.push('roster',JSON.stringify(player.persistedFields),JSON.stringify(wire.before),JSON.stringify(wire.after),JSON.stringify(wire.beforeVisual),JSON.stringify(wire.afterVisual));});}
-  const result={resultKind:TOOL_ID,mode:'preview',status:'preview',savePath:loaded.savePath,backupPath:null,reportPath:context.reports.create({...report,toolId:TOOL_ID,toolName:TOOL_NAME}),summary:[{label:'Teams to regenerate',value:rosters.length},{label:'Players to replace',value:rows.length},{label:'Original EA roster players',value:rosters.reduce((sum,roster)=>sum+roster.summary.originalEaReplacements,0)},{label:'Apply blockers',value:blocking.length}],historySummary:[{label:'Players regenerated',value:rows.length}],details:{fileKind:loaded.kind??'dynasty',canApply:!blocking.length,preset,seed,blocking,warnings:[...new Set(rosters.flatMap(roster=>roster.warnings))],teams:rosters.map(roster=>({team:roster.team.name,...roster.summary})),totalPreviewRows:rows.length,changes:rows.slice(0,1000)}};
+  const originalEaReplacements=rosters.reduce((sum,roster)=>sum+roster.summary.originalEaReplacements,0);
+  const warnings=[...new Set(rosters.flatMap(roster=>roster.warnings.map(note=>note.startsWith(roster.team.name+':')?note:`${roster.team.name}: ${note}`)))];
+  if(originalEaReplacements)warnings.unshift(`${originalEaReplacements} original EA roster players will be replaced in total.`);
+  const result={resultKind:TOOL_ID,mode:'preview',status:'preview',savePath:loaded.savePath,backupPath:null,reportPath:context.reports.create({...report,toolId:TOOL_ID,toolName:TOOL_NAME}),summary:[{label:'Teams to regenerate',value:rosters.length},{label:'Players to replace',value:rows.length},{label:'Original EA roster players',value:originalEaReplacements},{label:'Apply blockers',value:blocking.length}],historySummary:[{label:'Players regenerated',value:rows.length}],details:{fileKind:loaded.kind??'dynasty',canApply:!blocking.length,preset,seed,blocking,warnings,teams:rosters.map(roster=>({team:roster.team.name,...roster.summary})),totalPreviewRows:rows.length,changes:rows.slice(0,1000)}};
   const planId=storePlan({toolId:TOOL_ID,toolName:TOOL_NAME,savePath:loaded.savePath,saveFingerprint:fingerprint,previewRows:rows,report,result,rosters,presetId:preset.id,settings,configurations,depthCharts});
   return {...result,planId};
 }

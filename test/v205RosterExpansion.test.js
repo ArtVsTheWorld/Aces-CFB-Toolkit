@@ -7,6 +7,7 @@ import {storyEligible} from '../src/main/tools/rosterGenerator/backstories.js';
 import {loadObservedCatalog} from '../src/main/tools/rosterGenerator/catalog.js';
 import {modelForPreset,rosterPreset} from '../src/main/tools/rosterGenerator/presets.js';
 import {RATING_FIELDS} from '../src/main/tools/rosterGenerator/contract.js';
+import {calculateOverall} from '../src/main/tools/rosterGenerator/ratings.js';
 import {ATHLETICISM_PROFILES,MENTAL_RATINGS,athleticProfilePool,athleticVariant} from '../src/main/tools/rosterGenerator/athletics.js';
 import {OFFENSIVE_SCHEMES,DEFENSIVE_SCHEMES,normalizeGenerationSettings,archetypeWeight,toneWeights} from '../src/main/tools/rosterGenerator/settings.js';
 
@@ -31,7 +32,7 @@ test('personality stories require compatible game personalities, without inventi
 
 test('rare mental/execution profiles trade positional skill against reading the game at comparable OVR',()=>{
   const model=modelForPreset(loadObservedCatalog(),rosterPreset()),athletic=new Set(['SpeedRating','AccelerationRating','AgilityRating','ChangeOfDirectionRating','JumpingRating','StrengthRating']);
-  for(const id of ['cerebral','drill'])assert.equal(ATHLETICISM_PROFILES.find(p=>p.id===id).weight,1);
+  for(const id of ['cerebral','drill'])assert.equal(ATHLETICISM_PROFILES.find(p=>p.id===id).weight,3);
   for(const [position,pool]of model.byPosition){
     const available=athleticProfilePool(pool,'cerebral');assert.ok(available.every(p=>p.physical.every(tier=>tier==='None')));
     const source=available[Math.floor(available.length/2)],formula=model.formulas.get(`${position}|${source.archetype}`),before=[...source.ratings],savant=athleticVariant(model,source,'cerebral'),drill=athleticVariant(model,source,'drill');
@@ -41,7 +42,10 @@ test('rare mental/execution profiles trade positional skill against reading the 
     assert.ok(mental.every(([,i])=>drill.ratings[i]<=55),position);
     assert.ok(mean(savant,skill)<mean(drill,skill),position);
     assert.ok(Math.abs(savant.overall-source.overall)<=1,position);
-    assert.ok(Math.abs(drill.overall-source.overall)<=1,position);
+    // The mental ceiling and position-specific athletic ceilings can make an
+    // individual source's OVR unreachable. Never break those limits to match it.
+    const maximum=calculateOverall({...drill,ratings:drill.ratings.map((rating,i)=>formula.coefficients[RATING_FIELDS[i]]>0&&!athletic.has(RATING_FIELDS[i])?(MENTAL_RATINGS.has(RATING_FIELDS[i])?55:99):rating)},model.formulas);
+    assert.ok(Math.abs(drill.overall-Math.min(source.overall,maximum))<=1,position);
     assert.deepEqual(source.ratings,before);assert.strictEqual(athleticVariant(model,source,'cerebral'),savant);
     const protectedSource=pool.find(p=>model.observedById.get(p.id).physical.some(t=>t!=='None'));
     if(protectedSource)for(const id of ['cerebral','drill']){

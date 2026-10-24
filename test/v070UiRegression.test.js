@@ -8,8 +8,8 @@ const localization = fs.readFileSync(new URL("../src/shared/localization.js", im
 
 test("v0.7 appearance navigation order, icon tokens, and recommendation are correct", () => {
   const appearance = tools.filter(tool => tool.category === "appearance" && !tool.hidden);
-  assert.deepEqual(appearance.map(tool => tool.id), ["jersey-renumber", "commentary-id", "freshman-equipment", "equipment-patcher", "equipment-mapper"]);
-  assert.deepEqual(appearance.map(tool => tool.icon), ["jersey-number", "microphone", "shuffle", "equipment-repair", "equipment-map"]);
+  assert.deepEqual(appearance.map(tool => tool.id), ["jersey-renumber", "commentary-id", "equipment-quickstart", "freshman-equipment", "equipment-patcher", "equipment-mapper"]);
+  assert.deepEqual(appearance.map(tool => tool.icon), ["jersey-number", "microphone", "equipment-quickstart", "shuffle", "equipment-repair", "equipment-map"]);
   assert.equal(tools.find(tool => tool.id === "automatic-force-win").icon, "trophy");
   assert.match(tools.find(tool => tool.id === "equipment-patcher").description, /recommended after running Equipment Randomizer/);
 });

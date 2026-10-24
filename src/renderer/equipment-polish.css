@@ -1,0 +1,43 @@
+.equipment-sources{grid-column:1/-1;min-width:0;width:100%}.equipment-source-heading{display:flex;align-items:center;gap:10px;margin:4px 0 10px}.equipment-source-heading>span,.equipment-source-note{color:var(--muted);font-size:11px}
+.equipment-source-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(250px,100%),1fr));gap:10px}.equipment-source{display:flex;align-items:flex-start;gap:10px;padding:12px;border:1px solid var(--border);border-radius:6px;background:var(--surface);min-width:0}.equipment-source>img{width:32px;height:32px;object-fit:contain;flex:none}.equipment-source>div{min-width:0}.equipment-source strong,.equipment-source small{display:block;overflow-wrap:anywhere}.equipment-source small{color:var(--muted);margin-top:4px}.equipment-source-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}.equipment-source-tags>span{font-size:11px;line-height:1.4;background:var(--action-soft);border-radius:4px;padding:3px 7px;color:var(--text)}.equipment-sources.is-compact .equipment-source-grid{grid-template-columns:1fr}.equipment-source-note{display:inline-block;margin-top:8px}
+.equipment-pass-editor .configuration-page-fields{display:flex;flex-direction:column;gap:20px}.equipment-pass-editor .configuration-page-fields>.percentage-section{margin:0}.equipment-pass-editor .probability-grid{gap:16px 24px}.equipment-pass-editor .configuration-page-tabs{margin-bottom:22px;gap:8px}.equipment-pass-editor .configuration-page-fields label{margin-top:0}.equipment-pass-editor .configuration-page-fields>.configuration-field{min-width:0}.equipment-global-panel{padding:16px;border:1px solid var(--border);border-radius:6px;background:var(--surface)}.equipment-global-panel>p{margin:0 0 14px;color:var(--muted);font-size:12px}.equipment-global-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.equipment-global-grid>label{display:flex;flex-direction:column;gap:8px;margin:0}.equipment-global-grid input{min-width:0;width:100%;box-sizing:border-box}.equipment-global-grid .global-enabled{grid-column:1/-1;display:flex;flex-direction:row;align-items:center;gap:8px}.equipment-global-grid .global-enabled>input{width:16px}.equipment-global-scope{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}.equipment-global-scope>.active{border-color:var(--action);background:var(--action-soft);color:var(--text)}.equipment-pass-editor .copy-position-settings{margin-top:18px}.quickstart-workspace .quickstart-mod-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.equipment-global-reset{margin-top:12px}
+@media(max-width:760px){.quickstart-workspace .quickstart-mod-grid{grid-template-columns:1fr}.equipment-global-grid{grid-template-columns:1fr}.equipment-pass-editor .configuration-page-tabs{gap:6px}.equipment-pass-editor .configuration-page-tabs>.button{padding:8px 10px}}
+.equipment-pass-editor .percentage-section.configuration-stack{gap:18px}.equipment-pass-editor .percentage-section.configuration-stack>h3{margin:0}.equipment-global-scope>.active{box-shadow:inset 0 -2px var(--action)}.equipment-global-panel .global-style-total{margin:0;gap:12px}
+.equipment-global-grid>label>.field-caption{margin:0;line-height:1.4}
+/* Mouthpieces use the same two-card editor at either scope. Canonical controls
+   and their validation are retained; these rules only organize the draft. */
+.equipment-settings-card{border:1px solid var(--border);border-radius:7px;background:var(--surface);padding:18px;min-width:0}
+.configuration-dialog .equipment-settings-card>h3{margin:0 0 16px;font-size:14px;line-height:1.4}
+.equipment-settings-card-body{display:grid;gap:18px;min-width:0}
+.mouthpiece-editor .configuration-page-fields>.percentage-section{padding:0}
+.mouthpiece-editor .mouthpiece-global-view{display:grid;gap:16px;border:0;padding:0;background:transparent}
+.mouthpiece-global-view>p{margin:0;font-size:12px;line-height:1.5;color:var(--muted)}
+.mouthpiece-position-view,.mouthpiece-editor [data-mouthpiece-group]{display:grid;gap:16px;margin:0;padding:0}
+.mouthpiece-editor [data-mouthpiece-style-controls]{display:block}
+.mouthpiece-limit-grid,.mouthpiece-style-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin:0}
+.mouthpiece-style-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.mouthpiece-limit-grid>label,.mouthpiece-style-grid>label,.mouthpiece-limit-grid>div,.mouthpiece-style-grid>div{display:flex;flex-direction:column;gap:8px;min-width:0;margin:0}
+.mouthpiece-editor .mouthpiece-limit-grid label,.mouthpiece-editor .mouthpiece-style-grid label,.mouthpiece-editor .field-caption{margin:0;line-height:1.4}
+.mouthpiece-editor .input-suffix{display:flex;align-items:center;gap:8px;max-width:none;width:100%}
+.mouthpiece-editor .input-suffix>input{width:100%;min-width:0;max-width:none}
+.mouthpiece-editor .input-suffix>span{flex:none;color:var(--muted)}
+.mouthpiece-editor .global-enabled{display:flex;align-items:center;gap:9px;margin:0;flex-wrap:wrap}
+.mouthpiece-editor .global-enabled>input{width:16px;height:16px;margin:0;flex:none;accent-color:var(--action)}
+.mouthpiece-enabled-status{font-size:11px;color:var(--muted);margin-left:auto}
+.mouthpiece-editor .equipment-global-scope{margin:0 0 16px;gap:0;display:inline-flex;padding:4px;border:1px solid var(--border);border-radius:6px;background:var(--surface)}
+.mouthpiece-editor .equipment-global-scope>.button{border:0;border-radius:4px;min-width:130px;box-shadow:none;background:transparent}
+.mouthpiece-editor .equipment-global-scope>.active{background:var(--action-soft);color:var(--text);box-shadow:inset 0 0 0 1px var(--action)}
+.mouthpiece-editor .percentage-total{margin:0;padding-top:14px;border-top:1px solid var(--border);font-size:12px}
+.mouthpiece-editor .percentage-total[data-valid=true]>strong{color:var(--action)}
+.mouthpiece-editor .copy-position-settings{margin:0;padding:0;border:1px solid var(--border);border-radius:6px}
+.mouthpiece-editor .copy-position-settings>summary{padding:12px 16px;cursor:pointer}
+.mouthpiece-editor .copy-position-settings>p,.mouthpiece-editor .copy-position-settings>div,.mouthpiece-editor .copy-position-settings>button{margin:12px 16px}
+.mouthpiece-editor .copy-position-settings .toggle-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(75px,1fr));gap:12px}
+.mouthpiece-legacy-note{margin:0;padding:12px 14px;border-left:3px solid var(--action);background:var(--action-soft);font-size:12px;line-height:1.5}
+.mouthpiece-scope-bar{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:16px}
+.mouthpiece-scope-bar>.equipment-global-scope{margin:0;flex:none}
+.mouthpiece-scope-bar>div:last-child:not(.equipment-global-scope){min-width:0;flex:0 1 260px}
+.mouthpiece-editor .equipment-settings-card .compact-toggle{padding:0;border:0;background:transparent;max-width:none;width:auto}
+.mouthpiece-editor .mouthpiece-brand-field .input-suffix{max-width:180px}
+@media(max-width:600px){.mouthpiece-scope-bar{display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}.mouthpiece-scope-bar>.equipment-global-scope{display:flex}.mouthpiece-scope-bar>div:last-child:not(.equipment-global-scope){max-width:none}}
+@media(max-width:600px){.equipment-settings-card{padding:14px}.mouthpiece-limit-grid{grid-template-columns:1fr;gap:16px}.mouthpiece-style-grid{gap:10px}.mouthpiece-enabled-status{width:100%;margin:0 0 0 25px}.mouthpiece-editor .equipment-global-scope{display:flex}.mouthpiece-editor .equipment-global-scope>.button{flex:1;min-width:0}}

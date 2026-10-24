@@ -22,6 +22,13 @@ test('asset references are never treated as local table indices; null and malfor
   assert.equal(await schemeRecord(loaded,'1'+'0'.repeat(30)+'1','TeamPhilosophy'),null);assert.equal(assetRead,1);assert.equal(await schemeRecord(loaded,'2'.repeat(32)),null);assert.equal(await schemeRecord(loaded,'0'.repeat(32)),null);
   const ref=(1).toString(2).padStart(15,'0')+'0'.repeat(17);assert.equal((await schemeRecord(loaded,ref,'TeamPhilosophy')).record,table.records[0]);assert.equal(await schemeRecord(loaded,ref,'Coach'),null);
 });
+
+test('normal native-scheme fallbacks are diagnostic notes, not Apply warnings',async()=>{
+ const loaded={kind:'dynasty',franchise:{tables:[]}},team={teamIndex:1,record:{CurrentOffensiveScheme:bindings.schemes.OFF_OPTION,CurrentDefensiveScheme:bindings.schemes.DEF_BASE3_4}};
+ const found=await inspectTeamSchemes(loaded,team,'resources/engine-data/C27_486_6.gz');assert.deepEqual(found.warnings,[]);assert.equal(found.notes.length,2);
+ const resolved=resolveSchemeContext(normalizeGenerationSettings({offensiveScheme:'auto',defensiveScheme:'auto'}),found,bindings,mulberry32(225));
+ assert.deepEqual(resolved.warnings,[]);assert.deepEqual(resolved.notes,found.notes);assert.equal(resolved.offense.id,'OFF_OPTION');assert.equal(resolved.defense.id,'DEF_BASE3_4');
+});
 test('local philosophy/config arrays and commitments resolve, while coach ownership uses TeamIndex',async()=>{
   const ref=id=>id.toString(2).padStart(15,'0')+'0'.repeat(17),tables=[],table=(id,name,record,offsetTable=[])=>{const t={name,header:{tableId:id},offsetTable,readRecords:async()=>{},records:[{isEmpty:false,...record}]};tables.push(t);return t;};
   table(1,'TeamPhilosophy',{DepthChartOffensivePhilosophy:ref(2)});table(2,'DepthChartOffensivePhilosophy',{QB:ref(3)});table(3,'DepthChartPositionPhilosophy[]',{arraySize:1,Entry0:ref(4)},[{name:'Entry0',isReference:true}]);table(4,'DepthChartPositionPhilosophy',{PlayerType:'QB_StrongArm',Importance:73});

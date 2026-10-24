@@ -5,7 +5,7 @@ function optionHelpCaption(note) {
   const parent = note.parentElement, scope = note.closest('.configuration-draft,.configuration-body,.ops-section-body') ?? parent;
   let caption = null;
   if (note.dataset.helpFor) {
-    const target = document.getElementById(note.dataset.helpFor) ?? configurationRead(scope,note.dataset.helpFor);
+    const target = configurationRead(scope,note.dataset.helpFor) ?? document.getElementById(note.dataset.helpFor);
     caption = target?.matches('input,select,textarea') ? target.closest('label') ?? [...scope.querySelectorAll('label[for]')].find(label=>label.htmlFor===target.id) : target;
   }
   if (!caption && parent.matches('.team-picker')) caption = parent.querySelector(':scope > label, :scope > .field-caption > label');
@@ -42,6 +42,22 @@ function optionHelpCaption(note) {
   }
   if (caption?.matches('label') && caption.parentElement.matches('.model-slider-caption')) caption=caption.parentElement;
   return caption;
+}
+function alignHelpCaptions(root) {
+  for(const icon of root.querySelectorAll('.model-help-button')){
+    const parent=icon.parentElement;
+    if(parent.matches('.field-caption,.model-slider-caption'))continue;
+    if(parent.matches('span')&&!parent.querySelector('input,select,textarea')&&parent.textContent.trim())parent.classList.add('field-caption');
+    else if(parent.matches('th')&&!parent.querySelector('input,select,textarea')){
+      const caption=document.createElement('span');caption.className='field-caption';caption.append(...parent.childNodes);parent.append(caption);
+    }
+    else if(parent.matches('label')&&parent.querySelector('input,select,textarea')){
+      // Hand-authored checkboxes and field labels need the same caption row
+      // as automatically condensed descriptions. Do not include the control.
+      const nodes=[...parent.childNodes].filter(n=>n===icon||n.nodeType===3&&n.textContent.trim()||n.nodeType===1&&n.matches('span,strong')&&!n.querySelector('input,select,textarea'));
+      if(nodes.some(n=>n!==icon&&n.textContent.trim())){const caption=document.createElement('span');caption.className='field-caption';nodes[0].before(caption);caption.append(...nodes);}
+    }
+  }
 }
 function condenseOptionHelp(root = document.body) {
   bindModelHelp(document.body);
@@ -86,6 +102,7 @@ function condenseOptionHelp(root = document.body) {
     if (requirements.length) note.replaceChildren(...requirements);
     else note.hidden = true;
   }
+  alignHelpCaptions(root);
 }
 let optionHelpQueued = false;
 function scheduleOptionHelp(records) {

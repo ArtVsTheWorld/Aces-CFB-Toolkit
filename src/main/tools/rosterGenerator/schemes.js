@@ -50,7 +50,7 @@ function declaredScheme(value,bindings,side){
   return NATIVE_SCHEMES.find(scheme=>scheme.side===side&&bindings.schemes[scheme.enum]===number)??null;
 }
 export async function inspectTeamSchemes(loaded,team,schemaPath){
-  const bindings=schemeSchema(schemaPath),warnings=[],result={available:loaded.kind!=='roster',offense:null,defense:null,preferences:{},requirements:{},commits:{},commitsKnown:false,warnings};
+  const bindings=schemeSchema(schemaPath),warnings=[],notes=[],result={available:loaded.kind!=='roster',offense:null,defense:null,preferences:{},requirements:{},commits:{},commitsKnown:false,warnings,notes};
   if(loaded.kind==='roster')return result;
   for(const [side,field]of [['offense','CurrentOffensiveScheme'],['defense','CurrentDefensiveScheme']])result[side]=declaredScheme(sf(team.record,field),bindings,side)?.enum??null;
   const philosophy=await schemeRecord(loaded,sf(team.record,'Philosophy'),'TeamPhilosophy');
@@ -61,7 +61,7 @@ export async function inspectTeamSchemes(loaded,team,schemaPath){
       if(entries)result.preferences[position]=entries.map((entry,index)=>({depthSlot:index+1,archetypeValue:bindings.types[sf(entry,'PlayerType')]??Number(sf(entry,'PlayerType')),importance:Number(sf(entry,'Importance'))})).filter(entry=>Number.isInteger(entry.archetypeValue)&&Number.isFinite(entry.importance)&&entry.importance>=0);
     }
   }
-  if(!Object.keys(result.preferences).length)warnings.push('Saved player preferences could not be resolved; named-scheme tuning will be used.');
+  if(!Object.keys(result.preferences).length)notes.push('Saved player preferences could not be resolved; named-scheme tuning will be used.');
   const config=await schemeRecord(loaded,sf(team.record,'DepthChartConfig'),'DepthChartConfig');
   const configs=config?[config,await schemeRecord(loaded,sf(config.record,'OffensiveDepthChartConfigRef'),'OffensiveDepthChartConfig'),await schemeRecord(loaded,sf(config.record,'DefensiveDepthChartConfigRef'),'DefensiveDepthChartConfig')].filter(Boolean):[];
   for(const source of configs)for(const position of NATIVE_POSITIONS){
@@ -69,19 +69,19 @@ export async function inspectTeamSchemes(loaded,team,schemaPath){
     const values={idealOnRoster:Number(sf(entry.record,'IdealNumberOnRoster')),minimum:Number(sf(entry.record,'MinimumCount')),starters:Number(sf(entry.record,'StarterCount')),extraStarters:Number(sf(entry.record,'AdditionalStarterCount'))};
     if(Object.values(values).every(value=>Number.isInteger(value)&&value>=0&&value<=85))result.requirements[position]=values;
   }
-  if(!Object.keys(result.requirements).length)warnings.push('Saved roster requirements could not be resolved; native scheme counts are available instead.');
+  if(!Object.keys(result.requirements).length)notes.push('Saved roster requirements could not be resolved; native scheme counts are available instead.');
   const coach=await schemeRecord(loaded,sf(team.record,'HeadCoach'),'Coach');
-  if(coach&&Number(sf(coach.record,'TeamIndex'))!==team.teamIndex)warnings.push('Head-coach ownership differs from TeamIndex; coach data was not used.');
+  if(coach&&Number(sf(coach.record,'TeamIndex'))!==team.teamIndex)warnings.push('Head-coach ownership does not match this team; coach data was not used.');
   // Team scheme/Philosophy is authoritative. Coach records are corroboration,
   // never inferred from the team table's row number.
   result.coachMatched=Boolean(coach&&Number(sf(coach.record,'TeamIndex'))===team.teamIndex);
   const committed=await arrayReferences(loaded,sf(team.record,'CommittedPlayers'),'Player');
-  if(committed){result.commitsKnown=true;const seen=new Set();for(const record of committed){if(seen.has(record))continue;seen.add(record);const position=normalPosition(sf(record,'Position'));if(NATIVE_POSITIONS.includes(position))result.commits[position]=(result.commits[position]??0)+1;else result.commitsKnown=false;}if(!result.commitsKnown)warnings.push('Some committed players have an unresolved position; recruiting needs are unavailable rather than assuming those commits do not exist.');}
+  if(committed){result.commitsKnown=true;const seen=new Set();for(const record of committed){if(seen.has(record))continue;seen.add(record);const position=normalPosition(sf(record,'Position'));if(NATIVE_POSITIONS.includes(position))result.commits[position]=(result.commits[position]??0)+1;else result.commitsKnown=false;}if(!result.commitsKnown)warnings.push('Some commitments could not be read; recruiting-need estimates are unavailable.');}
   return result;
 }
 export function resolveSchemeContext(settings,evidence,bindings,rng){
   const usesSaved=settings.offensiveScheme==='auto'||settings.defensiveScheme==='auto';
-  const warnings=usesSaved?[...evidence.warnings]:[],resolved={types:bindings.types,offense:null,defense:null,preferences:{},preferenceSources:{},requirements:{},commits:evidence.commits,commitsKnown:evidence.commitsKnown,warnings,sources:{},tuningVersion:NATIVE_SCHEME_DATA.source};
+  const warnings=usesSaved?[...evidence.warnings]:[],notes=usesSaved?[...(evidence.notes??[])]:[],resolved={types:bindings.types,offense:null,defense:null,preferences:{},preferenceSources:{},requirements:{},commits:evidence.commits,commitsKnown:evidence.commitsKnown,warnings,notes,sources:{},tuningVersion:NATIVE_SCHEME_DATA.source};
   for(const side of ['offense','defense']){
     const choice=settings[side==='offense'?'offensiveScheme':'defensiveScheme'];
     if(choice==='random'){resolved.sources[side]='No scheme preference';continue;}

@@ -5,8 +5,13 @@ app.setPath("userData", fs.mkdtempSync(path.join(os.tmpdir(), "cfb-v190-config-"
 app.whenReady().then(async () => {
   const { registrySnapshot } = await import(pathToFileURL(path.join(root, "src/shared/toolRegistry.js")));
   const { getToolHandler } = await import(pathToFileURL(path.join(root, "src/main/tools/handlers.js")));
+  const {QuickstartMemory}=await import(pathToFileURL(path.join(root,'src/main/services/quickstartMemory.js')));
+  const quickstartMemory=new QuickstartMemory(path.join(app.getPath('userData'),'quickstart-memory.json'));
+  let quickstartCompleted=0;
+  ipcMain.handle('equipment:clear-quickstart-memory',()=>{quickstartCompleted=0;return {remembered:0};});
   const fixture = path.resolve(root, "../EXAMPLE SAVES VANILLA GAME/DYNASTY-LSUTESTSAVEPRESZN"), schemaPath = path.join(root, "resources/engine-data/C27_486_6.gz"), cache = new Map(), runs = [];
   let settings = { theme: "light", toolPresets: [], customMatchupModel: null };
+  let rosterReviewReport = null;
   const { normalizeCustomModel } = await import(pathToFileURL(path.join(root, "src/main/tools/forceWin/core/customModel.js")));
   ipcMain.handle("settings:save-custom-matchup-model", (_event, input) => (settings = { ...settings, customMatchupModel: normalizeCustomModel(input) }));
   const appVersion = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8")).version.replace(/\.0$/, "");
@@ -25,11 +30,61 @@ app.whenReady().then(async () => {
   ipcMain.handle("home:lines", (_event, request) => ({ season: 2026, modelProfile: request?.modelProfile ?? "balanced", profiles: [{ value:"balanced", label:"Balanced" }, ...(settings.customMatchupModel ? [{value:"custom",label:"Saved Custom Model"}] : [])], rows: [{week:1,awayTeam:"LSU",homeTeam:"Alabama",favorite:"Alabama",underdog:"LSU",favoriteSpread:-7,total:48,favoriteMoneyline:-200,underdogMoneyline:200}] }));
   ipcMain.handle("dialog:choose-save", () => null);
   ipcMain.handle("settings:update-theme", (_event, theme) => ({ ...settings, theme }));
-  ipcMain.handle("tools:prepare", async (_event, request) => { if (!cache.has(request.toolId)) cache.set(request.toolId, await getToolHandler(request.toolId).prepare({ savePath: request.toolId === "automatic-force-win" ? path.resolve(root, "../EXAMPLE SAVES VANILLA GAME/DYNASTY-LSUTESTSAVEWEEK0") : fixture, schemaPath, options: request.options, defaultMapPath: path.join(root, 'resources/commentary-data/PlayerCommentaryidMap.txt') })); const prepared = cache.get(request.toolId); return request.toolId === "automatic-force-win" ? { ...prepared, userControlledTeams: prepared.userControlledTeams.map(name => ({ name })) } : prepared; });
-  ipcMain.handle("tools:run", (_event, request) => { runs.push(request); return { resultKind: request.toolId, mode: request.mode, status: "preview", planId: "draft-safety-plan", reportPath: "UI test only", summary: [], details: { changes: [], totalPreviewRows: 0 } }; });
+  ipcMain.handle("tools:prepare", async (_event, request) => { if (request.toolId==='equipment-quickstart') { const p=await getToolHandler(request.toolId).prepare({savePath:fixture,schemaPath,quickstartMemory});return {...p,newPlayers:p.newPlayers-quickstartCompleted,remembered:quickstartCompleted}; } if (!cache.has(request.toolId)) cache.set(request.toolId, await getToolHandler(request.toolId).prepare({ savePath: request.toolId === "automatic-force-win" ? path.resolve(root, "../EXAMPLE SAVES VANILLA GAME/DYNASTY-LSUTESTSAVEWEEK0") : fixture, schemaPath, options: request.options, defaultMapPath: path.join(root, 'resources/commentary-data/PlayerCommentaryidMap.txt') })); const prepared = cache.get(request.toolId); return request.toolId === "automatic-force-win" ? { ...prepared, userControlledTeams: prepared.userControlledTeams.map(name => ({ name })) } : prepared; });
+  ipcMain.handle("tools:run", async (_event, request) => {
+    runs.push(request);
+    if(request.toolId==='equipment-quickstart'){
+      if(request.mode==='apply')quickstartCompleted=1;
+      return {resultKind:request.toolId,mode:request.mode,status:request.mode==='apply'?'completed':'preview',planId:'quickstart-ui-plan',savePath:fixture,reportPath:'UI-only.csv',summary:[{label:'Players ready',value:1}],details:{changes:[],totalPreviewRows:1,canApply:true,warnings:[]}};
+    }
+    if (process.argv.includes('--roster-review-only') && request.toolId === 'roster-generator') {
+      if (request.mode !== 'preview') throw Error('Roster review checks never Apply.');
+      const hash=()=>require('node:crypto').createHash('sha256').update(fs.readFileSync(fixture)).digest('hex'),before=hash();
+      const result=await getToolHandler(request.toolId).run({savePath:fixture,schemaPath,mode:'preview',options:request.options,defaultMapPath:path.join(root,'resources/commentary-data/PlayerCommentaryidMap.txt'),reports:{create:report=>{rosterReviewReport=report;return 'UI-ONLY-roster-report.csv';}}});
+      if(hash()!==before)throw Error('Read-only roster preview modified its fixture.');
+      return result;
+    }
+    return { resultKind: request.toolId, mode: request.mode, status: "preview", planId: "draft-safety-plan", reportPath: "UI test only", summary: [], details: { changes: [], totalPreviewRows: 0 } };
+  });
   const window = new BrowserWindow({ show: false, width: 1480, height: 1000, webPreferences: { preload: path.join(uiRoot, "src/main/preload.cjs"), contextIsolation: true, sandbox: true, offscreen: true, backgroundThrottling: false } });
-  const errors = []; window.webContents.on("console-message", details => { const { level, message } = details; if (message.startsWith('[v200]')) console.log(message); if (level === "error" && !message.includes("ERR_FILE_NOT_FOUND") && !message.includes("'frame-ancestors' is ignored")) errors.push(message); });
+  const errors = []; window.webContents.on("console-message", details => { const { level, message } = details; if (message.startsWith('[v200]')) console.log(message); if (level === "error" && !message.includes("ERR_FILE_NOT_FOUND") && !message.includes("'frame-ancestors' is ignored")) {errors.push(message);console.error(message);} });
   await window.loadFile(path.join(uiRoot, "src/renderer/index.html"));
+  if(process.argv.includes('--frequency-only')){
+    await window.webContents.executeJavaScript(`new Promise(resolve=>{const ready=()=>state.bootstrap?resolve():setTimeout(ready,20);ready()})`);
+    await require('./lib/v230-frequency-ui.cjs')(window,root);
+    if(errors.length)throw Error(errors.join('\n'));
+    if(runs.length)throw Error('Frequency UI checks must not run tools.');
+    window.destroy();app.quit();return;
+  }
+  if(process.argv.includes('--visual-audit-only')){
+    await window.webContents.executeJavaScript(`new Promise(resolve=>{const ready=()=>state.bootstrap?resolve():setTimeout(ready,20);ready()})`);
+    await require('./lib/v230-visual-audit.cjs')(window,root);
+    if(errors.length)throw Error(errors.join('\n'));
+    if(runs.length)throw Error('Visual audit must not run tools.');
+    window.destroy();app.quit();return;
+  }
+  if(process.argv.includes('--equipment-pages-only')){
+    await window.webContents.executeJavaScript(`new Promise(resolve=>{const ready=()=>state.bootstrap?resolve():setTimeout(ready,20);ready()})`);
+    await require('./lib/equipment-pass-pages-ui.cjs')(window,root);
+    if(errors.length)throw Error(errors.join('\n'));
+    if(runs.length)throw Error('Patcher page checks must not run any tool.');
+    window.destroy();app.quit();return;
+  }
+  if(process.argv.includes('--quickstart-only')){
+    await window.webContents.executeJavaScript(`new Promise(resolve=>{const ready=()=>state.bootstrap?resolve():setTimeout(ready,20);ready()})`);
+    await require('./lib/equipment-quickstart-ui.cjs')(window,root);
+    if(errors.length)throw Error(errors.join('\n'));
+    if(runs.length!==3||runs[0].mode!=='preview'||runs[1].mode!=='preview'||runs[2].mode!=='apply')throw Error('Unexpected Quickstart UI runs: '+JSON.stringify(runs));
+    if(JSON.stringify(runs[1].options)!==JSON.stringify({unlocked:true,raw:true,gameday:true}))throw Error('Quickstart did not forward the exact mod choices.');
+    window.destroy();app.quit();return;
+  }
+  if (process.argv.includes('--roster-review-only')) {
+    await window.webContents.executeJavaScript(`new Promise(resolve=>{const ready=()=>state.bootstrap?resolve():setTimeout(ready,20);ready()})`);
+    await require('./lib/v225-roster-review.cjs')(window,root,()=>rosterReviewReport);
+    if (errors.length) throw Error(errors.join('\n'));
+    if (runs.length !== 1 || runs[0].mode !== 'preview') throw Error('Roster review checks must only generate one read-only Preview.');
+    window.destroy();app.quit();return;
+  }
   if (process.argv.includes('--mod-pool-layout-only')) {
     await window.webContents.executeJavaScript(`new Promise(resolve=>{const ready=()=>state.bootstrap?resolve():setTimeout(ready,20);ready()})`);
     await require('./lib/v225-mod-pool-layout.cjs')(window,root);
@@ -123,10 +178,12 @@ app.whenReady().then(async () => {
 
     const priorHelmet=JSON.stringify(equipmentOptions("equipment-patcher"));
     document.querySelector("#configure-helmet-mix").click();
+    [...document.querySelectorAll('dialog [role="tab"]')].find(button=>button.textContent==='Helmet Mix').click();
     document.querySelector("[data-helmet-mode]").value="custom";document.querySelector("[data-helmet-mode]").dispatchEvent(new Event("change"));
     document.querySelector("[data-helmet-position]").value="OL";document.querySelector("[data-helmet-position]").dispatchEvent(new Event("change"));
     document.querySelector("[data-helmet-inherit]").click();
     for(const input of document.querySelectorAll("[data-helmet-id]")){input.value=input.dataset.helmetId==="GearHelmet_VicisZero2Trench"?"100":"0";input.dispatchEvent(new Event("input",{bubbles:true}));}
+    [...document.querySelectorAll('dialog [role="tab"]')].find(button=>button.textContent==='Facemask Pools').click();
     const newlyOptional=[...document.querySelectorAll("[data-mask-choice]")].find(input=>!input.checked);
     check(newlyOptional,"Previously omitted/new masks are available and unchecked");
     check([...document.querySelectorAll("[data-mask-list] .team-picker-row > span")].every(label=>label.clientWidth>150 && getComputedStyle(label).whiteSpace==="normal" && getComputedStyle(label).textOverflow==="clip"),"Facemask labels get full width and wrap rather than truncate"); newlyOptional.click();
@@ -135,6 +192,7 @@ app.whenReady().then(async () => {
     check(equipmentOptions("equipment-patcher").helmetDistribution.positions.OL.GearHelmet_VicisZero2Trench===100,"OL can explicitly receive Trench helmets");
     check(equipmentOptions("equipment-patcher").facemaskPools.GearHelmet_Speed_Flex.includes(newlyOptional.value),"Facemask selection commits with helmet settings");
     document.querySelector("#configure-helmet-mix").click();
+    [...document.querySelectorAll('dialog [role="tab"]')].find(button=>button.textContent==='Facemask Pools').click();
     const globalMasks = [...document.querySelectorAll("[data-mask-choice]")].filter(input => input.checked).map(input => input.value);
     change(document.querySelector("[data-mask-position]"), "QB");
     check(document.querySelector("[data-mask-inherit]").checked && [...document.querySelectorAll("[data-mask-choice]")].every(input => input.disabled), "Position masks inherit until explicitly overridden");
@@ -229,13 +287,14 @@ app.whenReady().then(async () => {
     check(document.querySelector("#force-custom-model-json").value===customBaseline,"Model draft isolated");
     document.querySelector("[data-week-limit]").value="2";document.querySelector("[data-week-limit]").dispatchEvent(new Event("input",{bubbles:true}));
     check([...document.querySelectorAll('input[type="range"]')].every(input => input.closest('.model-slider').querySelector('[data-model-help]')),"Every model slider has help");
-    const help=slider.closest(".model-slider").querySelector("[data-model-help]"); help.focus();
+    const help=slider.closest(".model-slider").querySelector("[data-model-help]"); document.dispatchEvent(new KeyboardEvent('keydown',{key:'Tab',bubbles:true}));help.focus();
     // Hidden BrowserWindows update activeElement without activating native focus events.
     help.dispatchEvent(new FocusEvent("focusin",{bubbles:true}));
     check(!document.getElementById(help.getAttribute('aria-describedby')).hidden && document.getElementById(help.getAttribute('aria-describedby')).textContent.includes("Base advantage"),"Keyboard focus shows slider explanation: "+JSON.stringify({active:document.activeElement.outerHTML,help:help.outerHTML,hidden:document.getElementById(help.getAttribute('aria-describedby')).hidden,text:document.getElementById(help.getAttribute('aria-describedby')).textContent}));
     const tipBounds=document.getElementById(help.getAttribute('aria-describedby')).getBoundingClientRect();
     check(tipBounds.left>=0 && tipBounds.right<=innerWidth && tipBounds.top>=0 && tipBounds.bottom<=innerHeight,"Tooltip remains inside window");
-    help.blur();help.dispatchEvent(new FocusEvent("focusout",{bubbles:true}));help.dispatchEvent(new MouseEvent("mouseover",{bubbles:true}));
+    help.blur();help.dispatchEvent(new FocusEvent("focusout",{bubbles:true}));await new Promise(resolve=>setTimeout(resolve,180));help.dispatchEvent(new MouseEvent("mouseover",{bubbles:true}));
+    await new Promise(resolve=>setTimeout(resolve,220));
     check(!document.getElementById(help.getAttribute('aria-describedby')).hidden,"Mouse hover shows slider explanation");
     document.querySelector("dialog [data-config-save]").click();await wait(()=>!document.querySelector("dialog.configuration-dialog[open]"));check(forceWinOptions().customModel.values["homeField.home"]===2 && forceWinOptions().customModel.maxForceWinsPerWeek===2,"Custom sliders and weekly limit commit");
     check(state.bootstrap.settings.customMatchupModel.values["homeField.home"]===2,"Saved model is stored in personal settings");
@@ -276,7 +335,7 @@ app.whenReady().then(async () => {
     for (const tool of state.bootstrap.registry.tools.filter(tool => !tool.hidden)) { navigate(tool.id); await delay(); check(document.querySelector("#select-save"), "No-save guard retained for " + tool.id + " actual=" + state.page + " save=" + Boolean(state.activeSave) + " content=" + content.textContent.slice(0, 250)); check(!content.querySelector(".configuration-entry"), "No configuration before a save: " + tool.id); }
     state.activeSave = active; navigate("equipment-patcher"); await wait(() => document.querySelector("#configure-helmet-mix"));
     return "All nine tool pages, Settings, draft Save/Cancel/Escape, defaults, unique IDs, validation, selectors/search/donor shift-click, scope semantics, previews, sessions, presets, and no-save guards passed.";
-  })()`);
+  })().catch(error=>{console.error(error.stack);throw error})`);
   if (process.argv.includes('--refinements')) console.log(await require('./smoke-v200-refinements.cjs')(window, root));
   if (process.argv.includes('--alignment')) console.log(await require('./smoke-v225-alignment.cjs')(window, root));
   if (process.argv.includes('--uniforms')) console.log(await require('./smoke-v201-uniforms.cjs')(window, root));

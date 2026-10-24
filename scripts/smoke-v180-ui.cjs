@@ -38,7 +38,7 @@ app.whenReady().then(async () => {
     document.querySelector("#configure-helmet-mix").click();
     check(document.querySelector('[data-helmet-action][value="repair"]').checked, "Action selection reflects default saved state");
     document.querySelector('[data-helmet-action][value="balance"]').click(); document.querySelector("[data-helmet-vicis]").click();
-    check(document.querySelector("[data-helmet-zero-note]").textContent.includes("0% replaces existing"), "Apply My Mix clearly explains removing zero-weight helmets");
+    check(document.querySelector("[data-helmet-zero-note]").textContent.includes("0% replaces existing"), "Balance All clearly explains removing zero-weight helmets");
     document.querySelector("[data-helmet-cancel]").click();
     check(!document.querySelector("#helmet-balance").checked && !document.querySelector("#helmet-allow-vicis").checked, "Cancel discards action and Vicis edits together");
     document.querySelector("#configure-helmet-mix").click();
@@ -46,7 +46,7 @@ app.whenReady().then(async () => {
     check(document.querySelector("[data-default-mix-summary]").textContent.includes("68%"), "Optional default Vicis displays its actual mix");
     document.querySelector("[data-helmet-save]").click();
     check(document.querySelector("#helmet-balance").checked && document.querySelector("#helmet-allow-vicis").checked, "Save commits action and default Vicis choices together");
-    check(document.querySelector("#helmet-action-summary").textContent.includes("Apply My Mix"), "Pass card summarizes the saved action");
+    check(document.querySelector("#helmet-action-summary").textContent.includes("Balance All"), "Pass card summarizes the saved action");
     document.querySelector("#equipment-skip-nil").click(); document.querySelector("#fix-unlocked-mouthpieces").click(); document.querySelector("#randomize-existing-mouthpieces").click(); document.querySelector("#fix-unlocked-recolor").click();
     change("#mouthpiece-branded-frequency", "35"); change("#tape-color-mode", "accessory"); change("#unlocked-color-theme", "black"); change("#equipment-redshirt-group", "redshirt"); change("#equipment-min", "72"); pick("#equipment-positions", ["QB", "WR"]);
     check(document.querySelector("#tape-distribution-settings").hidden, "Match mode hides unused tape percentages");
@@ -89,11 +89,11 @@ app.whenReady().then(async () => {
     check(!document.querySelector("#bears-pads-style-field").hidden, "Bears Pads replacement style is exposed only when enabled");
     const configuration = JSON.stringify(equipmentOptions("equipment-patcher"));
     for (const step of [1, 2, 3, 0, 3]) { setEquipmentStep("equipment-patcher", step); await delay(); check(JSON.stringify(equipmentOptions("equipment-patcher")) === configuration, "Every Patcher control survives navigation"); }
-    check(document.querySelector("#equipment-review-summary").textContent.includes("Apply My Mix") && document.querySelector("#equipment-review-summary").textContent.includes("What 0% Means"), "Review shows action and zero-weight consequence before Preview");
+    check(document.querySelector("#equipment-review-summary").textContent.includes("Balance All") && document.querySelector("#equipment-review-summary").textContent.includes("What 0% Means"), "Review shows action and zero-weight consequence before Preview");
     await runEquipment("equipment-patcher", "preview"); await delay();
     check(document.querySelector("#equipment-config-workspace").hidden && !document.querySelector("#equipment-preview-workspace").hidden, "Preview opens its own page");
     check(document.querySelector(".helmet-balance-preview")?.textContent.includes("100 (100.0%)") && document.querySelector(".helmet-balance-preview")?.textContent.includes("65 (65.0%)"), "Patcher Preview exposes before/after helmet counts and percentages");
-    check(document.querySelector(".helmet-preview-intent")?.textContent.includes("Apply My Mix"), "Preview identifies the action used to create its cached changes");
+    check(document.querySelector(".helmet-preview-intent")?.textContent.includes("Balance All"), "Preview identifies the action used to create its cached changes");
     check(JSON.stringify(equipmentOptions("equipment-patcher")) === configuration, "Preview leaves configuration unchanged");
     await runEquipment("equipment-patcher", "apply"); await delay(); check(JSON.stringify(equipmentOptions("equipment-patcher")) === configuration, "Apply leaves configuration unchanged");
     navigate("long-snap"); navigate("equipment-patcher"); await wait(() => document.querySelector("#helmet-balance")); check(JSON.stringify(equipmentOptions("equipment-patcher")) === configuration, "Tool switching preserves all Patcher settings");

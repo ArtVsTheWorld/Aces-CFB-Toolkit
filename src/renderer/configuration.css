@@ -25,7 +25,6 @@
 .configuration-dialog .tape-team-settings > summary { display:none; }
 .configuration-dialog .tape-team-settings { margin-top:20px; }
 .configuration-dialog .distribution-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
-.configuration-draft > [hidden]:first-child { display:block !important; }
 .compact-choice-picker .team-picker-toolbar,.compact-choice-picker .team-picker-summary { display:none; }
 .compact-choice-picker .team-picker-list { display:flex; flex-wrap:wrap; gap:6px; overflow:visible; max-height:none; min-height:0; padding:6px 0; }
 .compact-choice-picker .team-picker-row { width:auto; padding:6px 10px; min-height:0; border:1px solid var(--border); border-radius:4px; }

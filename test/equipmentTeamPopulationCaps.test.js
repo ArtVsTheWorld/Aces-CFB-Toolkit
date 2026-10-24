@@ -33,7 +33,7 @@ function addTattoo(parsed) { parsed.loadouts.unshift({ loadoutCategory: "Base", 
 
 test("tattoo caps are per team: an over-cap early team cannot consume later teams' allowances", () => {
   const make = () => fixture([10, 10, 10], ({ parsed, teamIndex, number }) => { if (teamIndex === 1 && number < 8) addTattoo(parsed); });
-  const a = make(), b = make(), options = { unlockedTattooFix: true, unlockedTattooCap: 40, fcsTeamIndexes: new Set([3]) };
+  const a = make(), b = make(), options = { unlockedTattooFix: true, unlockedTattooCap: 40, fillFrequencies: {tattoos:true}, fcsTeamIndexes: new Set([3]) };
   const result = run(a, options); run(b, options);
   assert.deepEqual(a.visuals, b.visuals, "same seed and settings reproduce the exact preview");
   assert.deepEqual([0, 10, 20].map(start => a.visuals.slice(start, start + 10).filter(row => hasUnlockedBodyTattoo(JSON.parse(row.RawData))).length), [8, 4, 4]);
@@ -108,7 +108,7 @@ test("uniform caps and final before/limit/after counts are separate for each tea
     player.Position = number < 10 ? "WR" : "CB";
     if (teamIndex === 1 && number % 10 < 6) { set(parsed, "OuterShirt", "Gear_JerseyStyle_RolledLowest_Untucked"); set(parsed, "OuterPants", "GearPants_Cutoff"); }
   });
-  const data = make(), copy = make(), options = { lowerRolledJerseyFix: true, lowerJerseyCaps: caps(40), cutoffPantsFix: true, cutoffPantsCaps: caps(40) };
+  const data = make(), copy = make(), options = { fillFrequencies:{lowerJersey:true,cutoffPants:true}, lowerRolledJerseyFix: true, lowerJerseyCaps: caps(40), cutoffPantsFix: true, cutoffPantsCaps: caps(40) };
   const result = run(data, options); run(copy, options);
   assert.deepEqual(data.visuals, copy.visuals); assert.equal(result.uniformPopulation.length, 4);
   for (const row of result.uniformPopulation) {
@@ -130,16 +130,16 @@ test("no-undershirt safeguards preserve the floor in each team instead of borrow
 
 test("whole-percentage team caps do not lose a player to floating-point rounding", () => {
   const data = fixture([50, 50]);
-  const result = run(data, { unlockedTattooFix: true, unlockedTattooCap: 58, visorFix: true, visorFrequencies: { WR: 58 } });
+  const result = run(data, { unlockedTattooFix: true, unlockedTattooCap: 58, fillFrequencies:{tattoos:true}, visorFix: true, visorFrequencies: { WR: 58 } });
   for (const team of result.unlockedTattooPopulation.teams) { assert.equal(team.capCount, 29); assert.equal(team.addedTattooPlayers, 29); }
   for (const team of result.populationSafeguards.teams) assert.equal(team.visors.WR.ceilingCount, 29);
 });
 
 test("per-team cap scope and audit are exposed in configuration, previews, and CSV reports", () => {
   const read = file => fs.readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
-  assert.match(read("src/renderer/renderer.js"), /Tattoo Caps by Team/);
-  assert.match(read("src/renderer/renderer.js"), /Equipment Caps by Team/);
-  assert.match(read("src/renderer/configuration.js"), /per-team cap/);
+  assert.match(read("src/renderer/renderer.js"), /Tattoo Frequencies by Team/);
+  assert.match(read("src/renderer/renderer.js"), /Equipment Frequencies by Team/);
+  assert.match(read("src/renderer/configuration.js"), /per-team frequency/);
   assert.match(read("src/renderer/unlocked-uniforms.js"), /Each team's position groups are capped separately/);
   assert.match(read("src/main/tools/equipment/runner.js"), /PopulationCapsAuditJSON/);
 });

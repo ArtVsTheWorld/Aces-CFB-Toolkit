@@ -3,12 +3,16 @@ const require=createRequire(import.meta.url),asar=require('@electron/asar'),buil
 const files=dir=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(entry=>entry.isDirectory()?files(path.join(dir,entry.name)):[path.join(dir,entry.name)]),hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 asar.extractAll(archive,extracted);let checked=0;
 for(const file of files(path.resolve('src'))){const relative=path.relative(process.cwd(),file);assert.equal(hash(fs.readFileSync(file)),hash(fs.readFileSync(path.join(extracted,relative))),relative);checked++;}
-assert.equal(JSON.parse(fs.readFileSync(path.join(extracted,'package.json'))).version,'22.5.0');
+assert.equal(JSON.parse(fs.readFileSync(path.join(extracted,'package.json'))).version,JSON.parse(fs.readFileSync('package.json')).version);
 for(const relative of ['engine-data/C27_486_6.gz','commentary-data/PlayerCommentaryidMap.txt'])assert.equal(hash(fs.readFileSync(path.join('resources',relative))),hash(fs.readFileSync(path.join(build,'win-unpacked/resources',relative))));
 console.log(`Verified ${checked} packaged source files/assets, native tuning, version, schema and commentary map.`);
 const checks=[['scripts/smoke-v225.cjs']];
 if(process.argv.includes('--filter-polish'))checks.push(['scripts/smoke-v190-configuration.cjs','--paged-filters','--alignment','--tooltip-redshirt','--scope-force-alignment']);
 if(process.argv.includes('--mod-pool-layout'))checks.push(['scripts/smoke-v190-configuration.cjs','--mod-pool-layout-only']);
+if(process.argv.includes('--roster-review'))checks.push(['scripts/smoke-v190-configuration.cjs','--roster-review-only']);
+if(process.argv.includes('--quickstart'))checks.push(['scripts/smoke-v190-configuration.cjs','--quickstart-only']);
+if(process.argv.includes('--frequency'))checks.push(['scripts/smoke-v190-configuration.cjs','--frequency-only']);
+if(process.argv.includes('--equipment-pages'))checks.push(['scripts/smoke-v190-configuration.cjs','--equipment-pages-only']);
 let status=0;
 for(const [script,...flags]of checks){
  const result=spawnSync(require('electron'),[path.resolve(script),'--ui-root='+extracted,...flags],{stdio:'inherit',timeout:240000});

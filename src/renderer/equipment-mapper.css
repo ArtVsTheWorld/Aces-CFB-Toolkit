@@ -10,4 +10,11 @@
 .mapper-browser-filters:not(:has([data-map-slot])){grid-template-columns:minmax(180px,2fr) repeat(3,minmax(100px,1fr))}
 @media(max-width:800px){.mapper-browser-filters:not(:has([data-map-slot])){grid-template-columns:repeat(2,minmax(0,1fr))}}
 .experimental-ui .mapper-target-tabs button[aria-selected="true"]{border-color:var(--action);background:var(--action-soft);color:var(--action)}
+.mapper-rule-form .mapper-target-section{border:0;padding:0;margin:0}
+.mapper-rule-form .mapper-target-section>h3{margin-top:0}
+.mapper-rule-form .mapper-target-tabs{margin:16px 0}
+.mapper-rule-form .mapper-flow section{gap:10px}
+.mapper-rule-form .mapper-flow h3{margin:0}
+.mapper-rule-form .mapper-flow small:empty{display:none}
+.mapper-rule-form .mapper-flow button{margin-top:8px}
 @media(max-width:560px){.mapper-item{grid-template-columns:minmax(0,1fr)}.mapper-item-actions{max-width:none;grid-template-columns:minmax(0,1fr) auto;align-items:end}.mapper-slot-tag{text-align:left}.mapper-options-section{grid-template-columns:1fr}.mapper-library-stats{gap:10px}.mapper-library-stats strong{font-size:22px}.mapper-library-toolbar{font-size:12px}.mapper-target-actions{flex-wrap:wrap}.mapper-target-actions span{flex-basis:100%}.mapper-workbench .ops-section-header{grid-template-columns:31px minmax(0,1fr)}.mapper-workbench .ops-section-header>button{grid-column:2;justify-self:start;margin-left:0}}

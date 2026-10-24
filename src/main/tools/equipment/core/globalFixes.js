@@ -1,4 +1,5 @@
 import {isOriginalEaPlayer,originalEaProtectionEnabled} from '../../../services/originalEaPlayers.js';
+import { shuffledFrequencyCandidates } from './frequency.js';
 import { helmetPopulationAudit } from "./helmetPopulation.js";
 import { parseRef, sf } from "../openSave.js";
 import { EQUIPMENT_COLOR_THEMES, equipmentDisplayName, isInvalidMouthpieceAsset, mouthpieceColorVariants, UNLOCKED_POOLS } from "../catalog.js";
@@ -21,6 +22,11 @@ const OFFENSIVE_LINE_POSITIONS = new Set(["LT", "LG", "C", "RG", "RT"]);
 const VISOR_POSITIONS = new Set(["WR", "CB", "FS", "SS", "LOLB", "MLB", "ROLB", "LB", "TE", "HB", "RB", "LE", "RE", "DT", "EDGE"]);
 export const OAKLEY_CLEAR_VISOR = "GearVisor_visorOakley_clear";
 export const OAKLEY_VISOR_REPLACEMENTS = Object.freeze({ GearVisor_visorClear: OAKLEY_CLEAR_VISOR, GearVisor_visorClearReflective: "GearVisor_visorOakley_clearreflective", GearVisor_visorDark: "GearVisor_visorOakley_Dark", GearVisor_visorDarkLight: "GearVisor_visorOakley_DarkLight" });
+export const GAMEDAY_CLEAR_VISORS=Object.freeze(['GearVisor_visorTeamOakley_clear','gearvisor_visorbrandvisors_clear']);
+export function brandedVisorReplacement(item,usingGameDay,rng){
+  if(usingGameDay&&[OAKLEY_CLEAR_VISOR,'GearVisor_visorClear'].includes(item))return GAMEDAY_CLEAR_VISORS[Math.floor(rng()*GAMEDAY_CLEAR_VISORS.length)];
+  return Object.hasOwn(OAKLEY_VISOR_REPLACEMENTS,item)?OAKLEY_VISOR_REPLACEMENTS[item]:null;
+}
 export function visorChanceForPosition(position) { const value=String(position??"").toUpperCase(); if(value==="QB"||["LE","RE","DT","EDGE"].includes(value))return 0.20; if(["WR","CB"].includes(value))return 0.60; return VISOR_POSITIONS.has(value)?0.40:0; }
 const BROKEN_HOODIE_ASSET = "Gear_Undershirt_Hoodie";
 const HOODIE_ASSET = "Gear_Undershirt_HoodieSleeveless";
@@ -256,7 +262,7 @@ function noneUndershirt(loadouts) {
 // avoid flooring 50 * 0.58 to 28 (rather than the intended 29 players).
 const populationCeilingCount = stats => Math.floor(stats.total * Math.round(stats.ceiling * 100) / 100);
 
-export function equipmentPopulationState(playerRecords, visualsRecords, visualsTableId, teamNames = new Map(), fcsTeamIndexes = new Set(), activePlayerRows, visorFrequencies, mouthpiecePositions) {
+export function equipmentPopulationState(playerRecords, visualsRecords, visualsTableId, teamNames = new Map(), fcsTeamIndexes = new Set(), activePlayerRows, visorFrequencies, mouthpiecePositions, mouthpieceLimits) {
   const createCohort = () => ({ visorGroups: new Map(), mouthpieceGroups: new Map(), undershirts: { total: 0, none: 0, floor: 0, limited: false } });
   const populations = { fbs: createCohort(), fcs: createCohort() }, teams = new Map();
   const populationByVisualRow = new Map();
@@ -279,7 +285,8 @@ export function equipmentPopulationState(playerRecords, visualsRecords, visualsT
     const cohortEntry = entry.cohorts[cohortName] ?? { visorGroups: new Map(), mouthpieceGroups: new Map(), largeBodyPlayers: 0 };
     const teamEntry = entry.teams.get(teamIndex) ?? { visorGroups: new Map(), mouthpieceGroups: new Map(), largeBodyPlayers: 0 };
     const profile = mouthpieceProfile(sf(record, 'Position'), mouthpiecePositions);
-    const mouthpieceGroup = mouthpiecePositions ? profile?.enabled ? positionGroup(sf(record, 'Position')) : null : mouthpiecePopulationGroup(sf(record, "Position"));
+    const mouthpieceEnabled=mouthpiecePositions?profile?.enabled:Boolean(mouthpiecePopulationGroup(sf(record,'Position')));
+    const mouthpieceGroup=mouthpieceEnabled?(mouthpiecePositions||mouthpieceLimits?positionGroup(sf(record,'Position')):mouthpiecePopulationGroup(sf(record,'Position'))):null;
     for (const [population, linked] of [[cohort, cohortEntry], [team, teamEntry]]) {
       if (group) {
         const stats = population.visorGroups.get(group) ?? { total: 0, equipped: 0, ceiling: visorFrequencies ? visorFrequencies[positionGroup(sf(record, "Position"))] / 100 : visorChanceForPosition(sf(record, "Position")), limited: false };
@@ -287,7 +294,7 @@ export function equipmentPopulationState(playerRecords, visualsRecords, visualsT
         if (!equippedVisor(loadouts)) linked.visorGroups.set(group, (linked.visorGroups.get(group) ?? 0) + 1);
       }
       if (mouthpieceGroup) {
-        const stats = population.mouthpieceGroups.get(mouthpieceGroup) ?? { total: 0, equipped: 0, ceiling: 0.85, limited: false };
+        const stats = population.mouthpieceGroups.get(mouthpieceGroup) ?? { total: 0, equipped: 0, ceiling: (mouthpieceLimits?.[mouthpieceGroup]?.populationCap??85)/100, applicationChance: mouthpieceLimits?.[mouthpieceGroup]?.applicationChance??85, limited: false };
         stats.total += 1; if (equippedMouthpiece(loadouts)) stats.equipped += 1; population.mouthpieceGroups.set(mouthpieceGroup, stats);
         if (!equippedMouthpiece(loadouts)) linked.mouthpieceGroups.set(mouthpieceGroup, (linked.mouthpieceGroups.get(mouthpieceGroup) ?? 0) + 1);
       }
@@ -320,7 +327,7 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
   const mouthpieceColorRng = mulberry32((seed ^ 0x4D50434C) >>> 0);
   const brandedFrequency = options.brandedMouthpieceFrequency ?? 75;
   const mouthpiecePositions = normalizeMouthpiecePositions(options.mouthpiecePositions);
-  const population = equipmentPopulationState(playerRecords, visualsRecords, visualsTableId, teamNames, fcsTeamIndexes, activePlayerRows, visorFrequencies, mouthpiecePositions);
+  const population = equipmentPopulationState(playerRecords, visualsRecords, visualsTableId, teamNames, fcsTeamIndexes, activePlayerRows, visorFrequencies, mouthpiecePositions, options.mouthpieceLimits);
   if (undershirtColor === "custom") for (const cohort of population.teams.values()) cohort.undershirts.floor = Math.ceil(cohort.undershirts.total * normalizeUndershirtWeights(options.undershirtWeights).large.none / 100);
   const playersByVisualRow = new Map();
   const allPlayerReferences = new Map();
@@ -384,8 +391,8 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
     tattooEntries[player.isFcs ? "fcs" : "fbs"].push({ visualsRow, player, rawData, teamIndex, team: teamNames.get(teamIndex) ?? `Team ${teamIndex}` });
   }
   const tattooRng = mulberry32((seed ^ 0x7A770015) >>> 0);
-  const tattooFbs = buildUnlockedTattooPopulationPlan(tattooEntries.fbs, unlockedTattooCap, tattooRng, unlockedTattooFix ? options.unlockedTattooSelection : undefined);
-  const tattooFcs = buildUnlockedTattooPopulationPlan(tattooEntries.fcs, unlockedTattooCap, tattooRng, unlockedTattooFix ? options.unlockedTattooSelection : undefined);
+  const tattooFbs = buildUnlockedTattooPopulationPlan(tattooEntries.fbs, unlockedTattooCap, tattooRng, unlockedTattooFix ? options.unlockedTattooSelection : undefined, options.tattooChances, options.fillFrequencies?.tattoos);
+  const tattooFcs = buildUnlockedTattooPopulationPlan(tattooEntries.fcs, unlockedTattooCap, tattooRng, unlockedTattooFix ? options.unlockedTattooSelection : undefined, options.tattooChances, options.fillFrequencies?.tattoos);
   const tattooPlans = new Map([...tattooFbs.plans, ...tattooFcs.plans]);
   const combineTattooStats = (fbs, fcs) => {
     const eligiblePlayers = fbs.eligiblePlayers + fcs.eligiblePlayers;
@@ -438,7 +445,9 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
   const existingMouthpieceColorChanges = [];
   let unlockedTattooPlayersChanged = 0;
   let unlockedTattooPlayersRepaired = 0;
-  for (const [visualsRow, players] of playersByVisualRow) {
+  const frequencyOrder = options.visorFix || options.unlockedMouthpieceFix || options.unlockedTattooFix || options.lowerRolledJerseyFix || options.cutoffPantsFix
+    ? shuffledFrequencyCandidates(playersByVisualRow, mulberry32(seed ^ 0x5f3759df)) : playersByVisualRow;
+  for (const [visualsRow, players] of frequencyOrder) {
     // A shared record cannot be edited without also changing every player who
     // references it, so protect the whole row if any linked player is NIL or excluded.
     if (allPlayerReferences.get(visualsRow) !== players.length || players.some(player => (protectOriginalEaPlayers && player.eaProtected) || player.excluded) || new Set(players.map(player => player.isFcs)).size > 1) continue;
@@ -603,7 +612,7 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
     if (options.oakleyVisorFix) {
       const replacements = new Map();
       for (const loadout of loadouts) for (const element of loadout.loadoutElements) {
-        const replacement = slotOf(element) === "Visor" && Object.hasOwn(OAKLEY_VISOR_REPLACEMENTS, element.itemAssetName) ? OAKLEY_VISOR_REPLACEMENTS[element.itemAssetName] : null;
+        const replacement = slotOf(element) === "Visor" ? replacements.get(element.itemAssetName)??brandedVisorReplacement(element.itemAssetName,options.usingEquipmentTruckMod,rng) : null;
         if (replacement) { replacements.set(element.itemAssetName, replacement); element.itemAssetName = replacement; }
       }
       if (replacements.size) {
@@ -616,14 +625,15 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
       const hasVisor = equippedVisor(loadouts);
       const chances = new Set(players.map(player => visorFrequencies[positionGroup(player.position)] / 100));
       const chance = chances.size === 1 ? [...chances][0] : 0;
-      if (!hasVisor && chance > 0 && rng() < chance) {
+      if (!hasVisor && chance > 0 && (options.fillFrequencies?.visors || rng() < chance)) {
         const blocked = populationScopes.flatMap(({ entry, population }) => [...entry.visorGroups].map(([group, count]) => ({ stats: population.visorGroups.get(group), count }))).filter(({ stats, count }) => !stats || stats.equipped + count > populationCeilingCount(stats));
         if (!populationScopes.length || blocked.length) { for (const { stats } of blocked) if (stats) stats.limited = true; }
         else {
-          for (const loadout of loadouts) setSlot(loadout.loadoutElements, "Visor", OAKLEY_CLEAR_VISOR);
+          const addedVisor=options.usingEquipmentTruckMod?GAMEDAY_CLEAR_VISORS[Math.floor(rng()*GAMEDAY_CLEAR_VISORS.length)]:OAKLEY_CLEAR_VISOR;
+          for (const loadout of loadouts) setSlot(loadout.loadoutElements, "Visor", addedVisor);
           for (const { entry, population } of populationScopes) for (const [group, count] of entry.visorGroups) population.visorGroups.get(group).equipped += count;
           visorPlayersChanged += players.length;
-          for (const player of players) visorChanges.push(playerLogInfo(player, teamNames, fcsTeamIndexes, { oldItem: "GearVisor_None", newItem: OAKLEY_CLEAR_VISOR }));
+          for (const player of players) visorChanges.push(playerLogInfo(player, teamNames, fcsTeamIndexes, { oldItem: "GearVisor_None", newItem: addedVisor }));
           changed = true;
         }
       }
@@ -651,7 +661,8 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
           changed = true;
         }
       }
-      if (group && !equippedMouthpiece(loadouts) && rng() < 0.85) {
+      const applicationChance=Math.min(...players.map(player=>options.mouthpieceLimits?.[positionGroup(player.position)]?.applicationChance??85));
+      if (group && !equippedMouthpiece(loadouts) && applicationChance>0 && (options.fillFrequencies?.mouthpieces || rng() < applicationChance/100)) {
         const blocked = populationScopes.flatMap(({ entry, population }) => [...entry.mouthpieceGroups].map(([group, count]) => ({ stats: population.mouthpieceGroups.get(group), count }))).filter(({ stats, count }) => !stats || stats.equipped + count > populationCeilingCount(stats));
         if (!populationScopes.length || blocked.length) {
           for (const { stats } of blocked) if (stats) stats.limited = true;

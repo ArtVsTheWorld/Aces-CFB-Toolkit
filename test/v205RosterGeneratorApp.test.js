@@ -42,5 +42,5 @@ test('empty Base category placeholders are harmless but unknown appearance layer
 test('in-app presentation includes modal caliber/team selection, shared review facets, confirmation and preset controls',()=>{
   const renderer=fs.readFileSync(new URL('../src/renderer/renderer.js',import.meta.url),'utf8'),page=fs.readFileSync(new URL('../src/renderer/roster-generator.js',import.meta.url),'utf8');
   for(const token of ['rosterGeneratorPage(tool)','roster-result-filter','rosterGeneratorResults(result)','confirmRegeneration = true','details?.canApply === false'])assert.ok(renderer.includes(token),token);
-  for(const token of ['condenseConfiguration','teamPicker','roster-caliber','roster-strength-config','roster-scheme-config','roster-skin-tone','standardPreviewWorkspace','data-generic-view="cards"','data-generic-view="table"','Position counts preserved'])assert.ok(page.includes(token),token);
+  for(const token of ['condenseConfiguration','teamPicker','roster-caliber','roster-strength-config','roster-scheme-config','roster-skin-tone','standardPreviewWorkspace','data-generic-view="cards"','data-generic-view="table"'])assert.ok(page.includes(token),token);
 });

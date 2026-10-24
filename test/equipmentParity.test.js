@@ -23,7 +23,7 @@ test("unchanged Equipment Patcher passes and safeguards retain v2.0 behavior", (
 test("Randomizer retains legacy donor, universal gear, and safeguard parity apart from explicit pants and brand fixes", () => {
   const players = [basePlayer("Target", 0), basePlayer("Donor", 1, { SchoolYear: "Senior", RedshirtStatus: "Previous", OverallRating: 95 })];
   const visuals = [visual(raw(equipment())), visual(raw(equipment().map(item => ({ ...item, itemAssetName: `${item.itemAssetName}_DONOR` }))))];
-  const common = { teamNames: new Map([[1, "Test"]]), teamApparel: new Map([[1, "nike"]]), seed: 123, top: 125, apply: true };
+  const common = { eligiblePlayer:record=>record.SchoolYear==='Freshman', teamNames: new Map([[1, "Test"]]), teamApparel: new Map([[1, "nike"]]), seed: 123, top: 125, apply: true };
   const visualsA = structuredClone(visuals), visualsB = structuredClone(visuals);
   const a = desktopFreshman(structuredClone(players), visualsA, 10, common), b = originalFreshman(structuredClone(players), visualsB, 10, common);
   const withoutPants = value => { const parsed = JSON.parse(value); for (const loadout of parsed.loadouts) loadout.loadoutElements = loadout.loadoutElements.filter(item => item.slotType !== "OuterPants"); return JSON.stringify(parsed); };

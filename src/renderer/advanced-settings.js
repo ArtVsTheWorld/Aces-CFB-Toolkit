@@ -116,6 +116,16 @@ function modelHelpButton(label, description) {
   return `<button type="button" class="model-help-button" data-model-help="${escapeHtml(description)}" aria-label="About ${escapeHtml(label)}"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.25"/><circle cx="8" cy="4.7" r=".85" fill="currentColor"/><path d="M8 7v4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>`;
 }
 const boundHelpRoots = new WeakSet();
+// Mouse focus is not a request to pin help. Only keyboard focus keeps it open
+// after the pointer leaves, so clicking a caption cannot strand a tooltip.
+let helpKeyboardNavigation = false;
+let dismissActiveHelp = () => {};
+let validateActiveHelp = () => {};
+document.addEventListener('keydown', event => { if (event.key === 'Tab') helpKeyboardNavigation = true; }, true);
+document.addEventListener('pointerdown', () => { helpKeyboardNavigation = false; }, true);
+window.addEventListener('blur', () => dismissActiveHelp());
+window.addEventListener('resize', () => dismissActiveHelp());
+new MutationObserver(()=>validateActiveHelp()).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['hidden','open']});
 function bindModelHelp(dialog) {
   if (boundHelpRoots.has(dialog)) return;
   boundHelpRoots.add(dialog);
@@ -123,9 +133,12 @@ function bindModelHelp(dialog) {
   const belongsHere = button => button && (dialog === document.body ? !button.closest("dialog") : button.closest("dialog") === dialog);
   const tooltip = document.createElement("div"), id = `model-help-${++configurationSequence}`;
   tooltip.id = id; tooltip.className = "model-help-tooltip"; tooltip.setAttribute("role", "tooltip"); tooltip.hidden = true; dialog.append(tooltip);
-  let active = null, timer;
+  let active = null, timer, keyboardFocus = false;
   const hide = () => { clearTimeout(timer); active?.removeAttribute("aria-describedby"); active = null; tooltip.hidden = true; };
   const show = button => {
+    if (!button.isConnected || button.closest('[hidden]') || !button.getClientRects().length) return;
+    dismissActiveHelp(); dismissActiveHelp = hide;
+    validateActiveHelp=()=>{if(active&&(!active.isConnected||active.closest('[hidden]')||!active.getClientRects().length))hide();};
     clearTimeout(timer); active?.removeAttribute("aria-describedby"); active = button;
     button.setAttribute("aria-describedby", id); tooltip.textContent = button.dataset.helpSource ? document.getElementById(button.dataset.helpSource)?.textContent.trim() || button.dataset.modelHelp : button.dataset.modelHelp; tooltip.hidden = false;
     const bounds = button.getBoundingClientRect(), frame = dialog === document.body ? { left: 0, top: 0, right: innerWidth, bottom: innerHeight } : dialog.getBoundingClientRect(), width = tooltip.getBoundingClientRect().width;
@@ -134,21 +147,26 @@ function bindModelHelp(dialog) {
     const height = tooltip.getBoundingClientRect().height;
     if (bounds.bottom + 8 + height > Math.min(innerHeight, frame.bottom) - 8) tooltip.style.top = Math.max(Math.max(8, frame.top + 8), bounds.top - height - 8) + "px";
   };
-  dialog.addEventListener("mouseover", event => { const button = event.target.closest("[data-model-help]"); if (belongsHere(button)) show(button); });
-  dialog.addEventListener("mouseout", event => {
-    if (!event.target.closest("[data-model-help]") || event.relatedTarget?.closest("[data-model-help]") || event.relatedTarget === tooltip) return;
-    timer = setTimeout(() => { if (document.activeElement !== active) hide(); }, 120);
+  dialog.addEventListener("mouseover", event => {
+    const button = event.target.closest("[data-model-help]");
+    if (!belongsHere(button) || button.contains(event.relatedTarget)) return;
+    clearTimeout(timer); timer = setTimeout(() => { keyboardFocus = helpKeyboardNavigation && document.activeElement === button; show(button); }, 180);
   });
-  dialog.addEventListener("focusin", event => { if (event.target.matches("[data-model-help]") && belongsHere(event.target)) show(event.target); });
+  dialog.addEventListener("mouseout", event => {
+    const button = event.target.closest("[data-model-help]");
+    if (!belongsHere(button) || button.contains(event.relatedTarget) || tooltip.contains(event.relatedTarget)) return;
+    clearTimeout(timer); timer = setTimeout(() => { if (!keyboardFocus || document.activeElement !== active) hide(); }, 120);
+  });
+  dialog.addEventListener("focusin", event => { if (event.target.matches("[data-model-help]") && belongsHere(event.target) && helpKeyboardNavigation) { keyboardFocus = true; show(event.target); } });
   dialog.addEventListener("click", event => {
     const button = event.target.closest("[data-model-help]");
-    if (belongsHere(button)) { event.preventDefault(); event.stopPropagation(); show(button); }
+    if (belongsHere(button)) { event.preventDefault(); event.stopPropagation(); keyboardFocus = helpKeyboardNavigation; if (active === button && !tooltip.hidden) hide(); else show(button); }
     else if (!tooltip.contains(event.target)) hide();
   });
   dialog.addEventListener("focusout", event => { if (event.target === active) hide(); });
   tooltip.addEventListener("mouseenter", () => clearTimeout(timer));
-  tooltip.addEventListener("mouseleave", () => { if (document.activeElement !== active) hide(); });
-  dialog.addEventListener("scroll", event => { if (event.target === tooltip) return; if (active && document.activeElement === active) show(active); else hide(); }, true);
+  tooltip.addEventListener("mouseleave", () => { if (!keyboardFocus || document.activeElement !== active) hide(); });
+  dialog.addEventListener("scroll", event => { if (event.target !== tooltip) hide(); }, true);
   dialog.addEventListener("toolkit-hide-help", hide);
   dialog.addEventListener("keydown", event => {
     if (tooltip.hidden) return;

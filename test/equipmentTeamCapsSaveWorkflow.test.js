@@ -24,7 +24,9 @@ test("team-level population caps survive exact Preview/Apply/reopen and appear i
   const preview = await runEquipmentPatcher({ savePath, schemaPath, reports, mode: "preview", options: {
     includedTeams: ["LSU", "Alabama"], skipNilPlayers: false, seed: 21040,
     unlockedTattooFix: true, unlockedTattooCap: 40, visorFix: true, unlockedMouthpieceFix: true,
-    lowerRolledJerseyFix: true, cutoffPantsFix: true
+    lowerRolledJerseyFix: true, cutoffPantsFix: true,
+    fillFrequencies:{visors:true,mouthpieces:false,tattoos:false},
+    tattooChances:{arm:50,leg:25,both:25,doubleArm:70,differentArms:90,leftArm:30}
   } });
   assert.equal(hash(savePath), sourceHash, "Preview never changes the save copy");
   assert.equal(preview.details.unlockedTattooPopulation.teams.length, 2);
@@ -43,6 +45,9 @@ test("team-level population caps survive exact Preview/Apply/reopen and appear i
   assert.equal(first.length, headings.length);
   const audit = JSON.parse(first[headings.indexOf("PopulationCapsAuditJSON")]);
   assert.equal(audit.scope, "team");
+  const resolved=JSON.parse(first[headings.indexOf("ResolvedOptionsJSON")]);
+  assert.equal(resolved.fillFrequencies.visors,true);assert.equal(resolved.fillFrequencies.tattoos,false);
+  assert.equal(resolved.tattooChances.doubleArm,70);assert.equal(resolved.tattooChances.both,25);
   assert.deepEqual(audit.tattoos, preview.details.unlockedTattooPopulation);
   assert.deepEqual(audit.equipment, preview.details.populationSafeguards);
   assert.equal(hash(fixture), sourceHash, "Original dynasty fixture is untouched");

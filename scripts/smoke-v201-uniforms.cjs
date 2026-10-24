@@ -5,9 +5,9 @@ module.exports = async (window, root) => {
     closeConfigurationDialogs(); navigate('equipment-patcher');
     for (let i=0;i<300&&!document.getElementById('fix-unlocked-lower-jersey');i++) await pause();
     const entry = title => [...content.querySelectorAll('.configuration-entry')].find(node=>node.querySelector('strong')?.textContent===title);
-    check(entry('Lower Rolled Jersey Caps').hidden && entry('Cutoff Pants Settings').hidden, 'new editors hidden until enabled');
+    check(entry('Lower Rolled Jersey Frequency').hidden && entry('Cutoff Pants Settings').hidden, 'new editors hidden until enabled');
     check(!equipmentOptions('equipment-patcher').lowerRolledJerseyFix && !equipmentOptions('equipment-patcher').cutoffPantsFix, 'both passes default off');
-    document.getElementById('fix-unlocked-lower-jersey').click(); entry('Lower Rolled Jersey Caps').querySelector('button').click();
+    document.getElementById('fix-unlocked-lower-jersey').click(); entry('Lower Rolled Jersey Frequency').querySelector('button').click();
     let dialog=document.querySelector('dialog'), draft=id=>configurationRead(dialog,id);
     check(draft('lower-uniform-cap-QB').value==='100' && draft('lower-uniform-cap-OL').value==='0' && draft('lower-uniform-cap-EDGE').value==='100' && draft('lower-uniform-cap-DT').value==='0', 'requested default caps');
     draft('lower-uniform-cap-WR').value='12.5'; draft('lower-uniform-cap-WR').dispatchEvent(new Event('input',{bubbles:true}));
@@ -28,7 +28,7 @@ module.exports = async (window, root) => {
   const fs=require('node:fs'),path=require('node:path');
   for (const [width,theme,kind] of [[1480,'light','lower'],[1480,'dark','cutoff'],[520,'light','cutoff']]) {
     window.setSize(width,width===1480?1000:760);
-    await window.webContents.executeJavaScript(`closeConfigurationDialogs();document.documentElement.dataset.theme=${JSON.stringify(theme)};[...content.querySelectorAll('.configuration-entry')].find(node=>node.querySelector('strong')?.textContent===${JSON.stringify(kind==='lower'?'Lower Rolled Jersey Caps':'Cutoff Pants Settings')}).querySelector('button').click();`);
+    await window.webContents.executeJavaScript(`closeConfigurationDialogs();document.documentElement.dataset.theme=${JSON.stringify(theme)};[...content.querySelectorAll('.configuration-entry')].find(node=>node.querySelector('strong')?.textContent===${JSON.stringify(kind==='lower'?'Lower Rolled Jersey Frequency':'Cutoff Pants Settings')}).querySelector('button').click();`);
     await new Promise(resolve=>setTimeout(resolve,130));
     const size=await window.webContents.executeJavaScript(`(()=>{const d=document.querySelector('dialog'),b=d.querySelector('.configuration-body');return {left:d.getBoundingClientRect().left,right:d.getBoundingClientRect().right,width:innerWidth,client:b.clientWidth,scroll:b.scrollWidth};})()`);
     if(size.left<0||size.right>size.width+1||size.scroll>size.client+1)throw new Error('Uniform window overflow: '+JSON.stringify(size));

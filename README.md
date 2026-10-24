@@ -1,6 +1,6 @@
 # Ace's CFB Toolkit
 
-A Windows desktop toolkit for College Football 27 Dynasty and Road To Glory save utilities. This repository contains the maintained Electron application source, build resources, and regression tests alongside the official release downloads. Current source: **v22.5**. Source updates and installer releases are published separately.
+A Windows desktop toolkit for College Football 27 Dynasty and Road To Glory save utilities. This repository contains the maintained Electron application source, build resources, and regression tests alongside the official release downloads. Current source: **v23.0**. Source updates and installer releases are published separately.
 
 ## Download the app
 
@@ -32,7 +32,7 @@ npm run build
 npm run build:portable
 ```
 
-Build output is written to `dist/`. App display version **22.5** uses installer/update SemVer **22.5.0**. Tools share the app release version instead of separate tool version numbers. No installer is published by the build commands above.
+Build output is written to `dist/`. App display version **23.0** uses installer/update SemVer **23.0.0**. Tools share the app release version instead of separate tool version numbers. No installer is published by the build commands above.
 
 ## Project layout
 
@@ -55,7 +55,11 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for development and save-safety expectati
 
 Personal settings, uploaded team artwork, saves, backups, reports, credentials, installed dependencies, build outputs, and private diagnostic artifacts are excluded. Default bundled artwork is included so a fresh checkout can build the same interface.
 
-Current source: [v22.5 draft patch notes](docs/RELEASE_NOTES_V22_5.md), [native schemes and multi-team configuration](docs/V22_5_NATIVE_SCHEMES.md), and [original EA roster player protection](docs/V22_5_ORIGINAL_EA_PROTECTION.md). The draft notes cover changes since [v22.0](docs/RELEASE_NOTES_V22_0.md). Source publication is separate from installer releases; use the Releases page for the latest published installer. Test generated rosters on copied saves in-game before continuing a dynasty.
+v23.0 adds Equipment Quickstart: a one-size-fits-all Randomizer/Patcher workflow with top-15 donors, built-in No Drip and visor additions/branding, optional mod pools and separate player memory for each save file. Only successful Quickstart runs mark players as completed; standalone equipment runs do not. Randomizer and Quickstart previews group equipment sources by donor and category. Patcher configuration uses focused pages and explicit global or position-specific edits; opening a global page does not overwrite individual settings. Mouthpiece Frequency defaults to 85%, combining a chance roll with a per-team limit. Each frequency-based pass offers Fill to Frequency, and tattoo placement chances are configurable. Randomizer protects previously randomized players per save by default; donor randomization is optional.
+
+Optional equipment pools require CFB27 Unlocked v0.97+, RAW Accessories v3.1.0+, or GameDay Gear v2.0+, respectively. Quickstart uses the verified GameDay clear visors when that mod is enabled; existing tinted visors retain their tint.
+
+Previous development notes: [v22.5 draft patch notes](docs/RELEASE_NOTES_V22_5.md), [native schemes and multi-team configuration](docs/V22_5_NATIVE_SCHEMES.md), and [original EA roster player protection](docs/V22_5_ORIGINAL_EA_PROTECTION.md). The draft notes cover changes since [v22.0](docs/RELEASE_NOTES_V22_0.md). Source publication is separate from installer releases; use the Releases page for the latest published installer. Test generated rosters on copied saves in-game before continuing a dynasty.
 Previous update: [v20.1 Unlocked uniform passes and compatibility](docs/V20_1_UPDATE.md).
 Published v20.0: [v20.0 release notes](docs/RELEASE_NOTES_20_0.md) and [configuration, usability, and safety refinements](docs/V20_0_REFINEMENT.md).
 Previous update: [v19.1 user schedules, position-specific facemasks, configurable mod pools and Unlocked socks](docs/V19_1_UPDATE.md).

@@ -23,6 +23,7 @@ export const IPC = Object.freeze({
   runTool: "tools:run",
   prepareTool: "tools:prepare",
   prepareEquipmentDonors: "equipment:prepare-donors",
+  clearQuickstartMemory: 'equipment:clear-quickstart-memory',
   searchPreview: "tools:search-preview",
   listReports: "reports:list",
   listHistory: "history:list",

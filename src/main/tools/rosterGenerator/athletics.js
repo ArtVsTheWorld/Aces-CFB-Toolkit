@@ -1,17 +1,18 @@
 import {RATING_FIELDS} from './contract.js';
 import {calibrateProfile} from './presets.js';
+import {ATHLETIC_RATINGS,observedAthleticBounds} from './athleticBounds.js';
 
 export const ATHLETICISM_PROFILES=Object.freeze([
-  {id:'balanced',name:'Balanced',weight:75},
-  {id:'speed',name:'Speed Focused',weight:6},
-  {id:'size',name:'Size & Strength',weight:6},
-  {id:'technical',name:'Technical',weight:7},
-  {id:'freak',name:'Freak Athlete',weight:3},
+  {id:'balanced',name:'Balanced',weight:85},
+  {id:'speed',name:'Speed Focused',weight:2},
+  {id:'size',name:'Size & Strength',weight:2},
+  {id:'technical',name:'Technical',weight:3},
+  {id:'freak',name:'Freak Athlete',weight:1},
   {id:'outlier',name:'Outlier',weight:1},
-  {id:'cerebral',name:'Field Savant',weight:1},
-  {id:'drill',name:'Drill Specialist',weight:1}
+  {id:'cerebral',name:'Field Savant',weight:3},
+  {id:'drill',name:'Drill Specialist',weight:3}
 ]);
-const ATHLETIC=new Set(['SpeedRating','AccelerationRating','AgilityRating','ChangeOfDirectionRating','JumpingRating','StrengthRating']);
+const ATHLETIC=new Set(ATHLETIC_RATINGS);
 export const MENTAL_RATINGS=new Set(['AwarenessRating','PlayRecognitionRating','BCVisionRating','PursuitRating']);
 export function athleticProfilePool(pool,id){const free=pool.filter(profile=>profile.physical.every(tier=>tier==='None'));return ['cerebral','drill'].includes(id)&&free.length?free:pool;}
 const variants=new WeakMap();
@@ -25,13 +26,13 @@ export function athleticVariant(model,base,id='balanced'){
   const delta=field=>{
     if(id==='cerebral')return MENTAL_RATINGS.has(field)?18:skills.has(field)?-10:0;
     if(id==='drill')return MENTAL_RATINGS.has(field)?-18:skills.has(field)?10:0;
-    if(id==='speed')return field==='StrengthRating'?-4:ATHLETIC.has(field)?6:skills.has(field)?-2:0;
-    if(id==='size')return field==='StrengthRating'?8:ATHLETIC.has(field)?-5:['HitPowerRating','ImpactBlockingRating','TruckingRating'].includes(field)?5:0;
-    if(id==='technical')return ATHLETIC.has(field)?-6:skills.has(field)?7:0;
-    return ATHLETIC.has(field)?9:skills.has(field)?-7:0;
+    if(id==='speed')return field==='StrengthRating'?-1:ATHLETIC.has(field)?2:skills.has(field)?-2:0;
+    if(id==='size')return field==='StrengthRating'?3:ATHLETIC.has(field)?-2:['HitPowerRating','ImpactBlockingRating','TruckingRating'].includes(field)?5:0;
+    if(id==='technical')return ATHLETIC.has(field)?-2:skills.has(field)?7:0;
+    return ATHLETIC.has(field)?3:skills.has(field)?-7:0;
   };
   const adjusted={...base,ratings:base.ratings.map((value,i)=>Math.max(floors[i],Math.min(ceilings[i],value+delta(RATING_FIELDS[i]))))};
-  const result={...calibrateProfile(adjusted,base.overall,model.formulas,{minimumRatings:floors,maximumRatings:ceilings}),athleticProfile:id};cache.set(key,result);return result;
+  const result={...calibrateProfile(adjusted,base.overall,model.formulas,{minimumRatings:floors,maximumRatings:ceilings,athleticBounds:observedAthleticBounds(model,base.position,id)}),athleticProfile:id};cache.set(key,result);return result;
 }
 const buildSize=appearance=>appearance.fields.Height*3+appearance.fields.Weight;
 const byBuildSize=pool=>[...pool].sort((a,b)=>buildSize(a)-buildSize(b)||a.id.localeCompare(b.id));

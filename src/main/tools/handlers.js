@@ -1,4 +1,5 @@
 import { runLongSnap } from "./longSnap/runner.js";
+import {prepareEquipmentQuickstart,runEquipmentQuickstart} from './equipmentQuickstart/runner.js';
 import {prepareEquipmentMapper,runEquipmentMapper} from './equipmentMapper/runner.js';
 import { prepareTeamBoost, runTeamBoost } from "./teamBoost/runner.js";
 import { prepareCommentary, runCommentary } from "./commentary/runner.js";
@@ -11,6 +12,7 @@ import { prepareNilToggle, runNilToggle } from "./nilToggle/runner.js";
 import { prepareRosterGenerator, runRosterGenerator } from "./rosterGenerator/runner.js";
 
 const handlers = new Map([
+  ['equipment-quickstart',{prepare:prepareEquipmentQuickstart,run:runEquipmentQuickstart}],
   ['equipment-mapper',{prepare:prepareEquipmentMapper,run:runEquipmentMapper}],
   ["roster-generator", { prepare: prepareRosterGenerator, run: runRosterGenerator }],
   ["long-snap", { run: runLongSnap }],

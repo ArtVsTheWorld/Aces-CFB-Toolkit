@@ -48,7 +48,7 @@ test("rolled undershirts precede lower jerseys, then cutoff pants, then recolor"
 });
 test("caps count existing items, protect players, separate cohorts, and select deterministically", () => {
   const entries = Array.from({ length: 200 }, (_, index) => ({ visualsRow: index, position: index % 2 ? "WR" : "CB", cohort: index < 100 ? "fbs" : "fcs", editable: index % 9 !== 0, raw: raw(outfit(index % 10 === 1 ? "Gear_JerseyStyle_RolledLowest_Untucked" : "Gear_JerseyStyle_RolledLow")) }));
-  const options = { lowerRolledJerseyFix: true, lowerJerseyCaps: caps(30), cutoffPantsFix: true, cutoffPantsCaps: caps(10) };
+  const options = { fillFrequencies:{lowerJersey:true,cutoffPants:true}, lowerRolledJerseyFix: true, lowerJerseyCaps: caps(30), cutoffPantsFix: true, cutoffPantsCaps: caps(10) };
   const a = buildUniformStylePlan(entries, options, mulberry32(201)), b = buildUniformStylePlan(entries, options, mulberry32(201));
   assert.deepEqual([...a.lower], [...b.lower]); assert.deepEqual([...a.pants], [...b.pants]); assert.equal(a.stats.length, 4);
   for (const row of a.stats) { assert.equal(row.total, 50); assert.ok(row.existingLower + row.lowerSelected <= row.lowerTarget); assert.equal(row.cutoffSelected, 5); }
@@ -70,9 +70,9 @@ test("both passes interact safely: lowest untucked qualifies but lowest tucked n
 });
 test("cutoff cap defaults permit exactly 5% WR/CB, not other positions, and repeated runs do not add more", () => {
   const positions = ["WR", "CB", "QB"], players = Array.from({ length: 60 }, (_, row) => player(row, positions[Math.floor(row / 20)])), visuals = players.map(() => visual(outfit()));
-  const result = run(players, visuals, { cutoffPantsFix: true });
+  const result = run(players, visuals, { cutoffPantsFix: true, fillFrequencies:{cutoffPants:true} });
   assert.equal(result.cutoffPantsChanges.length, 2); assert.equal(visuals.slice(40).filter(row => get(row, "OuterPants") === CUTOFF_PANTS).length, 0);
-  assert.equal(run(players, visuals, { cutoffPantsFix: true }).cutoffPantsChanges.length, 0);
+  assert.equal(run(players, visuals, { cutoffPantsFix: true, fillFrequencies:{cutoffPants:true} }).cutoffPantsChanges.length, 0);
   assert.equal(result.uniformPopulation.find(row => row.group === "WR").cutoffAfter, 1);
 });
 test("Standard Pants override is off by default, explicit, uncapped, and never bypasses fit", () => {
@@ -110,6 +110,6 @@ test("v0.97 labels and existing verified cleats remain readable and brand-scoped
 test("new modal settings are compact, conditional, saved through canonical controls, and visible in Review", () => {
   const ui = fs.readFileSync(new URL("../src/renderer/renderer.js", import.meta.url), "utf8"), editor = fs.readFileSync(new URL("../src/renderer/unlocked-uniforms.js", import.meta.url), "utf8");
   assert.match(ui, /fix-unlocked-lower-jersey/); assert.match(ui, /fix-unlocked-cutoff-pants/); assert.match(ui, /uniformCapSummary\("cutoff"\)/);
-  assert.match(editor, /condenseConfiguration/); assert.match(editor, /cutoff-replace-standard/); assert.match(editor, /not independent chances/);
+  assert.match(editor, /condenseConfiguration/); assert.match(editor, /cutoff-replace-standard/); assert.match(editor, /both a chance per eligible player and a maximum population share/);
   assert.doesNotMatch(ui, /Latest version recommended: 0\.96/);
 });

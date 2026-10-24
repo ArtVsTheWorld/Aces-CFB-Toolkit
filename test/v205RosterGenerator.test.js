@@ -71,6 +71,8 @@ test('preview verification rejects independent field, appearance, numbering and 
 });
 test('HTML is escaped, searchable and explicitly preview-only; CSV captures exact field and visual evidence',()=>{
   const p=make(),html=renderRosterGeneratorReport({...p,team:{...p.team,name:'<script>alert(1)</script>'}}),csv=rosterGeneratorCsv(p);
+  const changed=structuredClone(p);changed.players[0].before.Position='WR';
+  const flagged=renderRosterGeneratorReport(changed);assert.match(flagged,/<span class="position-change"[^>]*title="Position changed: WR → QB"[^>]*>\*<\/span><\/strong>/);assert.match(flagged,/\.position-change\{color:#bd2032/);
   assert.ok(html.includes('&lt;script&gt;'));assert.ok(!html.includes('<script>alert(1)</script>'));assert.ok(html.includes('Preview only'));assert.ok(html.includes('script-src'));assert.ok(html.includes('aria-live'));assert.equal(csv.rows.length,p.players.length);for(const key of ['ChangesJSON','BeforeFieldsJSON','AfterFieldsJSON','BeforeRawData','AfterRawData','FootballSource','CatalogSHA256'])assert.ok(csv.headings.includes(key));assert.equal(typeof getToolHandler('roster-generator')?.run,'function');
 });
 test('compiled bank has proven sources, no paired identities/Age and supports all original formula profiles',()=>{

@@ -16,7 +16,7 @@ function ui(settings = {}) {
 const custom = { mode: "custom", global: { ...DEFAULT_HELMET_WEIGHTS, GearHelmet_SchuttF7: 0, GearHelmet_SchuttF7Pro: 20 }, positions: {} };
 
 test("v19.0 integrates the two helmet actions without changing tool versions or saved control IDs", () => {
-  assert.equal(JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url))).version, "22.5.0");
+  assert.equal(JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url))).version, "23.0.0");
   const { context } = ui();
   const markup = context.helmetEditorControls();
   for (const id of ["helmet-distribution-json", "helmet-balance", "helmet-allow-vicis"]) assert.ok(markup.includes(`id="${id}"`));
@@ -35,9 +35,9 @@ test("Repair Only is the default and explains the unchanged Toolkit Defaults", (
   assert.match(context.helmetDistributionSummary(prepared), /Toolkit Defaults:.*70%.*10%/);
 });
 
-test("Apply My Mix explains zero targets, position override priority and protected-player exclusions", () => {
+test("Balance All explains zero targets, position override priority and protected-player exclusions", () => {
   const { context } = ui({ balanceExistingHelmets: true, helmetDistribution: custom });
-  assert.match(context.helmetActionLabel(context.currentHelmetSettings()), /Apply My Mix.*Balance Existing Helmets/);
+  assert.match(context.helmetActionLabel(context.currentHelmetSettings()), /Balance All.*Balance Existing Helmets/);
   assert.match(context.helmetZeroExplanation(context.currentHelmetSettings()), /0% replaces existing.*Position overrides take priority.*Protected players/);
   assert.match(context.helmetDistributionSummary(prepared), /Custom:.*F7 Pro 20%/);
 });
@@ -68,7 +68,7 @@ test("Review shows the action, mix and zero meaning; disabled passes do not impl
     assert.equal(rows.length, 5);
     assert.equal(rows[4][0], "Facemask Pools");
     assert.equal(rows[1][0], "Helmet Action");
-    assert.match(rows[1][1], balanceExistingHelmets ? /Apply My Mix/ : /Repair Only/);
+    assert.match(rows[1][1], balanceExistingHelmets ? /Balance All/ : /Repair Only/);
     assert.equal(rows[3][0], "What 0% Means");
   }
   const { context } = ui({ helmetFix: false, balanceExistingHelmets: true, helmetDistribution: custom });
@@ -77,7 +77,7 @@ test("Review shows the action, mix and zero meaning; disabled passes do not impl
 
 test("Preview uses its saved run settings rather than current form settings; old previews remain readable", () => {
   const { context } = ui({ balanceExistingHelmets: false });
-  assert.match(context.helmetPassPreview({ helmetFix: true, balanceExistingHelmets: true }), /Apply My Mix.*0% replaces existing/s);
+  assert.match(context.helmetPassPreview({ helmetFix: true, balanceExistingHelmets: true }), /Balance All.*0% replaces existing/s);
   assert.match(context.helmetPassPreview({ helmetFix: true, balanceExistingHelmets: false, helmetDistribution: custom, helmetMixExcludesZero: true }), /Repair Only.*0% excludes a helmet/s);
   assert.match(context.helmetPassPreview({ helmetFix: true, balanceExistingHelmets: false, helmetDistribution: custom }), /earlier Repair Only rules.*Run a new preview/s);
   assert.equal(context.helmetPassPreview({}), ""); assert.equal(context.helmetPassPreview({ helmetFix: false }), "");

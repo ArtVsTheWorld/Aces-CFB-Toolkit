@@ -4,7 +4,7 @@
 
 Use Node.js 24 and Windows. Run `npm ci`, `npm run test:source`, and `npm start` from the repository root. The lockfile pins the dependency graph; do not commit `node_modules`, `dist`, or local caches.
 
-The v22.5 source passes 772 portable source tests. The maintainer also runs copied-save integration checks, packaged configuration/UI checks, and installer-resource and updater checks. A public checkout does not include private dynasty fixtures; this does not claim that the full `npm test` suite runs without them. In-game validation of newly generated rosters is still recommended.
+The v23.0 source has 808 portable source tests. The maintainer also runs copied-save integration checks, packaged configuration/UI checks, and installer-resource and updater checks. A public checkout does not include private dynasty fixtures; this does not claim that the full `npm test` suite runs without them. In-game validation of newly generated rosters is still recommended.
 
 ## Full-save checks
 

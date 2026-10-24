@@ -17,7 +17,7 @@ const DEFAULT_TATTOO_ASSETS = Object.freeze({
 });
 
 export const UNLOCKED_TATTOO_ELIGIBLE_POSITIONS = new Set([
-  "QB", "FB", "WR", "HB", "TE", "LE", "RE", "DT", "MLB", "CB", "FS", "LOLB", "ROLB", "SS"
+  "QB", "FB", "WR", "HB", "TE", "LT", "LG", "C", "RG", "RT", "LE", "RE", "DT", "MLB", "CB", "FS", "LOLB", "ROLB", "SS"
 ]);
 
 // Exact ItemNames and arm slots are cross-checked against the user's Unlocked
@@ -85,12 +85,6 @@ export function normalizeTattooSelection(selection) {
   if (!Array.isArray(selection) || selection.some(value => !UNLOCKED_TATTOO_POOL.some(item => item.value === value))) throw new Error("Choose tattoos from the available tattoo pool.");
   return [...new Set(selection)];
 }
-
-const ARM_CHOICES = Object.freeze([
-  { value: "left", weight: 30 },
-  { value: "right", weight: 30 },
-  { value: "both", weight: 40 }
-]);
 
 const BODY_TATTOO_SLOT = /^(Left|Right)(Arm|Leg)Tattoo$/;
 const isHeadLoadout = loadout => loadout?.loadoutType === "Head" || loadout?.loadoutCategory === "Head";
@@ -219,7 +213,16 @@ export function repairUnlockedTattooLoadout(parsed) {
   return true;
 }
 
-export function rollUnlockedTattoo(rng, parsed, selection) {
+export const DEFAULT_TATTOO_CHANCES = Object.freeze({arm:80,leg:12,both:8,doubleArm:40,differentArms:35,leftArm:50});
+export function normalizeTattooChances(value = {}) {
+  if(!value||typeof value!=='object'||Array.isArray(value)||Object.keys(value).some(key=>!(key in DEFAULT_TATTOO_CHANCES)))throw Error('Invalid tattoo placement settings.');
+  const result={...DEFAULT_TATTOO_CHANCES,...value};
+  if(Object.values(result).some(n=>!Number.isInteger(n)||n<0||n>100))throw Error('Tattoo chances must be whole percentages from 0 through 100.');
+  if(result.arm+result.leg+result.both!==100)throw Error('Arm Only, Leg Only and Arms & Legs must total 100%.');
+  return result;
+}
+export function rollUnlockedTattoo(rng, parsed, selection, settings) {
+  const chances=normalizeTattooChances(settings);
   const selected = new Set(normalizeTattooSelection(selection)), arms = ARM_TATTOOS.filter(item => selected.has(item.asset)), legs = LEG_TATTOOS.filter(item => selected.has(item.asset));
   // Tattoos are a separate Base layer. Sleeves may hide them visually but do
   // not prevent assignment; never remove or recolor sleeves to expose tattoos.
@@ -228,18 +231,19 @@ export function rollUnlockedTattoo(rng, parsed, selection) {
   const canArm = availableArms.length > 0 && arms.length > 0, canLeg = legs.length > 0;
   if (!canArm && !canLeg) return null;
   const kind = canArm
-    ? weightedChoice([{ value: "arm", weight: 80 }, { value: "leg", weight: 12 }, { value: "both", weight: 8 }].filter(item => item.value === "arm" || canLeg), rng).value
+    ? weightedChoice([{ value: "arm", weight: chances.arm }, { value: "leg", weight: chances.leg }, { value: "both", weight: chances.both }].filter(item => (item.value === "arm" || canLeg) && item.weight>0), rng)?.value
     : "leg";
+  if(!kind)return null;
   const plan = { kind, arms: {}, legs: null };
   if (kind === "arm" || kind === "both") {
-    const preferred = weightedChoice(ARM_CHOICES, rng).value;
+    const preferred = rng()*100<chances.doubleArm ? 'both' : rng()*100<chances.leftArm ? 'left' : 'right';
     const sides = preferred === "both" && availableArms.length === 2
       ? ["left", "right"]
       : [availableArms.includes(preferred) ? preferred : availableArms[Math.floor(rng() * availableArms.length)]];
     const first = weightedChoice(arms.filter(item => allowedOnSide(item, sides[0])), rng);
     plan.arms[sides[0]] = first;
     if (sides.length === 2) {
-      const different = rng() < 0.35;
+      const different = rng()*100 < chances.differentArms;
       const right = arms.filter(item => allowedOnSide(item, "right"));
       const alternatives = right.filter(item => item.asset !== first.asset);
       plan.arms.right = different && alternatives.length
@@ -251,7 +255,7 @@ export function rollUnlockedTattoo(rng, parsed, selection) {
   return plan;
 }
 
-export function buildUnlockedTattooPopulationPlan(entries, capPercentage, rng, selection) {
+export function buildUnlockedTattooPopulationPlan(entries, capPercentage, rng, selection, settings = {}, fill = false) {
   const teams = new Map(), plans = new Map(), teamStats = [];
   for (const entry of entries) {
     const key = entry.teamIndex ?? null;
@@ -259,7 +263,7 @@ export function buildUnlockedTattooPopulationPlan(entries, capPercentage, rng, s
     teams.get(key).push(entry);
   }
   for (const [teamIndex, players] of teams) {
-    const result = buildTeamTattooPlan(players, capPercentage, rng, selection);
+    const result = buildTeamTattooPlan(players, capPercentage, rng, selection, settings, fill);
     for (const [row, plan] of result.plans) plans.set(row, plan);
     teamStats.push({ teamIndex, team: players[0].team ?? `Team ${teamIndex ?? "Unknown"}`, ...result.stats });
   }
@@ -273,7 +277,7 @@ export function buildUnlockedTattooPopulationPlan(entries, capPercentage, rng, s
   } };
 }
 
-function buildTeamTattooPlan(entries, capPercentage, rng, selection) {
+function buildTeamTattooPlan(entries, capPercentage, rng, selection, settings, fill) {
   const selected = normalizeTattooSelection(selection);
   const eligible = [];
   const existing = [];
@@ -295,7 +299,8 @@ function buildTeamTattooPlan(entries, capPercentage, rng, selection) {
   const plans = new Map();
   for (const entry of eligible) {
     if (plans.size >= additionsAllowed) break;
-    const plan = rollUnlockedTattoo(rng, JSON.parse(entry.rawData), selected);
+    if(!fill && rng()*100>=capPercentage)continue;
+    const plan = rollUnlockedTattoo(rng, JSON.parse(entry.rawData), selected, settings);
     if (plan) plans.set(entry.visualsRow, plan);
   }
   const projectedTattooPlayers = existing.length + plans.size;

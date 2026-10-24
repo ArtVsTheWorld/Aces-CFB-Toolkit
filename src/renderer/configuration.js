@@ -68,6 +68,7 @@ function addConfigurationPages(dialog, host, pages) {
     [...panels.children].forEach((panel, i) => panel.hidden = i !== index);
     if (focus) nav.children[index].focus();
     dialog.dispatchEvent(new Event('toolkit-hide-help'));
+    const scroller=dialog.querySelector('.configuration-body');if(scroller)scroller.scrollTop=0;
   };
   available.forEach((page, index) => {
     const button = document.createElement('button'), panel = document.createElement('section');
@@ -77,6 +78,13 @@ function addConfigurationPages(dialog, host, pages) {
     panel.setAttribute('role', 'tabpanel'); panel.setAttribute('aria-labelledby', button.id);
     const fields = document.createElement('div'); fields.className = 'configuration-page-fields';
     page.nodes.forEach(node => fields.append(node)); panel.append(fields); panels.append(panel); nav.append(button);
+    // A label and its input are one field, not separate rows in the page grid.
+    for(const label of fields.querySelectorAll(':scope > label[for]')){
+      const next=label.nextElementSibling;
+      if(next?.id===label.htmlFor&&next.matches('input,select,textarea')){
+        const field=document.createElement('div');field.className='configuration-field';label.before(field);field.append(label,next);
+      }
+    }
     button.addEventListener('click', () => activate(index));
     button.addEventListener('keydown', event => {
       const next = event.key === 'Home' ? 0 : event.key === 'End' ? available.length - 1 : event.key === 'ArrowRight' ? (index + 1) % available.length : event.key === 'ArrowLeft' ? (index + available.length - 1) % available.length : null;
@@ -91,8 +99,10 @@ function addPlayerFilterPages(dialog, root) {
   const page = (title, ids) => ({ title, nodes: [...new Set(ids.map(field).filter(Boolean))] });
   let pages;
   if (read('equipment-positions')) {
-    pages = [page('Positions', ['equipment-positions']), page('Class & Redshirt', ['equipment-classes','equipment-redshirt-group']), page('Build & Overall', ['equipment-bodies','equipment-min']), page('Player Protection', ['equipment-protect-ea'])];
+    pages = [page('Positions', ['equipment-positions']), page('Class & Redshirt', ['equipment-classes','equipment-redshirt-group']), page('Build & Overall', ['equipment-bodies','equipment-min']), page('Player Protection', ['equipment-protect-ea','equipment-protect-previous','equipment-randomize-donors'])];
     root.querySelector('.ops-subheading')?.remove();
+  } else if(read('db-protected-values')) {
+    pages=[page('Dealbreakers',['db-protected-values']),page('Players',['db-protected-players'])];
   } else {
     const prefix = ['commentary','boost','nil'].find(prefix => read(prefix + '-classes'));
     if (!prefix) return;
@@ -101,6 +111,10 @@ function addPlayerFilterPages(dialog, root) {
   addConfigurationPages(dialog, root, pages);
   if (root.querySelector('[data-config-page]')) {
     dialog.classList.add('player-filter-editor');
+    root.querySelectorAll('[data-option-picker]').forEach(picker=>{
+      const select=picker.querySelector('select[multiple]');
+      if(select&&select.options.length<=8)picker.classList.add('small-choice-picker');
+    });
     root.querySelectorAll('.compact-grid:empty').forEach(node => node.remove());
   }
 }
@@ -108,6 +122,14 @@ function configurationControlActive(control) {
   if (control.disabled) return false;
   for (let node = control; node; node = node.parentElement) if (node.hidden && !node.hasAttribute('data-config-page')) return false;
   return true;
+}
+function addDonorSettingsPages(dialog,root){
+  const read=id=>configurationRead(root,id),mode=read('equipment-donor-mode');if(!mode)return;
+  const host=root.querySelector('.donor-settings-content');if(!host)return;
+  const mixing=read('equipment-cross-percent').closest('.probability-grid'),mixNote=read('equipment-mixing-help'),cross=root.querySelector('[data-cross-receiver]').closest('section');
+  const source=read('equipment-donor').closest('section'),label=mode.previousElementSibling,top=read('equipment-top-donors'),players=read('equipment-selected-donors');
+  addConfigurationPages(dialog,host,[{title:'Donor Source & Players',nodes:[source,label,mode,top,players]},{title:'Mixing & Cross-Position',nodes:[mixing,mixNote,cross]}]);
+  dialog.querySelector('.configuration-description').textContent='Choose your donor source and players, then adjust mixing if needed. Donor files are read-only.';
 }
 function commitConfigurationDraft(controls, draft, original, close) {
   const donor = configurationRead(draft, 'equipment-donor-players');
@@ -171,6 +193,7 @@ function openConfigurationEditor(source, defaults, specification, refresh) {
   dialog.querySelector(".configuration-body").append(draft);
   bindMultiSelectEnhancements(draft); bindTeamPickers(draft); bindTeamLogoFallbacks(draft); if (typeof addExplicitSelectionModes === "function") addExplicitSelectionModes(draft);
   addPlayerFilterPages(dialog, draft);
+  addDonorSettingsPages(dialog,draft);
   const update = () => {
     syncConfigurationDraft(draft);
     const error = validateConfigurationDraft(draft, specification), node = dialog.querySelector("[data-config-error]");
@@ -219,13 +242,14 @@ function openConfigurationEditor(source, defaults, specification, refresh) {
     commitConfigurationDraft(controls, draft, original, () => dialog.closeEditor());
     refresh(); captureToolSettings();
   });
-  update(); if (typeof installPositionCopy === "function") installPositionCopy(dialog); dialog.showModal();
+  update(); if (typeof installPositionCopy === "function") installPositionCopy(dialog); if(typeof organizePatcherSettings==='function')organizePatcherSettings(dialog,draft);update();dialog.showModal();
 }
 
 function syncConfigurationDraft(root) {
   if (configurationRead(root, 'db-total')) syncDealbreakerEligibility(root);
   if (typeof syncRosterGeneratorDraft === "function") syncRosterGeneratorDraft(root);
   syncAdvancedDraft(root); syncDonorMouthpieceDraft(root);
+  if(typeof syncEquipmentPassSettings==='function')syncEquipmentPassSettings(root);
   const control = id => configurationRead(root, id), show = (id, visible) => { const node = control(id); if (node) node.hidden = !visible; };
   if (control("equipment-donor-mode")) {
     const manual = control("equipment-donor-mode").value === "selected";
@@ -272,6 +296,10 @@ function validateConfigurationDraft(root, specification) {
     if (invalid) return `${invalid.querySelector(".tape-team-name strong").textContent}: Tape Color must use whole percentages totaling 100%. Find this team or use Balance to 100%.`;
   }
   if (control("db-total") && Math.abs([...root.querySelectorAll(".db-percent")].reduce((sum, input) => sum + Number(input.value), 0) - 100) > 1e-9) return "Starting percentages must total exactly 100%.";
+  if(control('tattoo-chance-arm')){
+    const values=['arm','leg','both'].map(key=>Number(control('tattoo-chance-'+key).value));
+    if(values.reduce((a,b)=>a+b,0)!==100)return 'Arm Only, Leg Only and Arms & Legs must total 100%.';
+  }
   return (typeof validateAdvancedDraft === "function" ? validateAdvancedDraft(root) : "") || validateDonorMouthpieceDraft(root) || specification.validate?.(root) || "";
 }
 
@@ -279,6 +307,7 @@ function bindConfigurationWindows() {
   const get = selector => content.querySelector(selector);
   const feature = (selector, specification) => condenseConfiguration(get(selector), specification);
   if (get("#equipment-wizard")) {
+    installEquipmentFrequencySettings();
     for (const [field, toggle] of [["bears-pads-style-field", "fix-bears-pads"]]) get("#" + toggle)?.closest(".toggle-card")?.after(get("#" + field));
     feature(".player-filter-group", { title: "Player Filters", description: "These filters work together. Empty selections allow every option; original EA player protection is configured here too.", summary: root => [["equipment-positions", "positions"], ["equipment-classes", "class years"], ["equipment-bodies", "body types"]].filter(([id]) => configurationRead(root, id)).map(([id, label]) => `${label}: ${configurationSelectionSummary(configurationRead(root, id))}`).join(" · ") + ` · ${configurationLabel(root, "equipment-redshirt-group")} · ${configurationRead(root, "equipment-protect-ea").checked ? "EA Players Protected" : "EA Players Included"} · OVR ${configurationRead(root, "equipment-min").value || "Any"}–${configurationRead(root, "equipment-max").value || "Any"}` });
     const donor = get('[data-equipment-panel="1"]:has(#equipment-donor-mode)');
@@ -288,9 +317,9 @@ function bindConfigurationWindows() {
       condenseConfiguration(group, { title: "Donor Settings", description: "Choose donors and mixing chances in one place. Use your active save or a read-only dynasty/roster donor file. Choose cross-position sources and donor players here; checked players stay selected across positions.", summary: root => `${configurationLabel(root, "equipment-donor-mode")} · ${configurationRead(root, "equipment-donor-mode").value === "selected" ? configurationRead(root, "equipment-donor-players").selectedOptions.length + " players" : configurationRead(root, "equipment-top").value + " per position"} · Cross-position ${configurationRead(root, "equipment-cross-percent").value}% · Multiple donors ${configurationRead(root, "equipment-multiple-percent").value}%` });
     }
     feature("#equipment-no-drip-chances", { title: "No Drip Chances", description: "Chance to remove selected accessories for each position group.", dependencies: ["equipment-no-drip"], enabled: () => get("#equipment-no-drip").checked, summary: root => ["skill", "balanced", "heavy"].map(key => `${configurationRead(root, "equipment-no-drip-" + key).value}%`).join(" / ") });
-    feature("#unlocked-mouthpiece-color-field", { title: "Mouthpiece Settings", description: "Choose allowed positions and style mixes, colors, rerolls, and branded frequency together. QB and K/P start disabled but can be enabled.", dependencies: ["fix-unlocked-mouthpieces"], enabled: () => get("#fix-unlocked-mouthpieces").checked, summary: root => `${configurationLabel(root, "unlocked-mouthpiece-colors")} · ${configurationRead(root, "mouthpiece-branded-frequency").value}% branded · ${configurationRead(root, "randomize-existing-mouthpieces").checked ? "Reroll existing" : "Keep existing"}` });
+    feature("#unlocked-mouthpiece-color-field", { title: "Mouthpiece Settings", description: "Edit all positions together or set each group separately. Frequency is both the chance per player and the per-team limit; it defaults to 85%. Use Custom Style Mix to enable QB or K/P.", dependencies: ["fix-unlocked-mouthpieces"], enabled: () => get("#fix-unlocked-mouthpieces").checked, summary: root => `${configurationLabel(root, "unlocked-mouthpiece-colors")} · ${configurationRead(root, "mouthpiece-branded-frequency").value}% branded · ${mouthpieceLimitSummary(root)} · ${configurationRead(root, "randomize-existing-mouthpieces").checked ? "Reroll existing" : "Keep existing"}` });
     feature("#unlocked-color-field", { title: "Colors & Tape", description: "Choose accessory colors from a shared mix, fixed color, or team-by-team percentages. Tape can use that same result or its own team mix. Existing items are recolored, not added.", dependencies: ["fix-unlocked-recolor"], enabled: () => get("#fix-unlocked-recolor").checked, summary: root => `${configurationLabel(root, "unlocked-color-theme")} · ${configurationLabel(root, "tape-color-mode")}` });
-    feature("#unlocked-tattoo-field", { title: "Tattoo Settings", description: "Choose a per-team population cap and the designs that may be added. Existing tattoos are kept. Japanese and Polynesian styles start unchecked.", dependencies: ["fix-unlocked-tattoos"], enabled: () => get("#fix-unlocked-tattoos").checked, summary: root => `${configurationRead(root, "unlocked-tattoo-cap").value}% per-team cap · ${configurationRead(root, "unlocked-tattoo-pool").selectedOptions.length} designs selected` });
+    feature("#unlocked-tattoo-field", { title: "Tattoo Settings", description: "Choose a per-team frequency and the designs that may be added. Existing tattoos are kept. Japanese and Polynesian styles start unchecked.", dependencies: ["fix-unlocked-tattoos"], enabled: () => get("#fix-unlocked-tattoos").checked, summary: root => `${configurationRead(root, "unlocked-tattoo-cap").value}% per-team frequency · ${configurationRead(root, "unlocked-tattoo-pool").selectedOptions.length} designs selected` });
   }
   if (state.page === "nil-toggle") feature('.standard-config-workspace .ops-section:nth-of-type(2) .ops-section-body', { title: "Player Scope", description: "All filters work together. Leave every selection empty for the entire active dynasty roster. The preview lists every match before any flags change.", summary: root => [...["nil-teams", "nil-players", "nil-positions", "nil-classes"].map(id => `${configurationRead(root, id).selectedOptions.length || "All"} ${id.slice(4)}`), redshirtScopeSummary(root, "nil-redshirts")].join(" · ") });
   if (state.page === "dealbreaker-fixer") feature('.ops-section:nth-of-type(2) .ops-section-body', { title: "Starting Dealbreaker Mix", description: "These are starting weights, not guaranteed final results. Each player's situation still affects assignments; None sets a minimum population share.", summary: root => [...root.querySelectorAll(".db-percent")].filter(input => Number(input.value)).map(input => `${dealbreakerLabels[input.dataset.value]} ${input.value}%`).join(" · ") });

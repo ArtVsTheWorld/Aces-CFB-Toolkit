@@ -4,6 +4,8 @@ import {calculateOverall} from './ratings.js';
 import {rosterSamplingPolicy} from './sampling.js';
 import {positionGroup} from '../../../shared/positionGroups.js';
 import {normalizeGenerationSettings} from './settings.js';
+import {ATHLETIC_RATINGS,observedAthleticBounds} from './athleticBounds.js';
+const athleticRatings=new Set(ATHLETIC_RATINGS);
 
 export const ROSTER_PRESETS = Object.freeze([
   {id:'startup',name:'From Nothing',targetAverage:60,spread:7,description:'A tough rebuild with limited current talent and smaller builds.'},
@@ -20,15 +22,18 @@ export function rosterPreset(id='building-blocks') {
   return preset;
 }
 
-// Preserve the shape of an observed position/archetype rating vector. Only
-// positive OVR contributors are calibrated; unrelated ratings stay observed.
+// Caliber changes football skills, not the observed player's athleticism.
+// Physical ratings are only clamped to safety bounds here; only positive,
+// non-athletic OVR contributors (including awareness) receive the OVR offset.
 // Downward calibration uses ability-free physical packages: unknown ability
 // thresholds must never be invented for a newly weakened rating vector.
-export function calibrateProfile(source,desired,formulas,{minimumRatings=null,maximumRatings=null}={}) {
-  const constrained=minimumRatings!==null,speedFloor=({WR:74,FS:74,SS:74,HB:75,CB:75,TE:68,FB:68,LOLB:70,MLB:70,ROLB:70,SAM:70,MIKE:70,WILL:70})[source.position]??1;
-  minimumRatings=RATING_FIELDS.map((field,i)=>Math.max(minimumRatings?.[i]??1,field==='SpeedRating'?speedFloor:1));
+export function calibrateProfile(source,desired,formulas,{minimumRatings=null,maximumRatings=null,athleticBounds=null}={}) {
+  const constrained=minimumRatings!==null;
+  minimumRatings=RATING_FIELDS.map((field,i)=>Math.max(minimumRatings?.[i]??1,athleticBounds?.[i]?.minimum??1));
+  maximumRatings=RATING_FIELDS.map((field,i)=>Math.min(maximumRatings?.[i]??99,athleticBounds?.[i]?.maximum??99));
+  if(minimumRatings.some((minimum,i)=>minimum>maximumRatings[i]))throw new Error('Observed athletic limits conflict with a required rating floor.');
   const formula=formulas.get(`${source.position}|${source.archetype}`);
-  const fields=new Set(Object.entries(formula.coefficients).filter(([,weight])=>weight>0).map(([field])=>field));
+  const fields=new Set(Object.entries(formula.coefficients).filter(([field,weight])=>weight>0&&!athleticRatings.has(field)).map(([field])=>field));
   let best=null,low=constrained?-99:source.physical.some(tier=>tier!=='None')?0:-99,high=99;
   const evaluate=offset=>{
     const ratings=source.ratings.map((value,i)=>Math.max(minimumRatings[i],Math.min(maximumRatings?.[i]??99,value+(fields.has(RATING_FIELDS[i])?offset:0))));
@@ -57,7 +62,7 @@ export function modelForPreset(model,preset,settings=null,talentTargets={}) {
     for(const source of pool) {
       const entry=means.get(source.classYear+'|'+source.redshirt),average=entry.sum/entry.count;
       const desired=Math.max(30,Math.min(99,(talentTargets[positionGroup(position)]??preset.targetAverage)+(source.overall-average)*.8));
-      const profile=calibrateProfile(source,desired,model.formulas);
+      const profile=calibrateProfile(source,desired,model.formulas,{athleticBounds:observedAthleticBounds(model,source.position)});
       validateFootballProfile(profile);profiles.push(profile);byId.set(profile.id,profile);
       if(!byPosition.has(position))byPosition.set(position,[]);byPosition.get(position).push(profile);
     }

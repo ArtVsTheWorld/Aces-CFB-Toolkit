@@ -29,9 +29,10 @@ test('premium ratings have diminishing returns while the roster average remains 
 test('a three-QB room uses a graduated centered spread rather than independent extremes',()=>{
   const rows=[{row:1},{row:2},{row:3}];for(let seed=0;seed<50;seed++){const a=roomRatingTargets(rows,82,8,mulberry32(seed)),values=[...a.values()].sort((a,b)=>b-a);assert.ok(values[0]>=89&&values[0]<=91);assert.ok(values[1]>=81&&values[1]<=83);assert.ok(values[2]>=73&&values[2]<=75);assert.ok(Math.abs(values.reduce((a,b)=>a+b,0)/3-82)<1e-8);assert.deepEqual(a,roomRatingTargets(rows,82,8,mulberry32(seed)));}
 });
-test('speed floors survive downward calibration without inventing ability packages',()=>{
-  const model=loadObservedCatalog(),index=RATING_FIELDS.indexOf('SpeedRating'),minimums={WR:74,FS:74,SS:74,HB:75,CB:75,TE:68,FB:68,LOLB:70,MLB:70,ROLB:70};
-  for(const [position,floor]of Object.entries(minimums)){const source=model.byPosition.get(position).find(p=>p.physical.every(t=>t==='None'));const profile=calibrateProfile(source,60,model.formulas);assert.ok(profile.ratings[index]>=floor,position);assert.deepEqual(profile.physical,source.physical);}
+test('calibration preserves observed speed without artificial position floors or invented ability packages',()=>{
+  const model=loadObservedCatalog(),index=RATING_FIELDS.indexOf('SpeedRating'),formerMinimums={WR:74,FS:74,SS:74,HB:75,CB:75,TE:68,FB:68,LOLB:70,MLB:70,ROLB:70};let belowFormerFloor=0;
+  for(const [position,floor]of Object.entries(formerMinimums)){const source=[...model.byPosition.get(position)].filter(p=>p.physical.every(t=>t==='None')).sort((a,b)=>a.ratings[index]-b.ratings[index])[0];const profile=calibrateProfile(source,60,model.formulas);assert.equal(profile.ratings[index],source.ratings[index],position);assert.deepEqual(profile.physical,source.physical);if(profile.ratings[index]<floor)belowFormerFloor++;}
+  assert.ok(belowFormerFloor>=7,'Observed slower players remain below the old artificial speed floors');
   assert.equal(rosterPreset('all-time').targetAverage,83);assert.equal(normalizeEquipmentOptions({},false).unlockedTattooCap,40);assert.equal(normalizeEquipmentOptions({unlockedTattooCap:33},false).unlockedTattooCap,33);
 });
 test('recruit stars favor better players, retain rare surprises and replay exactly',()=>{

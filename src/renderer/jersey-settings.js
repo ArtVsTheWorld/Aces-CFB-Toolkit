@@ -50,19 +50,23 @@ function openJerseyCustomization(prepared, input) {
     dialog.querySelector('[data-config-dirty]').textContent = changed ? 'Unsaved settings · Save all pages together, or Cancel to discard.' : 'Settings stay unchanged until you save. Cancel discards this draft.';
   };
   let currentPage = 'locks';
+  dialog.querySelector('.jersey-page-choice').hidden=true;
+  dialog.querySelector('.jersey-editor-nav').classList.add('configuration-page-tabs');
+  dialog.querySelector('.jersey-editor-nav').setAttribute('aria-orientation','horizontal');
   const showPage = page => {
     currentPage = page;
     for (const panel of dialog.querySelectorAll('[data-jersey-page]')) panel.hidden = panel.dataset.jerseyPage !== page;
     for (const button of dialog.querySelectorAll('[data-jersey-page-tab]')) { const active = button.dataset.jerseyPageTab===page; button.setAttribute('aria-selected',String(active)); button.tabIndex=active?0:-1; }
     dialog.querySelector('[data-jersey-page-select]').value = page;
-    dialog.scrollTop = 0;
+    dialog.querySelector('.configuration-body').scrollTop = 0;
+    dialog.dispatchEvent(new Event('toolkit-hide-help'));
   };
   for (const button of dialog.querySelectorAll('[data-jersey-page-tab]')) button.onclick = () => showPage(button.dataset.jerseyPageTab);
   dialog.querySelector('[data-jersey-page-select]').onchange = event => showPage(event.target.value);
   dialog.querySelector('.jersey-editor-nav').onkeydown = event => {
-    if (!['ArrowDown','ArrowUp','Home','End'].includes(event.key)) return;
+    if (!['ArrowDown','ArrowUp','ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
     event.preventDefault(); const index=pages.findIndex(([id])=>id===currentPage);
-    const next=event.key==='Home'?0:event.key==='End'?pages.length-1:(index+(event.key==='ArrowDown'?1:-1)+pages.length)%pages.length;
+    const next=event.key==='Home'?0:event.key==='End'?pages.length-1:(index+(['ArrowDown','ArrowRight'].includes(event.key)?1:-1)+pages.length)%pages.length;
     showPage(pages[next][0]); dialog.querySelector(`[data-jersey-page-tab="${pages[next][0]}"]`).focus();
   };
   teamSelect.onchange = renderRetired;

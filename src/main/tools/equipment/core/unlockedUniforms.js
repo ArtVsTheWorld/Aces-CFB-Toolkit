@@ -1,4 +1,5 @@
 import { POSITION_GROUPS, positionGroup } from "../../../../shared/positionGroups.js";
+import { selectFrequencyCandidates } from './frequency.js';
 import { ABOVE_KNEE_PANTS, CUTOFF_PANTS, STANDARD_PANTS, LOWER_JERSEY_REPLACEMENTS, cutoffPantsConflict, uniformItem } from "./uniformCompatibility.js";
 
 export const DEFAULT_LOWER_JERSEY_CAPS = Object.freeze(Object.fromEntries(POSITION_GROUPS.map(group => [group, ["OL", "DT"].includes(group) ? 0 : 100])));
@@ -16,11 +17,6 @@ const fieldOutfits = raw => { try { return JSON.parse(raw).loadouts.filter(outfi
 const has = (outfits, slot, assets) => outfits.some(outfit => assets.has(uniformItem(outfit.loadoutElements, slot)));
 const lowest = new Set(Object.values(LOWER_JERSEY_REPLACEMENTS));
 const eligibleJerseys = new Set(Object.keys(LOWER_JERSEY_REPLACEMENTS));
-function shuffled(entries, rng) {
-  const result = [...entries];
-  for (let index = result.length - 1; index > 0; index--) { const other = Math.floor(rng() * (index + 1)); [result[index], result[other]] = [result[other], result[index]]; }
-  return result;
-}
 // Includes protected players in the chosen population, but never selects them.
 // Single-owner rows only: a capped addition must not silently affect siblings.
 export function buildUniformStylePlan(entries, options, rng) {
@@ -40,7 +36,7 @@ export function buildUniformStylePlan(entries, options, rng) {
     const existingCutoff = values.filter(entry => has(entry.outfits, "OuterPants", new Set([CUTOFF_PANTS]))).length;
     const lowerTarget = Math.floor(total * lowerCaps[group] / 100), cutoffTarget = Math.floor(total * pantsCaps[group] / 100);
     const lowerCandidates = values.filter(entry => entry.editable && !has(entry.outfits, "OuterShirt", lowest) && has(entry.outfits, "OuterShirt", eligibleJerseys));
-    if (options.lowerRolledJerseyFix) for (const entry of shuffled(lowerCandidates, rng).slice(0, Math.max(0, lowerTarget - existingLower))) lower.add(entry.visualsRow);
+    if (options.lowerRolledJerseyFix) for (const entry of selectFrequencyCandidates(lowerCandidates, Math.max(0, lowerTarget - existingLower), lowerCaps[group], options.fillFrequencies?.lowerJersey, rng)) lower.add(entry.visualsRow);
     const candidates = [], standards = []; let incompatible = 0;
     for (const entry of values) {
       if (!entry.editable || has(entry.outfits, "OuterPants", new Set([CUTOFF_PANTS]))) continue;
@@ -58,7 +54,7 @@ export function buildUniformStylePlan(entries, options, rng) {
     }
     if (options.cutoffPantsFix) {
       if (options.replaceStandardWithCutoff) for (const entry of standards) pants.add(entry.visualsRow);
-      for (const entry of shuffled(candidates, rng).slice(0, Math.max(0, cutoffTarget - existingCutoff - (options.replaceStandardWithCutoff ? standards.length : 0)))) pants.add(entry.visualsRow);
+      for (const entry of selectFrequencyCandidates(candidates, Math.max(0, cutoffTarget - existingCutoff - (options.replaceStandardWithCutoff ? standards.length : 0)), pantsCaps[group], options.fillFrequencies?.cutoffPants, rng)) pants.add(entry.visualsRow);
     }
     stats.push({ scope: "team", teamIndex, team: values[0].team ?? `Team ${teamIndex ?? "Unknown"}`, cohort, group, total, lowerCap: lowerCaps[group], existingLower, lowerTarget, lowerSelected: values.filter(entry => lower.has(entry.visualsRow)).length, cutoffCap: pantsCaps[group], existingCutoff, cutoffTarget, cutoffSelected: values.filter(entry => pants.has(entry.visualsRow)).length, standardReplacements: options.cutoffPantsFix && options.replaceStandardWithCutoff ? standards.length : 0, incompatible, protectedPlayers: values.filter(entry => !entry.editable).length });
   }

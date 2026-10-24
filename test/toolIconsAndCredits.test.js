@@ -7,6 +7,10 @@ import { getTool } from '../src/shared/toolRegistry.js';
 const read = file => fs.readFileSync(new URL('../' + file, import.meta.url), 'utf8');
 const renderer = read('src/renderer/renderer.js');
 
+test('Equipment parent header uses the shared helmet icon', () => {
+  assert.ok(renderer.includes('${toolIcon("helmet")}</span><span class="nav-label">Equipment</span>'));
+});
+
 test('Jersey Renumber and Team Boost use distinct shared stroke icons, not text glyphs', () => {
   const iconFunction = renderer.split(/\r?\n/).find(line => line.startsWith('function toolIcon('));
   const context = vm.createContext({ escapeHtml: value => String(value) });
@@ -22,9 +26,9 @@ test('Jersey Renumber and Team Boost use distinct shared stroke icons, not text 
 });
 
 test('Equipment Truck credits ElJax YT in pool requirements, recolor help and catalog provenance', () => {
-  assert.match(read('src/renderer/mod-pools.js'), /Requires ELJAX's Equipment Truck by ElJax YT\./);
-  assert.match(renderer, /Requires ELJAX's Equipment Truck by ElJax YT\./);
-  assert.match(renderer, /ELJAX’s Equipment Truck by ElJax YT/);
+  assert.match(read('src/renderer/mod-pools.js'), /Requires GameDay Gear v2\.0\+ \(ELJAX's Equipment Truck\) by ElJax YT\./);
+  assert.match(renderer, /Requires GameDay Gear v2\.0\+ \(ELJAX's Equipment Truck\) by ElJax YT\./);
+  assert.match(renderer, /Requires CFB27 Unlocked v0\.97\+ by Orckestra\. RAW Accessories items require v3\.1\.0\+; GameDay Gear items require v2\.0\+\./);
   assert.equal(JSON.parse(read('src/main/tools/equipment/equipmentTruckInventory.json')).author, 'ElJax YT');
 });
 

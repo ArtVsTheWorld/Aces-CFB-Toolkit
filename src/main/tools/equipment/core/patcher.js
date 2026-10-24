@@ -342,7 +342,7 @@ function shuffle(items, rng) {
 }
 
 export function patchFreshmanEquipment(playerRecords, visualsRecords, visualsTableId, options = {}) {
-  const { teamNames = new Map(), teamApparel = new Map(), donorPlayerRecords = playerRecords, donorVisualRecords = visualsRecords, donorVisualsTableId = visualsTableId, donorTeamNames = teamNames, donorTeamApparel = teamApparel, recipientRosterRows = null, donorRosterRows = null, fcsTeamIndexes = new Set(), excludedRecipientTeamIndexes = new Set(), eligiblePlayer = isTrueFreshman, top = 125, mixedChance = 0.30, crossMixedChance = 0.10, forceCrossPosition = false, usingUnlockedMod = false, noDripProfile = false, protectOriginalEaPlayers = originalEaProtectionEnabled(options), unlockedItemChance = 0.10, seed = 1, apply = false } = options;
+  const { teamNames = new Map(), teamApparel = new Map(), donorPlayerRecords = playerRecords, donorVisualRecords = visualsRecords, donorVisualsTableId = visualsTableId, donorTeamNames = teamNames, donorTeamApparel = teamApparel, recipientRosterRows = null, donorRosterRows = null, fcsTeamIndexes = new Set(), excludedRecipientTeamIndexes = new Set(), eligiblePlayer = () => true, top = 15, mixedChance = 0.30, crossMixedChance = 0.10, forceCrossPosition = false, usingUnlockedMod = false, noDripProfile = false, protectOriginalEaPlayers = originalEaProtectionEnabled(options), unlockedItemChance = 0.10, seed = 1, apply = false } = options;
   const disableCrossPosition = options.disableCrossPosition === true;
   const crossDonorGroups = options.crossDonorGroups ? normalizeCrossDonorGroups(options.crossDonorGroups) : null;
   if (disableCrossPosition && forceCrossPosition) throw new Error("Disable cross-position mixing and forced mixing cannot both be enabled.");
@@ -370,7 +370,7 @@ export function patchFreshmanEquipment(playerRecords, visualsRecords, visualsTab
   }
   for (const list of donorsByPosition.values()) list.sort((a, b) => b.overall - a.overall || a.row - b.row);
   const facePaintPool = buildFacePaintPool([...donorsByPosition.values()].flatMap(list => list.slice(0, donorLimit)), options);
-  const protectedDonorRecords = donorPlayerRecords === playerRecords
+  const protectedDonorRecords = donorPlayerRecords === playerRecords && !options.randomizeDonors
     ? new Set([...donorsByPosition.values()].flatMap(list => list.slice(0, donorLimit).map(donor => donor.record)))
     : new Set();
 
