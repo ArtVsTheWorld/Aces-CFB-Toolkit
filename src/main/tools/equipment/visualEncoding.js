@@ -71,7 +71,7 @@ export function preserveIsonStringCase(ison, expected, lookup) {
   return changed ? Buffer.concat(chunks) : ison;
 }
 
-export function encodeVisualData(codec, value, old, maxLength, context) {
+function encodeExactVisualData(codec, value, old, maxLength, context) {
   const encoded = codec.setUnformattedValueFromFormatted(value, old, maxLength, context);
   if (context?.gameYear !== 27 || context?.gameType !== "college" || context?.tableName !== "CharacterVisuals") return encoded;
   const { lookup, dictionary, canonical } = collegeVisualAssets(), expected = JSON.parse(value);
@@ -89,4 +89,29 @@ export function encodeVisualData(codec, value, old, maxLength, context) {
   const result = Buffer.alloc(2 + Math.max(compressed.length, maxLength));
   result.writeUInt16LE(compressed.length); compressed.copy(result, 2);
   return result;
+}
+
+// Each visual is compressed again inside the outer save stream. A faster Zstd
+// representation often leaves more repeated bytes for that outer compressor,
+// even when the individual frame is slightly larger. Preserve the exact ISON
+// bytes, native dictionary/format, and existing inline/overflow requirement.
+// Never trade a smaller outer file for additional storage rows or data loss.
+export function encodeSaveFriendlyVisualFrame(encoded, maxLength, dictionary) {
+  if (!Buffer.isBuffer(encoded) || encoded.length < 6 || !encoded.subarray(2, 6).equals(magic)) return encoded;
+  const length = encoded.readUInt16LE(0);
+  if (length <= 0 || length + 2 > encoded.length) throw new Error('Truncated encoded equipment data. The save has not been written.');
+  const ison = zlib.zstdDecompressSync(encoded.subarray(2, 2 + length), {dictionary});
+  const compressed = zlib.zstdCompressSync(ison, {dictionary, params: {[zlib.constants.ZSTD_c_compressionLevel]: 1}});
+  const capacity = maxLength + 2;
+  if ((length > maxLength) !== (compressed.length > maxLength) || compressed.length > 2 * capacity - 2 || compressed.length > 0xffff) return encoded;
+  if (!zlib.zstdDecompressSync(compressed, {dictionary}).equals(ison)) throw new Error('Equipment compression changed its encoded data. The save has not been written.');
+  const result = Buffer.alloc(2 + Math.max(compressed.length, maxLength));
+  result.writeUInt16LE(compressed.length); compressed.copy(result, 2);
+  return result;
+}
+
+export function encodeVisualData(codec, value, old, maxLength, context) {
+  const encoded = encodeExactVisualData(codec, value, old, maxLength, context);
+  if (context?.gameYear !== 27 || context?.gameType !== 'college' || context?.tableName !== 'CharacterVisuals') return encoded;
+  return encodeSaveFriendlyVisualFrame(encoded, maxLength, collegeVisualAssets().dictionary);
 }

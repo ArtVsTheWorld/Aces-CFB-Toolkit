@@ -71,7 +71,7 @@ test("Raw and Unlocked pool membership stays separate and unclassified masks are
   const unlocked = Object.values(UNLOCKED_POOLS).flat(), raw = Object.values(RAW_ACCESSORIES_POOLS).flat();
   const rawNames = new Set(raw.map(item => item.itemName));
   assert.ok(unlocked.every(item => !rawNames.has(item.itemName) && equipmentOrigin(item.itemName) !== "raw"));
-  assert.ok(raw.every(item => equipmentOrigin(item.itemName) === "raw"));
+  assert.ok(raw.every(item => equipmentOrigin(item.itemName, {usingRawAccessoriesMod:true}) === "raw"));
   assert.ok(UNLOCKED_POOLS.neckwear.filter(item => item.category === "Neckwear").every(item => equipmentOrigin(item.itemName) === "unlocked"));
   const inventory = JSON.parse(fs.readFileSync(new URL("../src/main/tools/equipment/equipmentColorInventory.json", import.meta.url), "utf8"));
   for (const name of inventory.unclassifiedNeckwear) assert.ok(![...unlocked, ...raw].some(item => item.itemName === name), name);

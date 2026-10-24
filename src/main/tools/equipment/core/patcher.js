@@ -212,6 +212,7 @@ export function applyUnlockedRandomizerEquipment(loadouts, target, rng, perCateg
 }
 
 export function applyRawRandomizerEquipment(loadouts, rng, perCategoryChance = 0.10, state = createGeneratedEquipmentState(loadouts), position = "", configuration) {
+  if (state) state.options = {...state.options, usingRawAccessoriesMod: true};
   const changes = [];
   const neckwear = configuredModItems(RAW_ACCESSORIES_POOLS.neckwear, configuration, "neckwear").filter(item => canGenerateEquipment(loadouts, item, item.slots, position));
   if (neckwear.length && rng() < modCategoryChance(configuration, "neckwear", perCategoryChance)) {
@@ -223,6 +224,13 @@ export function applyRawRandomizerEquipment(loadouts, rng, perCategoryChance = 0
   }
   const backplates = configuredModItems(RAW_ACCESSORIES_POOLS.backplates ?? [], configuration, "backplates").filter(item => canGenerateEquipment(loadouts, item, ["BackPlate"], position));
   if (backplates.length && rng() < modCategoryChance(configuration, "backplates", perCategoryChance)) applyCatalogItem(loadouts, "Backplate", choose(backplates, rng), ["BackPlate"], changes, state);
+  const sleeves = configuredModItems(RAW_ACCESSORIES_POOLS.armSleeves, configuration, 'armSleeves');
+  if (sleeves.length && rng() < modCategoryChance(configuration, 'armSleeves', 0)) {
+    for (const side of ['Left', 'Right']) {
+      const slots = [`${side}ArmWear`], available = sleeves.filter(item => canGenerateEquipment(loadouts, item, slots, position));
+      if (available.length) applyCatalogItem(loadouts, `${side} RAW Jamo sleeve`, choose(available, rng), slots, changes, state);
+    }
+  }
   return changes;
 }
 
@@ -442,9 +450,9 @@ export function patchFreshmanEquipment(playerRecords, visualsRecords, visualsTab
     targetVisuals.loadouts.forEach(loadout => { sleeveCompatibilityCorrections += enforceArmSleeveCompatibility(loadout.loadoutElements, { usingUnlockedMod }).length; });
     const generatedCorrections = enforceGeneratedEquipmentCompatibility(targetVisuals.loadouts, generated, target.position);
     sleeveCompatibilityCorrections += generatedCorrections.length;
-    unlockedChanges = finalGeneratedChanges(targetVisuals.loadouts, unlockedChanges);
-    rawChanges = finalGeneratedChanges(targetVisuals.loadouts, rawChanges);
-    equipmentTruckChanges = finalGeneratedChanges(targetVisuals.loadouts, equipmentTruckChanges);
+    unlockedChanges = finalGeneratedChanges(targetVisuals.loadouts, unlockedChanges, generated?.options);
+    rawChanges = finalGeneratedChanges(targetVisuals.loadouts, rawChanges, generated?.options);
+    equipmentTruckChanges = finalGeneratedChanges(targetVisuals.loadouts, equipmentTruckChanges, generated?.options);
     const newRawData = JSON.stringify(targetVisuals.parsed);
     if (apply) targetVisuals.visual.RawData = newRawData;
     changes.push({ fallbackNotes: [...(!ownPositionCandidates.length ? ["Used position-family donors because no eligible same-position donor was available."] : []), ...(crossPositions.length && !crossEligible ? ["Cross-position sources unavailable; used the normal donor pool."] : []), ...(usedDonors.some(donor => donor.bodyType !== target.bodyType) ? ["Kept body-dependent gear where donor and receiver builds differ."] : [])], target, donor: donorUses[0].donor, donorUses, mixed, crossPositionMixed, isFcs, visualsRow: targetVisuals.ref.row, newRawData, brandAssignments: branded.audits, brandCorrections, facePaint, ...(generatedCorrections.length ? { generatedCorrections } : {}), ...(usingUnlockedMod ? { unlockedChanges } : {}), ...(options.usingRawAccessoriesMod ? { rawChanges } : {}), ...(options.usingEquipmentTruckMod ? { equipmentTruckChanges } : {}), ...(noDripProfile ? { noDrip, noDripChanges } : {}) });

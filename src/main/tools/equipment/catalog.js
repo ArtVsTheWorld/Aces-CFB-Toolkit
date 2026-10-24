@@ -9,6 +9,8 @@ const modInventory = JSON.parse(fs.readFileSync(new URL("./equipmentModInventory
 const colorInventory = JSON.parse(fs.readFileSync(new URL("./equipmentColorInventory.json", import.meta.url), "utf8"));
 const sourcedInventory = JSON.parse(fs.readFileSync(new URL("./equipmentSourcedInventory.json", import.meta.url), "utf8"));
 const raw204Inventory = JSON.parse(fs.readFileSync(new URL("./equipmentRaw204Inventory.json", import.meta.url), "utf8"));
+export const RAW_314 = JSON.parse(fs.readFileSync(new URL('./equipmentRaw314Inventory.json', import.meta.url), 'utf8'));
+const rawStockOriginals = new Map(Object.entries(RAW_314.displacedStock).map(([original, alias]) => [alias, original]));
 const mod191Inventory = JSON.parse(fs.readFileSync(new URL("./equipmentMod191Inventory.json", import.meta.url), "utf8"));
 const unlocked097 = JSON.parse(fs.readFileSync(new URL("./equipmentUnlocked097Inventory.json", import.meta.url), "utf8"));
 const unlockedLive210 = JSON.parse(fs.readFileSync(new URL("./equipmentUnlockedLive210Inventory.json", import.meta.url), "utf8"));
@@ -17,25 +19,30 @@ const offlineInventory = JSON.parse(fs.readFileSync(new URL("./equipmentOfflineI
 const offlineLabels = new Map(Object.entries(offlineInventory.displayNames).map(([id, label]) => [id.toLowerCase(), label]));
 const liveFacemasks = JSON.parse(fs.readFileSync(new URL("./equipmentLiveFacemasks.json", import.meta.url), "utf8"));
 const modItems = Object.entries(modInventory.mods).flatMap(([origin, mod]) => (mod.equipmentItems ?? []).map(item => ({ ...item, origin })));
-const mergedItems = new Map([...catalog.items, ...modItems, ...colorInventory.items, ...sourcedInventory.items, ...liveFacemasks.items, ...raw204Inventory.items, ...mod191Inventory.items, ...unlocked097.items, ...unlockedLive210.items, ...equipmentTruck.items, ...offlineInventory.items].map(item => [item.itemName, item]));
+const mergedItems = new Map([...catalog.items, ...modItems, ...colorInventory.items, ...sourcedInventory.items, ...liveFacemasks.items, ...raw204Inventory.items, ...mod191Inventory.items, ...unlocked097.items, ...unlockedLive210.items, ...equipmentTruck.items, ...offlineInventory.items, ...RAW_314.items].map(item => [item.itemName, item]));
 export const EQUIPMENT_ITEMS = Object.freeze([...mergedItems.values()].map(item => {
   const resolved = { ...item, displayName: sourcedInventory.displayNames[item.itemName] ?? item.displayName, ...GENERATION_METADATA.itemOverrides[item.itemName] };
   if (unlocked097.cleatDisplayNames[item.itemName]) resolved.displayName = unlocked097.cleatDisplayNames[item.itemName];
   return Object.freeze({ ...resolved, semantic: describeEquipment(resolved) });
 }));
 const BY_ITEM_NAME = new Map(EQUIPMENT_ITEMS.map(item => [item.itemName, item]));
+const RAW_JAMO_ITEMS = RAW_314.jamoItems.map(item => { const semantic = {...describeEquipment(item), actualType: 'raw-jamo-sleeve'}; delete semantic.coverage; return Object.freeze({...item, semantic}); });
+const RAW_JAMO_BY_NAME = new Map(RAW_JAMO_ITEMS.map(item => [item.itemName, item]));
 const TATTOO_DISPLAY_NAMES = new Map(UNLOCKED_TATTOO_POOL.map(item => [item.value, item.label]));
-export const equipmentItem = itemName => BY_ITEM_NAME.get(String(itemName ?? ""));
+export const equipmentItem = (itemName, options) => (options?.usingRawAccessoriesMod ? RAW_JAMO_BY_NAME.get(String(itemName ?? '')) : null) ?? BY_ITEM_NAME.get(String(itemName ?? ""));
+export const isRawJamoItem = itemName => RAW_JAMO_BY_NAME.has(itemName);
+export const rawStockOriginal = itemName => rawStockOriginals.get(itemName) ?? itemName;
 // Only reject positively catalogued wrong-slot items. Unknown custom mouthpiece
 // assets are not sufficient evidence to remove gear from a modded save.
 export function isInvalidMouthpieceAsset(asset) { const item = equipmentItem(asset); return Boolean(item && !item.slots.includes("MouthWear")); }
 export function mouthpieceDisplayValue(value) { return String(value ?? "").split(/,\s*/).map(asset => isInvalidMouthpieceAsset(asset) ? `Invalid Mouthpiece (${equipmentDisplayName(asset)})` : equipmentDisplayName(asset)).join(", "); }
-export const equipmentOrigin = itemName => equipmentItem(itemName)?.origin ?? "catalog";
-export const equipmentSemantics = itemName => equipmentItem(itemName)?.semantic ?? uncataloguedEquipmentSemantics(itemName);
+export const equipmentOrigin = (itemName, options) => equipmentItem(itemName, options)?.origin ?? "catalog";
+export const equipmentSemantics = (itemName, options) => equipmentItem(itemName, options)?.semantic ?? uncataloguedEquipmentSemantics(itemName);
 export const canGenerateItem = item => item?.semantic.poolEligible === true;
 
-export function equipmentDisplayName(itemName) {
+export function equipmentDisplayName(itemName, options) {
   const value = String(itemName ?? "");
+  if (options?.usingRawAccessoriesMod && RAW_JAMO_BY_NAME.has(value)) return RAW_JAMO_BY_NAME.get(value).displayName;
   return TATTOO_DISPLAY_NAMES.get(value) || BY_ITEM_NAME.get(value)?.displayName || sourcedInventory.displayNames[value] || unlocked097.observedDisplayNames[value] || FACEPAINT_DISPLAY_NAMES.get(value) || offlineLabels.get(value.toLowerCase()) || value;
 }
 
@@ -54,10 +61,10 @@ export function equipmentTags(itemName) {
   return [...(BY_ITEM_NAME.get(String(itemName ?? ""))?.tags ?? [])];
 }
 
-export function equipmentDisplayValue(value) {
+export function equipmentDisplayValue(value, options) {
   const text = String(value ?? "");
-  if (BY_ITEM_NAME.has(text) || FACEPAINT_DISPLAY_NAMES.has(text)) return equipmentDisplayName(text);
-  return text.replace(/[A-Za-z][A-Za-z0-9]*(?:_[A-Za-z0-9]+)+/g, token => equipmentDisplayName(token));
+  if (BY_ITEM_NAME.has(text) || FACEPAINT_DISPLAY_NAMES.has(text)) return equipmentDisplayName(text, options);
+  return text.replace(/[A-Za-z][A-Za-z0-9]*(?:_[A-Za-z0-9]+)+/g, token => equipmentDisplayName(token, options));
 }
 
 const COLOR_TOKEN = /_(TeamColor|SecondaryColor|Primary|Secondary|Black|White|OffWhite)(\d*)$/i;
@@ -69,6 +76,7 @@ const THEME_TOKENS = Object.freeze({
 });
 const COLOR_FAMILIES = new Map();
 for (const item of EQUIPMENT_ITEMS) {
+  if (rawStockOriginals.has(item.itemName)) continue;
   const match = item.itemName.match(COLOR_TOKEN);
   if (!match) continue;
   const key = `${item.itemName.slice(0, match.index)}_#${match[2] || ""}`.toLowerCase();
@@ -83,6 +91,7 @@ const registerExplicitFamily = family => {
   for (const itemName of new Set(Object.values(family))) EXPLICIT_COLOR_LOOKUP.set(itemName, targets);
 };
 raw204Inventory.colorFamilies.forEach(registerExplicitFamily);
+RAW_314.colorFamilies.forEach(registerExplicitFamily);
 // All four ItemInfo labels rechecked in the user's live Unlocked session on
 // 2026-10-20 (repeated ItemName fields and DisplayName +56 agree).
 registerExplicitFamily({white:'G_CompressionT_Crew_ShortSleeve_BasicJ_WHI',black:'G_CompressionT_Crew_ShortSleeve_BasicJ_BLA',primary:'G_CompressionT_Crew_ShortSleeve_BasicJ_PRI',secondary:'G_CompressionT_Crew_ShortSleeve_BasicJ_SEC'});
@@ -152,11 +161,17 @@ registerExplicitFamily({ primary: "NeckWear_Turtleneck_Tight5" });
 
 export const EQUIPMENT_COLOR_THEMES = Object.freeze(["primary", "secondary", "black", "white"]);
 
-export function recolorEquipmentItem(itemName, theme) {
+export function recolorEquipmentItem(itemName, theme, options) {
+  if (options?.usingRawAccessoriesMod) {
+    if (RAW_JAMO_BY_NAME.has(itemName)) return RAW_314.jamoColors[theme] ?? itemName;
+    const recolored = recolorEquipmentItem(rawStockOriginal(itemName), theme);
+    return RAW_314.displacedStock[recolored] ?? recolored;
+  }
+  if (rawStockOriginals.has(itemName)) return itemName;
   const value = String(itemName ?? "");
-  if (equipmentItem(value)?.displayOnly) return value;
   const explicit = EXPLICIT_COLOR_LOOKUP.get(value);
   if (explicit) return explicit.get(theme) ?? value;
+  if (equipmentItem(value)?.displayOnly) return value;
   const match = value.match(COLOR_TOKEN);
   const tokens = THEME_TOKENS[theme];
   if (!match || !tokens) return value;
@@ -261,9 +276,10 @@ export const UNLOCKED_POOLS = Object.freeze({
 });
 
 export const RAW_ACCESSORIES_POOLS = Object.freeze({
+  armSleeves: RAW_JAMO_ITEMS,
   backplates: equipmentItemsFor("Back Plate", item => item.origin === "raw" && canGenerateItem(item)),
   neckwear: EQUIPMENT_ITEMS.filter(item => item.origin === "raw" && ["Neckwear", "Neck Pad"].includes(item.category)),
-  skullcaps: EQUIPMENT_ITEMS.filter(item => item.origin === "raw" && item.category === "Guardian Cap")
+  skullcaps: EQUIPMENT_ITEMS.filter(item => item.origin === "raw" && item.category === "Guardian Cap" && canGenerateItem(item))
 });
 
 export const EQUIPMENT_TRUCK_POOLS = Object.freeze({

@@ -27,7 +27,7 @@ async function equipmentQuickstartPage(tool) {
     content.innerHTML=toolHeader(tool)+`<div class="standard-config-workspace nil-toggle-workspace quickstart-workspace">
       <section class="ops-section"><header class="ops-section-header"><span class="step-number">1</span><div><h2>Mods You Use</h2><p>Leave these off for an unmodded game.</p></div></header><div class="ops-section-body quickstart-mod-grid">
         ${mod('unlocked','CFB27 Unlocked v0.97+','Requires v0.97 or newer, by Orckestra. Enables its equipment pool, tattoos, mouthpieces, accessory recoloring, lower rolled jerseys, cutoff pants and sock styles, using Patcher defaults. Accessory colors use team percentages; tape matches accessory color.')}
-        ${mod('raw','RAW Accessories v3.1.0+','Requires v3.1.0 or newer, by Delonte RAW. Enables its default equipment pool.')}
+        ${mod('raw','RAW Accessories v3.1.4+','Requires v3.1.4 or newer, by Delonte RAW. Enables its default equipment pool.')}
         ${mod('gameday','GameDay Gear v2.0+','Requires v2.0 or newer, by ElJax YT (Equipment Truck). Enables its default pool and Team Logo / Team Brand clear visors. Other visor tints are preserved.')}
       </div></section>
       <section class="ops-section"><header class="ops-section-header"><span class="step-number">2</span><div><h2>Players in This Dynasty ${modelHelpButton('Quickstart Player Memory','Successful Quickstart and Randomizer runs share player memory for this dynasty on this computer. Renamed saves, manual saves, autosaves and copies keep the same memory. Preview does not mark players.')}</h2><p>Original EA roster players stay unchanged. Previously randomized players are skipped.</p></div></header><div class="ops-section-body configuration-stack">

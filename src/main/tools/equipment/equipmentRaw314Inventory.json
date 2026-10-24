@@ -1,0 +1,238 @@
+{
+  "verification": "RAW Accessories v3.1.4, Delonte RAW. Read-only installed MMC/CollegeFB27 SDK decoding on 2026-10-24 verifies exact definition names, display labels, Model/Material, and slots 29=Neckpad, 110/111=Left/RightArmWear, 135=GuardianCap. Jamo sleeves deliberately reuse four vanilla IDs; RawJamo_* IDs preserve displaced stock styles. Apply Jamo interpretation only in explicit RAW context. No mod payloads are bundled.",
+  "version": "3.1.4",
+  "sha256": "cbe96d7bb79c929bf81a80db046951f7e5ff5180c8452faa3329b88e6274d069",
+  "items": [
+    {
+      "itemName": "GearNeckpad_Raw_DiamondNecklace",
+      "displayName": "Diamond Necklace",
+      "category": "Neckwear",
+      "slots": [
+        "Neckpad"
+      ],
+      "tags": [],
+      "origin": "raw"
+    },
+    {
+      "itemName": "GuardianCap_RawNikeSkullCapTeamColorV190",
+      "displayName": "Team Primary Nike Skullcap",
+      "category": "Guardian Cap",
+      "slots": [
+        "GuardianCap"
+      ],
+      "tags": [
+        "GuardianCap",
+        "Gender_All"
+      ],
+      "origin": "raw",
+      "themeColors": [
+        "primary"
+      ]
+    },
+    {
+      "itemName": "GuardianCap_RawLongDreadlocksCombo_RawNikeSkullCapTeamColorV190",
+      "displayName": "Long Dreadlocks + Team Primary Nike Skullcap",
+      "category": "Guardian Cap",
+      "slots": [
+        "GuardianCap"
+      ],
+      "tags": [
+        "GuardianCap",
+        "Gender_All"
+      ],
+      "origin": "raw",
+      "themeColors": [
+        "primary"
+      ],
+      "displayOnly": true
+    },
+    {
+      "itemName": "GuardianCap_RawBattleSkullCapTeamColorV190",
+      "displayName": "Team Primary Battle Skullcap",
+      "category": "Guardian Cap",
+      "slots": [
+        "GuardianCap"
+      ],
+      "tags": [
+        "GuardianCap",
+        "Gender_All"
+      ],
+      "origin": "raw",
+      "themeColors": [
+        "primary"
+      ]
+    },
+    {
+      "itemName": "GuardianCap_RawLongDreadlocksCombo_RawBattleSkullCapTeamColorV190",
+      "displayName": "Long Dreadlocks + Team Primary Battle Skullcap",
+      "category": "Guardian Cap",
+      "slots": [
+        "GuardianCap"
+      ],
+      "tags": [
+        "GuardianCap",
+        "Gender_All"
+      ],
+      "origin": "raw",
+      "themeColors": [
+        "primary"
+      ],
+      "displayOnly": true
+    },
+    {
+      "itemName": "GearArmSleeve_RawJamo_White",
+      "displayName": "Full Arm Sleeve — Black (RAW)",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "raw",
+      "displayOnly": true
+    },
+    {
+      "itemName": "GearArmSleeve_RawJamo_Black",
+      "displayName": "Honeycomb Padded Sleeve — White (RAW)",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [
+        "Gender_All",
+        "GearArm_FullSleeve"
+      ],
+      "origin": "raw",
+      "displayOnly": true
+    },
+    {
+      "itemName": "GearArmSleeve_RawJamo_SecondaryColor",
+      "displayName": "Shooter Sleeve — Team Secondary (RAW)",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "raw",
+      "displayOnly": true
+    },
+    {
+      "itemName": "GearArmSleeve_RawJamo_TeamColor",
+      "displayName": "Short Arm Tape — Black (RAW)",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "raw",
+      "displayOnly": true
+    }
+  ],
+  "colorFamilies": [
+    {
+      "black": "GuardianCap_RawNikeSkullCap",
+      "white": "GuardianCap_RawNikeSkullCapWhiteV87",
+      "primary": "GuardianCap_RawNikeSkullCapTeamColorV190"
+    },
+    {
+      "black": "GuardianCap_RawLongDreadlocksCombo_RawNikeSkullCap",
+      "white": "GuardianCap_RawLongDreadlocksCombo_RawNikeSkullCapWhiteV87",
+      "primary": "GuardianCap_RawLongDreadlocksCombo_RawNikeSkullCapTeamColorV190"
+    },
+    {
+      "black": "GuardianCap_RawBattleSkullCap",
+      "white": "GuardianCap_RawBattleSkullCapWhiteV87",
+      "primary": "GuardianCap_RawBattleSkullCapTeamColorV190"
+    },
+    {
+      "black": "GuardianCap_RawLongDreadlocksCombo_RawBattleSkullCap",
+      "white": "GuardianCap_RawLongDreadlocksCombo_RawBattleSkullCapWhiteV87",
+      "primary": "GuardianCap_RawLongDreadlocksCombo_RawBattleSkullCapTeamColorV190"
+    }
+  ],
+  "jamoItems": [
+    {
+      "itemName": "GearArmSleeve_Quarter_armTape_normal_Black",
+      "displayName": "RAW Jamo Sleeves — Team Primary",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [
+        "Gender_All"
+      ],
+      "origin": "raw",
+      "themeColors": [
+        "primary"
+      ],
+      "rawJamo": true
+    },
+    {
+      "itemName": "GearArmSleeve_McDavidPaddedCompressionSleeve_White",
+      "displayName": "RAW Jamo Sleeves — Black",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [
+        "Gender_All"
+      ],
+      "origin": "raw",
+      "themeColors": [
+        "black"
+      ],
+      "rawJamo": true
+    },
+    {
+      "itemName": "GearArmSleeve_Shooter_sleeveLongUnderarmor_normal_SecondaryColor",
+      "displayName": "RAW Jamo Sleeves — Team Secondary",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [
+        "Gender_All"
+      ],
+      "origin": "raw",
+      "themeColors": [
+        "secondary"
+      ],
+      "rawJamo": true
+    },
+    {
+      "itemName": "GearArmSleeve_Full_sleeveLongUnderarmor_normal_Black",
+      "displayName": "RAW Jamo Sleeves — White",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [
+        "Gender_All"
+      ],
+      "origin": "raw",
+      "themeColors": [
+        "white"
+      ],
+      "rawJamo": true
+    }
+  ],
+  "jamoColors": {
+    "primary": "GearArmSleeve_Quarter_armTape_normal_Black",
+    "black": "GearArmSleeve_McDavidPaddedCompressionSleeve_White",
+    "secondary": "GearArmSleeve_Shooter_sleeveLongUnderarmor_normal_SecondaryColor",
+    "white": "GearArmSleeve_Full_sleeveLongUnderarmor_normal_Black"
+  },
+  "displacedStock": {
+    "GearArmSleeve_Quarter_armTape_normal_Black": "GearArmSleeve_RawJamo_TeamColor",
+    "GearArmSleeve_McDavidPaddedCompressionSleeve_White": "GearArmSleeve_RawJamo_Black",
+    "GearArmSleeve_Shooter_sleeveLongUnderarmor_normal_SecondaryColor": "GearArmSleeve_RawJamo_SecondaryColor",
+    "GearArmSleeve_Full_sleeveLongUnderarmor_normal_Black": "GearArmSleeve_RawJamo_White"
+  }
+}

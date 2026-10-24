@@ -151,8 +151,13 @@ app.whenReady().then(async () => {
     draft("randomize-existing-mouthpieces").click(); change(draft("mouthpiece-branded-frequency"), "110"); check(document.querySelector("[data-config-save]").disabled, "Mouthpiece frequency bounds enforced");
     change(draft("mouthpiece-branded-frequency"), "35"); save(); check(equipmentOptions("equipment-patcher").rerollExistingMouthpieces && equipmentOptions("equipment-patcher").brandedMouthpieceFrequency === 35, "Mouthpiece settings commit through existing options");
     document.querySelector("#fix-unlocked-recolor").click(); open("Colors & Tape");
+    check(!draft('recolor-raw-accessories').checked, 'RAW replacement interpretation starts off');
+    draft('recolor-raw-accessories').click(); cancel();
+    check(!document.querySelector('#recolor-raw-accessories').checked, 'Cancel discards RAW interpretation changes');
+    open('Colors & Tape');
     change(draft("accessory-color-white"), "80"); check(document.querySelector("[data-config-save]").disabled, "Color weights must total 100");
     document.querySelector("[data-config-reset]").click(); check(draft("accessory-color-white").value === "65", "Scoped reset restores only draft defaults");
+    draft('recolor-raw-accessories').click();
     change(draft("tape-color-mode"), "distribution");
     const tapeRows = [...document.querySelectorAll("dialog [data-tape-team-row]")], row = tapeRows.find(row => row.dataset.tapeTeamRow === "alabama");
     const white = row.querySelector('[data-tape-color="white"]'); change(white, "3");
@@ -161,6 +166,7 @@ app.whenReady().then(async () => {
     row.querySelector("[data-balance-tape]").click(); check([...row.querySelectorAll("[data-tape-color]")].map(input => Number(input.value)).reduce((a,b) => a+b,0) === 100, "Tape balancing remains whole and exact");
     change(draft("tape-color-mode"), "accessory"); change(draft("unlocked-color-theme"), "black"); save();
     check(equipmentOptions("equipment-patcher").tapeColorMode === "accessory", "Match tape behavior preserved");
+    check(equipmentOptions('equipment-patcher').usingRawAccessoriesMod === true, 'Save commits RAW Jamo interpretation');
 
     if(!document.querySelector("#fix-rolled").checked)document.querySelector("#fix-rolled").click();
     open("Undershirt Settings"); change(draft("undershirt-color"),"custom");

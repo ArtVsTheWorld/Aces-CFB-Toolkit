@@ -78,7 +78,7 @@ export function enforceGeneratedEquipmentCompatibility(loadouts, state, position
     for (const [slot, asset] of state.added[index]) {
       const elements = loadout.loadoutElements;
       if (get(elements, slot) !== asset) continue;
-      const item = equipmentItem(asset), reason = item && (!allowedPoolPosition(item, position) ? "Item is not generated for this position" : generatedItemConflict(elements, item, [slot], position));
+      const item = equipmentItem(asset, state.options), reason = item && (!allowedPoolPosition(item, position) ? "Item is not generated for this position" : generatedItemConflict(elements, item, [slot], position));
       // A paired band/cleat shares a type on two sides but is not a conflict.
       if (!reason) continue;
       const at = elements.findIndex(element => element.slotType === slot);
@@ -92,10 +92,10 @@ export function enforceGeneratedEquipmentCompatibility(loadouts, state, position
 
 // Optional-pool descriptions must describe what survived No Drip and final
 // compatibility checks, not earlier rolls that were subsequently removed.
-export function finalGeneratedChanges(loadouts, changes) {
+export function finalGeneratedChanges(loadouts, changes, options) {
   return changes.flatMap(change => {
     const names = [...new Set(change.newItem.split(" + "))].filter(name => loadouts.some(loadout => loadout.loadoutElements.some(element => change.slots.includes(element.slotType) && element.itemAssetName === name)));
     if (!names.length) return [];
-    return [{ ...change, newItem: names.join(" + "), displayName: names.map(name => equipmentItem(name)?.displayName ?? name).join(" + ") }];
+    return [{ ...change, newItem: names.join(" + "), displayName: names.map(name => equipmentItem(name, options)?.displayName ?? name).join(" + ") }];
   });
 }

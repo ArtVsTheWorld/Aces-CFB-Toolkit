@@ -1,4 +1,4 @@
-import { equipmentTags, recolorEquipmentItem } from "../catalog.js";
+import { equipmentTags, recolorEquipmentItem, isRawJamoItem, rawStockOriginal } from "../catalog.js";
 
 export const DEFAULT_ACCESSORY_COLOR_WEIGHTS = Object.freeze({ white: 65, black: 20, primary: 10, secondary: 5 });
 export const DEFAULT_TAPE_COLOR_WEIGHTS = Object.freeze({ white: 95, black: 5, primary: 0, secondary: 0 });
@@ -55,22 +55,25 @@ export function rollAccessoryColorTheme(rng, weights = DEFAULT_ACCESSORY_COLOR_W
 }
 export function isWristTape(itemName, slot) { return ["LeftWristWear", "RightWristWear"].includes(slot) && (equipmentTags(itemName).includes("GearWrist_Tape") || /^(?:GearWrist_wristTaped(?:Lite|Normal|Max)_|G_WristTaped_Max_)/i.test(String(itemName))); }
 export function isArmTape(itemName, slot) { return ["LeftArmWear", "RightArmWear"].includes(slot) && /^GearArmSleeve_(?:Undershirt|Quarter)_armTape_normal_(?:Black|OffWhite|TeamColor|SecondaryColor)$/i.test(String(itemName)); }
-export function recolorTapeItem(itemName, color, slot) {
+export function recolorTapeItem(itemName, color, slot, options) {
   if (!Object.hasOwn(DEFAULT_TAPE_COLOR_WEIGHTS, color)) throw new Error("Tape color must be White, Black, Primary, or Secondary.");
   const item = String(itemName ?? "");
   // GearSpats_override_* items control cleat colors; they are not ankle tape.
-  if (["LeftSpat", "RightSpat"].includes(slot) && /^GearSpats_spatThin_/i.test(item)) return recolorEquipmentItem(item, color);
-  if (!isWristTape(item, slot) && !isArmTape(item, slot)) return item;
-  if (/^G_WristTaped_Max_/i.test(item)) return recolorEquipmentItem("GearWrist_wristTapedMax_TeamColor", color);
-  return recolorEquipmentItem(item, color);
+  const stock = options?.usingRawAccessoriesMod ? rawStockOriginal(item) : item;
+  if (["LeftSpat", "RightSpat"].includes(slot) && /^GearSpats_spatThin_/i.test(stock)) return recolorEquipmentItem(item, color, options);
+  if (!isWristTape(stock, slot) && !isArmTape(stock, slot)) return item;
+  if (/^G_WristTaped_Max_/i.test(stock)) return recolorEquipmentItem("GearWrist_wristTapedMax_TeamColor", color, options);
+  return recolorEquipmentItem(item, color, options);
 }
-export function recolorPlayerAccessories(loadouts, theme, tapeColor) {
+export function recolorPlayerAccessories(loadouts, theme, tapeColor, options) {
   const replacements = new Map();
   for (const loadout of loadouts) for (const element of loadout.loadoutElements) {
     const slot = element.slotType ?? element.slot, oldItem = element.itemAssetName;
     if (slot === "MouthWear") continue;
-    const newItem = ["LeftSpat", "RightSpat"].includes(slot) || isWristTape(oldItem, slot) || isArmTape(oldItem, slot)
-      ? recolorTapeItem(oldItem, tapeColor, slot) : recolorEquipmentItem(oldItem, theme);
+    const stock = options?.usingRawAccessoriesMod ? rawStockOriginal(oldItem) : oldItem;
+    const jamo = options?.usingRawAccessoriesMod && isRawJamoItem(oldItem);
+    const newItem = !jamo && (["LeftSpat", "RightSpat"].includes(slot) || isWristTape(stock, slot) || isArmTape(stock, slot))
+      ? recolorTapeItem(oldItem, tapeColor, slot, options) : recolorEquipmentItem(oldItem, theme, options);
     if (newItem !== oldItem) { element.itemAssetName = newItem; replacements.set(oldItem, newItem); }
   }
   return replacements;

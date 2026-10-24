@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { randomBytes } from "node:crypto";
+import { randomBytes, createHash } from "node:crypto";
 import { installVisualsWriteSafety, verifyVisualSnapshot, snapshotVisualsForVerification, saveEquipmentCandidate } from "../src/main/tools/equipment/visualsSafety.js";
 import { loadEquipmentTables, snapshotVisualRawData } from "../src/main/tools/equipment/shared.js";
 import { normalizeEquipmentOptions } from "../src/main/tools/equipment/runner.js";
@@ -137,6 +137,24 @@ test("packed-container capacity failure keeps the original save and leaves no ca
   await assert.rejects(saveEquipmentCandidate(loaded, schemaPath, before, []), /cannot fit/);
   assert.deepEqual(fs.readFileSync(savePath), original);
   assert.deepEqual(fs.readdirSync(directory), ["DYNASTY-TEST"]);
+});
+
+test('a concurrent save change after candidate validation is preserved instead of overwritten', {timeout: 30000}, async t => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'equipment-concurrent-save-'));
+  t.after(() => fs.rmSync(directory, {recursive: true, force: true}));
+  const savePath = path.join(directory, 'DYNASTY-TEST'); fs.copyFileSync(fixture, savePath);
+  const original = fs.readFileSync(savePath), changedByAnotherWriter = Buffer.from(original);
+  changedByAnotherWriter[changedByAnotherWriter.length - 1] ^= 1;
+  const loaded = await loadEquipmentTables(savePath, schemaPath), before = snapshotVisualsForVerification(loaded.visuals, snapshotVisualRawData(loaded.visuals.records));
+  const record = loaded.visuals.records.find(record => record && !record.isEmpty && typeof before.get(record.index) === 'string');
+  const data = JSON.parse(before.get(record.index)); data.safetyTestMarker = 'reviewed change';
+  const newValue = JSON.stringify(data); record.RawData = newValue;
+  const fingerprint = createHash('sha256').update(original).digest('hex');
+  await assert.rejects(saveEquipmentCandidate(loaded, schemaPath, before, [{table: 'visuals', row: record.index, newValue}], fingerprint, async () => {
+    fs.writeFileSync(savePath, changedByAnotherWriter);
+  }), /Active Save changed during Apply/);
+  assert.deepEqual(fs.readFileSync(savePath), changedByAnotherWriter);
+  assert.deepEqual(fs.readdirSync(directory), ['DYNASTY-TEST']);
 });
 
 test("real CharacterVisuals overflow allocation, reopening and release remain safe", { timeout: 30000 }, async t => {

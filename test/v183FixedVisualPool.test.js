@@ -4,7 +4,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { openCfb27Save, readTables } from "../src/main/services/save.js";
-import { VISUALS_TABLE_UID, snapshotVisualRawData } from "../src/main/tools/equipment/shared.js";
+import { VISUALS_TABLE_UID, snapshotVisualRawData, loadEquipmentTables } from "../src/main/tools/equipment/shared.js";
 import { validateVisualStorageLayout } from "../src/main/tools/equipment/visualStorage.js";
 import { installVisualsWriteSafety, snapshotVisualsForVerification, saveEquipmentCandidate, verifyVisualSnapshot } from "../src/main/tools/equipment/visualsSafety.js";
 import { parseRef, sf } from "../src/main/tools/equipment/openSave.js";
@@ -57,4 +57,24 @@ test("copy-on-write finds another in-pool block when the preferred canonical blo
   assert.deepEqual(JSON.parse(table.records[owner.index].RawData), JSON.parse(before.get(owner.index)));
   assert.deepEqual(JSON.parse(table.records[third.index].RawData), JSON.parse(before.get(third.index)));
   assert.deepEqual(validateVisualStorageLayout(table), before.storageLayout);
+});
+
+test('candidate serialization preserves all physical pointers after the planned record writes', {timeout: 60000}, async t => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'visual-block-order-')); t.after(() => fs.rmSync(directory, {recursive: true, force: true}));
+  const savePath = path.join(directory, 'DYNASTY-TEST'), schema = path.resolve('resources/engine-data/C27_486_6.gz');
+  fs.copyFileSync(path.resolve('../EXAMPLE SAVES VANILLA GAME/DYNASTY-LSUTESTSAVEPRESZN'), savePath);
+  const loaded = await loadEquipmentTables(savePath, schema), table = loaded.visuals;
+  const before = snapshotVisualsForVerification(table, snapshotVisualRawData(table.records));
+  const records = table.records.filter(record => record && !record.isEmpty && !parseRef(sf(record, 'Overflow')) && typeof before.get(record.index) === 'string').slice(0, 12);
+  const assignments = records.map((record, index) => {
+    const data = JSON.parse(before.get(record.index)); data.skinTone = index % 8;
+    const newValue = JSON.stringify(data); record.RawData = newValue;
+    return {table: 'visuals', row: record.index, newValue};
+  });
+  const offsets = table.records.map(record => record.getFieldByKey('RawData').thirdTableField.index);
+  await saveEquipmentCandidate(loaded, schema, before, assignments);
+  const reopened = await loadEquipmentTables(savePath, schema);
+  for (const record of reopened.visuals.records) assert.equal(record.getFieldByKey('RawData').thirdTableField.index, offsets[record.index], `row ${record.index} must retain its physical pointer`);
+  verifyVisualSnapshot(before, reopened.visuals, assignments);
+  assert.equal(fs.statSync(savePath).size, fs.statSync(path.resolve('../EXAMPLE SAVES VANILLA GAME/DYNASTY-LSUTESTSAVEPRESZN')).size);
 });
