@@ -42,7 +42,27 @@ test("custom accent colors validate safely and produce readable light/dark palet
   for (const color of ["#ffffff", "#000000", "#ffff00", "#ff0000", "#002244", "#aa22ff"]) for (const dark of [false, true]) {
     const palette = context.accentPalette(color, dark), rgb = palette["--action"].match(/\d+/g).map(Number);
     assert.ok(context.accentContrast(rgb, dark ? [17, 24, 22] : [255, 255, 255]) >= 4.45);
-    const ink = palette["--action-ink"] === "#ffffff" ? [255, 255, 255] : [16, 23, 29]; assert.ok(context.accentContrast(rgb, ink) >= 4.45);
+    const ink = palette["--action-ink"] === "#ffffff" ? [255, 255, 255] : [16, 23, 29]; assert.ok(context.accentContrast(rgb, ink) >= 4.45);assert.ok(context.accentContrast(palette['--action-2'].match(/\d+/g).map(Number),ink)>=4.45);
   }
   assert.equal(context.accentPalette(null), null);
+});
+
+test('independent main colors tint all main surfaces while preserving readable text and accents',()=>{
+ const context=vm.createContext({});vm.runInContext(fs.readFileSync(new URL('../src/renderer/accent.js',import.meta.url),'utf8'),context);
+ for(const dark of [false,true])for(const base of [null,'#ffffff','#000000','#ff0000','#00ff00','#0000ff','#aa22ff']){
+  const main=context.mainPalette(base,dark),rgb=value=>value.match(/\d+/g).map(Number),ink=dark?[244,244,247]:[23,23,29],muted=dark?[197,197,207]:[73,73,84];
+  for(const key of ['--surface','--surface-2','--surface-3']){assert.ok(context.accentContrast(ink,rgb(main[key]))>=7);assert.ok(context.accentContrast(muted,rgb(main[key]))>=4.5,base+' '+dark+' '+key);}
+  const accent=context.accentPalette('#ff00ff',dark,base);assert.ok(context.accentContrast(rgb(accent['--action']),rgb(main['--surface-3']))>=4.45);
+  if(base)assert.notEqual(main['--sidebar'],context.mainPalette(null,dark)['--sidebar']);
+ }
+});
+
+test('light mode keeps every light surface neutral while main color tints only dark chrome',()=>{
+ const context=vm.createContext({});vm.runInContext(fs.readFileSync(new URL('../src/renderer/accent.js',import.meta.url),'utf8'),context);
+ for(const color of ['#ff0000','#0000ff','#ffffff','#000000','#00ff00']){
+  const plain=context.mainPalette(null,false),tinted=context.mainPalette(color,false);
+  for(const key of ['--surface','--surface-2','--surface-3','--line','--ink','--subtle-ink'])assert.equal(tinted[key],plain[key]);
+  assert.notEqual(tinted['--sidebar'],plain['--sidebar']);assert.notEqual(tinted['--sidebar-2'],plain['--sidebar-2']);
+  assert.notEqual(context.mainPalette(color,true)['--surface'],context.mainPalette(null,true)['--surface']);
+ }
 });

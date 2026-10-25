@@ -9,6 +9,8 @@ import {ReviewSnapshots} from './reviewSnapshots.js';
 import {readHomeContext} from './homeContext.js';
 import {readSeasonLines} from '../tools/forceWin/runner.js';
 import {withToolProgress, toolProgress, progressRange} from './toolProgress.js';
+import path from 'node:path';
+import {readDynastyIdentity} from './dynastyIdentity.js';
 
 const memory = new QuickstartMemory(workerData.memoryFile);
 const reports = new ReportService(workerData.reportsDirectory);
@@ -17,6 +19,7 @@ const reviews = new ReviewSnapshots(workerData.reviewsDirectory);
 async function execute(action, payload) {
   const context = {...payload, quickstartMemory:memory};
   if (action === 'inspect') return inspectSaveSchema(payload.savePath, payload.schemaDirectory);
+  if (action === 'identity') return readDynastyIdentity(payload.savePath,payload.schemaDirectory??path.dirname(payload.schemaPath));
   if (action === 'prepare') {
     const prepared = await progressRange(0, 80, () => getToolHandler(payload.toolId)?.prepare?.(context) ?? {});
     toolProgress(82, 'Reading controlled teams…');
@@ -29,8 +32,11 @@ async function execute(action, payload) {
     const handler = getToolHandler(payload.toolId);
     if (!handler?.run) throw new Error('This tool has not been migrated yet.');
     const previous = payload.mode === 'apply' && payload.options?.planId ? planAudit(payload.options.planId) : null;
-    const audit = {...payload.audit, options:previous?.options ?? payload.options ?? {}, previewRunId:previous?.runId ?? null};
-    const result = await progressRange(0, 93, () => handler.run({...context, reports:reports.forRun(audit)}));
+    const dynastyId=await readDynastyIdentity(payload.savePath,path.dirname(payload.schemaPath));
+    if(payload.mode==='apply'&&previous?.dynastyId!=null&&previous.dynastyId!==dynastyId)throw Error('The save changed after Preview: it belongs to a different dynasty. Run Preview again.');
+    const audit = {...payload.audit,dynastyId, options:previous?.options ?? payload.options ?? {}, previewRunId:previous?.runId ?? null};
+    const generated = await progressRange(0, 93, () => handler.run({...context, reports:reports.forRun(audit)}));
+    const result={...generated,dynastyId};
     if (payload.mode === 'preview' && result.planId) setPlanAudit(result.planId, audit);
     toolProgress(94, 'Saving review details…');
     let reviewAvailable = false, reviewError = null;

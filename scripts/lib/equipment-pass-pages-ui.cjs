@@ -10,6 +10,7 @@ module.exports=async(window,root)=>{
   window.passSave=d=>{const button=d.querySelector('[data-config-save]');passCheck(!button.disabled,'Valid draft '+d.querySelector('[data-config-error]').textContent);button.click();passCheck(!document.querySelector('dialog[open]'),'Save closes')};
   navigate('equipment-patcher');await passWait(()=>document.getElementById('fix-unlocked-mouthpieces'));
   for(const id of ['fix-visors','fix-rolled','fix-unlocked-mouthpieces','fix-unlocked-lower-jersey','fix-unlocked-cutoff-pants','fix-unlocked-tattoos','fix-unlocked-recolor'])if(!document.getElementById(id).checked)document.getElementById(id).click();
+  document.getElementById('equipment-step-next').click();
   let d=passOpen('Visor Frequency'),read=id=>configurationRead(d,id);
   passCheck(d.querySelector('[role="tab"]').textContent==='All Positions','Visors start globally');
   passChange(d.querySelector('[data-global-key="visor"]'),'25');

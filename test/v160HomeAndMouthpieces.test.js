@@ -36,12 +36,12 @@ test("team artwork validates 1024-square logos and loads only an exact managed f
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), "cfb-team-artwork-"));
   t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
   const fakeImage = (width, height) => ({ createFromPath: () => ({ isEmpty: () => false, getSize: () => ({ width, height }), toPNG: () => Buffer.from("verified-image") }) });
-  assert.throws(() => saveTeamArtwork({ dataDirectory: directory, teamName: "LSU", kind: "logo", sourcePath: "unused", nativeImage: fakeImage(1023, 1024) }), /1024 × 1024/);
-  const saved = saveTeamArtwork({ dataDirectory: directory, teamName: "LSU", kind: "logo", sourcePath: "unused", nativeImage: fakeImage(1024, 1024) });
+  assert.throws(() => saveTeamArtwork({ dataDirectory: directory, teamName: "LSU", kind: "logo", sourcePath: "unused", dynastyId:42,nativeImage: fakeImage(1023, 1024) }), /1024 × 1024/);
+  const saved = saveTeamArtwork({ dataDirectory: directory, teamName: "LSU", kind: "logo", sourcePath: "unused", dynastyId:42,nativeImage: fakeImage(1024, 1024) });
   const key = teamArtworkKey(" LSU ");
   assert.equal(key, "lsu");
-  assert.equal(readTeamArtwork(directory, { [key]: { logo: saved.path } }, ["LSU"])[key].logo, saved.dataUrl);
-  assert.deepEqual(readTeamArtwork(directory, { [key]: { logo: path.join(directory, "elsewhere.png") } }, ["LSU"]), {});
+  assert.equal(readTeamArtwork(directory, { [key]: { logo: saved.path } }, ["LSU"],42)[key].logo, saved.dataUrl);
+  assert.deepEqual(readTeamArtwork(directory, { [key]: { logo: path.join(directory, "elsewhere.png") } }, ["LSU"],42), {});
 });
 
 test("Patcher color option preserves the safe default and adds Battle and NXTRND variants of nine bright colors", () => {
@@ -123,6 +123,6 @@ test("Home shows only saved context and recorded history, with existing tool nav
   assert.match(configuration, /Upload Header/);
   assert.match(renderer, /URL\.createObjectURL/);
   assert.match(fs.readFileSync(new URL("../src/renderer/index.html", import.meta.url), "utf8"), /img-src 'self' data: blob:/);
-  assert.match(main, /readHomeContext\(sessionActiveSave/);
+  assert.match(main, /toolWorker\.request\('home',\{savePath,schemaPath:schema\.path\}/);
   assert.doesNotMatch(renderer, /Continue Where You Left Off|active tool\$\{/);
 });

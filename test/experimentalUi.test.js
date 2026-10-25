@@ -12,7 +12,7 @@ test("the stable shell and packaging no longer show experimental release labels"
   assert.doesNotMatch(index, /Experimental UI|EXPERIMENTAL UI|UI REDESIGN|\(Experimental\)/);
   assert.doesNotMatch(renderer, /\(Experimental\)|This experimental build/);
   assert.doesNotMatch(pkg.build.artifactName, /Experimental/);
-  assert.equal(pkg.version, "23.1.0");
+  assert.equal(pkg.version, "24.0.0");
 });
 
 test("sports operations navigation retains every registered primary tool", () => {
@@ -77,7 +77,7 @@ test("Equipment second pass uses a persistent wizard and dedicated full-width pr
 });
 
 test("equipment preview replaces the full configuration page and Player Pool stays compact", () => {
-  assert.match(renderer, /id="equipment-config-workspace"/);
+  assert.match(fs.readFileSync(new URL('../src/renderer/ui-components.js', import.meta.url),'utf8'), /id="equipment-config-workspace"/);
   assert.match(renderer, /querySelector\("#equipment-config-workspace"\)/);
   assert.match(renderer, /showEquipmentPreviewWorkspace\(show\)[\s\S]*window\.scrollTo\(\{ top: 0, behavior: "smooth" \}\)/);
   assert.match(css, /\.equipment-config-workspace\[hidden\]/);

@@ -6,7 +6,7 @@ module.exports=async(window,root)=>{
   window.quickWait=async predicate=>{for(let i=0;i<1000;i++){if(predicate())return;await new Promise(r=>setTimeout(r,20))}throw Error('UI wait timed out: '+content.textContent.slice(-900))};
   window.quickChange=(node,value)=>{node.value=value;node.dispatchEvent(new Event('input',{bubbles:true}));node.dispatchEvent(new Event('change',{bubbles:true}))};
   navigate('equipment-quickstart');await quickWait(()=>document.getElementById('quickstart-unlocked'));
-  quickCheck(content.querySelectorAll('.standard-config-workspace input[type="checkbox"]').length===3,'Only mod choices are exposed');
+  quickCheck(content.querySelectorAll('.standard-config-workspace input[type="checkbox"]').length===4,'Three mods and one player-protection choice are exposed');
   quickCheck(!document.getElementById('quickstart-noDrip'),'No Drip is built in, not configurable');
   for(const key of ['unlocked','raw','gameday'])quickCheck(!document.getElementById('quickstart-'+key).checked,'Mod starts off: '+key);
   quickCheck(document.getElementById('quickstart-clear').disabled,'Clear disabled for empty memory');

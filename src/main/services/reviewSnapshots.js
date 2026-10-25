@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import zlib from "node:zlib";
+import {equipmentRunOverview} from '../../shared/equipmentRunOverview.js';
 
 export class ReviewSnapshots {
   constructor(directory) { this.directory = directory; }
@@ -12,7 +13,8 @@ export class ReviewSnapshots {
       const omitted = new Set(result.details.leaveUnchangedRows.map(Number));
       reviewRows = reviewRows.map(row => omitted.has(Number(row.row)) ? { ...row, affected: false, forcedWinner: 'Unchanged', proposedForceWin: row.existingForceWin, status: 'Left unchanged by user' } : row);
     }
-    const snapshot = { result: { ...result, planId: null, details: { ...result.details, changes: reviewRows.slice(0, 1000), totalPreviewRows: reviewRows.length } }, rows: reviewRows };
+    const overview=reviewRows.length===Number(result.details?.totalPreviewRows??reviewRows.length)?equipmentRunOverview(result.resultKind,reviewRows):null;
+    const snapshot = { result: { ...result, planId: null, details: { ...result.details, ...(overview?{equipmentOverview:overview}:{}), changes: reviewRows.slice(0, 1000), totalPreviewRows: reviewRows.length } }, rows: reviewRows };
     const destination = this.file(id), temporary = `${destination}.tmp`;
     fs.writeFileSync(temporary, zlib.gzipSync(JSON.stringify(snapshot)));
     fs.renameSync(temporary, destination);

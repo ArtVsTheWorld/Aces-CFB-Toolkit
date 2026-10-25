@@ -56,7 +56,7 @@ test('tracking blocks concurrent runs and clear operations',async t=>{
   memory.clear(saves[0]);
 });
 test('Quickstart fixes the simple pipeline, uses 15 donors and defaults No Drip on',()=>{
-  const defaults=quickstartSettings({top:999,protectOriginalEaPlayers:false});
+  const defaults=quickstartSettings({top:999});
   assert.equal(defaults.randomizer.top,15);assert.equal(normalizeEquipmentOptions({},true).top,15);
   assert.deepEqual(defaults.randomizer.classes,[]);assert.deepEqual(defaults.randomizer.redshirtStatuses,[]);
   assert.equal(defaults.randomizer.protectOriginalEaPlayers,true);assert.equal(defaults.randomizer.noDripProfile,true);
@@ -69,7 +69,9 @@ test('Quickstart mod switches enable the correct default pools and Unlocked corr
   assert.equal(randomizer.noDripProfile,true,'legacy No Drip opt-out is ignored in Quickstart');
   for(const name of ['unlockedTattooFix','unlockedMouthpieceFix','unlockedRecolorFix','lowerRolledJerseyFix','cutoffPantsFix','unlockedSocksFix'])assert.equal(patcher[name],true,name);
   assert.equal(patcher.unlockedColorTheme,'team');assert.equal(patcher.tapeColorMode,'accessory');
-  assert.equal(patcher.allowRandomMouthpieceColors,false);assert.equal(patcher.unlockedTattooCap,40);
+  assert.equal(patcher.allowRandomMouthpieceColors,false);assert.equal(patcher.unlockedTattooCap,35);assert.equal(patcher.fillFrequencies.tattoos,true);
+  assert.deepEqual(randomizer.donorOnlyPositions,['K','P']);
+  const unprotected=quickstartSettings({protectOriginalEaPlayers:false});assert.equal(unprotected.randomizer.protectOriginalEaPlayers,false);assert.equal(unprotected.patcher.protectOriginalEaPlayers,false);
   assert.equal(quickstartSettings({raw:true,gameday:true}).patcher.unlockedMouthpieceFix,false);
   assert.throws(()=>quickstartOptions({unlocked:'yes'}),/checkboxes/);
 });

@@ -85,6 +85,7 @@ function openCustomMatchupEditor() {
     dialog.querySelector("[data-week-limit]").addEventListener("input", event => { draft.maxForceWinsPerWeek = Number(event.target.value); update(); });
     dialog.querySelector("[data-load-model-preset]").addEventListener("click", () => { draft = structuredClone(prepared.customModelPresets[dialog.querySelector("[data-model-preset]").value]); render(); });
     dialog.querySelectorAll("[data-model-balance]").forEach(button => button.addEventListener("click", () => { const selected = fields.filter(field => field.group === button.dataset.modelBalance), inputs = selected.map(field => dialog.querySelector(`[data-model-path="${field.path}"]`)); balanceWholeInputs(inputs); inputs.forEach((input, index) => draft.values[selected[index].path] = Number(input.value) / 100); update(); }));
+    if(typeof paginateMatchupModel==='function')paginateMatchupModel(dialog);
     update();
   };
   dialog.querySelector("[data-config-reset]").addEventListener("click", () => { draft = structuredClone(prepared.customModelPresets.balanced); render(); });

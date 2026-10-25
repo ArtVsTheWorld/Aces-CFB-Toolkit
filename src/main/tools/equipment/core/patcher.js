@@ -7,6 +7,7 @@ import { canGenerateEquipment, createGeneratedEquipmentState, enforceGeneratedEq
 import { BRAND_SLOTS, assignCompatibleBrandEquipment, guardBrandEquipment } from "./brandCompatibility.js";
 import { buildFacePaintPool, facePaintSource, rollFacePaint } from "./facepaint.js";
 import { configuredModItems, modCategoryChance } from "./modPools.js";
+import {resolveModPoolRolls} from './modPoolArbitration.js';
 import { configuredCrossPositions, normalizeCrossDonorGroups } from './donorGroups.js';
 export { rollFacePaint } from "./facepaint.js";
 
@@ -249,6 +250,19 @@ export function applyEquipmentTruckRandomizerEquipment(loadouts, rng, perCategor
   return changes;
 }
 
+export function applyModdedRandomizerEquipment(loadouts,target,rng,chance,state,options={}){
+  state??=createGeneratedEquipmentState(loadouts);
+  const providers=[
+    ['unlocked',options.usingUnlockedMod,(outfits,local)=>applyUnlockedRandomizerEquipment(outfits,target,rng,chance,local,options.modPools?.unlocked)],
+    ['raw',options.usingRawAccessoriesMod,(outfits,local)=>applyRawRandomizerEquipment(outfits,rng,chance,local,target.position,options.modPools?.raw)],
+    ['eljax',options.usingEquipmentTruckMod,(outfits,local)=>applyEquipmentTruckRandomizerEquipment(outfits,rng,chance,local,target.position,options.modPools?.eljax)]
+  ].filter(([,enabled])=>enabled);
+  if(state)state.options={...state.options,usingRawAccessoriesMod:Boolean(options.usingRawAccessoriesMod)};
+  if(providers.length<2)return Object.fromEntries(providers.map(([origin,,apply])=>[origin,apply(loadouts,state)]));
+  const candidates=providers.map(([origin,,apply])=>{const outfits=structuredClone(loadouts),local=createGeneratedEquipmentState(outfits);local.options=state.options;return {origin,loadouts:outfits,state:local,changes:finalGeneratedChanges(outfits,apply(outfits,local),local.options)};});
+  return resolveModPoolRolls(loadouts,candidates,rng,state,target.position);
+}
+
 export function applyNoDripEquipment(loadouts, position) {
   const changes = [];
   const replace = (label, slots, itemName, preserve = () => false) => {
@@ -435,17 +449,18 @@ export function patchFreshmanEquipment(playerRecords, visualsRecords, visualsTab
       const preserveSlots = donor.bodyType === target.bodyType ? new Set() : BODY_DEPENDENT_SLOTS;
       targetVisuals.loadouts.forEach((loadout, index) => { loadout.loadoutElements = copySlots(loadout.loadoutElements, donor.visuals.loadouts[index].loadoutElements, null, { preserveSlots }); });
     }
+    const donorOnly=options.donorOnlyPositions?.includes(target.position)===true;
+    if(donorOnly){const donor=usedDonors.find(donor=>donor.position===target.position)??usedDonors[0];targetVisuals.loadouts.forEach((loadout,index)=>{const paint=donor.visuals.loadouts[index].loadoutElements.find(element=>slotOf(element)==='FacePaint');if(paint)setSlot(loadout.loadoutElements,'FacePaint',paint.itemAssetName);});}
     const brandCandidates = forceCrossPosition && crossEligible ? crossCandidates : crossPositionMixed ? [...baseCandidates, ...crossCandidates] : baseCandidates;
     const branded = assignCompatibleBrandEquipment(targetVisuals.loadouts, target, brandCandidates, usedDonors, rng);
     donorUses.push(...branded.donorUses.map(use => ({ group: use.group, donor: donorSummary(use.donor) })));
     targetVisuals.loadouts.forEach(loadout => {
-      sleeveCompatibilityCorrections += finalizeEquipment(loadout.loadoutElements, rng, facePaintPool, target.position, usingUnlockedMod).length;
+      sleeveCompatibilityCorrections += donorOnly?enforceArmSleeveCompatibility(loadout.loadoutElements,{usingUnlockedMod}).length:finalizeEquipment(loadout.loadoutElements, rng, facePaintPool, target.position, usingUnlockedMod).length;
     });
-    const generated = usingUnlockedMod || options.usingRawAccessoriesMod || options.usingEquipmentTruckMod ? createGeneratedEquipmentState(targetVisuals.loadouts) : null;
-    let unlockedChanges = usingUnlockedMod ? applyUnlockedRandomizerEquipment(targetVisuals.loadouts, target, rng, unlockedItemChance, generated, options.modPools?.unlocked) : [];
-    let rawChanges = options.usingRawAccessoriesMod ? applyRawRandomizerEquipment(targetVisuals.loadouts, rng, unlockedItemChance, generated, target.position, options.modPools?.raw) : [];
-    let equipmentTruckChanges = options.usingEquipmentTruckMod ? applyEquipmentTruckRandomizerEquipment(targetVisuals.loadouts, rng, unlockedItemChance, generated, target.position, options.modPools?.eljax) : [];
-    const noDrip = noDripProfile && rng() < noDripChanceForPosition(target.position, options.noDripPercentages);
+    const generated = !donorOnly&&(usingUnlockedMod || options.usingRawAccessoriesMod || options.usingEquipmentTruckMod) ? createGeneratedEquipmentState(targetVisuals.loadouts) : null;
+    const pools=donorOnly?{}:applyModdedRandomizerEquipment(targetVisuals.loadouts,target,rng,unlockedItemChance,generated,options);
+    let unlockedChanges=pools.unlocked??[],rawChanges=pools.raw??[],equipmentTruckChanges=pools.eljax??[];
+    const noDrip = !donorOnly&&noDripProfile && rng() < noDripChanceForPosition(target.position, options.noDripPercentages);
     const noDripChanges = noDrip ? applyNoDripEquipment(targetVisuals.loadouts, target.position).changes : [];
     const brandCorrections = guardBrandEquipment(targetVisuals.loadouts, target, originalLoadouts);
     const facePaint = targetVisuals.loadouts.map((loadout, index) => { const asset = loadout.loadoutElements.find(element => slotOf(element) === "FacePaint")?.itemAssetName; return { loadout: index, asset, source: facePaintSource(asset, facePaintPool.diagnostics) }; });

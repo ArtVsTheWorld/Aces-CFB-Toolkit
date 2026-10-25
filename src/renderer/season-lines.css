@@ -1,0 +1,30 @@
+/* Paired team rows share exactly the same market columns. Projections are
+   display tiles, with no wagering or force-win actions. */
+.experimental-ui .season-lines-heading{background:var(--sidebar-2);border-bottom:1px solid var(--sidebar-border)}
+.experimental-ui .season-lines-heading span,.experimental-ui .season-lines-heading label{color:#d0d0d9}
+.experimental-ui .season-lines-heading select{min-width:180px}
+.season-lines-games{padding:0 18px 18px}
+.season-line-game{--market-columns:minmax(160px,1.6fr) repeat(3,minmax(0,1fr));display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto repeat(2,1fr);align-items:stretch;gap:10px;padding:18px 0;border-bottom:1px solid var(--line)}
+.season-line-game:last-child{border-bottom:0;padding-bottom:0}
+.season-line-market-head,.season-line-team-row{display:grid;grid-template-columns:var(--market-columns);gap:10px;align-items:stretch}
+.season-line-market-head{align-items:center;margin-bottom:0;color:var(--subtle-ink);font-size:10px;letter-spacing:.06em;text-transform:uppercase}
+.season-line-market-head>span:not(:first-child){text-align:center}
+.season-line-market-head>span:first-child{font-weight:750;letter-spacing:0;text-transform:none;font-size:12px}
+.season-line-team-row+.season-line-team-row{margin-top:0}
+.season-line-team{display:flex;align-items:center;gap:12px;min-width:0;min-height:64px}
+.season-line-team img{width:56px;height:56px;object-fit:contain;flex:none}
+.season-line-team>div{min-width:0}
+.season-line-team strong{font:750 24px/1.25 var(--sport-heading);overflow-wrap:anywhere}
+.season-line-at{color:var(--subtle-ink);font-weight:650;white-space:nowrap}
+.season-line-tile{display:flex;align-items:center;justify-content:center;min-width:0;min-height:64px;padding:10px 6px;border:1px solid color-mix(in srgb,var(--action) 58%,var(--line));border-radius:6px;background:var(--surface);box-shadow:0 1px 2px #00000008;color:var(--action);font-variant-numeric:tabular-nums;text-align:center}
+.season-line-tile strong{font:800 19px/1.2 var(--sport-heading);white-space:nowrap}
+.season-line-tile strong>span{color:var(--subtle-ink);font-size:.8em}
+.library-pagination{justify-content:flex-end;align-items:center;gap:12px}
+.library-pagination [role=status]{color:var(--subtle-ink);font-size:12px;white-space:nowrap}
+.reports-library{overflow-x:auto}
+@media(max-width:760px){.season-line-game{--market-columns:minmax(146px,1.8fr) repeat(3,minmax(0,1fr))}.season-line-market-head,.season-line-team-row{gap:8px}.season-line-team{gap:8px}.season-line-team img{width:44px;height:44px}.season-line-team strong{font-size:16px}.season-line-tile strong{font-size:16px}.season-lines-heading{align-items:flex-start;flex-direction:column}.season-lines-heading label,.season-lines-heading select{width:100%}}
+@media(max-width:480px){.season-lines-games{padding:0 12px 12px}.season-line-game{--market-columns:minmax(130px,1.8fr) repeat(3,minmax(0,1fr))}.season-line-market-head,.season-line-team-row{gap:6px}.season-line-team img{width:36px;height:36px}.season-line-team{gap:6px}.season-line-team strong{font-size:16px}.season-line-tile{padding:8px 2px}.season-line-tile strong{font-size:14px}.season-line-market-head{font-size:8px;letter-spacing:0}}
+
+.home-matchup-grid{grid-template-columns:1fr;gap:0}.home-matchups .season-line-game{background:transparent}.season-line-note{display:block;margin-top:0;color:var(--subtle-ink);font-size:11px}@media(max-width:480px){.home-matchups{padding:16px 12px}}
+
+.experimental-ui .home-dashboard-body{display:flex;flex-direction:column;gap:24px;margin-top:0;padding:24px 22px 26px}.experimental-ui .home-dashboard-body>.home-bottom-grid{margin-top:0}.experimental-ui .home-dashboard-body>.home-matchups{margin-bottom:0}@media(max-width:760px){.experimental-ui .home-dashboard-body{padding:24px 13px 20px}}

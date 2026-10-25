@@ -24,7 +24,7 @@ test("equipment preview defaults to visible cards and positions follow in-game o
   vm.runInContext(`${localized}\n${order}\n${compare}\nresult = ["P", "CB", "RE", "QB", "MLB", "LT", "LE", "FB", "LOLB", "K"].sort(positionCompare);`, context);
   assert.deepEqual([...context.result], ["QB", "FB", "LT", "LE", "RE", "LOLB", "MLB", "CB", "K", "P"]);
   assert.match(source, /\[\.\.\.prepared\.positions\]\.sort\(positionCompare\)/);
-  assert.match(source, /field === "position" \? positionCompare/);
+  assert.match(source, /field\s*===\s*['"]position['"]\s*\?\s*positionCompare/);
 });
 
 test("completed run review snapshots persist all display rows and can be reopened after reload", t => {

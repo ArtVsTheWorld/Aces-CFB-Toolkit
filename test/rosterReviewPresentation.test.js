@@ -34,8 +34,8 @@ test('position aliases and unknown legacy positions do not create false change f
  assert.match(context.rosterPositionBadge(row('<script>','TE')),/&lt;script&gt;/);
 });
 
-test('Before You Apply appears only for actual preview warnings, preserving unknown warnings and blockers',()=>{
- const context=renderer();context.result=result();assert.doesNotMatch(vm.runInContext('rosterGeneratorResults(result)',context),/Before You Apply/);
+test('shared review notices preserve actual unknown warnings and blockers outside the player list',()=>{
+ const context=renderer();vm.runInContext(fs.readFileSync(new URL('../src/renderer/results-ui.js',import.meta.url),'utf8'),context);context.result=result();assert.equal(vm.runInContext('runIssueMarkup(result)',context),'');
  context.result=result([],['Test Team: Unrecognized issue <keep this warning>.']);context.result.details.generationNotes=['Explains how generation works.'];context.result.details.blocking=[{team:'Test Team',row:1,reason:'Unsafe appearance reference'}];
- const markup=vm.runInContext('rosterGeneratorResults(result)',context);assert.match(markup,/Before You Apply/);assert.match(markup,/Unrecognized issue &lt;keep this warning&gt;/);assert.match(markup,/Apply is blocked/);assert.match(markup,/Unsafe appearance reference/);assert.doesNotMatch(markup,/Explains how generation works/);
+ const markup=vm.runInContext('runIssueMarkup(result)',context);assert.match(markup,/Needs attention/);assert.match(markup,/Unrecognized issue &lt;keep this warning&gt;/);assert.match(markup,/Unsafe appearance reference/);assert.doesNotMatch(markup,/Explains how generation works/);
 });

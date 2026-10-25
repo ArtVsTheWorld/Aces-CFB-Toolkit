@@ -1,0 +1,6 @@
+.randomizer-option-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:24px;padding-top:4px;padding-bottom:4px}
+.randomizer-option-list>.ui-option-row:nth-child(-n+2){border-top:0}
+.randomizer-donor-card{grid-column:1/-1}
+.randomizer-flow .ui-setting-body .configuration-entry>div{flex:1}
+.randomizer-flow .ui-setting-body .configuration-entry button{margin-left:auto}
+@media(max-width:680px){.randomizer-option-list{grid-template-columns:1fr}.randomizer-option-list>.ui-option-row:nth-child(2){border-top:1px solid var(--border)}}

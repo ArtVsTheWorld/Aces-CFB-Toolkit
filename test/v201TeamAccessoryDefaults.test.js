@@ -7,6 +7,7 @@ import { normalizeEquipmentOptions } from "../src/main/tools/equipment/runner.js
 import { applyGlobalEquipmentFixes } from "../src/main/tools/equipment/core/globalFixes.js";
 import { validatePresetConfiguration } from "../src/main/services/toolPresets.js";
 import { tools } from "../src/shared/toolRegistry.js";
+import { quickstartSettings } from "../src/main/tools/equipmentQuickstart/runner.js";
 
 const colors = color => Object.fromEntries(["white", "black", "primary", "secondary"].map(name=>[name,name===color?100:0]));
 const ref = row => (10).toString(2).padStart(15,"0")+row.toString(2).padStart(17,"0");
@@ -27,6 +28,16 @@ test("team accessory defaults exactly reuse every tape override and unknown-team
   assert.deepEqual(teamAccessoryWeights("East Point"),{white:95,black:5,primary:0,secondary:0});
   const accessory=normalizeTeamAccessoryColors({ALABAMA:colors("primary")});
   assert.deepEqual(teamAccessoryWeights("Alabama",accessory),colors("primary"));assert.deepEqual(defaultTeamTapeWeights("Alabama"),colors("black"),"accessory override never changes tape defaults");
+});
+test('Patcher and Quickstart default to each team’s accessory distribution with matching tape',()=>{
+  const patcher=normalizeEquipmentOptions({unlockedRecolorFix:true},false),quickstart=quickstartSettings({unlocked:true}).patcher;
+  for(const settings of [patcher,quickstart]){
+    assert.equal(settings.unlockedColorTheme,'team');assert.equal(settings.tapeColorMode,'accessory');
+    assert.deepEqual(teamAccessoryWeights('Alabama',settings.teamAccessoryColors),defaultTeamTapeWeights('Alabama'));
+  }
+  const visuals=[visual()],result=applyGlobalEquipmentFixes([player(0)],visuals,10,{unlockedRecolorFix:true,teamNames:new Map([[1,'Alabama']])});
+  assert.ok(result.unlockedRecolorChanges.length);assert.equal(result.unlockedRecolorChanges[0].colorTheme,'black');assert.equal(result.unlockedRecolorChanges[0].tapeColor,'black');
+  assert.equal(normalizeEquipmentOptions({unlockedRecolorFix:true,unlockedColorTheme:'weighted'},false).unlockedColorTheme,'weighted','explicit saved choices remain available');
 });
 test("team accessories validate whole percentages and normalize portable team keys",()=>{
   assert.deepEqual(normalizeTeamAccessoryColors({"  Michigan ":colors("primary")}).michigan,colors("primary"));

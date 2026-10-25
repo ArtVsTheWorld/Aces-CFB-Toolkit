@@ -13,7 +13,11 @@ if(process.argv.includes('--roster-review'))checks.push(['scripts/smoke-v190-con
 if(process.argv.includes('--quickstart'))checks.push(['scripts/smoke-v190-configuration.cjs','--quickstart-only']);
 if(process.argv.includes('--frequency'))checks.push(['scripts/smoke-v190-configuration.cjs','--frequency-only']);
 if(process.argv.includes('--equipment-pages'))checks.push(['scripts/smoke-v190-configuration.cjs','--equipment-pages-only']);
+if(process.argv.includes('--patcher-flow'))checks.push(['scripts/smoke-v190-configuration.cjs','--patcher-flow-only']);
+if(process.argv.includes('--randomizer-flow'))checks.push(['scripts/smoke-v190-configuration.cjs','--randomizer-flow-only']);
 if(process.argv.includes('--compact-progress'))checks.push(['scripts/smoke-v190-configuration.cjs','--compact-progress-only']);
+if(process.argv.includes('--results-ui'))checks.push(['scripts/smoke-v190-configuration.cjs','--results-ui-only']);
+if(process.argv.includes('--remaining-tools'))checks.push(['scripts/smoke-v190-configuration.cjs','--remaining-tools-only'],['scripts/smoke-v190-configuration.cjs','--remaining-behavior-only']);
 let status=0;
 for(const [script,...flags]of checks){
  const result=spawnSync(require('electron'),[path.resolve(script),'--ui-root='+extracted,...flags],{stdio:'inherit',timeout:240000});

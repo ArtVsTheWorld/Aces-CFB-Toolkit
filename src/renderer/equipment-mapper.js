@@ -21,12 +21,20 @@ async function equipmentMapperPage(tool){
     document.getElementById('mapper-queue').onclick=event=>{const button=event.target.closest('[data-mapper-edit],[data-mapper-remove]');if(!button)return;if(button.dataset.mapperEdit!==undefined)edit(Number(button.dataset.mapperEdit));else{control.value=JSON.stringify(read().filter((_,index)=>index!==Number(button.dataset.mapperRemove)));control.dispatchEvent(new Event('change',{bubbles:true}));}};
     control.addEventListener('change',update);bindCommon();restoreToolSettings();update();
     const run=async mode=>{
+      const preview=state.genericPreviews.get(tool.id);
+      if(mode==='apply'&&(!preview?.planId||preview.details?.canApply===false))return;
       const output=mode==='preview'?document.getElementById('mapper-status'):document.getElementById('run-output'),token=beginToolRun(output),page=state.page;
       document.getElementById('mapper-preview').disabled=true;document.getElementById('mapper-apply').disabled=true;output.innerHTML=toolLoading('Checking equipment changes…');
       try{const result=await window.cfbToolkit.runTool({toolId:tool.id,savePath:save,mode,options:mode==='preview'?{fingerprint:prepared.fingerprint,rules:read()}:{planId:state.genericPreviews.get(tool.id)?.planId}});if(!currentToolRun(output,save,page,token))return;
         if(mode==='preview'){state.genericPreviews.set(tool.id,result);output.innerHTML='';showStandardPreviewStage(true);}else state.genericPreviews.delete(tool.id);
-        renderResult(document.getElementById('run-output'),result);document.getElementById('mapper-apply').disabled=mode!=='preview'||!result.details.canApply;await refreshHistory();
-      }catch(error){if(currentToolRun(output,save,page,token))showError(readableError(error),output);}finally{if(state.page===page&&document.getElementById('mapper-preview'))document.getElementById('mapper-preview').disabled=!read().length;}
+        renderResult(document.getElementById('run-output'),result);document.getElementById('mapper-apply').disabled=mode!=='preview'||!result.details.canApply;await refreshHistory().catch(()=>{});
+      }catch(error){if(currentToolRun(output,save,page,token)){
+        const readable=readableError(error);
+        if(/cached result|already been applied|save changed.*preview|source row.*changed|donor file changed/i.test(readable.message))state.genericPreviews.delete(tool.id);
+        if(mode==='apply'&&state.genericPreviews.get(tool.id)===preview)renderResult(output,preview);
+        showError(readable,output);markRunFailure(output,readable,mode);
+        document.getElementById('mapper-apply').disabled=!state.genericPreviews.get(tool.id)?.planId||state.genericPreviews.get(tool.id)?.details?.canApply===false;
+      }}finally{if(state.page===page&&document.getElementById('mapper-preview'))document.getElementById('mapper-preview').disabled=!read().length;}
     };
     document.getElementById('mapper-preview').onclick=()=>run('preview');document.getElementById('mapper-apply').onclick=()=>run('apply');
   }catch(error){if(state.page===tool.id&&state.activeSave?.path===save)showError(readableError(error));}
@@ -109,4 +117,4 @@ function openMapperRule(prepared,initial,onSave){
     onSave({...draft,...selected,replacementCap,pairSides,scope:scope.value,playerIdentities:prepared.players.filter(player=>selected.playerRows.includes(player.row)).map(({row,player,team})=>({row,player,team})),matchMode:rules.querySelector('[data-map-mode]').value,preserveColor:rules.querySelector('[data-map-keep-color]').checked,preserveSide:true});dialog.closeEditor();
   };dialog.showModal();
 }
-function mapperResults(result){return `${result.details.blocked?.length?`<div class="notice error"><strong>Apply blocked — resolve these mapping conflicts</strong><ul>${result.details.blocked.map(player=>`<li>${escapeHtml(player.team)} · ${escapeHtml(player.player)}: ${escapeHtml(player.reason)}</li>`).join('')}</ul></div>`:''} ${result.details.allocations?.some(item=>item.percentage<100)?`<details><summary>Replacement Caps by Team</summary><table class="mapper-cap-table"><thead><tr><th>Rule</th><th>Team</th><th>Cap</th><th>Matching Players</th><th>Selected</th></tr></thead><tbody>${result.details.allocations.filter(item=>item.percentage<100).map(item=>`<tr><td>${item.rule}</td><td>${escapeHtml(item.team)}</td><td>${item.percentage}%</td><td>${item.matchedPlayers}</td><td>${item.selectedPlayers}</td></tr>`).join('')}</tbody></table></details>`:''}${equipmentResults(result)}`;}
+function mapperResults(result){return `${result.details.allocations?.some(item=>item.percentage<100)?`<details><summary>Replacement Caps by Team</summary><table class="mapper-cap-table"><thead><tr><th>Rule</th><th>Team</th><th>Cap</th><th>Matching Players</th><th>Selected</th></tr></thead><tbody>${result.details.allocations.filter(item=>item.percentage<100).map(item=>`<tr><td>${item.rule}</td><td>${escapeHtml(item.team)}</td><td>${item.percentage}%</td><td>${item.matchedPlayers}</td><td>${item.selectedPlayers}</td></tr>`).join('')}</tbody></table></details>`:''}${equipmentResults(result)}`;}

@@ -53,15 +53,14 @@ function notableWeekMatchups(rows, week) {
   }).slice(0, 3);
 }
 function homeMatchupLines() {
-  if (!state.activeSave?.schema?.supported) return "";
+  if (!state.activeSave?.schema?.supported || homeIsPreseason()) return "";
   const season = state.homeContext?.season, week = season?.weekType === "RegularSeason" ? season.week : null;
   const rows = state.seasonLinesSave === state.activeSave.path ? notableWeekMatchups(state.seasonLines?.rows ?? [], week) : [];
-  const rank = (value, name) => `${Number.isInteger(value) && value >= 1 && value <= 25 ? `#${value} ` : ""}${escapeHtml(name)}`;
-  return `<section class="home-matchups"><div class="home-section-heading"><div><span class="home-section-icon">◇</span><h2>Season Matchup Lines</h2><p>${week !== null ? `Top Matchups · Week ${week}` : "Explore this season's projected matchups"}</p></div><button class="button" id="open-season-lines">View Season Lines →</button></div>${rows.length ? `<div class="home-matchup-grid">${rows.map(row => `<article class="home-matchup-card"><div class="home-matchup-teams"><div><img data-team-logo src="${forceLogoUrl(row.awayTeam)}" alt=""><strong>${rank(row.awayRank, row.awayTeam)}</strong></div><span>${row.neutral ? "vs" : "at"}</span><div><img data-team-logo src="${forceLogoUrl(row.homeTeam)}" alt=""><strong>${rank(row.homeRank, row.homeTeam)}</strong></div></div><div class="home-matchup-numbers"><div><small>SPREAD</small><strong>${escapeHtml(row.favorite)} ${Number(row.favoriteSpread).toFixed(1)}</strong></div><div><small>OVER / UNDER</small><strong>${Number(row.total).toFixed(1)}</strong></div></div><div class="home-matchup-moneyline"><small>MONEYLINE</small><span>${escapeHtml(row.favorite)} <b>${forceMoneyline(row.favoriteMoneyline)}</b></span><span>${escapeHtml(row.underdog)} <b>${forceMoneyline(row.underdogMoneyline)}</b></span></div>${row.rivalry ? '<small class="matchup-rivalry">Rivalry</small>' : ""}</article>`).join("")}</div><p class="muted home-matchup-note">Ranked matchups first, then stronger paired rosters and closer projected spreads.</p>` : `<p class="muted">${state.homeLinesLoading ? "Reading this season's matchup projections…" : state.seasonLinesError ? "Home projections are unavailable for this save. Open Season Lines for details." : week !== null ? "No projected matchups are available for the active week." : "Spread, moneyline, and over/under projections are available without running Smart Force Win."}</p>`}</section>`;
+  return `<section class="home-matchups"><div class="home-section-heading"><div><span class="home-section-icon">◇</span><h2>Season Matchup Lines</h2><p>${week !== null ? `Top Matchups · Week ${week}` : "Explore this season's projected matchups"}</p></div><button class="button" id="open-season-lines">View Season Lines →</button></div>${rows.length ? `<div class="home-matchup-grid">${rows.map(seasonLineGameMarkup).join("")}</div><p class="muted home-matchup-note">Ranked matchups first, then stronger paired rosters and closer projected spreads.</p>` : `<p class="muted">${state.homeLinesLoading ? "Reading this season's matchup projections…" : state.seasonLinesError ? "Home projections are unavailable for this save. Open Season Lines for details." : week !== null ? "No projected matchups are available for the active week." : "Spread, moneyline, and over/under projections are available without running Smart Force Win."}</p>`}</section>`;
 }
 async function ensureHomeLines() {
   const savePath = state.activeSave?.path;
-  if (!state.activeSave?.schema?.supported || !savePath || state.homeLinesLoading || state.seasonLinesSave === savePath || state.seasonLinesError) return;
+  if (homeIsPreseason() || !state.activeSave?.schema?.supported || !savePath || state.homeLinesLoading || state.seasonLinesSave === savePath || state.seasonLinesError) return;
   state.homeLinesLoading = true;
   const requestId = state.seasonLinesRequest ?? 0;
   try {
@@ -69,5 +68,5 @@ async function ensureHomeLines() {
     if (state.activeSave?.path !== savePath || (state.seasonLinesRequest ?? 0) !== requestId) return;
     state.seasonLines = data; state.seasonLinesSave = savePath;
   } catch (error) { if (state.activeSave?.path === savePath && (state.seasonLinesRequest ?? 0) === requestId) state.seasonLinesError = readableError(error).message; }
-  finally { state.homeLinesLoading = false; if (state.page === "home") { content.innerHTML = homePage(); bindCommon(); } }
+  finally { if((state.seasonLinesRequest??0)===requestId){state.homeLinesLoading = false; if (state.page === "home"&&!state.saveLoading) { content.innerHTML = homePage(); bindCommon(); }} }
 }

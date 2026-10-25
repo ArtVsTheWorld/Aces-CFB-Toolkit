@@ -51,7 +51,8 @@ test("directional FCS players have prevalence populations separate from FBS", ()
 test("the uploaded wrench artwork is wired to the in-app brand and Windows packaging", () => {
   const index = fs.readFileSync(new URL("../src/renderer/index.html", import.meta.url), "utf8");
   const pkg = JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url), "utf8"));
-  assert.match(index, /class="brand-mark brand-image" src="assets\/app-icon\.png"/);
+  assert.match(index, /class="brand-mark brand-image app-accent-icon" role="img"/);
+  assert.ok(fs.existsSync(new URL("../src/renderer/assets/app-icon-mask.svg", import.meta.url)));
   assert.equal(pkg.build.win.icon, "build/icon.ico");
   assert.equal(pkg.build.nsis.installerIcon, "build/icon.ico");
   assert.ok(fs.existsSync(new URL("../src/renderer/assets/app-icon.png", import.meta.url)));

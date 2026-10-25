@@ -67,7 +67,7 @@ test("weighted colors respect each interval and validate a complete percentage m
   assert.throws(() => normalizeAccessoryColorWeights({ white: NaN, black: 20, primary: 10, secondary: 5 }), /numbers/);
   assert.throws(() => normalizeEquipmentOptions({ unlockedRecolorFix: true, tapeColorMode: "distribution", unlockedColorTheme: "weighted", accessoryColorWeights: { white: 70, black: 20, primary: 10, secondary: 5 } }, false), /total 100/);
   assert.equal(normalizeEquipmentOptions({}, false).unlockedRecolorFix, false);
-  assert.equal(normalizeEquipmentOptions({}, false).unlockedColorTheme, "weighted");
+  assert.equal(normalizeEquipmentOptions({}, false).unlockedColorTheme, "team");
   assert.doesNotThrow(() => normalizeEquipmentOptions({ unlockedRecolorFix: false, accessoryColorWeights: {} }, false));
 });
 
@@ -110,7 +110,7 @@ test("Recolor Accessories applies defaults and overrides across teams without ch
 
 test("seeded weighted accessory themes are repeatable and match across each player's loadouts", () => {
   const players = Array.from({ length: 1500 }, (_, row) => player(row));
-  const run = () => { const visuals = players.map(() => { const record = visual(), raw = JSON.parse(record.RawData); raw.loadouts.push(structuredClone(raw.loadouts[0])); record.RawData = JSON.stringify(raw); return record; }); applyGlobalEquipmentFixes(players, visuals, 10, { unlockedRecolorFix: true, tapeColorMode: "distribution", seed: 2026, teamNames: new Map([[1, "Oregon"]]) }); return visuals.map(record => record.RawData); };
+  const run = () => { const visuals = players.map(() => { const record = visual(), raw = JSON.parse(record.RawData); raw.loadouts.push(structuredClone(raw.loadouts[0])); record.RawData = JSON.stringify(raw); return record; }); applyGlobalEquipmentFixes(players, visuals, 10, { unlockedRecolorFix: true, tapeColorMode: "distribution", unlockedColorTheme: "weighted", seed: 2026, teamNames: new Map([[1, "Oregon"]]) }); return visuals.map(record => record.RawData); };
   const first = run(); assert.deepEqual(first, run());
   const counts = { White: 0, Black: 0, TeamColor: 0, SecondaryColor: 0 };
   for (const raw of first) {

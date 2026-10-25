@@ -1,0 +1,9 @@
+.patcher-flow .patcher-option-groups{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--ui-space-4);align-items:start}
+.patcher-flow .helmet-settings-summary{width:100%;margin:0;padding:0;border:0;background:transparent}
+.patcher-flow .helmet-editor-launch{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:0;padding:0;border:0;background:transparent}
+.patcher-flow .helmet-editor-launch>div{min-width:0}
+.patcher-flow .helmet-editor-launch strong{font-size:12px;line-height:1.5}
+.patcher-flow .helmet-editor-launch p{margin:5px 0 0;color:var(--muted);font-size:12px;line-height:1.6}
+.patcher-flow #helmet-zero-summary{display:none}
+@media(max-width:1100px){.patcher-flow .patcher-option-groups{grid-template-columns:1fr}.patcher-flow .ui-option-row{min-height:46px}.patcher-flow .ui-option-group{padding-top:14px;padding-bottom:8px}}
+@media(max-width:760px){.patcher-flow .helmet-editor-launch{flex-wrap:wrap}.patcher-flow .helmet-editor-launch>div{flex-basis:100%}}

@@ -23,7 +23,7 @@ function openModPoolEditor(origin, prepared) {
   const defaults = () => Object.fromEntries(categories.map(category => [category.id, { chance: category.defaultChance ?? defaultPercent, items: [...category.defaultItems] }]));
   let draft = { ...defaults(), ...structuredClone(previous[origin] ?? {}) }, active = categories[0].id;
   const initialDraft = JSON.stringify(draft);
-  const dialog = createConfigurationDialog({ title: `${modPoolName(origin)} Equipment Pool`, eyebrow: "Equipment Randomizer", className: "mod-pool-editor", description: "Choose supported items and each category's chance after donor copying. Categories roll independently, so percentages do not need to total 100%. Existing donor gear is not filtered out by these choices.", saveLabel: "Save Pool Settings" });
+  const dialog = createConfigurationDialog({ title: `${modPoolName(origin)} Equipment Pool`, eyebrow: "Equipment Randomizer", className: "mod-pool-editor", description: "Choose extra items and how often each category is added. Category chances are independent; they do not need to add up to 100%. Gear copied from donors is kept.", saveLabel: "Save Settings" });
   if (!dialog) return;
   const body = dialog.querySelector(".configuration-body");
   body.innerHTML = `<p class="notice">${origin === "eljax" ? "Requires GameDay Gear v2.0+ (ELJAX's Equipment Truck) by ElJax YT." : origin === "raw" ? "Requires RAW Accessories v3.1.4+ by Delonte RAW." : "Requires CFB27 Unlocked v0.97+ by Orckestra."}</p>${modPoolCategoryMarkup(origin, categories)}<input type="search" class="input" data-pool-search aria-label="Find an equipment item" placeholder="Find an item…"><div class="actions"><button class="button secondary" type="button" data-pool-all>Select All</button><button class="button secondary" type="button" data-pool-clear>Clear</button><button class="button secondary" type="button" data-pool-defaults>Default Category</button></div><p data-pool-count></p><div class="mod-pool-items" data-pool-items></div>`;
@@ -62,6 +62,7 @@ function openModPoolEditor(origin, prepared) {
   dialog.querySelector("[data-config-reset]").addEventListener("click", () => { draft = defaults(); render(); });
   dialog.querySelector("[data-config-save]").addEventListener("click", () => {
     if (!validate()) return;
+    if (JSON.stringify(draft) === initialDraft) { dialog.closeEditor(); return; }
     const control = document.getElementById("equipment-mod-pools"); control.value = JSON.stringify({ ...previous, [origin]: draft });
     dialog.closeEditor(); control.dispatchEvent(new Event("change", { bubbles: true })); captureToolSettings();
   });
@@ -73,7 +74,7 @@ function bindModPoolWindows() {
   for (const entry of content.querySelectorAll("[data-mod-pool-entry]")) {
     const origin = entry.dataset.modPoolEntry, toggle = document.getElementById({ unlocked: "equipment-unlocked", raw: "equipment-raw-accessories", eljax: "equipment-truck" }[origin]);
     toggle.closest(".toggle-card").after(entry);
-    const refresh = () => { entry.hidden = !toggle.checked; entry.querySelector("button").disabled = !toggle.checked; entry.querySelector("[data-mod-pool-summary]").textContent = !modPoolOptions()[origin] ? `Toolkit defaults · ${document.getElementById("equipment-expanded-percent").value}% for most categories${origin === "unlocked" ? " · Jamo sleeves off" : origin === "eljax" ? " · Logo handwarmer off" : ""} · Default items` : "Custom pool · " + (prepared.modPoolCategories[origin] ?? []).filter(category => (modPoolOptions()[origin][category.id]?.items.length ?? category.defaultItems.length) && (modPoolOptions()[origin][category.id]?.chance ?? category.defaultChance ?? 10)).length + " categories active"; };
+    const refresh = () => { entry.hidden = !toggle.checked; entry.querySelector("button").disabled = !toggle.checked; entry.querySelector("[data-mod-pool-summary]").textContent = !modPoolOptions()[origin] ? `Toolkit defaults · ${document.getElementById("equipment-expanded-percent").value}% for most categories${["unlocked", "raw"].includes(origin) ? " · Jamo sleeves off" : origin === "eljax" ? " · Logo handwarmer off" : ""} · Default items` : "Custom pool · " + (prepared.modPoolCategories[origin] ?? []).filter(category => (modPoolOptions()[origin][category.id]?.items.length ?? category.defaultItems.length) && (modPoolOptions()[origin][category.id]?.chance ?? category.defaultChance ?? 10)).length + " categories active"; };
     toggle.addEventListener("change", refresh); document.getElementById("equipment-mod-pools").addEventListener("change", refresh); document.getElementById("equipment-expanded-percent").addEventListener("change", refresh);
     entry.querySelector("button").addEventListener("click", () => openModPoolEditor(origin, prepared)); refresh();
   }

@@ -4,7 +4,7 @@
 
 Use Node.js 24 and Windows. Run `npm ci`, `npm run test:source`, and `npm start` from the repository root. The lockfile pins the dependency graph; do not commit `node_modules`, `dist`, or local caches.
 
-The v23.0 source has 812 portable source tests. The maintainer also runs copied-save integration checks, packaged configuration/UI checks, and installer-resource and updater checks. A public checkout does not include private dynasty fixtures; this does not claim that the full `npm test` suite runs without them. In-game validation of newly generated rosters is still recommended.
+The v24.0 source includes a portable source test suite. The maintainer also runs copied-save integration checks, packaged configuration/UI checks, and installer-resource and updater checks. A public checkout does not include private dynasty fixtures; this does not claim that the full `npm test` suite runs without them. In-game validation of newly generated rosters is still recommended.
 
 ## Full-save checks
 
@@ -16,6 +16,8 @@ The v23.0 source has 812 portable source tests. The maintainer also runs copied-
 Use authorized disposable local fixtures. Some checks assert the original fixture's schema, roster sizes, or season context, so arbitrary saves are not necessarily interchangeable. Do not upload user saves to an issue, commit, or public pull request without their permission. The full suite is not claimed to pass without those fixtures.
 
 `scripts/smoke-v180-ui.cjs` and `scripts/smoke-recolor-ui.cjs` also need these fixtures. `scripts/smoke-updates-ui.cjs` uses isolated UI state; `scripts/smoke-update-download.cjs --build=dist` tests a locally built installer's updater against a loopback feed, verifies checksums, and does not install anything.
+
+The dynasty-profile and save-reader integration checks also need a second, unrelated dynasty. Set `CFB_TEST_OTHER_DYNASTY` to its path, or provide `EXAMPLE SAVES VANILLA GAME/DYNASTY-SECOND-DYNASTY`. The native profile smoke also accepts `--other-save=...`. Loading benchmarks accept `--save=...` and an optional `--legacy-profile=...`; they copy inputs into an isolated profile and never write the supplied saves/profile. These optional checks require authorized private fixtures and are not included in `test:source`.
 
 ## Save-safety requirements
 

@@ -7,7 +7,7 @@ function toolLoading(message) {
   window.cfbToolkit.onToolProgress?.(update => {
     if (update.phase === 'start') {
       const targets = [...document.querySelectorAll('[data-tool-progress]:not([data-operation-id])')];
-      let target = targets.at(-1);
+      let target = targets.filter(node=>node.getClientRects().length&&!node.closest('[hidden]')).at(-1);
       if (!target) {
         let tray = document.getElementById('tool-progress-tray');
         if (!tray) { tray = document.createElement('aside'); tray.id = 'tool-progress-tray'; tray.setAttribute('aria-label', 'Current operations'); document.body.append(tray); }

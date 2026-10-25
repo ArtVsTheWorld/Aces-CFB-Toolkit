@@ -27,9 +27,12 @@ test('Quickstart has one exact backed-up write, protects EA players and tracks o
   const before=await loadEquipmentTables(savePath,schemaPath),dynastyId=await equipmentDynastyId(before.franchise),rawBefore=snapshotVisualRawData(before.visuals.records);
   const prepared=await prepareEquipmentQuickstart(context);
   assert.ok(prepared.newPlayers>0);assert.ok(prepared.protectedPlayers>0);
+  const unprotected=await prepareEquipmentQuickstart({...context,options:{protectOriginalEaPlayers:false}});assert.equal(unprotected.protectedPlayers,0);assert.equal(unprotected.newPlayers,prepared.newPlayers+prepared.protectedPlayers);
   const preview=await runEquipmentQuickstart({...context,mode:'preview',options:{unlocked:true,raw:true,gameday:true}});
   assert.equal(hash(savePath),sourceHash);assert.equal(memory.snapshot(dynastyId).keys.size,0);
   const plan=takePlan(preview.planId),rows=plan.previewRows;
+  assert.ok(rows.some(row=>['K','P'].includes(row.position)),'Specialists included in the donor-only workflow');
+  for(const row of rows.filter(row=>['K','P'].includes(row.position))){assert.ok(Object.values(row.modPoolAdditions).every(changes=>changes.length===0),'No specialist mod pool additions');assert.ok(!Object.hasOwn(row,'noDrip'),'No internal profile exposed');}
   assert.ok(rows.length>100);assert.equal(rows.length+preview.details.skipped,prepared.newPlayers);
   assert.ok(rows.every(row=>!isOriginalEaPlayer(before.players.records[row.row])));
   assert.ok(rows.every(row=>!Object.hasOwn(row,'newRaw')&&!Object.hasOwn(row,'oldRaw')),'large raw gear is kept in the CSV, not IPC preview');
@@ -56,7 +59,7 @@ test('Quickstart has one exact backed-up write, protects EA players and tracks o
   assert.equal(repeat.details.remembered,rows.length);
   const [headings,first]=parseCsv(fs.readFileSync(applied.reportPath,'utf8'));assert.equal(first.length,headings.length);
   assert.equal(JSON.parse(first[headings.indexOf('RandomizerOptionsJSON')]).top,15);
-  const patcher=JSON.parse(first[headings.indexOf('PatcherOptionsJSON')]);assert.equal(patcher.unlockedColorTheme,'team');assert.equal(patcher.tapeColorMode,'accessory');
+  const patcher=JSON.parse(first[headings.indexOf('PatcherOptionsJSON')]);assert.equal(patcher.unlockedColorTheme,'team');assert.equal(patcher.tapeColorMode,'accessory');assert.equal(patcher.unlockedTattooCap,35);assert.equal(patcher.fillFrequencies.tattoos,true);assert.ok(!/noDrip/i.test(first[headings.indexOf('QuickstartOptionsJSON')]));assert.ok(!/noDrip/i.test(first[headings.indexOf('RandomizerOptionsJSON')]));
   assert.equal(JSON.parse(first[headings.indexOf('TrackingAuditJSON')]).scope,'dynasty');
   assert.equal(hash(fixture),sourceHash);
 });

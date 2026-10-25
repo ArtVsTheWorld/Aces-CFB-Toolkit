@@ -38,7 +38,7 @@ test("presentation deduplicates matching loadout changes without dropping distin
 });
 
 test("release versions, normal defaults, and professional control labels are consistent", () => {
-  assert.equal(JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url), "utf8")).version, "23.1.0");
+  assert.equal(JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url), "utf8")).version, "24.0.0");
   for (const id of ["freshman-equipment", "equipment-patcher"]) assert.equal(tools.find(tool => tool.id === id).version, undefined);
   for (const id of ["jersey-renumber", "automatic-force-win"]) assert.equal(tools.find(tool => tool.id === id).version, undefined);
   const randomizer = normalizeEquipmentOptions({}, true), patcher = normalizeEquipmentOptions({}, false);

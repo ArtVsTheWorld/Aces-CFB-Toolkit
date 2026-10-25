@@ -15,8 +15,10 @@ app.whenReady().then(async () => {
   const { normalizeCustomModel } = await import(pathToFileURL(path.join(root, "src/main/tools/forceWin/core/customModel.js")));
   ipcMain.handle("settings:save-custom-matchup-model", (_event, input) => (settings = { ...settings, customMatchupModel: normalizeCustomModel(input) }));
   const appVersion = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8")).version.replace(/\.0$/, "");
-  ipcMain.handle("app:bootstrap", () => ({ app: { version: appVersion, schemas: ["C27_486_6"] }, registry: registrySnapshot(), settings, activeSave: { path: fixture, name: "Configuration Test", exists: true, schema: { supported: true, version: "C27_486_6" } } }));
-  ipcMain.handle("history:list", () => []); ipcMain.handle("reports:list", () => []); ipcMain.handle("logs:list", () => []);
+  ipcMain.handle("app:bootstrap", () => ({ app: { version: appVersion, schemas: ["C27_486_6"] }, registry: registrySnapshot(), settings, activeSave: { path: fixture, name: "Configuration Test", exists: true,dynastyId:1001, schema: { supported: true, version: "C27_486_6" } } }));
+  const reportActions=[];
+  ipcMain.handle("history:list", () => []); ipcMain.handle("reports:list", () => process.argv.includes('--v240-ui-only')?Array.from({length:45},(_,index)=>({name:'Report '+(index+1)+(index===0?' <safe>':''),tool:'Equipment Randomizer',path:'UI-ONLY-'+(index+1)+'.csv',createdAt:new Date().toISOString()})):[]); ipcMain.handle("logs:list", () => []);
+  ipcMain.handle('shell:open-path',(_event,file)=>{reportActions.push({action:'open',file});return true;});ipcMain.handle('shell:reveal-report',(_event,file)=>{reportActions.push({action:'reveal',file});return true;});
   const { ToolPresets } = await import(pathToFileURL(path.join(root, 'src/main/services/toolPresets.js')));
   const presets = new ToolPresets({ get: () => settings, update: values => (settings = { ...settings, ...values }) });
   ipcMain.handle('settings:save-preset', (_event, request) => presets.save(request));
@@ -26,13 +28,17 @@ app.whenReady().then(async () => {
   let exportedPreset;
   ipcMain.handle('settings:preset-transfer', (_event, request) => { if (request.action === 'export') { exportedPreset = request; return 'UI-ONLY.json'; } return { name: 'Imported UI Test', configuration: exportedPreset.configuration }; });
   ipcMain.handle("updates:status", () => ({ phase: "disabled", message: "Updates disabled in smoke test." }));
-  ipcMain.handle("home:context", () => ({ season: { season: 2026, week: 0 }, controlledTeams: [{ name: "LSU" }], teams: [{ name: "LSU" }, { name: "Alabama" }, { name: "Custom Builder" }], artwork: {} }));
+  ipcMain.handle("home:context", () => ({ dynastyId:1001, season: { season: 2026, week: 0 }, controlledTeams: [{ name: "LSU" }], teams: [{ name: "LSU" }, { name: "Alabama" }, { name: "Custom Builder" }], artwork: {} }));
   ipcMain.handle("home:lines", (_event, request) => ({ season: 2026, modelProfile: request?.modelProfile ?? "balanced", profiles: [{ value:"balanced", label:"Balanced" }, ...(settings.customMatchupModel ? [{value:"custom",label:"Saved Custom Model"}] : [])], rows: [{week:1,awayTeam:"LSU",homeTeam:"Alabama",favorite:"Alabama",underdog:"LSU",favoriteSpread:-7,total:48,favoriteMoneyline:-200,underdogMoneyline:200}] }));
   ipcMain.handle("dialog:choose-save", () => null);
-  ipcMain.handle("settings:update-theme", (_event, theme) => ({ ...settings, theme }));
-  ipcMain.handle("tools:prepare", async (_event, request) => { if (request.toolId==='equipment-quickstart') { const p=await getToolHandler(request.toolId).prepare({savePath:fixture,schemaPath,quickstartMemory});return {...p,newPlayers:p.newPlayers-quickstartCompleted,remembered:quickstartCompleted}; } if (!cache.has(request.toolId)) cache.set(request.toolId, await getToolHandler(request.toolId).prepare({ savePath: request.toolId === "automatic-force-win" ? path.resolve(root, "../EXAMPLE SAVES VANILLA GAME/DYNASTY-LSUTESTSAVEWEEK0") : fixture, schemaPath, options: request.options, defaultMapPath: path.join(root, 'resources/commentary-data/PlayerCommentaryidMap.txt') })); const prepared = cache.get(request.toolId); return request.toolId === "automatic-force-win" ? { ...prepared, userControlledTeams: prepared.userControlledTeams.map(name => ({ name })) } : prepared; });
+  ipcMain.handle("settings:update-theme", (_event, theme) => (settings={ ...settings, theme }));
+  ipcMain.handle("settings:update-accent",(_event,accentColor)=>(settings={...settings,accentColor}));
+  ipcMain.handle("settings:update-base-color",(_event,baseColor)=>(settings={...settings,baseColor}));
+  const updateReplies=[];ipcMain.handle("updates:prompt-response",(_event,request)=>{updateReplies.push(request);return true;});ipcMain.handle("updates:acknowledge-release",(_event,version)=>{updateReplies.push({version});return {};});
+  ipcMain.handle("tools:prepare", async (_event, request) => { if(process.argv.includes('--final-polish-only'))await new Promise(resolve=>setTimeout(resolve,250));if (request.toolId==='equipment-quickstart') { const p=await getToolHandler(request.toolId).prepare({savePath:fixture,schemaPath,quickstartMemory,options:request.options});return {...p,newPlayers:p.newPlayers-quickstartCompleted,remembered:quickstartCompleted,rememberedTotal:quickstartCompleted}; } if (!cache.has(request.toolId)) cache.set(request.toolId, await getToolHandler(request.toolId).prepare({ savePath: request.toolId === "automatic-force-win" ? path.resolve(root, "../EXAMPLE SAVES VANILLA GAME/DYNASTY-LSUTESTSAVEWEEK0") : fixture, schemaPath, toolId:request.toolId,quickstartMemory, options: request.options, defaultMapPath: path.join(root, 'resources/commentary-data/PlayerCommentaryidMap.txt') })); const prepared = cache.get(request.toolId); return request.toolId === "automatic-force-win" ? { ...prepared, userControlledTeams: prepared.userControlledTeams.map(name => ({ name })) } : prepared; });
   ipcMain.handle("tools:run", async (_event, request) => {
     runs.push(request);
+    if(process.argv.includes('--patcher-flow-only')||process.argv.includes('--randomizer-flow-only'))await new Promise(resolve=>setTimeout(resolve,180));
     if(request.toolId==='equipment-quickstart'){
       if(request.mode==='apply')quickstartCompleted=1;
       return {resultKind:request.toolId,mode:request.mode,status:request.mode==='apply'?'completed':'preview',planId:'quickstart-ui-plan',savePath:fixture,reportPath:'UI-only.csv',summary:[{label:'Players ready',value:1}],details:{changes:[],totalPreviewRows:1,canApply:true,warnings:[]}};
@@ -49,9 +55,84 @@ app.whenReady().then(async () => {
   const window = new BrowserWindow({ show: false, width: 1480, height: 1000, webPreferences: { preload: path.join(uiRoot, "src/main/preload.cjs"), contextIsolation: true, sandbox: true, offscreen: true, backgroundThrottling: false } });
   const errors = []; window.webContents.on("console-message", details => { const { level, message } = details; if (message.startsWith('[v200]')) console.log(message); if (level === "error" && !message.includes("ERR_FILE_NOT_FOUND") && !message.includes("'frame-ancestors' is ignored")) {errors.push(message);console.error(message);} });
   await window.loadFile(path.join(uiRoot, "src/renderer/index.html"));
+  if(process.argv.includes('--save-loading-ui-only')){
+    await window.webContents.executeJavaScript(`new Promise(resolve=>{const ready=()=>state.bootstrap?resolve():setTimeout(ready,20);ready()})`);
+    let release,request;
+    ipcMain.handle('context:set-active-save',(_event,value)=>{request=value;return new Promise(resolve=>release=resolve);});
+    const directory=path.join(root,'outputs/loading-ui');fs.mkdirSync(directory,{recursive:true});
+    for(const theme of ['light','dark'])for(const width of [1480,1040]){
+      window.setContentSize(width,900);request=null;
+      await window.webContents.executeJavaScript(`document.documentElement.dataset.theme=${JSON.stringify(theme)};state.bootstrap.settings.theme=${JSON.stringify(theme)};applyAccentColor(state.bootstrap.settings);state.saveLoading=true;render();window.pendingLoad=window.cfbToolkit.setActiveSave('UI-ONLY');void 0`);
+      for(let n=0;n<100&&!request;n++)await new Promise(resolve=>setTimeout(resolve,10));if(!request)throw Error('Loading IPC not invoked');
+      window.webContents.send('tools:progress',{operationId:request.operationId,percent:52,message:'Reading dynasty information…'});
+      await new Promise(resolve=>setTimeout(resolve,500));
+      await window.webContents.executeJavaScript(`if(!content.querySelector('[data-save-loading]')||content.querySelector('progress').value!==52||content.querySelector('[data-progress-percent]').textContent!=='52%')throw Error('Loading progress did not update');navigate('equipment-patcher');if(!content.querySelector('[data-save-loading]')||content.querySelector('#equipment-apply'))throw Error('Old tool can be used while loading');if(content.scrollWidth>content.clientWidth+2)throw Error('Loading layout overflow');void 0`);
+      fs.writeFileSync(path.join(directory,`loading-${theme}-${width}.png`),(await window.webContents.capturePage()).toPNG());
+      release({path:'UI-ONLY'});await window.webContents.executeJavaScript('pendingLoad;');
+    }
+    if(errors.length)throw Error(errors.join('\n'));console.log('PASS save-loading pane, real preload progress, protected tool navigation and light/dark layouts.');window.destroy();app.quit();return;
+  }
+  if(process.argv.includes('--v240-ui-only')){
+    await window.webContents.executeJavaScript(`new Promise(resolve=>{const ready=()=>state.bootstrap?resolve():setTimeout(ready,20);ready()})`);
+    await require('./lib/v240-ui.cjs')(window,root,reportActions);
+    if(errors.length)throw Error(errors.join('\n'));if(runs.length)throw Error('Visual checks must not run save tools.');window.destroy();app.quit();return;
+  }
+  if(process.argv.includes('--final-polish-only')){
+    await window.webContents.executeJavaScript(`new Promise(resolve=>{const ready=()=>state.bootstrap?resolve():setTimeout(ready,20);ready()})`);
+    await require('./lib/final-polish-ui.cjs')(window,root,updateReplies);
+    if(errors.length)throw Error(errors.join('\n'));window.destroy();app.quit();return;
+  }
+  if(process.argv.includes('--remaining-behavior-only')){
+    await window.webContents.executeJavaScript(`new Promise(resolve=>{const ready=()=>state.bootstrap?resolve():setTimeout(ready,20);ready()})`);
+    await require('./lib/remaining-tools-behavior.cjs')(window,root);
+    const unexpected=errors.filter(message=>!message.includes('REMAINING-TEST:'));
+    if(unexpected.length)throw Error(unexpected.join('\n'));
+    window.destroy();app.quit();return;
+  }
+  if(process.argv.includes('--remaining-inventory-only')||process.argv.includes('--remaining-tools-only')){
+    await window.webContents.executeJavaScript(`new Promise(resolve=>{const ready=()=>state.bootstrap?resolve():setTimeout(ready,20);ready()})`);
+    await require('./lib/remaining-tools-ui.cjs')(window,root,{inventory:process.argv.includes('--remaining-inventory-only')});
+    if(errors.length)throw Error(errors.join('\n'));
+    window.destroy();app.quit();return;
+  }
+  if(process.argv.includes('--results-ui-only')){
+    await window.webContents.executeJavaScript(`new Promise(resolve=>{const ready=()=>state.bootstrap?resolve():setTimeout(ready,20);ready()})`);
+    await require('./lib/results-ui.cjs')(window,root);
+    const unexpected=errors.filter(message=>!message.includes('RESULTS-TEST:'));
+    if(unexpected.length)throw Error(unexpected.join('\n'));
+    window.destroy();app.quit();return;
+  }
   if(process.argv.includes('--compact-progress-only')){
     await require('./lib/compact-progress-ui.cjs')(window,root);
     app.quit();return;
+  }
+  if(process.argv.includes('--randomizer-flow-only')){
+    await window.webContents.executeJavaScript(`new Promise(resolve=>{const ready=()=>state.bootstrap?resolve():setTimeout(ready,20);ready()})`);
+    await require('./lib/randomizer-flow-ui.cjs')(window,root);
+    if(errors.length)throw Error(errors.join('\n'));
+    if(runs.length!==3||runs[0].mode!=='preview'||runs[1].mode!=='preview'||runs[2].mode!=='apply'||runs[2].options.planId!=='draft-safety-plan')throw Error('Unexpected Randomizer Preview/Apply requests: '+JSON.stringify(runs));
+    window.destroy();app.quit();return;
+  }
+  if(process.argv.includes('--patcher-flow-only')){
+    await window.webContents.executeJavaScript(`new Promise(resolve=>{const ready=()=>state.bootstrap?resolve():setTimeout(ready,20);ready()})`);
+    await require('./lib/patcher-flow-ui.cjs')(window,root);
+    if(errors.length)throw Error(errors.join('\n'));
+    if(runs.length!==3||runs[0].mode!=='preview'||runs[1].mode!=='preview'||runs[2].mode!=='apply'||runs[2].options.planId!=='draft-safety-plan')throw Error('Unexpected Patcher Preview/Apply requests: '+JSON.stringify(runs));
+    window.destroy();app.quit();return;
+  }
+  if(process.argv.includes('--randomizer-inventory-only')){
+    await window.webContents.executeJavaScript(`new Promise(resolve=>{const ready=()=>state.bootstrap?resolve():setTimeout(ready,20);ready()})`);
+    await require('./lib/randomizer-inventory.cjs')(window,root);
+    if(errors.length)throw Error(errors.join('\n'));
+    if(runs.length)throw Error('Inventory must not run tools.');
+    window.destroy();app.quit();return;
+  }
+  if(process.argv.includes('--patcher-inventory-only')){
+    await window.webContents.executeJavaScript(`new Promise(resolve=>{const ready=()=>state.bootstrap?resolve():setTimeout(ready,20);ready()})`);
+    await require('./lib/patcher-inventory.cjs')(window,root);
+    if(errors.length)throw Error(errors.join('\n'));
+    if(runs.length)throw Error('Inventory must not run tools.');
+    window.destroy();app.quit();return;
   }
   if(process.argv.includes('--frequency-only')){
     await window.webContents.executeJavaScript(`new Promise(resolve=>{const ready=()=>state.bootstrap?resolve():setTimeout(ready,20);ready()})`);
@@ -79,7 +160,7 @@ app.whenReady().then(async () => {
     await require('./lib/equipment-quickstart-ui.cjs')(window,root);
     if(errors.length)throw Error(errors.join('\n'));
     if(runs.length!==3||runs[0].mode!=='preview'||runs[1].mode!=='preview'||runs[2].mode!=='apply')throw Error('Unexpected Quickstart UI runs: '+JSON.stringify(runs));
-    if(JSON.stringify(runs[1].options)!==JSON.stringify({unlocked:true,raw:true,gameday:true}))throw Error('Quickstart did not forward the exact mod choices.');
+    if(JSON.stringify(runs[1].options)!==JSON.stringify({unlocked:true,raw:true,gameday:true,protectOriginalEaPlayers:true}))throw Error('Quickstart did not forward the exact mod choices.');
     window.destroy();app.quit();return;
   }
   if (process.argv.includes('--roster-review-only')) {
@@ -123,8 +204,8 @@ app.whenReady().then(async () => {
     const unique = () => { const ids = [...document.querySelectorAll("[id]")].map(node => node.id); check(new Set(ids).size === ids.length, "All canonical/draft IDs must be unique"); };
     await wait(() => state.bootstrap); await refreshHomeContext();
     navigate("equipment-patcher"); await wait(() => document.querySelector("#configure-helmet-mix"));
-    check([...document.querySelectorAll("[data-equipment-panel]")].filter(node => !node.hidden).length === 3, "One equipment control center exposes all primary sections");
-    check(document.querySelectorAll("[data-equipment-step]").length === 2, "Only Configure and Review stages");
+    check(!document.querySelector('[data-ui-page="0"]').hidden && document.querySelector('[data-ui-page="1"]').hidden, "Patcher starts on Choose Options");
+    check(document.querySelectorAll("[data-ui-step]").length === 2, "Choose Options and Configure stages");
     check(document.querySelector("#equipment-protect-ea").checked, "Original EA protection defaults preserved");
     check([...document.querySelectorAll('input[id^="fix-"]')].every(control=>!control.checked), "Every Patcher pass starts off");
     for(const id of ["fix-helmet","fix-rolled","fix-socks","fix-sleeves","fix-nike","fix-visors"])document.getElementById(id).click();
@@ -151,11 +232,14 @@ app.whenReady().then(async () => {
     const teamSelect = draft("equipment-included"), firstTeam = [...teamSelect.options].find(option => option.textContent === "Alabama");
     pick(teamSelect, [firstTeam.value]); save(); check(equipmentAvailableTeamCount(cachePrepared()) === 1, "Team count updates after window Save");
     function cachePrepared() { return state.prepared.get("equipment-patcher|" + state.activeSave.path); }
+    document.querySelector('#equipment-step-next').click();
     document.querySelector("#fix-unlocked-mouthpieces").click(); open("Mouthpiece Settings");
     draft("randomize-existing-mouthpieces").click(); change(draft("mouthpiece-branded-frequency"), "110"); check(document.querySelector("[data-config-save]").disabled, "Mouthpiece frequency bounds enforced");
     change(draft("mouthpiece-branded-frequency"), "35"); save(); check(equipmentOptions("equipment-patcher").rerollExistingMouthpieces && equipmentOptions("equipment-patcher").brandedMouthpieceFrequency === 35, "Mouthpiece settings commit through existing options");
     document.querySelector("#fix-unlocked-recolor").click(); open("Colors & Tape");
     check(!document.querySelector('#recolor-raw-accessories'), 'RAW recoloring is built in without an extra control');
+    check(draft('unlocked-color-theme').value==='team'&&draft('tape-color-mode').value==='accessory','Requested recolor defaults');
+    change(draft('unlocked-color-theme'),'weighted');
     change(draft("accessory-color-white"), "80"); check(document.querySelector("[data-config-save]").disabled, "Color weights must total 100");
     document.querySelector("[data-config-reset]").click(); check(draft("accessory-color-white").value === "65", "Scoped reset restores only draft defaults");
     change(draft("tape-color-mode"), "distribution");
@@ -218,7 +302,7 @@ app.whenReady().then(async () => {
     check(document.querySelector("dialog.helmet-editor.configuration-dialog"), "Helmet editor uses shared shell");
     check(createConfigurationDialog({ title: "Nested" }) === null, "Nested configuration windows prevented");
     document.querySelector("dialog").dispatchEvent(new Event("cancel", { cancelable: true })); check(document.activeElement === opener, "Escape/Cancel restores opener focus");
-    document.querySelector("#equipment-step-next").click(); check([...document.querySelectorAll("[data-equipment-panel]")].filter(node => !node.hidden).length === 1 && !document.querySelector('[data-equipment-panel="3"]').hidden, "Review remains a separate page");
+    check(!document.querySelector('[data-ui-page="1"]').hidden && !document.querySelector('#equipment-preview').hidden, "Preview is reached from selected configuration");
     await runEquipment("equipment-patcher", "preview"); check(document.querySelector("#equipment-config-workspace").hidden && !document.querySelector("#equipment-preview-workspace").hidden, "Exact preview never appended to configuration");
     const savedPatcher = JSON.stringify(equipmentOptions("equipment-patcher")); navigate("freshman-equipment"); await wait(() => document.querySelector("#equipment-donor-mode"));
     const randomizerTeamEntry=document.querySelector(".team-scope-group .configuration-entry"), randomizerFilterEntry=[...document.querySelectorAll(".player-pool-layout .configuration-entry")].find(node=>node.querySelector("strong").textContent==="Player Filters");
@@ -292,6 +376,7 @@ app.whenReady().then(async () => {
     const slider=document.querySelector('[data-model-path="homeField.home"]');slider.value="2";slider.dispatchEvent(new Event("input",{bubbles:true}));
     check(document.querySelector("#force-custom-model-json").value===customBaseline,"Model draft isolated");
     document.querySelector("[data-week-limit]").value="2";document.querySelector("[data-week-limit]").dispatchEvent(new Event("input",{bubbles:true}));
+    [...document.querySelectorAll('dialog [role=tab]')].find(button=>button.textContent==='Coaches & Venue')?.click();
     check([...document.querySelectorAll('input[type="range"]')].every(input => input.closest('.model-slider').querySelector('[data-model-help]')),"Every model slider has help");
     const help=slider.closest(".model-slider").querySelector("[data-model-help]"); document.dispatchEvent(new KeyboardEvent('keydown',{key:'Tab',bubbles:true}));help.focus();
     // Hidden BrowserWindows update activeElement without activating native focus events.

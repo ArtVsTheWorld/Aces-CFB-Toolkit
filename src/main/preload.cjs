@@ -37,13 +37,20 @@ contextBridge.exposeInMainWorld("cfbToolkit", Object.freeze({
   respondUpdatePrompt: request=>ipcRenderer.invoke("updates:prompt-response",request),
   chooseSave: purpose => ipcRenderer.invoke(channels.chooseSave, purpose),
   chooseFile: () => ipcRenderer.invoke(channels.chooseFile),
-  setActiveSave: value => ipcRenderer.invoke(channels.setActiveSave, value),
+  setActiveSave: value => invokeOperation(channels.setActiveSave, {savePath:value}),
+  onDynastyProfilesChanged: callback => {
+    if(typeof callback!=='function')throw new TypeError('Dynasty profile listener must be a function.');
+    const listener=()=>callback();ipcRenderer.on('dynasty:profiles-changed',listener);
+    return ()=>ipcRenderer.removeListener('dynasty:profiles-changed',listener);
+  },
   clearActiveSave: () => ipcRenderer.invoke(channels.clearActiveSave),
   updateReadingSize: value => ipcRenderer.invoke("settings:update-reading-size", value),
   presetTransfer: request => ipcRenderer.invoke("settings:preset-transfer", request),
   setToolDefault: request => ipcRenderer.invoke("settings:set-tool-default", request),
   updateTheme: theme => ipcRenderer.invoke(channels.updateTheme, theme),
   updateAccent: color => ipcRenderer.invoke("settings:update-accent", color),
+  updateBaseColor: color => ipcRenderer.invoke("settings:update-base-color", color),
+  acknowledgeRelease: version => ipcRenderer.invoke("updates:acknowledge-release", version),
   savePreset: request => ipcRenderer.invoke("settings:save-preset", request),
   deletePreset: request => ipcRenderer.invoke("settings:delete-preset", request),
   homeContext: () => invokeOperation(channels.homeContext),
@@ -51,6 +58,7 @@ contextBridge.exposeInMainWorld("cfbToolkit", Object.freeze({
   saveCustomMatchupModel: model => ipcRenderer.invoke("settings:save-custom-matchup-model", model),
   chooseTeamArtwork: request => ipcRenderer.invoke(channels.chooseTeamArtwork, request),
   clearTeamArtwork: request => ipcRenderer.invoke(channels.clearTeamArtwork, request),
+  importLegacyTeamArtwork: request => ipcRenderer.invoke("settings:import-legacy-team-artwork", request),
   runTool: async request => {
     const result = await invokeOperation(channels.runTool, request);
     if (request?.mode === 'apply' && result?.status === 'completed') for (const callback of applyListeners) { try { callback(); } catch {} }

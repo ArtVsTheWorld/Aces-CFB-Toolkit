@@ -1,0 +1,92 @@
+/* The same setup frame, cards and actions used by the equipment tools. */
+.workspace:has(.ui-other-workspace){grid-template-columns:minmax(0,1fr)}
+.ui-pending-workspace>:not([data-ui-pending-message]){display:none!important}
+.ui-pending-message{padding:24px;border:1px solid var(--border);border-radius:var(--ui-radius);background:var(--surface)}
+.ui-pending-message h2{font-size:15px;margin:0 0 20px}
+.ui-inline-setting .tool-inline-body{display:flex;flex-direction:column;gap:12px;min-width:0;margin-top:auto}
+.ui-inline-setting .tool-control-field{max-width:none;width:100%}
+.ui-inline-field>label{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+.ui-inline-field>label .model-help-button{display:none}
+.tool-section-content>.ui-settings-grid+.ui-settings-grid{margin-top:16px}
+.help-search-controls.history-filter-controls{grid-template-columns:minmax(0,2fr) repeat(2,minmax(0,1fr));align-items:end;gap:16px}
+.history-filter-controls>label{margin:0;min-width:0}
+.history-filter-controls input,.history-filter-controls select{display:block;width:100%;min-width:0;min-height:38px;margin-top:6px}
+@media(max-width:680px){.help-search-controls.history-filter-controls{grid-template-columns:1fr}}
+.experimental-ui main:has(.ui-other-workspace:not([hidden])){display:flex;flex-direction:column;min-width:0;width:100%;overflow:hidden;padding-bottom:20px}
+.experimental-ui main:has(.ui-other-workspace:not([hidden]))>.tool-header{flex:none}
+.experimental-ui .ui-other-workspace{display:flex;flex-direction:column;min-width:0;min-height:0;flex:1;width:100%;max-width:none;margin:0;padding:0;border:0;background:transparent;box-shadow:none}
+.ui-other-workspace[hidden]{display:none!important}
+.ui-other-workspace>.ui-setup-flow{min-width:0;min-height:0;flex:1}
+.ui-other-workspace .ui-control-bank{display:none!important}
+.ui-other-workspace .ui-setting-card{min-height:108px}
+.ui-other-workspace .ui-setting-card[hidden]{display:none!important}
+.ui-other-workspace .ui-settings-grid>.ui-setting-card:only-child{grid-column:1/-1}
+.ui-other-workspace .ui-settings-grid:not(:has(>.ui-setting-card:not([hidden]))){display:none}
+.ui-other-workspace .ui-setting-body>.ui-option-row{padding:0;border:0;min-height:38px;align-items:center;flex:1}
+.ui-other-workspace .tool-section-content{min-width:0}
+.ui-other-workspace .tool-section-content>.ui-option-row{padding:14px 0}
+.ui-other-workspace .ui-option-group>.ui-option-row:first-child{border-top:0;padding-top:0}
+.ui-other-workspace .ui-option-group>.ui-option-row:last-child{padding-bottom:0}
+.ui-other-workspace .quickstart-mod-options{display:grid;grid-auto-rows:1fr;padding:0 16px}
+.experimental-ui .ui-other-workspace .quickstart-mod-options>.ui-option-row{min-height:60px;padding:16px 0;align-items:center}
+.experimental-ui .ui-other-workspace .quickstart-mod-options>.ui-option-row>input{margin:0}
+.ui-other-workspace .ui-mode-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:0}
+.experimental-ui .ui-other-workspace .ui-mode-options .mode-card{display:flex;align-items:center;gap:10px;min-width:0;min-height:64px;width:100%;padding:14px 16px;margin:0;border:1px solid var(--border);border-radius:var(--ui-radius);background:var(--surface);color:var(--text)}
+.ui-other-workspace .ui-mode-options .mode-card:has(input:checked){border-color:var(--action);background:var(--action-soft)}
+.ui-other-workspace .ui-mode-options input{margin:0;flex:none;accent-color:var(--action)}
+.ui-other-workspace .ui-mode-options .mode-card>span{display:flex;align-items:center;gap:7px;min-width:0}
+.ui-other-workspace .ui-mode-options .mode-card strong{font-size:12px;line-height:1.5}
+.ui-other-workspace .ui-mode-options small{display:none}
+.tool-field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.tool-control-field{min-width:0;max-width:580px}
+.tool-control-field label{margin:0 0 8px;line-height:1.5;font-size:12px}
+.tool-control-field select,.tool-control-field input{margin:0;min-height:38px;width:100%;min-width:0}
+.tool-control-field>label .model-help-button{vertical-align:middle}
+.tool-player-condition>p{font-size:12px;color:var(--muted);line-height:1.6}
+.tool-important-note{padding:14px 16px;font-size:12px;line-height:1.6;margin:0 0 16px}
+.tool-important-note p{margin:4px 0 0}
+.ui-other-workspace .tool-roster-config{display:block;min-width:0;margin:0;padding:0;border:0}
+.tool-roster-config>.ui-setting-card{margin-top:16px}
+.ui-other-workspace .tool-roster-config:disabled{opacity:.6}
+.ui-other-workspace #roster-team-required{margin:16px 0 0;font-size:12px}
+.ui-other-workspace .tool-quickstart-memory{padding:0;background:transparent;border:0;display:flex;flex-direction:column;gap:14px}
+.ui-other-workspace .tool-quickstart-memory .metric-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:0;padding:0;border:0;background:transparent}
+.ui-other-workspace .tool-quickstart-memory .metric{border-radius:var(--ui-radius);padding:16px;background:var(--surface);border:1px solid var(--border)}
+.ui-other-workspace .tool-quickstart-memory .metric strong{font-size:22px}
+.ui-other-workspace .tool-quickstart-memory .metric small{font-size:11px;line-height:1.5}
+.ui-other-workspace .tool-quickstart-memory .quickstart-included-summary{display:none}
+.ui-other-workspace .tool-quickstart-memory>div>strong{font-size:12px}
+.ui-other-workspace .rule-summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.ui-other-workspace .rule-summary-grid article{background:var(--surface);border:1px solid var(--border);border-radius:var(--ui-radius);padding:18px}
+.ui-other-workspace .mapper-library-stats{display:flex;flex-wrap:wrap;justify-content:start;gap:24px;margin:0 0 16px;padding:16px;border:1px solid var(--border);border-radius:var(--ui-radius);background:var(--surface)}
+.ui-other-workspace .mapper-library-stats>div{padding:0;flex:1;min-width:120px}
+.ui-other-workspace .mapper-library-stats strong{font-size:22px}
+.ui-other-workspace .mapper-library-actions{display:flex;gap:12px;flex-wrap:wrap;margin:0}
+.ui-other-workspace .mapper-rule-row{margin-top:12px;border-radius:var(--ui-radius);padding:16px;gap:12px;background:var(--surface)}
+.ui-other-workspace .mapper-rule-actions{gap:8px}
+.ui-other-workspace .ui-section-heading>.button{margin-left:auto}
+.ui-other-workspace .tool-section-content>.ui-settings-grid+.ui-option-group,.ui-other-workspace .tool-section-content>.tool-field-grid+.ui-settings-grid{margin-top:16px}
+.ui-other-workspace .ui-flow-run-status:empty,.ui-other-workspace .ui-flow-run-status>div:empty{display:none}
+.ui-other-workspace #force-clear{max-width:580px}
+.ui-other-workspace #force-week-field label,.ui-other-workspace #force-clear label{font-size:12px}
+[data-ui-tool-review] .tool-review-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:0 0 16px;padding:0;border:0;background:transparent}
+[data-ui-tool-review] .metric{padding:14px 16px;border-radius:var(--ui-radius);background:var(--surface);border:1px solid var(--border)}
+[data-ui-tool-review] .metric strong{font-size:22px}
+[data-ui-tool-review] .metric small{font-size:11px}
+[data-ui-tool-review] .tool-review-toolbar{display:flex;flex-direction:column;align-items:stretch;gap:12px;margin:0 0 16px;padding:0;min-height:0;background:transparent;border:0}
+[data-ui-tool-review] .tool-review-filter-row{display:flex;align-items:end;gap:12px;flex-wrap:wrap}
+[data-ui-tool-review] .tool-review-filter-row>label{display:block;flex:1 1 130px;min-width:0;margin:0;color:var(--muted);font-size:11px}
+[data-ui-tool-review] .tool-review-filter-row select{display:block;width:100%;min-width:0;min-height:38px;margin-top:6px}
+[data-ui-tool-review] .tool-review-decision-actions{display:flex;flex-wrap:wrap;gap:8px}
+[data-ui-tool-review] .tool-review-search{flex:1 1 260px;min-width:0;max-width:none;margin:0;font-size:11px;color:var(--muted)}
+[data-ui-tool-review] .tool-review-search input{margin-top:6px;min-height:38px}
+[data-ui-tool-review] .tool-review-attention{padding:12px 16px;font-size:12px;margin:0 0 16px}
+[data-ui-tool-review] .equipment-result-switch{margin-bottom:12px;border:0;padding:0;background:transparent}
+[data-ui-tool-review] .commentary-review-table{max-height:none}
+@media(max-width:760px){.tool-field-grid{grid-template-columns:1fr}.ui-other-workspace .ui-mode-options{grid-template-columns:1fr}.ui-other-workspace .tool-quickstart-memory .metric-grid{gap:8px}.ui-other-workspace .tool-quickstart-memory .metric{padding:12px}.ui-other-workspace .tool-quickstart-memory .metric small{font-size:10px}.ui-other-workspace .mapper-rule-row{grid-template-columns:28px minmax(0,1fr)}.ui-other-workspace .mapper-rule-actions{grid-column:2;justify-content:flex-end;flex-wrap:wrap}}
+@media(max-width:760px){[data-ui-tool-review] .tool-review-metrics{gap:8px}[data-ui-tool-review] .metric{padding:12px}[data-ui-tool-review] .metric strong{font-size:19px}[data-ui-tool-review] .metric small{font-size:10px}[data-ui-tool-review] .ui-flow-actions{flex-wrap:wrap}[data-ui-tool-review] .ui-flow-status{order:-1;flex-basis:100%}[data-ui-tool-review] #commentary-preview{margin-left:auto}}
+@media(max-width:680px){.experimental-ui main:has(.ui-setup-flow)>.tool-header h1{font-size:24px}.experimental-ui main:has(.ui-setup-flow)>.tool-header .eyebrow{display:none}}
+
+.tool-memory-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px;border:1px solid var(--line);border-radius:6px;background:var(--surface);margin-top:16px;min-width:0}.tool-memory-row>div{display:grid;gap:5px;min-width:0}.tool-memory-row span{color:var(--subtle-ink);font-size:12px}.tool-memory-row button{flex-shrink:0}.tool-quickstart-memory>.ui-choice{margin-bottom:16px}@media(max-width:680px){.tool-memory-row{align-items:flex-start;flex-direction:column}.tool-memory-row button{align-self:flex-end}}
+
+.history-dynasty-scope{margin:0 0 16px}.history-dynasty-scope button{min-height:38px;padding:8px 14px;font-size:12px}.history-dynasty-scope button:disabled{opacity:.45;cursor:not-allowed}

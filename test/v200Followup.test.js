@@ -59,7 +59,7 @@ test('clear-only correction works on OL and preserves excluded/NIL/shared player
 test('no-op settings restoration emits no change event, while real restored edits still do', () => {
   let changes=0;
   const controls = {scope:{value:'default',type:'text',dataset:{},dispatchEvent:()=>changes++},nil:{checked:true,type:'checkbox',dataset:{},dispatchEvent:()=>changes++}};
-  const context = vm.createContext({toolLoading: message => message, state:{page:'tool',bootstrap:{registry:{tools:[{id:'tool'}]}},toolSettings:new Map([['tool',{scope:'default',nil:true}]])},document:{getElementById:id=>controls[id]},migrateOriginalEaProtectionSettings:()=>{},migrateEquipmentSessionSettings:()=>{},Event:class{}});
+  const context = vm.createContext({toolSettingsRestoreDepth:0,toolLoading: message => message, state:{page:'tool',bootstrap:{registry:{tools:[{id:'tool'}]}},toolSettings:new Map([['tool',{scope:'default',nil:true}]])},document:{getElementById:id=>controls[id]},migrateOriginalEaProtectionSettings:()=>{},migrateEquipmentSessionSettings:()=>{},Event:class{}});
   vm.runInContext(fn('restoreToolSettings'),context); vm.runInContext('restoreToolSettings()',context); assert.equal(changes,0);
   controls.scope.dataset={};context.state.toolSettings.get('tool').scope='changed';vm.runInContext('restoreToolSettings()',context);assert.equal(changes,1);
   vm.runInContext('restoreToolSettings()',context);assert.equal(changes,1);

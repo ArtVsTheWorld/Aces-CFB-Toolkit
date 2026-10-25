@@ -16,6 +16,7 @@ for (const expired of [false, true]) test(`failed equipment Apply ${expired ? 'd
     beginToolRun: () => 'token', currentToolRun: () => true,
     renderResult: (target, result) => {assert.equal(result, preview); target.innerHTML = 'Reviewed equipment'; events.push('preview');},
     readableError: error => error,
+    markRunFailure: () => {},
     showError: (error, target) => {target.innerHTML += ` | ${error.message}`; events.push('error');}
   });
   vm.runInContext(runTool, context);

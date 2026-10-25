@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import { EventEmitter } from "node:events";
-import { UpdateService, updateAvailability } from "../src/main/services/updates.js";
+import { UpdateService, updateAvailability, releaseNotesText } from "../src/main/services/updates.js";
 
 const tick = () => new Promise(resolve => setImmediate(resolve));
 class FakeUpdater extends EventEmitter {
@@ -127,3 +127,18 @@ test("installer metadata preserves persistence IDs and publishes only Windows re
   assert.match(preload, /removeListener\("updates:status-changed", listener\)/);
   assert.doesNotMatch(main + preload, /GH_TOKEN|setFeedURL/);
 });
+
+ test('GitHub notes reach consent prompts, persist after download and appear once after installing',async()=>{
+  const persisted=[],prompts=[];const {updater,service}=fixture({persistNotes:notes=>persisted.push(notes),prompt:async(kind,status)=>{prompts.push({kind,status});return false;}});
+  const notes=[{version:'0.18.1',note:'## Equipment\n- Fixed gear assignments.'}];updater.emit('update-available',{version:'0.18.1',releaseNotes:notes});await tick();
+  assert.match(prompts[0].status.releaseNotes,/Fixed gear/);assert.equal(updater.downloads,0);
+  updater.emit('update-downloaded',{version:'0.18.1'});await tick();assert.match(persisted[0].notes,/Equipment/);
+  const acknowledged=[],installed=new UpdateService({updater:null,currentVersion:'0.18.1',disabledReason:'test',savedNotes:persisted[0],acknowledge:v=>acknowledged.push(v)});
+  assert.equal(installed.snapshot().whatsNew.version,'0.18.1');assert.throws(()=>installed.acknowledgeRelease('9.9.9'),/installed/);
+  installed.acknowledgeRelease('0.18.1');assert.equal(installed.snapshot().whatsNew,null);assert.deepEqual(acknowledged,['0.18.1']);
+  assert.equal(new UpdateService({updater:null,currentVersion:'0.18.1',disabledReason:'test',savedNotes:persisted[0],lastSeenRelease:'0.18.1'}).snapshot().whatsNew,null);
+  assert.equal(releaseNotesText({bad:'value'}),'');assert.equal(releaseNotesText('x'.repeat(90000)).length,60000);
+ });
+ test('notes persistence failure never prevents a downloaded update from staying ready',async()=>{
+  const {updater,service,logs}=fixture({persistNotes:()=>{throw Error('disk full');}});updater.emit('update-downloaded',{version:'0.18.1',releaseNotes:'Notes'});await tick();assert.equal(service.snapshot().phase,'downloaded');assert.equal(logs[0][1],'update-notes-persist-failed');
+ });

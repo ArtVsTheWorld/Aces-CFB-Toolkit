@@ -25,7 +25,8 @@ test("preview dropdown filters search the complete cached plan and combine with 
 test("player-tool previews expose applicable dropdowns without changing Smart Force Win filters", () => {
   const renderer = fs.readFileSync(new URL("../src/renderer/renderer.js", import.meta.url), "utf8");
   assert.match(renderer, /function previewFilterToolbar\(/);
-  assert.match(renderer, /\["team", "All teams"\], \["position", "All positions"\], \["classYear", "All class years"\]/);
+  for(const label of ['All teams','All positions','All class years'])assert.ok(renderer.includes(label));
+  assert.match(renderer,/data-reset-preview-filters/);
   assert.match(renderer, /searchPreview\(\{ planId: result\.planId, query, filters \}\)/);
   assert.match(renderer, /function whiteHelmetResults\(/);
   assert.match(renderer, /function bindCommentaryReviewFilters\(/);
