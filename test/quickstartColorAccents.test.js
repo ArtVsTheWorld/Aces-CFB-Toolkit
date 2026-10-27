@@ -9,7 +9,7 @@ import {normalizeEquipmentOptions} from '../src/main/tools/equipment/runner.js';
 import {recolorQuickstartAccent,applyQuickstartColorAccents} from '../src/main/tools/equipmentQuickstart/colorAccents.js';
 import {equipmentColorVariant,RAW_314} from '../src/main/tools/equipment/catalog.js';
 
-const whiteMix={white:95,black:5,primary:0,secondary:0},blackMix={white:0,black:100,primary:0,secondary:0},schools=['Alabama','Nebraska','Penn State','USC'];
+const whiteMix={white:95,black:5,primary:0,secondary:0},blackMix={white:0,black:100,primary:0,secondary:0},schools=['Alabama','Georgia','Nebraska','Penn State','USC'];
 const element=(slotType,itemAssetName)=>({slotType,itemAssetName,keep:'metadata'}),glove='GearHand_glove_AdidasAdizero11_white',sleeve='GearArmSleeve_Half_sleeveLongUnderarmor_normal_White',shirt='Gear_Undershirt_CompressionTCrewSleeveless_White';
 const outfit=()=>[{loadoutType:'PlayerOnField',loadoutElements:[element('LeftHandWear',glove),element('RightHandWear',glove),element('LeftArmWear',sleeve),element('RightArmWear',sleeve),element('InnerShirt',shirt),element('LeftWristWear','GearWrist_wristTapedLite_TeamColor'),element('RightWristWear','GearWrist_wristTapedLite_TeamColor'),element('LeftSpat','GearSpats_spatThin_TeamColor'),element('RightSpat','GearSpats_spatThin_TeamColor'),element('MouthWear','GearMouthpiece_PacifierDualHanging_Black')]},{loadoutType:'Base',loadoutElements:[element('LeftHandWear',glove),element('LeftArmTattoo','KeepTattoo')]}];
 const ref=(row,table=10)=>table.toString(2).padStart(15,'0')+row.toString(2).padStart(17,'0');
@@ -18,13 +18,13 @@ const visual=()=>({isEmpty:false,RawData:JSON.stringify({keep:true,loadouts:outf
 const pick=(loadouts,slot)=>loadouts[0].loadoutElements.find(item=>item.slotType===slot)?.itemAssetName;
 const sequence=(...numbers)=>()=>numbers.shift()??0;
 
-test('four accessory defaults change in both tools without replacing tape distributions or explicit accessory choices',()=>{
+test('selected schools use the accessory defaults in both tools without replacing tape distributions or explicit accessory choices',()=>{
   for(const settings of [normalizeEquipmentOptions({unlockedRecolorFix:true},false),quickstartSettings({unlocked:true}).patcher])for(const team of schools){
     assert.deepEqual(teamAccessoryWeights(team,settings.teamAccessoryColors),whiteMix);assert.deepEqual(defaultTeamTapeWeights(team),blackMix);
     assert.deepEqual(teamAccessoryWeights(team,{[team.toLowerCase()]:blackMix}),blackMix,'Explicit settings take precedence over defaults');
   }
-  for(const team of ['Alabama Crimson Tide','Bama','Penn St.','Penn State Nittany Lions','Southern California','USC Trojans','Nebraska Cornhuskers'])assert.deepEqual(defaultTeamAccessoryWeights(team),whiteMix,team);
-  for(const team of ['Georgia','Army','Missouri','Michigan','Florida','Florida State','Miami'])assert.deepEqual(defaultTeamAccessoryWeights(team),defaultTeamTapeWeights(team),team);
+  for(const team of ['Alabama Crimson Tide','Bama','Georgia Bulldogs','UGA','Penn St.','Penn State Nittany Lions','Southern California','USC Trojans','Nebraska Cornhuskers'])assert.deepEqual(defaultTeamAccessoryWeights(team),whiteMix,team);
+  for(const team of ['Army','Missouri','Michigan','Florida','Florida State','Miami'])assert.deepEqual(defaultTeamAccessoryWeights(team),defaultTeamTapeWeights(team),team);
 });
 
 test('Patcher editor uses independent accessory and tape defaults',()=>{
@@ -33,7 +33,7 @@ test('Patcher editor uses independent accessory and tape defaults',()=>{
   for(const [kind,expected] of [['accessory',whiteMix],['tape',blackMix]]){
     const markup=render(prepared,kind);for(const color of ['white','black','primary','secondary']){
       const attribute=kind==='tape'?'data-tape-color':'data-accessory-team-color';
-      assert.equal([...markup.matchAll(new RegExp(attribute+'="'+color+'"[^>]*value="'+expected[color]+'"','g'))].length,4);
+      assert.equal([...markup.matchAll(new RegExp(attribute+'="'+color+'"[^>]*value="'+expected[color]+'"','g'))].length,schools.length);
     }
   }
 });
