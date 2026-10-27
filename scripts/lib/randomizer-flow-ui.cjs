@@ -15,12 +15,16 @@ module.exports=async(window,root)=>{
   rCheck(rVisible(content.querySelector('[data-ui-page="0"]'))&&!rVisible(content.querySelector('[data-ui-page="1"]')),'Start on Choose Options');
   rCheck(content.querySelectorAll('.ui-option-row').length===4&&[...content.querySelectorAll('.ui-option-row input')].every(n=>!n.checked&&rVisible(n)),'Four optional extras start off');
   rCheck(!document.getElementById('equipment-step-next').disabled,'Donor equipment works without extras');
-  const o=equipmentOptions('freshman-equipment');rCheck(o.top===15&&o.crossPositionPercent===10&&o.multipleDonorPercent===30&&!o.classes.length&&o.redshirtGroup==='all'&&o.protectPreviouslyRandomized&&!o.randomizeDonors,'Original donor/scope defaults');
+  const o=equipmentOptions('freshman-equipment');rCheck(o.top===30&&o.crossPositionPercent===10&&o.multipleDonorPercent===30&&!o.classes.length&&o.redshirtGroup==='all'&&o.protectPreviouslyRandomized&&!o.randomizeDonors,'Original donor/scope defaults');
   window.rBaseline={controls:configurationControls(content).filter(n=>!n.closest('.config-presets')).map(n=>({id:n.id,type:n.type,value:configurationValue(n)})),defaults:o};
  })()`);
  const baselinePath=path.join(root,'outputs/randomizer-ui-before-redesign.json'),current=await execute('rBaseline');
  if(fs.existsSync(baselinePath)){
   const before=JSON.parse(fs.readFileSync(baselinePath)),byId=list=>Object.fromEntries(list.map(n=>[n.id,{type:n.type,value:n.value}]));
+  // Account for the authorized default change without modifying the archive.
+  const donorCount=before.controls.find(control=>control.id==='equipment-top');
+  if(donorCount&&Number(donorCount.value)===15)donorCount.value=typeof donorCount.value==='number'?30:'30';
+  for(const defaults of [before.defaults,before.selected])if(defaults?.top===15)defaults.top=30;
   assert.deepEqual(byId(current.controls),byId(before.controls),'Every Randomizer setting and default retained');
   assert.deepEqual(JSON.parse(JSON.stringify(current.defaults)),before.defaults,'Default options unchanged');
   await execute(`for(const id of ['equipment-no-drip','equipment-unlocked','equipment-raw-accessories','equipment-truck'])document.getElementById(id).click();void 0`);

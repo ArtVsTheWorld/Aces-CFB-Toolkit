@@ -1,0 +1,224 @@
+{
+  "description": "Native three-block appearance with linked, non-adjacent continuations; no player or save identity",
+  "blocks": [
+    "HAMotS/9Y4tQ/GWmBXUYAELfakEwbxsAwIgODDUGiEwk2QKUh5NBAkqIlP+OxKWU95Lj8/NwNY8wt80UYWJnKNs2M7X2pjnYjdrJwz03bKsx5VSeHZbLC0rHAtezvmeJPJkKHyHKmtPTqtYkqGOKY3k9exwVCZrQNifCqPRz9Zxusj3DWoVNvz2LcaEB2XDh4nxjmWEvbhADEBEdJVBUK80G3SLQVWaiHcEkF7gv0sBohBhJ+nbW7ozOyZF7ByuVDK6IFK5U2TgRwkJDp5FnsqCP5khG94EKPXa1FCczyjH/TNuxZZdVz0kyDXx6/K5+cfyjjbvS7Rn7qHAEWNDxGNG0yHParPq0VItebVOeNrLYlgeQTbYrz06LPGVUTiwhUkbyL3lvTu/59pvvi+uwoM9tz+iC1Z3jsdm8Ui8u7Uv+9+dLK3eVAgHWRaK2O7aaOmip9kzSkTkI+pM19gzRP+PVkeOM6w17aszh23cqQ8/dgSAyIbSU+lM=",
+    "36PNA+3FJRkmMyvBA4wIJ+85B+uPAQ0rpMy3/XXPailktmlz3LFn6brXytb2GwqF0lG5OMAwEAA8KQ6oIEEtJgZgaFEggKuoEU0KaAIAGSAAAAhgAGCoiGoCUrkc5ZsTFhCWof8FAJIT6tufATAtgGbKiQ3ZkJPZ0fCJfGUiTWK1OPsZia8ACSyrpmgjsacilpZd27bosaarah4MhPgXpuDIHiWeI6KZvQHEhSlNUbiiS70INg7RncKjg8fH0gAIDeu++ULIFu661yqNtRgXMFI1ox3R1wwMkvgWit4cjxQWCF6rtI+jZo/C1fnzBW0XfQLe1CB4hTAYp4pzWjihJGGK7nUAosqzeiw/mQRbPTvGL40lEgs3kCAT9TP54wiUcxSBaEfhVhLLyFcqoBjGRsw1+UA17wm2leXbGr+RJe14ZAH7F9gdH68KA54Co2JjrMXVuzhlgAgy5f2wBFJQkhQEvSoPjTpUjms66Xs6tOJ4z3BMVcDpaok=",
+    "Kpxl6cOj0wA56cjPJXBqgUGV18AyLHF9l9uhtzSGjsIuvVEDaAJrNpLjiQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+  ],
+  "expected": {
+    "loadouts": [
+      {
+        "loadoutCategory": "Head",
+        "loadoutType": "Head",
+        "loadoutElements": [
+          {
+            "blends": [
+              {}
+            ],
+            "itemInstanceTag": "Head_SkinDetails_None",
+            "itemAssetName": "Head_SkinDetails_None",
+            "slotType": "FaceTexture",
+            "transforms": [
+              {}
+            ]
+          },
+          {
+            "blends": [
+              {}
+            ],
+            "itemInstanceTag": "NeckTattoo_None",
+            "itemAssetName": "NeckTattoo_None",
+            "slotType": "NeckTattoo",
+            "transforms": [
+              {}
+            ]
+          }
+        ]
+      },
+      {
+        "loadoutCategory": "Base",
+        "loadoutElements": [
+          {
+            "itemInstanceTag": "v_Tattoos_Japanese_10_ArmFloating_v01",
+            "itemAssetName": "v_Tattoos_Japanese_10_ArmFloating_v01",
+            "slotType": "LeftArmTattoo"
+          },
+          {
+            "itemInstanceTag": "ArmTattoo_Tattoos_Japanese_08_ArmSleeve_v02",
+            "itemAssetName": "ArmTattoo_Tattoos_Japanese_08_ArmSleeve_v02",
+            "slotType": "RightArmTattoo"
+          },
+          {
+            "itemInstanceTag": "LegTattoo_Four",
+            "itemAssetName": "LegTattoo_Four",
+            "slotType": "LeftLegTattoo"
+          },
+          {
+            "itemInstanceTag": "LegTattoo_Four",
+            "itemAssetName": "LegTattoo_Four",
+            "slotType": "RightLegTattoo"
+          }
+        ]
+      },
+      {
+        "loadoutType": "PlayerOnField",
+        "loadoutElements": [
+          {
+            "itemAssetName": "GearFaceMask_Speedflex2Bar_WR"
+          },
+          {
+            "itemAssetName": "ThighPad_NumberCross_V57",
+            "slotType": "LeftThighWear"
+          },
+          {
+            "blends": [
+              {}
+            ],
+            "itemAssetName": "ThighPad_Regular",
+            "slotType": "RightThighWear"
+          },
+          {
+            "itemAssetName": "GearVisor_visorOakley_enhancedclearreflective",
+            "slotType": "Visor"
+          },
+          {
+            "itemAssetName": "FaceMarks_NoseTape_C2",
+            "slotType": "FacePaint"
+          },
+          {
+            "itemAssetName": "HandwarmerStyle_None",
+            "slotType": "WaistWearOverride"
+          },
+          {
+            "itemAssetName": "GearSpats_overrides_custom",
+            "slotType": "RightSpat"
+          },
+          {
+            "itemAssetName": "GearSpats_overrides_custom",
+            "slotType": "LeftSpat"
+          },
+          {
+            "itemAssetName": "GearFootwear_shoe_low_UnderArmourBlurPro2026",
+            "slotType": "LeftShoe"
+          },
+          {
+            "itemAssetName": "GearFootwear_shoe_low_UnderArmourBlurPro2026",
+            "slotType": "RightShoe"
+          },
+          {
+            "itemAssetName": "GearHelmet_Speed_Flex",
+            "slotType": "HeadWear"
+          },
+          {
+            "blends": [
+              {
+                "barycentricBlend": 1,
+                "baseBlend": 1
+              }
+            ],
+            "itemAssetName": "GearBackplate_RawXTech",
+            "slotType": "BackPlate"
+          },
+          {
+            "itemAssetName": "GearLegBase_Socks_Under_Both_Black2",
+            "slotType": "InnerPants"
+          },
+          {
+            "itemAssetName": "Undershirt_None",
+            "slotType": "InnerShirt"
+          },
+          {
+            "itemAssetName": "Gear_Socks_Low",
+            "slotType": "InnerSocks"
+          },
+          {
+            "itemAssetName": "ArmSleeve_None",
+            "slotType": "LeftArmWear"
+          },
+          {
+            "itemAssetName": "geararmsleeve_teambrandarmsleeveshooter_teamcolor",
+            "slotType": "RightArmWear"
+          },
+          {
+            "itemAssetName": "GearMouthpiece_BrandLogoChinCover_SecondaryColor",
+            "slotType": "Reserved"
+          },
+          {
+            "itemAssetName": "ElbowGear_RubberBands3",
+            "slotType": "LeftElbowWear"
+          },
+          {
+            "itemAssetName": "ElbowGear_elbowSweatbandFull_TeamColor",
+            "slotType": "RightElbowWear"
+          },
+          {
+            "itemAssetName": "KneePad_Nike",
+            "slotType": "KneeWear"
+          },
+          {
+            "itemAssetName": "gear_y27_waistworncallsheet_teamlogo_v22_teamcolor",
+            "slotType": "HeadBand"
+          },
+          {
+            "blends": [
+              {}
+            ],
+            "itemAssetName": "Small_Pads",
+            "slotType": "Shoulderpads"
+          },
+          {
+            "itemAssetName": "GearWrist_wristTapedMax_WhiteCross",
+            "slotType": "LeftWristWear"
+          },
+          {
+            "itemAssetName": "Towel2_South",
+            "slotType": "Towel"
+          },
+          {
+            "itemAssetName": "GearWrist_wristTapedLite_SecondaryColor",
+            "slotType": "RightWristWear"
+          },
+          {
+            "itemAssetName": "GearMouthpiece_Mouthguard1_White",
+            "slotType": "MouthWear"
+          },
+          {
+            "itemAssetName": "GearNeckpad_Raw_DiamondNecklace",
+            "slotType": "Neckpad"
+          },
+          {
+            "itemAssetName": "GearPants_AboveKnee",
+            "slotType": "OuterPants"
+          },
+          {
+            "blends": [
+              {
+                "barycentricBlend": 0.6000000000000001,
+                "baseBlend": 0.6000000000000001
+              }
+            ],
+            "itemAssetName": "Flakjacket_On",
+            "slotType": "FlakJacket"
+          },
+          {
+            "itemAssetName": "Gear_JerseyStyle_RolledLowest",
+            "slotType": "OuterShirt"
+          },
+          {
+            "itemAssetName": "WaistBand_None_V36",
+            "slotType": "WaistWear"
+          },
+          {
+            "itemAssetName": "GuardianCap_RawNikeSkullCapTeamColorV190",
+            "slotType": "GuardianCap"
+          },
+          {
+            "itemAssetName": "NeckWear_Raw_Turtleneck_Black",
+            "slotType": "NeckWear"
+          }
+        ]
+      }
+    ],
+    "skinTone": -1
+  }
+}

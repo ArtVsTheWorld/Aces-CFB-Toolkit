@@ -55,9 +55,11 @@ test('tracking blocks concurrent runs and clear operations',async t=>{
   await assert.rejects(memory.exclusive(()=>{}),/busy/);release();await pending;
   memory.clear(saves[0]);
 });
-test('Quickstart fixes the simple pipeline, uses 15 donors and defaults No Drip on',()=>{
+test('Quickstart fixes the simple pipeline, uses 30 donors and defaults No Drip on',()=>{
   const defaults=quickstartSettings({top:999});
-  assert.equal(defaults.randomizer.top,15);assert.equal(normalizeEquipmentOptions({},true).top,15);
+  assert.equal(defaults.randomizer.top,30);assert.equal(normalizeEquipmentOptions({},true).top,30);
+  assert.equal(normalizeEquipmentOptions({top:15},true).top,15,'Explicit donor counts and saved presets retain their value');
+  assert.equal(normalizeEquipmentOptions({top:47},true).top,47);
   assert.deepEqual(defaults.randomizer.classes,[]);assert.deepEqual(defaults.randomizer.redshirtStatuses,[]);
   assert.equal(defaults.randomizer.protectOriginalEaPlayers,true);assert.equal(defaults.randomizer.noDripProfile,true);
   for(const name of ['helmetFix','visorFix','oakleyVisorFix','pantsFix','rolledJerseyFix','sleeveCompatibilityFix'])assert.equal(defaults.patcher[name],true,name);

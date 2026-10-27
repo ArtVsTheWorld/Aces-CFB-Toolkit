@@ -7,8 +7,9 @@ import { createHash, randomBytes } from "node:crypto";
 import { openCfb27Save, readTables } from "../src/main/services/save.js";
 import { VISUALS_TABLE_UID, snapshotVisualRawData } from "../src/main/tools/equipment/shared.js";
 import { installVisualsWriteSafety, snapshotVisualsForVerification, saveEquipmentCandidate, verifyVisualSnapshot } from "../src/main/tools/equipment/visualsSafety.js";
-import { isVisualOverflowStorage } from "../src/main/tools/equipment/visualStorage.js";
+import { isVisualOverflowStorage, visualOverflowChain } from "../src/main/tools/equipment/visualStorage.js";
 import { parseRef, sf } from "../src/main/tools/equipment/openSave.js";
+import {writeFixedSaveCandidate} from '../src/main/services/saveContainer.js';
 const fixture = path.resolve("../EXAMPLE SAVES VANILLA GAME/DYNASTY-LSUTESTSAVEPRESZN"), schema = path.resolve("resources/engine-data/C27_486_6.gz"), residual = JSON.parse(fs.readFileSync(new URL("./fixtures/equipmentOverflowResidual.json", import.meta.url), "utf8"));
 const field = record => record.getFieldByKey("RawData").thirdTableField;
 const ref = (table, row) => table.toString(2).padStart(15, "0") + row.toString(2).padStart(17, "0");
@@ -17,6 +18,36 @@ function setup(t) { const directory = fs.mkdtempSync(path.join(os.tmpdir(), "v18
 const eligible = table => table.records.filter(record => !record.isEmpty && !parseRef(record.Overflow) && field(record).index > 0 && typeof sf(record, "RawData") === "string");
 const setOffset = (record, offset) => { field(record).offset = offset; record.isChanged = true; };
 async function commit(loaded, row, expected) { const before = snapshotVisualsForVerification(loaded.visuals, snapshotVisualRawData(loaded.visuals.records)); loaded.visuals.records[row].RawData = expected; await saveEquipmentCandidate(loaded, schema, before, [{ table: "visuals", row, newValue: expected }]); }
+for (const shared of [false,true]) test(`native three-block continuations survive unrelated edits, copy-on-write and release (shared ${shared})`,{timeout:120000},async t=>{
+  const savePath=setup(t),native=JSON.parse(fs.readFileSync(new URL('./fixtures/equipmentThreeBlockOverflow.json',import.meta.url),'utf8'));
+  let loaded=await read(savePath,false),table=loaded.visuals;
+  const [main,alias]=eligible(table),root=main.index,aliasRow=alias.index,spills=table.records.filter(record=>record.isEmpty).slice(0,2);
+  spills[1].Overflow='0'.repeat(32);spills[0].Overflow=ref(table.header.tableId,spills[1].index);main.Overflow=ref(table.header.tableId,spills[0].index);
+  for(const [index,record] of [main,...spills].entries())Buffer.from(native.blocks[index],'base64').copy(table.data,table.header.table3StartIndex+field(record).index);
+  if(shared){setOffset(alias,field(main).index);alias.Overflow=main.Overflow;}
+  const originalPool=table.header.table3Length;
+  const pool=Buffer.from(table.data.subarray(table.header.table3StartIndex));table.strategy={...table.strategy,getTable3BinaryData:()=>[pool]};
+  await writeFixedSaveCandidate(loaded.franchise,savePath);
+  loaded=await read(savePath);table=loaded.visuals;
+  assert.deepEqual(JSON.parse(table.records[root].RawData),native.expected);
+  assert.equal(visualOverflowChain(table,table.records[root]).length,2);
+  const before=snapshotVisualsForVerification(table,snapshotVisualRawData(table.records));
+  assert.doesNotThrow(()=>verifyVisualSnapshot(before,table,[]));
+  // An unrelated player edit must preserve every original continuation byte.
+  const untouchedBlocks=[root,...spills.map(row=>row.index)].map(row=>Buffer.from(table.data.subarray(table.header.table3StartIndex+field(table.records[row]).index,table.header.table3StartIndex+field(table.records[row]).index+377)));
+  if(!shared){const other=eligible(table).find(record=>record.index!==root),raw=JSON.parse(other.RawData);raw.safetyTestMarker='unrelated edit';await commit(loaded,other.index,JSON.stringify(raw));loaded=await read(savePath);table=loaded.visuals;for(const [index,row] of [root,...spills.map(row=>row.index)].entries())assert.deepEqual(table.data.subarray(table.header.table3StartIndex+field(table.records[row]).index,table.header.table3StartIndex+field(table.records[row]).index+377),untouchedBlocks[index]);}
+  const target=shared?aliasRow:root,expanded=structuredClone(native.expected);expanded.safetyTestMarker=Array.from({length:32},(_,i)=>createHash('sha256').update('linked-native-'+i).digest('hex')).join('');
+  await commit(loaded,target,JSON.stringify(expanded));loaded=await read(savePath);table=loaded.visuals;
+  assert.deepEqual(JSON.parse(table.records[target].RawData),expanded);
+  assert.ok(visualOverflowChain(table,table.records[target]).length>=2,'Writer must retain every byte in multiple continuation blocks');
+  if(shared)assert.deepEqual(JSON.parse(table.records[root].RawData),native.expected);
+  const released=visualOverflowChain(table,table.records[target]).map(record=>record.index),small={loadouts:[{loadoutType:'PlayerOnField',loadoutElements:[{slotType:'LeftArmWear',itemAssetName:'GearArmSleeve_Baggy_White'}]}]};
+  await commit(loaded,target,JSON.stringify(small));loaded=await read(savePath);table=loaded.visuals;
+  assert.deepEqual(JSON.parse(table.records[target].RawData),small);assert.equal(visualOverflowChain(table,table.records[target]).length,0);
+  for(const row of released)assert.equal(table.records[row].isEmpty,true,'All exclusive continuation rows return to the free list');
+  if(shared)assert.deepEqual(JSON.parse(table.records[root].RawData),native.expected);
+  assert.equal(table.header.table3Length,originalPool);assert.equal(fs.statSync(savePath).size,fs.statSync(fixture).size);
+});
 for (const shared of [false, true]) test(`physical aliases detach on write without changing another row (overflow ${shared})`, { timeout: 60000 }, async t => {
   const savePath = setup(t); let loaded = await read(savePath, false);
   const [owner, alias] = eligible(loaded.visuals), ownerRow = owner.index, aliasRow = alias.index;
@@ -120,8 +151,8 @@ test("true invalid links, exhaustion and oversize payloads still fail before pub
   assert.throws(() => { record.RawData = raw; }, /invalid overflow reference/);
   assert.deepEqual(fs.readFileSync(savePath), original);
   record.Overflow = "0".repeat(32);
-  const huge = JSON.parse(raw); huge.safetyTestMarker = randomBytes(3000).toString("hex");
-  assert.throws(() => { record.RawData = JSON.stringify(huge); }, /exceeds safe CharacterVisuals storage/);
+  const huge = JSON.parse(raw); huge.safetyTestMarker = randomBytes(100000).toString("hex");
+  assert.throws(() => { record.RawData = JSON.stringify(huge); }, /out of range|exceeds safe CharacterVisuals storage/);
   assert.deepEqual(fs.readFileSync(savePath), original);
   for (const candidate of loaded.visuals.records) candidate.isEmpty = false;
   const expanded = JSON.parse(raw); expanded.safetyTestMarker = randomBytes(320).toString("hex");

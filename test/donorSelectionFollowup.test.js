@@ -57,5 +57,5 @@ test("top bar and footer both display the existing bootstrap app version", () =>
   const index = read("../src/renderer/index.html"), renderer = read("../src/renderer/renderer.js");
   assert.match(index, /<header class="topbar">[\s\S]*id="topbar-app-version"/);
   assert.match(renderer, /querySelectorAll\("#app-version,#topbar-app-version"\)[^\n]+snapshot.app.version/);
-  assert.equal(JSON.parse(read("../package.json")).version, "24.1.0", "The current packaged release version");
+  assert.equal(JSON.parse(read("../package.json")).version, "24.2.0", "The current packaged release version");
 });

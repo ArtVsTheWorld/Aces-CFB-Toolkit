@@ -52,7 +52,7 @@ function normalize(options, freshman) {
   if (freshman && crossPositionPercent + multipleDonorPercent > 100) throw new Error("Cross-position mixing and multiple-donor chances must total no more than 100%. The remainder uses one donor.");
   const expandedEquipmentPercent = percentage(options?.expandedEquipmentPercent, 10, "Unlocked Equipment Pool chance");
   const noDripPercentages = Object.fromEntries([["skill", 1], ["balanced", 3], ["heavy", 6]].map(([group, fallback]) => [group, percentage(options?.noDripPercentages?.[group], fallback, "No Drip chance")]));
-  const top = donorMode === "selected" ? 15 : Number(options?.top ?? 15); if (freshman && (!Number.isInteger(top) || top < 1)) throw new Error("Top donor count must be a positive integer.");
+  const top = donorMode === "selected" ? 30 : Number(options?.top ?? 30); if (freshman && (!Number.isInteger(top) || top < 1)) throw new Error("Top donor count must be a positive integer.");
   const undershirtColor = String(options?.undershirtColor ?? "weighted"); if (!["weighted", "custom", "primary", "secondary", "white", "black"].includes(undershirtColor)) throw new Error("Unknown rolled-jersey undershirt color.");
   const unlockedColorTheme = String(options?.unlockedColorTheme ?? "team"); if (!["weighted", "team", "primary", "secondary", "black", "white", "random"].includes(unlockedColorTheme)) throw new Error("Unknown unlocked accessory color theme.");
   const tapeColorMode = String(options?.tapeColorMode ?? "accessory");

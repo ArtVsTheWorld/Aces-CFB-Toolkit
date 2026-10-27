@@ -58,7 +58,7 @@ test('Quickstart has one exact backed-up write, protects EA players and tracks o
   assert.equal(repeat.details.totalPreviewRows,0);assert.equal(repeat.details.canApply,false);
   assert.equal(repeat.details.remembered,rows.length);
   const [headings,first]=parseCsv(fs.readFileSync(applied.reportPath,'utf8'));assert.equal(first.length,headings.length);
-  assert.equal(JSON.parse(first[headings.indexOf('RandomizerOptionsJSON')]).top,15);
+  assert.equal(JSON.parse(first[headings.indexOf('RandomizerOptionsJSON')]).top,30);
   const patcher=JSON.parse(first[headings.indexOf('PatcherOptionsJSON')]);assert.equal(patcher.unlockedColorTheme,'team');assert.equal(patcher.tapeColorMode,'accessory');assert.equal(patcher.unlockedTattooCap,35);assert.equal(patcher.fillFrequencies.tattoos,true);assert.ok(!/noDrip/i.test(first[headings.indexOf('QuickstartOptionsJSON')]));assert.ok(!/noDrip/i.test(first[headings.indexOf('RandomizerOptionsJSON')]));
   assert.equal(JSON.parse(first[headings.indexOf('TrackingAuditJSON')]).scope,'dynasty');
   assert.equal(hash(fixture),sourceHash);

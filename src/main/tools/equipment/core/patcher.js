@@ -175,7 +175,7 @@ export function applyAsymmetricElbowGear(loadouts, pool, rng, changes, state, po
   }
 }
 
-export function applyUnlockedRandomizerEquipment(loadouts, target, rng, perCategoryChance = 0.10, state = createGeneratedEquipmentState(loadouts), configuration) {
+export function applyUnlockedRandomizerEquipment(loadouts, target, rng, perCategoryChance = 0.10, state = createGeneratedEquipmentState(loadouts), configuration, allowGloves = true) {
   const changes = [];
   const selected = (key, pool) => configuredModItems(pool, configuration, key);
   const chance = key => modCategoryChance(configuration, key, key === "undershirts" ? 0 : perCategoryChance);
@@ -200,7 +200,7 @@ export function applyUnlockedRandomizerEquipment(loadouts, target, rng, perCateg
   rollItem("cleats", "Cleats", brandedEquipmentItems("Cleats", target.branding).filter(canGenerateItem), ["LeftShoe", "RightShoe"]);
   const brandedGloves = brandedEquipmentItems("Gloves", target.branding).filter(item => /^GearHand_(?!None)/i.test(item.itemName));
   const teamColorGloves = brandedGloves.filter(item => /_(?:TeamColor|SecondaryColor)$/i.test(item.itemName));
-  rollItem("gloves", "Gloves", configuration ? brandedGloves : teamColorGloves.length ? teamColorGloves : brandedGloves, ["LeftHandWear", "RightHandWear"]);
+  if (allowGloves) rollItem("gloves", "Gloves", configuration ? brandedGloves : teamColorGloves.length ? teamColorGloves : brandedGloves, ["LeftHandWear", "RightHandWear"]);
   rollItem("mouthpieces", "Mouthpiece", configuration ? [...UNLOCKED_POOLS.unlockedMouthpieces, ...UNLOCKED_POOLS.colorfulHangingMouthpieces] : UNLOCKED_POOLS.unlockedMouthpieces, ["MouthWear"]);
   rollItem("neckwear", "Neckwear", UNLOCKED_POOLS.neckwear, null);
   rollItem("undershirts", "Undershirt", UNLOCKED_POOLS.undershirts, ["InnerShirt"]);
@@ -249,7 +249,7 @@ export function applyEquipmentTruckRandomizerEquipment(loadouts, rng, perCategor
 export function applyModdedRandomizerEquipment(loadouts,target,rng,chance,state,options={}){
   state??=createGeneratedEquipmentState(loadouts);
   const providers=[
-    ['unlocked',options.usingUnlockedMod,(outfits,local)=>applyUnlockedRandomizerEquipment(outfits,target,rng,chance,local,options.modPools?.unlocked)],
+    ['unlocked',options.usingUnlockedMod,(outfits,local)=>applyUnlockedRandomizerEquipment(outfits,target,rng,chance,local,options.modPools?.unlocked,!options.donorOnlyGlovesPositions?.includes(target.position))],
     ['raw',options.usingRawAccessoriesMod,(outfits,local)=>applyRawRandomizerEquipment(outfits,rng,chance,local,target.position,options.modPools?.raw)],
     ['eljax',options.usingEquipmentTruckMod,(outfits,local)=>applyEquipmentTruckRandomizerEquipment(outfits,rng,chance,local,target.position,options.modPools?.eljax)]
   ].filter(([,enabled])=>enabled);
@@ -361,7 +361,7 @@ function shuffle(items, rng) {
 }
 
 export function patchFreshmanEquipment(playerRecords, visualsRecords, visualsTableId, options = {}) {
-  const { teamNames = new Map(), teamApparel = new Map(), donorPlayerRecords = playerRecords, donorVisualRecords = visualsRecords, donorVisualsTableId = visualsTableId, donorTeamNames = teamNames, donorTeamApparel = teamApparel, recipientRosterRows = null, donorRosterRows = null, fcsTeamIndexes = new Set(), excludedRecipientTeamIndexes = new Set(), eligiblePlayer = () => true, top = 15, mixedChance = 0.30, crossMixedChance = 0.10, forceCrossPosition = false, usingUnlockedMod = false, noDripProfile = false, protectOriginalEaPlayers = originalEaProtectionEnabled(options), unlockedItemChance = 0.10, seed = 1, apply = false } = options;
+  const { teamNames = new Map(), teamApparel = new Map(), donorPlayerRecords = playerRecords, donorVisualRecords = visualsRecords, donorVisualsTableId = visualsTableId, donorTeamNames = teamNames, donorTeamApparel = teamApparel, recipientRosterRows = null, donorRosterRows = null, fcsTeamIndexes = new Set(), excludedRecipientTeamIndexes = new Set(), eligiblePlayer = () => true, top = 30, mixedChance = 0.30, crossMixedChance = 0.10, forceCrossPosition = false, usingUnlockedMod = false, noDripProfile = false, protectOriginalEaPlayers = originalEaProtectionEnabled(options), unlockedItemChance = 0.10, seed = 1, apply = false } = options;
   const disableCrossPosition = options.disableCrossPosition === true;
   const crossDonorGroups = options.crossDonorGroups ? normalizeCrossDonorGroups(options.crossDonorGroups) : null;
   if (disableCrossPosition && forceCrossPosition) throw new Error("Disable cross-position mixing and forced mixing cannot both be enabled.");

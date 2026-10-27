@@ -5,7 +5,7 @@ import { randomUUID, createHash } from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
 import { openCfb27Save, readTables } from "../../services/save.js";
 import { parseRef, sf } from "./openSave.js";
-import { installVisualStorage, overflowOwners, validateVisualStorageLayout } from "./visualStorage.js";
+import { installVisualStorage, overflowOwners, validateVisualStorageLayout, visualOverflowChain, readVisualStorage } from "./visualStorage.js";
 import { writeFixedSaveCandidate, validateSaveContainer } from "../../services/saveContainer.js";
 import { encodeVisualData } from "./visualEncoding.js";
 
@@ -65,14 +65,15 @@ export function verifyVisualSnapshot(before, table, assignments) {
     toolProgressCount(++verifiedRows, before.size, "Verifying saved equipment…");
     if (before.overflowOwners?.has(row) && expected.has(before.overflowOwners.get(row))) continue;
     if (typeof oldRaw !== "string") continue;
-    const actual = sf(table.records[row], "RawData"), wanted = expected.get(row) ?? oldRaw;
+    const actual = readVisualStorage(table.records[row]), wanted = expected.get(row) ?? oldRaw;
     if (typeof actual !== "string" || !isDeepStrictEqual(JSON.parse(actual), JSON.parse(wanted))) throw new Error(`Saved equipment row ${row} does not match the validated preview. The original save was kept unchanged.`);
   }
   const claimed = new Map();
   for (const record of table.records) {
     if (!record || record.isEmpty) continue;
     const ref = parseRef(sf(record, "Overflow")); if (!ref) continue;
-    if (ref.tableId !== table.header.tableId || ref.row === record.index || !table.records[ref.row] || table.records[ref.row].isEmpty || parseRef(sf(table.records[ref.row], "Overflow"))) throw new Error("Saved CharacterVisuals overflow storage is invalid. The original save was kept unchanged.");
+    try { visualOverflowChain(table, record, before.logicalRows); }
+    catch { throw new Error("Saved CharacterVisuals overflow storage is invalid. The original save was kept unchanged."); }
     const rows = claimed.get(ref.row) ?? new Set(); rows.add(record.index); claimed.set(ref.row, rows);
   }
   for (const [row, owners] of claimed) if (owners.size > 1 && [...owners].some(owner => !before.originalOverflowOwners?.get(row)?.has(owner))) throw new Error("Saved CharacterVisuals introduced shared overflow storage. The original save was kept unchanged.");
@@ -81,6 +82,7 @@ export function verifyVisualSnapshot(before, table, assignments) {
 export function snapshotVisualsForVerification(table, snapshot) {
   snapshot.storageLayout = validateVisualStorageLayout(table);
   snapshot.originalOverflowOwners = overflowOwners(table);
+  snapshot.logicalRows = new Set(table.records.filter(record => record && !record.isEmpty && !snapshot.originalOverflowOwners.has(record.index)).map(record => record.index));
   snapshot.opaqueRows = new Map();
   for (const record of table.records) {
     if (!record || record.isEmpty || snapshot.originalOverflowOwners.has(record.index) || typeof snapshot.get(record.index) === "string") continue;

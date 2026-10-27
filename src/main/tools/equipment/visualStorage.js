@@ -17,6 +17,33 @@ export function overflowOwners(table) {
 }
 export const isVisualOverflowStorage = record => states.get(record?.parent)?.owners.has(record.index) ?? false;
 
+// Native saves can link more than one continuation block. Walk references,
+// never physical neighbours: a continuation has no frame header of its own.
+export function visualOverflowChain(table, record, logicalRows = states.get(table)?.logicalRows ?? new Set()) {
+  const chain = [], seen = new Set([record.index]);
+  let current = record;
+  while (true) {
+    const value = sf(current, "Overflow");
+    if (value === EMPTY || value === undefined && !table.data) return chain;
+    const ref = parseRef(value), spill = ref && table.records[ref.row];
+    if (!/^[01]{32}$/.test(value) || !ref || ref.tableId !== table.header.tableId || seen.has(ref.row) || !spill || spill.isEmpty || logicalRows.has(ref.row)) throw new Error(`Equipment row ${record.index} has an invalid overflow reference. The save has not been written.`);
+    seen.add(ref.row); chain.push(spill); current = spill;
+  }
+}
+
+export function readVisualStorage(record, base = null) {
+  const table = record.parent, field = rawField(record);
+  if (!table?.data || !field) return sf(record, "RawData");
+  const chain = visualOverflowChain(table, record);
+  // The dependency already reads the main block and its first continuation.
+  if (chain.length < 2) return sf(record, "RawData");
+  const data = base ?? table.data.subarray(table.header.table3StartIndex);
+  const buffers = [record, ...chain].map(row => { const value = rawField(row); return data.subarray(value.index, value.index + value.maxLength + 2); });
+  const encoded = Buffer.concat(buffers);
+  if (encoded.readUInt16LE(0) + 2 > encoded.length) throw new Error(`Equipment row ${record.index} has a truncated overflow chain. The save has not been written.`);
+  return field.strategy.getFormattedValueFromUnformatted(encoded, field.strategyContext);
+}
+
 // CFB's SPBF/BSFT blob pool is preallocated: one fixed-capacity block per
 // record. Updating the declared byte length is not a supported pool expansion.
 // A general-purpose parser follows pointers past this limit; the game doesn't.
@@ -54,7 +81,8 @@ export function validateVisualStorageLayout(table, expected = null) {
 export function installVisualStorage(table, logicalRows = new Set()) {
   if (states.has(table)) return;
   const layout = validateVisualStorageLayout(table), base = Buffer.from(table.data.subarray(table.header.table3StartIndex)), occupancy = new Map(), partial = new Set(), blockClaims = new Map(), available = new Set();
-  const owners = overflowOwners(table), state = { owners }; states.set(table, state);
+  const owners = overflowOwners(table), state = { owners, logicalRows }; states.set(table, state);
+  const decodedChains = new Map();
   const claim = (record, remove = false) => {
     const offset = rawField(record).index, rows = occupancy.get(offset) ?? new Set();
     if (remove) rows.delete(record.index); else rows.add(record.index);
@@ -89,17 +117,12 @@ export function installVisualStorage(table, logicalRows = new Set()) {
     }
     block.copy(base, offset);
   };
-  const validOverflow = record => {
-    const value = sf(record, "Overflow"), ref = parseRef(value);
-    if (!ref) return null;
-    const spill = table.records[ref.row];
-    if (!/^[01]{32}$/.test(value) || ref.tableId !== table.header.tableId || ref.row === record.index || !spill || spill.isEmpty || parseRef(sf(spill, "Overflow")) || logicalRows.has(ref.row)) throw new Error(`Equipment row ${record.index} has an invalid overflow reference (${ref.tableId}:${ref.row}). The save has not been written.`);
-    return spill;
-  };
   const detach = (record, spill) => {
     if (!spill) return;
     const rows = owners.get(spill.index); rows?.delete(record.index);
     if (!rows?.size) {
+      const next = parseRef(sf(spill, "Overflow"));
+      if (next) detach(spill, table.records[next.row]);
       owners.delete(spill.index); claim(spill, true);
       // Do not write a JSON {} into raw continuation bytes or a shared block.
       spill.empty();
@@ -111,7 +134,13 @@ export function installVisualStorage(table, logicalRows = new Set()) {
     const codec = field.strategy, originalGet = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(field), "value").get;
     Object.defineProperty(field, "value", {
       configurable: true,
-      get() { return owners.has(record.index) ? null : originalGet.call(this); },
+      get() {
+        if (owners.has(record.index)) return null;
+        const next = parseRef(sf(record, "Overflow"));
+        if (!next || !parseRef(sf(table.records[next.row], "Overflow"))) return originalGet.call(this);
+        if (!decodedChains.has(record.index)) decodedChains.set(record.index, readVisualStorage(record, base));
+        return decodedChains.get(record.index);
+      },
       set(value) {
         if (record.isEmpty || owners.has(record.index)) throw new Error(`Equipment row ${record.index} is empty or overflow storage, not a player loadout. The save has not been written.`);
         const encoded = encodeVisualData(codec, value, this.unformattedValue, this.maxLength, this.strategyContext);
@@ -119,26 +148,29 @@ export function installVisualStorage(table, logicalRows = new Set()) {
         try { decoded = codec.getFormattedValueFromUnformatted(encoded, this.strategyContext); }
         catch (error) { throw new Error(`Equipment row ${record.index} could not be encoded safely: ${error.message}`); }
         if (!isDeepStrictEqual(JSON.parse(decoded), JSON.parse(value))) throw new Error(`Equipment row ${record.index} lost data during encoding. The save has not been written.`);
-        const capacity = this.maxLength + 2, previous = validOverflow(record);
-        if (encoded.length > capacity) {
-          const tail = encoded.subarray(capacity);
-          let spill = previous;
-          if (!spill || owners.get(spill.index)?.size !== 1) {
-            const free = table.records[table.header.nextRecordToUse];
-            spill = free?.isEmpty && !owners.has(free.index) && !logicalRows.has(free.index) ? free : table.records.find(candidate => candidate?.isEmpty && !owners.has(candidate.index) && !logicalRows.has(candidate.index));
-          }
-          if (!spill) throw new Error("The CharacterVisuals table has no free overflow storage. The save has not been written.");
-          if (tail.length > rawField(spill).maxLength + 2) throw new Error(`Equipment row ${record.index} exceeds safe CharacterVisuals storage. The save has not been written.`);
-          if (spill !== previous) detach(record, previous);
-          // Setting Overflow unempties the allocation through the library's
-          // free-list machinery. Then place it at an exclusive physical block.
+        const capacity = this.maxLength + 2, previous = visualOverflowChain(table, record), needed = Math.ceil(encoded.length / capacity) - 1, chain = [];
+        let reusable = 0;
+        while (reusable < needed && reusable < previous.length && owners.get(previous[reusable].index)?.size === 1) chain.push(previous[reusable++]);
+        // Reserve the complete chain before changing its links. Existing shared
+        // tails stay attached to their other owners; only exclusive tails reuse.
+        if (chain.length < needed) for (const candidate of table.records) {
+          if (candidate?.isEmpty && !owners.has(candidate.index) && !logicalRows.has(candidate.index)) chain.push(candidate);
+          if (chain.length === needed) break;
+        }
+        if (chain.length < needed) throw new Error("The CharacterVisuals table has no free overflow storage. The save has not been written.");
+        detach(chain[reusable - 1] ?? record, previous[reusable]);
+        let parent = record;
+        for (let index = 0; index < chain.length; index++) {
+          const spill = chain[index], tail = encoded.subarray((index + 1) * capacity, (index + 2) * capacity);
           if (spill.isEmpty) spill.Overflow = EMPTY;
-          const rows = owners.get(spill.index) ?? new Set(); rows.add(record.index); owners.set(spill.index, rows);
-          physicalWrite(spill, tail);
-          rawField(spill).unformattedValue = Buffer.from(tail);
-          record.Overflow = reference(table.header.tableId, spill.index);
-        } else detach(record, previous);
+          const rows = owners.get(spill.index) ?? new Set(); rows.add(parent.index); owners.set(spill.index, rows);
+          parent.Overflow = reference(table.header.tableId, spill.index);
+          physicalWrite(spill, tail); rawField(spill).unformattedValue = Buffer.from(tail);
+          parent = spill;
+        }
+        if (chain.length) parent.Overflow = EMPTY;
         physicalWrite(record, encoded.subarray(0, capacity));
+        decodedChains.delete(record.index);
         // Keep a complete, independently owned buffer for reads between passes.
         // Only fixed-size main/continuation blocks are sent to the serializer.
         this.unformattedValue = Buffer.from(encoded); this._value = value;

@@ -24,7 +24,7 @@ test("verified MGUARDSOURCE team-color mouthguard values are used", () => {
 
 test("Randomizer defaults to all classes and redshirt states", () => {
   const defaults = normalizeEquipmentOptions({ seed: 9 }, true);
-  assert.equal(defaults.top, 15);
+  assert.equal(defaults.top, 30);
   assert.deepEqual(defaults.classes, []);
   assert.deepEqual(defaults.redshirtStatuses, []);
   const cleared = normalizeEquipmentOptions({ seed: 9, classes: [], redshirtStatuses: [], positions: [], includedTeams: [], excludedTeams: [] }, true);
@@ -77,7 +77,7 @@ test("v0.9 UI keeps new defaults, scope controls, and backend search", () => {
   const renderer = fs.readFileSync(new URL("../src/renderer/renderer.js", import.meta.url), "utf8");
   const main = fs.readFileSync(new URL("../src/main/main.js", import.meta.url), "utf8");
   assert.doesNotMatch(renderer, /\bBeta\b/);
-  assert.match(renderer, /id="equipment-top"[^>]+value="15"/);
+  assert.match(renderer, /id="equipment-top"[^>]+value="30"/);
   assert.match(renderer, /equipment-redshirt-group/);
   assert.match(renderer, /Below Position-Room Average/);
   assert.match(renderer, /Playing Style \(All Positions\)/);
