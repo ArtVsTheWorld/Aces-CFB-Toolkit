@@ -187,7 +187,8 @@ async function analyze(context, freshman) {
       ["CFB27 Unlocked mouthpiece repair", fixes.existingMouthpieceColorChanges.filter(change => change.repairInvalid)],
       ["Accessory recolor", fixes.unlockedRecolorChanges],
       ["CFB27 Unlocked tattoo", fixes.unlockedTattooChanges],
-      ["Clear tattoos", fixes.clearedTattooChanges]
+      ["Clear tattoos", fixes.clearedTattooChanges],
+      ["Remove Specific Item(s)", fixes.removeEquipmentChanges]
     ];
     const slotLabel = change => change.slot ? (({ LeftArmWear: "Left Arm", RightArmWear: "Right Arm", WaistWear: "Waist Gear" })[change.slot] ?? change.slot) + ": " : "";
     const oldValue = (type, change) => slotLabel(change) + (type.includes("mouthpiece") ? mouthpieceDisplayValue(change.oldItem) : equipmentDisplayValue(type === "helmet" ? `${change.oldHelmet}${change.oldFacemask ? ` / ${change.oldFacemask}` : ""}` : change.oldItem));

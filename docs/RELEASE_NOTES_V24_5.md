@@ -26,6 +26,7 @@ Equipment Randomizer and Equipment Quickstart
 
 Equipment Patcher
 
+- Fixed missing preview players and report entries when using Remove Specific Item(s)
 - Added Remove Specific Item(s), using the existing player filters
 - Choose from 686 removable items with categories, search and alternate display names
 - Includes turtlenecks, undershirts, leg sleeves, compression pants, facepaint, tattoos and supported modded accessories

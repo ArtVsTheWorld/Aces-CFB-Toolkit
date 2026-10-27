@@ -38,6 +38,14 @@ app.whenReady().then(async () => {
   ipcMain.handle("tools:prepare", async (_event, request) => { if(process.argv.includes('--final-polish-only'))await new Promise(resolve=>setTimeout(resolve,250));if (request.toolId==='equipment-quickstart') { const p=await getToolHandler(request.toolId).prepare({savePath:fixture,schemaPath,quickstartMemory,options:request.options});return {...p,newPlayers:p.newPlayers-quickstartCompleted,remembered:quickstartCompleted,rememberedTotal:quickstartCompleted}; } if (!cache.has(request.toolId)) cache.set(request.toolId, await getToolHandler(request.toolId).prepare({ savePath: request.toolId === "automatic-force-win" ? path.resolve(root, "../EXAMPLE SAVES VANILLA GAME/DYNASTY-LSUTESTSAVEWEEK0") : fixture, schemaPath, toolId:request.toolId,quickstartMemory, options: request.options, defaultMapPath: path.join(root, 'resources/commentary-data/PlayerCommentaryidMap.txt') })); const prepared = cache.get(request.toolId); return request.toolId === "automatic-force-win" ? { ...prepared, userControlledTeams: prepared.userControlledTeams.map(name => ({ name })) } : prepared; });
   ipcMain.handle("tools:run", async (_event, request) => {
     runs.push(request);
+    if(process.argv.includes('--removal-preview-only')){
+      if(request.toolId!=='equipment-patcher'||request.mode!=='preview')throw Error('Removal preview checks must never Apply.');
+      const hash=()=>require('node:crypto').createHash('sha256').update(fs.readFileSync(fixture)).digest('hex'),before=hash();
+      const {ReportService}=await import(pathToFileURL(path.join(root,'src/main/services/reports.js')));
+      const result=await getToolHandler(request.toolId).run({savePath:fixture,schemaPath,mode:'preview',options:request.options,reports:new ReportService(path.join(app.getPath('userData'),'reports'))});
+      if(hash()!==before)throw Error('Removal preview modified the source fixture.');
+      return result;
+    }
     if(process.argv.includes('--patcher-flow-only')||process.argv.includes('--randomizer-flow-only'))await new Promise(resolve=>setTimeout(resolve,180));
     if(request.toolId==='equipment-quickstart'){
       if(request.mode==='apply')quickstartCompleted=1;
@@ -55,6 +63,7 @@ app.whenReady().then(async () => {
   const window = new BrowserWindow({ show: false, width: 1480, height: 1000, webPreferences: { preload: path.join(uiRoot, "src/main/preload.cjs"), contextIsolation: true, sandbox: true, offscreen: true, backgroundThrottling: false } });
   const errors = []; window.webContents.on("console-message", details => { const { level, message } = details; if (message.startsWith('[v200]')) console.log(message); if (level === "error" && !message.includes("ERR_FILE_NOT_FOUND") && !message.includes("'frame-ancestors' is ignored")) {errors.push(message);console.error(message);} });
   await window.loadFile(path.join(uiRoot, "src/renderer/index.html"));
+  if(process.argv.includes('--removal-preview-only')){await require('./lib/equipment-removal-preview-ui.cjs')(window,root);if(errors.length)throw Error(errors.join('\n'));window.destroy();app.quit();return;}
   if(process.argv.includes('--donor-sources-only')){await require('./lib/donor-sources-ui.cjs')(window,root);if(errors.length)throw Error(errors.join('\n'));window.destroy();app.quit();return;}
   if(process.argv.includes('--equipment-removal-only')){await require('./lib/equipment-removal-ui.cjs')(window,root);if(errors.length)throw Error(errors.join('\n'));window.destroy();app.quit();return;}
 
