@@ -12,6 +12,7 @@ import {equipmentPreviewChanges,summarizeVisualChanges,limitEquipmentPreview} fr
 import {sf} from '../equipment/openSave.js';
 import {displayPosition} from '../../../shared/localization.js';
 import {equipmentDisplayValue} from '../equipment/catalog.js';
+import {applyQuickstartColorAccents} from './colorAccents.js';
 
 export const QUICKSTART_ID='equipment-quickstart',QUICKSTART_NAME='Equipment Quickstart';
 function memoryFor(context){if(!context.quickstartMemory)throw Error('Quickstart player tracking is unavailable. Your save has not been changed.');return context.quickstartMemory;}
@@ -45,7 +46,8 @@ async function preview(context){
   const recordRows=new Map(loaded.players.records.map((record,row)=>[record,row]));
   const randomized=progressRange(25, 55, () => patchFreshmanEquipment(loaded.players.records,loaded.visuals.records,loaded.visuals.header.tableId,{...settings.randomizer,seed,teamNames,teamApparel,playerApparel,donorPlayerRecords:[...loaded.players.records],preparedDonors,recipientRosterRows:null,eligiblePlayer:record=>s.pending.has(recordRows.get(record)),fcsTeamIndexes:fcs,top:15,mixedChance:.30,crossMixedChance:.10,unlockedItemChance:.10,apply:true}));
   const processed=new Set(randomized.changes.map(change=>change.target.row));
-  const fixes=progressRange(55, 82, () => applyGlobalEquipmentFixes(loaded.players.records,loaded.visuals.records,loaded.visuals.header.tableId,{...settings.patcher,teamNames,recolorTeamNames:buildRosterTeamNames(loaded.players,loaded.teams,loaded.rosters),fcsTeamIndexes:fcs,activePlayerRows:s.roster,eligiblePlayer:record=>processed.has(recordRows.get(record))&&!['K','P'].includes(String(sf(record,'Position')).toUpperCase())}));
+  const fixes=progressRange(55, 82, () => applyGlobalEquipmentFixes(loaded.players.records,loaded.visuals.records,loaded.visuals.header.tableId,{...settings.patcher,quickstartTapeDefaults:true,teamNames,recolorTeamNames:buildRosterTeamNames(loaded.players,loaded.teams,loaded.rosters),fcsTeamIndexes:fcs,activePlayerRows:s.roster,eligiblePlayer:record=>processed.has(recordRows.get(record))&&!['K','P'].includes(String(sf(record,'Position')).toUpperCase())}));
+  applyQuickstartColorAccents({unlocked:settings.mods.unlocked,changes:randomized.changes,players:loaded.players.records,visuals:loaded.visuals.records,visualsTableId:loaded.visuals.header.tableId,seed,protectOriginalEaPlayers:settings.mods.protectOriginalEaPlayers});
   const assignments=[],rows=[],donorAudits=new Map();
   for(const change of randomized.changes){
     const {newRawData,noDrip,noDripChanges,...audit}=change;donorAudits.set(change.target.row,audit);

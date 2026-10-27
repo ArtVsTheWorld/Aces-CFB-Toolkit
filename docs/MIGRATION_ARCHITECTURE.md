@@ -62,7 +62,7 @@ Save → Active Save/file picker, rejecting autosaves. Mode → Preview and “B
 
 ### Team Boost 0.5
 
-Save/mode/seed → shared controls. Team text match → searchable exact resolved-team selector (current CLI accepts exact or unique substring and rejects ambiguous matches). Minimum adjustment −99..99 (default 1), maximum min..99 (default 3) → paired bounded number inputs. Rating set → radio/cards: nonphysical (default), physical, or all. Apply → confirmation. Position/archetype rating weights, clamping, random order, and report rows remain unchanged.
+Save/mode/seed → shared controls. Team text match → searchable exact resolved-team selector (current CLI accepts exact or unique substring and rejects ambiguous matches). Minimum adjustment −99..99 (default 1), maximum min..99 (default 3) → paired bounded number inputs. Rating set → radio/cards: nonphysical (default), physical, or all. Apply → confirmation. As of v24.1, automatic modes adjust the full position-relevant rating set rather than sampling archetype-weighted skills. Seeded adjustment ranges, clamping, filters and exact cached Preview/Apply remain available.
 
 ### Automatic Force Win 3.0
 

@@ -25,5 +25,5 @@ test("position localization uses LEDG, REDG, MIKE, WILL, and SAM without LEDGE",
 });
 
 test("Dealbreaker UI exposes exact totals, reset, invalid-style cleanup, and bounded review", () => {
-  assert.match(renderer, /Base Distribution/); assert.match(renderer, /db-total/); assert.match(renderer, /Reset to Defaults/); assert.match(renderer, /Fix invalid Playing Style assignments/); assert.match(renderer, /total exactly 100%/); assert.match(renderer, /full result remains available in the generated report/);
+  assert.match(renderer, /Base Distribution/); assert.match(renderer, /db-total/); assert.match(renderer, /Reset to Defaults/); assert.match(renderer, /Fix invalid Playing Style assignments/); assert.match(renderer, /total exactly 100%/); assert.match(renderer, /100 rows per page/);
 });

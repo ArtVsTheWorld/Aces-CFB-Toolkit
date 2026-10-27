@@ -1,7 +1,7 @@
 import {parentPort, workerData} from 'node:worker_threads';
 import {getToolHandler} from '../tools/handlers.js';
 import {prepareEquipmentDonors} from '../tools/equipment/donorSource.js';
-import {planAudit, setPlanAudit, searchPlanRows, snapshotPlanRows} from '../tools/jersey/planStore.js';
+import {planAudit, setPlanAudit, searchPlanRows, snapshotPlanRows,pagePlanResult} from '../tools/jersey/planStore.js';
 import {QuickstartMemory, equipmentDynastyId} from './quickstartMemory.js';
 import {openCfb27Save, inspectSaveSchema} from './save.js';
 import {ReportService} from './reports.js';
@@ -36,7 +36,7 @@ async function execute(action, payload) {
     if(payload.mode==='apply'&&previous?.dynastyId!=null&&previous.dynastyId!==dynastyId)throw Error('The save changed after Preview: it belongs to a different dynasty. Run Preview again.');
     const audit = {...payload.audit,dynastyId, options:previous?.options ?? payload.options ?? {}, previewRunId:previous?.runId ?? null};
     const generated = await progressRange(0, 93, () => handler.run({...context, reports:reports.forRun(audit)}));
-    const result={...generated,dynastyId};
+    const result=pagePlanResult({...generated,dynastyId});
     if (payload.mode === 'preview' && result.planId) setPlanAudit(result.planId, audit);
     toolProgress(94, 'Saving review details…');
     let reviewAvailable = false, reviewError = null;
@@ -44,7 +44,7 @@ async function execute(action, payload) {
     catch (error) { reviewError = error.message; }
     return {result, reviewAvailable, reviewError};
   }
-  if (action === 'search') return searchPlanRows(payload.planId, payload.query, 1000, payload.filters);
+  if (action === 'search') return searchPlanRows(payload.planId, payload.query, 100, payload.filters,payload.page);
   if (action === 'donors') return prepareEquipmentDonors(context);
   if (action === 'clearMemory') {
     const {franchise} = await openCfb27Save(payload.savePath, payload.schemaPath);

@@ -1,4 +1,51 @@
 const EQUIPMENT_RESULT_KINDS=['freshman-equipment','equipment-patcher','equipment-quickstart','equipment-mapper'];
+function prepareResultPage(result){
+  if(!ToolkitPreviewPages.supports(result.resultKind))return result;
+  const details=result.details??{};if(details.previewPage&&details.changes?.length<=100)return result;
+  const rows=details.changes??[],first=ToolkitPreviewPages.page(ToolkitPreviewPages.createIndex(rows)),total=Number(details.totalSearchMatches??details.totalPreviewRows??rows.length);
+  first.previewPage={...first.previewPage,total,pages:Math.max(1,Math.ceil(total/100)),end:Math.min(total,first.changes.length)};
+  return {...result,details:{...details,changes:first.changes,previewPage:first.previewPage}};
+}
+function resultPageKey(result){return JSON.stringify([result.details?.previewPage?.index??0,result.details?.searchQuery??'',...ToolkitPreviewPages.FIELDS.map(field=>result.details?.searchFilters?.[field]??'')]);}
+function previewPagerMarkup(result){
+  const page=result.details?.previewPage;if(!page)return '';
+  return `<nav class="preview-pagination" aria-label="Preview pages"><span>${page.start.toLocaleString()}–${page.end.toLocaleString()} of ${page.total.toLocaleString()}</span><div><button type="button" class="button secondary" data-preview-page-step="-1" ${page.index===0?'disabled':''}>Previous</button><label><select class="input" data-preview-page data-order="preserve" aria-label="Preview page">${Array.from({length:page.pages},(_,index)=>`<option value="${index}" ${index===page.index?'selected':''}>Page ${index+1} of ${page.pages}</option>`).join('')}</select></label><button type="button" class="button secondary" data-preview-page-step="1" ${page.index>=page.pages-1?'disabled':''}>Next</button></div></nav>`;
+}
+function bindPreviewPager(output,result,request){
+  const page=result.details?.previewPage;if(!page)return;
+  output.querySelectorAll('[data-preview-page-step]').forEach(button=>button.addEventListener('click',event=>request(page.index+Number(button.dataset.previewPageStep),event)));
+  output.querySelectorAll('[data-preview-page]').forEach(select=>select.addEventListener('change',event=>request(Number(select.value),event)));
+}
+function setPreviewPagerBusy(output,result,busy){
+  const page=result.details?.previewPage;if(!page)return;
+  output.querySelectorAll('.preview-pagination').forEach(nav=>nav.setAttribute('aria-busy',String(busy)));
+  output.querySelectorAll('[data-preview-page-step]').forEach(button=>button.disabled=busy||(Number(button.dataset.previewPageStep)<0?page.index===0:page.index>=page.pages-1));
+  output.querySelectorAll('[data-preview-page]').forEach(select=>{select.disabled=busy;select.value=String(page.index);});
+}
+const parkedResultViews=new WeakMap();
+function bindParkedResultViews(output){
+  parkedResultViews.get(output)?.abort();
+  const equipment=output.querySelector('[data-equipment-view]'),jersey=output.querySelector('[data-jersey-view]');
+  if(!equipment&&!jersey)return;
+  const attribute=equipment?'equipmentView':'jerseyView',selector=equipment?'[data-equipment-view]':'[data-jersey-view]';
+  const cards=output.querySelector(equipment?'.equipment-card-list':'.jersey-card-list'),table=output.querySelector(equipment?'.equipment-table-view':'.jersey-table-view');
+  if(!cards||!table)return;
+  // Keep the alternate view's existing nodes/listeners, but outside the live
+  // document. Scrolling Cards need not restyle a second 1,000-row Table too.
+  const views=[{name:'cards',node:cards,park:document.createDocumentFragment()},{name:'table',node:table,park:document.createDocumentFragment()}];
+  for(const image of output.querySelectorAll('img[data-team-logo]')){image.loading='lazy';image.decoding='async';}
+  const activate=name=>{
+    for(const view of views){
+      if(view.name===name){if(view.park.childNodes.length){view.node.append(view.park);bindTeamLogoFallbacks(view.node);}}
+      else while(view.node.firstChild)view.park.append(view.node.firstChild);
+    }
+  };
+  activate(cards.hidden?'table':'cards');
+  const controller=new AbortController();parkedResultViews.set(output,controller);
+  output.addEventListener('click',event=>{
+    const button=event.target.closest(selector);if(button&&output.contains(button))activate(button.dataset[attribute]);
+  },{capture:true,signal:controller.signal});
+}
 function equipmentResultOverview(result){
   const details=result.details??{};if(details.equipmentOverview)return details.equipmentOverview;
   const rows=details.changes??[],total=Number(details.totalPreviewRows??rows.length),complete=total===rows.length&&!details.searchQuery&&!Object.values(details.searchFilters??{}).some(Boolean);
@@ -73,7 +120,7 @@ function runResultsMarkup(result){
   const status=runStatus(result),equipment=EQUIPMENT_RESULT_KINDS.includes(result.resultKind);
   return `<section class="run-results" data-run-result><div class="run-overview" data-run-tone="${status.tone}"><div class="run-status"><strong data-run-status>${escapeHtml(status.title)}</strong><p data-run-message>${escapeHtml(status.message)}</p></div><div class="run-primary-metrics">${runMetricsMarkup(result)}</div></div>
     <div data-run-attention role="status">${runIssueMarkup(result)}</div><div class="run-result-scroll"><details class="run-details"><summary>Run Details <span>Settings, totals, limits and reports</span></summary><div class="run-details-body">${runDetailsMarkup(result)}</div></details>
-    <section class="run-affected"><h3>${equipment?'Affected Players':result.resultKind==='automatic-force-win'?'Schedule Changes':result.mode==='preview'?'Proposed Changes':'Applied Changes'}</h3>${resultTable(result)}</section></div></section>`;
+    <section class="run-affected"><h3>${equipment?'Affected Players':result.resultKind==='automatic-force-win'?'Schedule Changes':result.mode==='preview'?'Proposed Changes':'Applied Changes'}</h3>${previewPagerMarkup(result)}${resultTable(result)}${previewPagerMarkup(result)}</section></div></section>`;
 }
 function rememberResultWorkspace(output){
   const workspace=output.closest('.equipment-preview-workspace,.standard-preview-workspace,.force-preview-workspace');
@@ -101,7 +148,7 @@ function bindRunResultsUi(output,result){
   output.querySelectorAll(views).forEach(button=>button.addEventListener('click',()=>queueMicrotask(sync)));sync();
   const panel=output.querySelector('[data-run-result]'),scroller=output.querySelector('.run-result-scroll');let scrollTimer;
   panel?.addEventListener('toggle',()=>rememberRunPresentation(output),true);
-  scroller?.addEventListener('scroll',()=>{clearTimeout(scrollTimer);scrollTimer=setTimeout(()=>{if(panel.isConnected)rememberRunPresentation(output);},100);});
+  scroller?.addEventListener('scroll',()=>{clearTimeout(scrollTimer);scrollTimer=setTimeout(()=>{if(panel.isConnected)rememberRunPresentation(output);},100);},{passive:true});
 }
 function markRunFailure(output,error,mode){
   const status=output.querySelector('[data-run-status]'),message=output.querySelector('[data-run-message]');

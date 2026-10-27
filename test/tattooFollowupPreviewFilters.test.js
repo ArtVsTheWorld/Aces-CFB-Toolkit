@@ -27,7 +27,7 @@ test("player-tool previews expose applicable dropdowns without changing Smart Fo
   assert.match(renderer, /function previewFilterToolbar\(/);
   for(const label of ['All teams','All positions','All class years'])assert.ok(renderer.includes(label));
   assert.match(renderer,/data-reset-preview-filters/);
-  assert.match(renderer, /searchPreview\(\{ planId: result\.planId, query, filters \}\)/);
+  assert.match(renderer, /searchPreview\(\{\s*planId:\s*result\.planId,\s*query,\s*filters,\s*page\s*\}\)/);
   assert.match(renderer, /function whiteHelmetResults\(/);
   assert.match(renderer, /function bindCommentaryReviewFilters\(/);
   assert.match(renderer, /function bindForceScheduleFilters\(/);

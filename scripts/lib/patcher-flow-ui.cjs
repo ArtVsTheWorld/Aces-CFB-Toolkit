@@ -26,6 +26,12 @@ module.exports=async(window,root)=>{
   // The user changed this one default after accepting the first Patcher stage.
   before.controls.find(n=>n.id==='unlocked-color-theme').value='team';
   before.defaults.unlockedColorTheme='team';before.selected.unlockedColorTheme='team';
+  const accessoryIds=await execute(`['alabama','nebraska','penn state','usc'].map(team=>({team,inputs:[...content.querySelectorAll('[data-accessory-team="'+team+'"]')].map(input=>({id:input.id,color:input.dataset.accessoryTeamColor}))}))`);
+  for(const {team,inputs} of accessoryIds){
+   const mix={white:95,black:5,primary:0,secondary:0};
+   for(const {id,color} of inputs){const expected=before.controls.find(control=>control.id===id);if(expected)expected.value=String(mix[color]);}
+   for(const expected of [before.defaults,before.selected])if(expected.teamAccessoryColors?.[team])expected.teamAccessoryColors[team]=mix;
+  }
   const byId=list=>Object.fromEntries(list.map(n=>[n.id,{type:n.type,value:n.value}]));
   assert.deepEqual(byId(current.controls),byId(before.controls),'Every original canonical setting and default retained');
   assert.deepEqual(JSON.parse(JSON.stringify(current.defaults)),before.defaults,'Default equipment options match archived UI');

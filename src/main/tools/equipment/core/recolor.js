@@ -17,6 +17,9 @@ for (const [names, values] of [
   [["Houston"], [70, 0, 30, 0]]
 ]) for (const name of names) TAPE_DEFAULTS.set(key(name), Object.fromEntries(Object.keys(DEFAULT_TAPE_COLOR_WEIGHTS).map((color, index) => [color, values[index]])));
 export function defaultTeamTapeWeights(name) { return { ...(TAPE_DEFAULTS.get(key(name)) ?? DEFAULT_TAPE_COLOR_WEIGHTS) }; }
+const WHITE_ACCESSORY_TEAMS = new Set(["Alabama", "Alabama Crimson Tide", "Bama", "Nebraska", "Nebraska Cornhuskers", "Penn State", "Penn St", "Penn State Nittany Lions", "USC", "Southern California", "USC Trojans"].map(key));
+export function defaultTeamAccessoryWeights(name) { return WHITE_ACCESSORY_TEAMS.has(key(name)) ? { ...DEFAULT_TAPE_COLOR_WEIGHTS } : defaultTeamTapeWeights(name); }
+export function defaultTeamTapeSlotColors(name) { return WHITE_ACCESSORY_TEAMS.has(key(name)) ? { LeftWristWear:"white", RightWristWear:"white", LeftSpat:"black", RightSpat:"black" } : {}; }
 // Legacy callers may still request a single color; use the most likely default.
 export function defaultTeamTapeColor(name) { return Object.entries(defaultTeamTapeWeights(name)).sort((a, b) => b[1] - a[1])[0][0]; }
 export function normalizeAccessoryColorWeights(value = DEFAULT_ACCESSORY_COLOR_WEIGHTS) {
@@ -47,7 +50,7 @@ export function normalizeTeamAccessoryColors(value = {}) {
 }
 export function teamAccessoryWeights(name, overrides = {}) {
   const team = String(name ?? "").trim().toLowerCase();
-  return Object.hasOwn(overrides, team) ? normalizeTeamAccessoryColors({ [team]: overrides[team] })[team] : defaultTeamTapeWeights(name);
+  return Object.hasOwn(overrides, team) ? normalizeTeamAccessoryColors({ [team]: overrides[team] })[team] : defaultTeamAccessoryWeights(name);
 }
 export function teamTapeWeights(name, overrides = {}) { const team = String(name ?? "").trim().toLowerCase(); return Object.hasOwn(overrides, team) ? normalizeTeamTapeColors({ [team]: overrides[team] })[team] : defaultTeamTapeWeights(name); }
 export function teamTapeColor(name, overrides = {}) { return Object.entries(teamTapeWeights(name, overrides)).sort((a, b) => b[1] - a[1])[0][0]; }
@@ -69,7 +72,7 @@ export function recolorTapeItem(itemName, color, slot, options) {
   if (/^G_WristTaped_Max_/i.test(stock)) return recolorEquipmentItem("GearWrist_wristTapedMax_TeamColor", color, options);
   return recolorEquipmentItem(item, color, options);
 }
-export function recolorPlayerAccessories(loadouts, theme, tapeColor) {
+export function recolorPlayerAccessories(loadouts, theme, tapeColor, tapeSlotColors = {}) {
   const options = ACCESSORY_RECOLOR_CONTEXT;
   const replacements = new Map();
   for (const loadout of loadouts) for (const element of loadout.loadoutElements) {
@@ -78,7 +81,7 @@ export function recolorPlayerAccessories(loadouts, theme, tapeColor) {
     const stock = rawStockOriginal(oldItem);
     const jamo = isRawJamoItem(oldItem);
     const newItem = !jamo && (["LeftSpat", "RightSpat"].includes(slot) || isWristTape(stock, slot) || isArmTape(stock, slot))
-      ? recolorTapeItem(oldItem, tapeColor, slot, options) : recolorEquipmentItem(oldItem, theme, options);
+      ? recolorTapeItem(oldItem, tapeSlotColors[slot] ?? tapeColor, slot, options) : recolorEquipmentItem(oldItem, theme, options);
     if (newItem !== oldItem) { element.itemAssetName = newItem; replacements.set(oldItem, newItem); }
   }
   return replacements;

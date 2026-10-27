@@ -40,7 +40,7 @@ test("completed run review snapshots persist all display rows and can be reopene
   assert.equal(reloaded.get(id).reviewAvailable, true);
   const saved = new ReviewSnapshots(path.join(directory, "reviews")).get(id);
   assert.equal(saved.rows.length, 1200);
-  assert.equal(saved.result.details.changes.length, 1000);
+  assert.equal(saved.result.details.changes.length, 100);
   assert.equal(saved.result.planId, null);
   assert.equal(saved.rows[1199].player, "Player 1199");
   snapshots.prune([]);

@@ -162,23 +162,29 @@ registerExplicitFamily({ primary: "NeckWear_Turtleneck_Tight5" });
 export const EQUIPMENT_COLOR_THEMES = Object.freeze(["primary", "secondary", "black", "white"]);
 
 export function recolorEquipmentItem(itemName, theme, options) {
+  return equipmentColorVariant(itemName, theme, options) ?? String(itemName ?? "");
+}
+
+// Return only verified variants. Callers that need to guarantee a specific
+// color must be able to distinguish a missing variant from an unchanged item.
+export function equipmentColorVariant(itemName, theme, options) {
   if (options?.usingRawAccessoriesMod) {
-    if (RAW_JAMO_BY_NAME.has(itemName)) return RAW_314.jamoColors[theme] ?? itemName;
-    const recolored = recolorEquipmentItem(rawStockOriginal(itemName), theme);
-    return RAW_314.displacedStock[recolored] ?? recolored;
+    if (RAW_JAMO_BY_NAME.has(itemName)) return RAW_314.jamoColors[theme] ?? null;
+    const recolored = equipmentColorVariant(rawStockOriginal(itemName), theme);
+    return recolored ? RAW_314.displacedStock[recolored] ?? recolored : null;
   }
-  if (rawStockOriginals.has(itemName)) return itemName;
+  if (rawStockOriginals.has(itemName)) return null;
   const value = String(itemName ?? "");
   const explicit = EXPLICIT_COLOR_LOOKUP.get(value);
-  if (explicit) return explicit.get(theme) ?? value;
-  if (equipmentItem(value)?.displayOnly) return value;
+  if (explicit) return explicit.get(theme) ?? null;
+  if (equipmentItem(value)?.displayOnly) return null;
   const match = value.match(COLOR_TOKEN);
   const tokens = THEME_TOKENS[theme];
-  if (!match || !tokens) return value;
+  if (!match || !tokens) return null;
   const family = COLOR_FAMILIES.get(`${value.slice(0, match.index)}_#${match[2] || ""}`.toLowerCase());
-  if (!family) return value;
+  if (!family) return null;
   for (const token of tokens) if (family.has(token)) return family.get(token);
-  return value;
+  return null;
 }
 
 const MOUTHPIECE_COLOR_TOKENS = Object.freeze({

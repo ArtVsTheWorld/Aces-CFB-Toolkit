@@ -135,7 +135,7 @@ function bindModelHelp(dialog) {
   const tooltip = document.createElement("div"), id = `model-help-${++configurationSequence}`;
   tooltip.id = id; tooltip.className = "model-help-tooltip"; tooltip.setAttribute("role", "tooltip"); tooltip.hidden = true; dialog.append(tooltip);
   let active = null, timer, keyboardFocus = false;
-  const hide = () => { clearTimeout(timer); active?.removeAttribute("aria-describedby"); active = null; tooltip.hidden = true; };
+  const hide = () => { clearTimeout(timer); active?.removeAttribute("aria-describedby"); active = null; if(!tooltip.hidden)tooltip.hidden = true; };
   const show = button => {
     if (!button.isConnected || button.closest('[hidden]') || !button.getClientRects().length) return;
     dismissActiveHelp(); dismissActiveHelp = hide;
@@ -167,7 +167,7 @@ function bindModelHelp(dialog) {
   dialog.addEventListener("focusout", event => { if (event.target === active) hide(); });
   tooltip.addEventListener("mouseenter", () => clearTimeout(timer));
   tooltip.addEventListener("mouseleave", () => { if (!keyboardFocus || document.activeElement !== active) hide(); });
-  dialog.addEventListener("scroll", event => { if (event.target !== tooltip) hide(); }, true);
+  dialog.addEventListener("scroll", event => { if (event.target !== tooltip) hide(); }, {capture:true,passive:true});
   dialog.addEventListener("toolkit-hide-help", hide);
   dialog.addEventListener("keydown", event => {
     if (tooltip.hidden) return;

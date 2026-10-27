@@ -49,7 +49,7 @@ test("mixed warnings and previously saved run reviews remain supported", () => {
 });
 test("current display keeps valid installer SemVer and updates correctly from v0.18.3", () => {
   const version = JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url))).version;
-  assert.equal(version, "24.0.0"); assert.ok(semver.gt(version, "19.0.0"));
-  assert.equal(displayAppVersion(version), "24.0"); assert.equal(displayAppVersion("18.3.1"), "18.3.1");
+  assert.equal(version, "24.1.0"); assert.ok(semver.gt(version, "19.0.0"));
+  assert.equal(displayAppVersion(version), "24.1"); assert.equal(displayAppVersion("18.3.1"), "18.3.1");
   assert.equal(displayAppVersion("18.4.0-beta.1"), "18.4-beta.1");
 });

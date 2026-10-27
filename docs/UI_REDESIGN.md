@@ -297,3 +297,31 @@ A shared Loading Save pane displays stage percentages and hides old controls unt
 ## Home artwork action
 
 For an active save, the hero uses Customize Team Art as its main action; Change Save remains in the shared top bar. The artwork action opens Settings with the displayed team selected. The no-save Home page retains Select Save. The shared v24 UI smoke checks this behavior, responsive layout, themes and the navigation target. User-facing notes for the complete update since v23.1 are in RELEASE_NOTES_V24_0.md.
+
+
+## Preview scrolling follow-up
+
+Equipment and Jersey results keep only the selected Cards/Table content in the live document, retaining the other view's nodes and listeners in a fragment for exact restoration. Searches, full-run totals, open player details and the reviewed Apply plan are preserved. Removed unused serialized search attributes and deferred result-logo decoding. Tooltip scroll dismissal avoids rewriting an already-hidden state. Legacy inner height caps no longer compete with the shared result scroller in Jersey and generic tables. Native wheel checks cover both views of Quickstart and Jersey, including repeated view changes, search/reset and help dismissal. No save-writing code changed.
+
+### Preview paging
+
+Equipment, Jersey and the other cached player previews now show at most **100 result rows per page**, with Previous/Next and direct page selection above and below the list. Completed results and saved reviews use the same controls. Search and combined team/position/class filters cover the entire result, reset to the first matching page, and retain complete run totals. Apply still uses every cached assignment, regardless of the displayed page or filters. Commentary's separate decision flow and Smart Force Win's schedule decisions retain their existing behavior.
+
+The background worker sorts and indexes complete preview rows once per plan, reuses matching rows while paging, and returns only the requested 100 rows. Full reports, assignments, player memory and complete saved-review rows are retained. Saved reviews index their complete snapshot once. Late search responses cannot replace newer input or another page; temporary page-request errors leave the current review available. Player expansion state is specific to the player row and page, avoiding repeated opening of rows sharing the same summary text.
+
+Stress validation uses a real Quickstart run with all three mods selected and original EA protection off: **12,153 players / 254,671 equipment changes / 122 pages**. A synthetic **12,087-player / 410,958-change** run covers the larger case. Native wheel tests exercise Cards/Table for Quickstart and Jersey in the packaged review. A disposable-save Patcher Apply/reopen verifies all **627** planned appearance records across seven pages, plus an exact backup. The 868 portable source checks pass. These checks establish bounded rendering and preserved results; user-machine scrolling still needs confirmation. The separate review is `dist/v24.0-preview-pages-review/win-unpacked/Ace's CFB Toolkit.exe`; production installer and prior reviews remain intact.
+
+### Accessory and tape defaults
+
+Alabama, Nebraska, Penn State and USC now start at **95% white / 5% black accessories** in both Quickstart and Patcher. Other school distributions and the original tape percentage tables remain unchanged. Quickstart alone uses **white wrist tape / black spats** for the four schools; arm tape retains the player accessory result. Patcher’s Match Player Accessory Color recolors wrist tape and spats to the player’s accessory color, including these schools. Patcher's explicit independent tape distributions and custom accessory percentages remain available. Prepared configuration metadata now separates accessory defaults from tape defaults, and the editor displays/saves each independently.
+
+Quickstart alone, with Unlocked enabled, has a **5% per-player** finishing step that recolors one worn gloves/sleeves/undershirt category to an available primary or secondary variant. Paired gloves or sleeves and duplicate on-field outfits share that color. It preserves style, adds no gear, skips unknown/unavailable variants, protects shared appearance rows and original EA players when protection is enabled, and retains donor-only kickers/punters. A None slot stays empty and does not prevent recoloring its single worn counterpart. There are no new Quickstart controls or explanatory notes. The normal preview/report still shows actual changed equipment. Patcher and Randomizer do not run this step.
+
+The local review is `dist/v24.0-accessory-colors-review/win-unpacked/Ace's CFB Toolkit.exe`. Prior reviews and the production installer are preserved. The full-source checkpoint is `outputs/v240-before-accessory-colors.zip`; HANDOFF.md records the package and verification results.
+
+
+### v24.1 validation and position ratings
+
+Team Boost’s automatic modes now adjust the full relevant rating set for a position, independent of archetype. This set combines the meaningful skills across that position’s embedded reference profiles; it excludes unrelated baseline-weight ratings. Every eligible rating receives its own adjustment within the selected range, with no weighted chance to omit a skill. Physical/nonphysical modes, Specific Attributes, position ranges, team/player filters, room averages, clamping and exact cached Preview/Apply remain available. All WR archetypes include short, medium and deep route running. Preview/report descriptions now identify position relevance accurately.
+
+Equipment Mapper passes its library, side/pair, scope, metadata/color, cap, compatibility, malformed-input and shared-appearance regression checks. Additional real-save workflows copy a sleeve, paired sleeves and an undershirt, replace a sleeve, remove an undershirt and queue multiple mappings. Each verifies read-only Preview, exact backed-up Apply/reopen, unchanged unrelated equipment/Base layers and other tables, same file size and an untouched original. A separate real-save Team Boost check verifies every Boise State WR’s three route-running ratings and all unrelated ratings/players/tables. Private save fixtures remain outside the published repository.

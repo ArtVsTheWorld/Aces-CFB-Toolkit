@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import vm from "node:vm";
-import { normalizeTeamAccessoryColors, teamAccessoryWeights, defaultTeamTapeWeights } from "../src/main/tools/equipment/core/recolor.js";
+import { normalizeTeamAccessoryColors, teamAccessoryWeights, defaultTeamTapeWeights, defaultTeamAccessoryWeights } from "../src/main/tools/equipment/core/recolor.js";
 import { normalizeEquipmentOptions } from "../src/main/tools/equipment/runner.js";
 import { applyGlobalEquipmentFixes } from "../src/main/tools/equipment/core/globalFixes.js";
 import { validatePresetConfiguration } from "../src/main/services/toolPresets.js";
@@ -22,8 +22,8 @@ const elements = () => [
 const visual=()=>({isEmpty:false,RawData:JSON.stringify({keep:true,loadouts:[{loadoutType:"PlayerOnField",loadoutElements:elements()},{loadoutType:"Base",loadoutElements:[{slotType:"LeftArmTattoo",itemAssetName:"Keep"}]}]})});
 const gear=(visual,slot)=>JSON.parse(visual.RawData).loadouts[0].loadoutElements.find(element=>element.slotType===slot)?.itemAssetName;
 
-test("team accessory defaults exactly reuse every tape override and unknown-team fallback",()=>{
-  for(const team of ["Alabama","Georgia","Michigan","Boston College","Miami","Florida State","Syracuse","Houston","Ohio State","Army","Kennesaw State","N. Illinois","Penn State","East Point","Unknown"])
+test("team accessory defaults retain other schools' tape defaults and unknown-team fallback",()=>{
+  for(const team of ["Georgia","Michigan","Boston College","Miami","Florida State","Syracuse","Houston","Ohio State","Army","Kennesaw State","N. Illinois","East Point","Unknown"])
     assert.deepEqual(teamAccessoryWeights(team),defaultTeamTapeWeights(team),team);
   assert.deepEqual(teamAccessoryWeights("East Point"),{white:95,black:5,primary:0,secondary:0});
   const accessory=normalizeTeamAccessoryColors({ALABAMA:colors("primary")});
@@ -33,9 +33,9 @@ test('Patcher and Quickstart default to each team’s accessory distribution wit
   const patcher=normalizeEquipmentOptions({unlockedRecolorFix:true},false),quickstart=quickstartSettings({unlocked:true}).patcher;
   for(const settings of [patcher,quickstart]){
     assert.equal(settings.unlockedColorTheme,'team');assert.equal(settings.tapeColorMode,'accessory');
-    assert.deepEqual(teamAccessoryWeights('Alabama',settings.teamAccessoryColors),defaultTeamTapeWeights('Alabama'));
+    assert.deepEqual(teamAccessoryWeights('Alabama',settings.teamAccessoryColors),defaultTeamAccessoryWeights('Alabama'));
   }
-  const visuals=[visual()],result=applyGlobalEquipmentFixes([player(0)],visuals,10,{unlockedRecolorFix:true,teamNames:new Map([[1,'Alabama']])});
+  const visuals=[visual()],result=applyGlobalEquipmentFixes([player(0)],visuals,10,{unlockedRecolorFix:true,teamNames:new Map([[1,'Georgia']])});
   assert.ok(result.unlockedRecolorChanges.length);assert.equal(result.unlockedRecolorChanges[0].colorTheme,'black');assert.equal(result.unlockedRecolorChanges[0].tapeColor,'black');
   assert.equal(normalizeEquipmentOptions({unlockedRecolorFix:true,unlockedColorTheme:'weighted'},false).unlockedColorTheme,'weighted','explicit saved choices remain available');
 });
@@ -50,7 +50,7 @@ test("team accessories validate whole percentages and normalize portable team ke
 test("team accessory mode plus matching tape rolls once and applies the same theme to all tape categories",()=>{
   for(const theme of ["white","black","primary","secondary"]){
     const visuals=[visual()],before=JSON.parse(visuals[0].RawData);
-    const result=applyGlobalEquipmentFixes([player(0)],visuals,10,{unlockedRecolorFix:true,unlockedColorTheme:"team",teamAccessoryColors:normalizeTeamAccessoryColors({Alabama:colors(theme)}),teamTapeColors:{alabama:colors(theme==="white"?"black":"white")},tapeColorMode:"accessory",teamNames:new Map([[1,"Alabama"]]),seed:201});
+    const result=applyGlobalEquipmentFixes([player(0)],visuals,10,{unlockedRecolorFix:true,unlockedColorTheme:"team",teamAccessoryColors:normalizeTeamAccessoryColors({"East Point":colors(theme)}),teamTapeColors:{"east point":colors(theme==="white"?"black":"white")},tapeColorMode:"accessory",teamNames:new Map([[1,"East Point"]]),seed:201});
     const correction=result.unlockedRecolorChanges[0];assert.ok(correction);assert.equal(correction.colorTheme,theme);assert.equal(correction.tapeColor,theme);
     const token={white:"OffWhite",black:"Black",primary:"TeamColor",secondary:"SecondaryColor"}[theme];
     assert.equal(gear(visuals[0],"LeftSpat"),`GearSpats_spatThin_${theme==="white"?"White":token}`);
