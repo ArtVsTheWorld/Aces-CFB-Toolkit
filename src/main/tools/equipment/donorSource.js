@@ -94,7 +94,7 @@ export async function prepareEquipmentDonors({ savePath, schemaPath }) {
   const loaded = await loadEquipmentDonorSource(savePath, schemaPath);
   const donorPlayers = collectEquipmentDonors(loaded.players.records, loaded.visuals.records, loaded.visuals.header.tableId, { rosterRows: buildRosterPlayerRows(loaded.players, loaded.teams, loaded.rosters), fcsTeamIndexes: buildFcsTeamIndexes(loaded.teams.records), teamNames: buildTeamNames(loaded.teams.records), teamApparel: buildTeamApparel(loaded.teams.records), playerApparel: buildRosterPlayerApparel(loaded.players, loaded.teams, loaded.rosters) })
     .sort((a, b) => a.team.localeCompare(b.team) || a.lastName.localeCompare(b.lastName) || a.firstName.localeCompare(b.firstName) || a.row - b.row)
-    .map(player => ({ value: String(player.row), position: player.position, overall: player.overall, label: `${player.firstName} ${player.lastName} · ${player.team} · ${displayPosition(player.position)} · ${player.classYear} · #${player.jersey} · ${player.overall} OVR` }));
+    .map(player => ({ value: String(player.row), position: player.position, overall: player.overall, team: player.team, name: `${player.firstName} ${player.lastName}`, label: `${player.firstName} ${player.lastName} · ${player.team} · ${displayPosition(player.position)} · ${player.classYear} · #${player.jersey} · ${player.overall} OVR` }));
   if (!donorPlayers.length) throw new Error('This file has no eligible on-roster upperclassman equipment donors.');
   return { donorPlayers, donorFingerprint: loaded.donorFingerprint, donorKind: loaded.donorKind, warnings: loaded.warnings ?? [] };
 }

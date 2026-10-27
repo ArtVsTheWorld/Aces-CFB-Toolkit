@@ -1,0 +1,266 @@
+{
+  "verification": "Display-name aliases from the checked bundled inventories and both human-readable catalog references. Search/removal only; no new generation or assignment eligibility.",
+  "aliases": {
+    "ArmTattoo_Tattoos_Japanese_08_ArmSleeve_v03": [
+      "Japanese Sleeve IV"
+    ],
+    "FaceMarks_NoseTape_C1": [
+      "Nose Tape Custom1"
+    ],
+    "FaceMarks_NoseTape_C10": [
+      "Nose Tape Custom10"
+    ],
+    "FaceMarks_NoseTape_C2": [
+      "Nose Tape Custom2"
+    ],
+    "FaceMarks_NoseTape_C3": [
+      "Nose Tape Custom3"
+    ],
+    "FaceMarks_NoseTape_C4": [
+      "Nose Tape Custom4"
+    ],
+    "FaceMarks_NoseTape_C5": [
+      "Nose Tape Custom5"
+    ],
+    "FaceMarks_NoseTape_C6": [
+      "Nose Tape Custom6"
+    ],
+    "FaceMarks_NoseTape_C7": [
+      "Nose Tape Custom7"
+    ],
+    "FaceMarks_NoseTape_C8": [
+      "Nose Tape Custom8"
+    ],
+    "FaceMarks_NoseTape_C9": [
+      "Nose Tape Custom9"
+    ],
+    "FaceMarks_NoseTape_DP": [
+      "DEE DOG Eye Paint"
+    ],
+    "FaceMarks_RawEarringsCombo_EyePaint": [
+      "Earring combination: FaceMarks_EyePaint"
+    ],
+    "FaceMarks_RawEarringsCombo_EyePaint2": [
+      "Earring combination: FaceMarks_EyePaint2"
+    ],
+    "FaceMarks_RawEarringsCombo_EyePaint3": [
+      "Earring combination: FaceMarks_EyePaint3"
+    ],
+    "FaceMarks_RawEarringsCombo_EyePaintCross": [
+      "Earring combination: FaceMarks_EyePaintCross"
+    ],
+    "FaceMarks_RawEarringsCombo_EyeTape": [
+      "Earring combination: FaceMarks_EyeTape"
+    ],
+    "FaceMarks_RawEarringsCombo_EyeTapeLeft": [
+      "Earring combination: FaceMarks_EyeTapeLeft"
+    ],
+    "FaceMarks_RawEarringsCombo_EyeTapeRight": [
+      "Earring combination: FaceMarks_EyeTapeRight"
+    ],
+    "FaceMarks_RawEarringsCombo_NoseEyeTape": [
+      "Earring combination: FaceMarks_NoseEyeTape"
+    ],
+    "FaceMarks_RawEarringsCombo_NoseTape": [
+      "Earring combination: FaceMarks_NoseTape"
+    ],
+    "FaceMarks_RawEarringsCombo_NoseTape_1hitta": [
+      "Earring combination: FaceMarks_RawNoseTape_1hitta"
+    ],
+    "FaceMarks_RawEarringsCombo_NoseTape_540baby": [
+      "Earring combination: FaceMarks_RawNoseTape_540baby"
+    ],
+    "FaceMarks_RawEarringsCombo_NoseTape_builtdiff": [
+      "Earring combination: FaceMarks_RawNoseTape_builtdiff"
+    ],
+    "FaceMarks_RawEarringsCombo_NoseTape_dontblink": [
+      "Earring combination: FaceMarks_RawNoseTape_dontblink"
+    ],
+    "FaceMarks_RawEarringsCombo_NoseTape_DP": [
+      "Earring combination: FaceMarks_NoseTape_DP"
+    ],
+    "FaceMarks_RawEarringsCombo_NoseTape_fearnone": [
+      "Earring combination: FaceMarks_RawNoseTape_fearnone"
+    ],
+    "FaceMarks_RawEarringsCombo_NoseTape_G": [
+      "Earring combination: FaceMarks_NoseTape_G"
+    ],
+    "FaceMarks_RawEarringsCombo_NoseTape_imfnopen": [
+      "Earring combination: FaceMarks_RawNoseTape_imfnopen"
+    ],
+    "FaceMarks_RawEarringsCombo_NoseTape_john316": [
+      "Earring combination: FaceMarks_RawNoseTape_john316"
+    ],
+    "FaceMarks_RawEarringsCombo_NoseTape_KE": [
+      "Earring combination: FaceMarks_NoseTape_KE"
+    ],
+    "FaceMarks_RawEarringsCombo_NoseTape_killall": [
+      "Earring combination: FaceMarks_RawNoseTape_killall"
+    ],
+    "FaceMarks_RawEarringsCombo_NoseTape_luke137": [
+      "Earring combination: FaceMarks_RawNoseTape_luke137"
+    ],
+    "FaceMarks_RawEarringsCombo_NoseTape_nolove": [
+      "Earring combination: FaceMarks_RawNoseTape_nolove"
+    ],
+    "FaceMarks_RawEarringsCombo_NoseTape_notsorry": [
+      "Earring combination: FaceMarks_RawNoseTape_notsorry"
+    ],
+    "FaceMarks_RawEarringsCombo_NoseTape_sickem": [
+      "Earring combination: FaceMarks_RawNoseTape_sickem"
+    ],
+    "FaceMarks_RawEarringsCombo_NoseTape_T": [
+      "Earring combination: FaceMarks_NoseTape_T"
+    ],
+    "FaceMarks_RawEarringsCombo_NoseTape_talkcrazy": [
+      "Earring combination: FaceMarks_RawNoseTape_talkcrazy"
+    ],
+    "FaceMarks_RawEarringsCombo_NoseTape_theproblem": [
+      "Earring combination: FaceMarks_RawNoseTape_theproblem"
+    ],
+    "FaceMarks_RawEarringsCombo_NoseTape_watchme": [
+      "Earring combination: FaceMarks_RawNoseTape_watchme"
+    ],
+    "FaceMarks_RawEarringsCombo_NoseTapeEyePaint": [
+      "Earring combination: FaceMarks_NoseTapeEyePaint"
+    ],
+    "FaceMarks_RawEarringsCombo_RawNoseEyeTape": [
+      "Earring combination: FaceMarks_RawNoseEyeTape"
+    ],
+    "FaceMarks_RawNoseEyeTape": [
+      "Nose and Eye Tape - All Gas"
+    ],
+    "FaceMarks_RawNoseTape_1hitta": [
+      "Nose and Eye Tape - #1 Hitta"
+    ],
+    "FaceMarks_RawNoseTape_540baby": [
+      "Nose and Eye Tape - 540 Baby"
+    ],
+    "FaceMarks_RawNoseTape_builtdiff": [
+      "Nose and Eye Tape - Built Diff"
+    ],
+    "FaceMarks_RawNoseTape_dontblink": [
+      "Nose and Eye Tape - Don't Blink"
+    ],
+    "FaceMarks_RawNoseTape_fearnone": [
+      "Nose and Eye Tape - Fear None"
+    ],
+    "FaceMarks_RawNoseTape_john316": [
+      "Nose and Eye Tape - John 3:16"
+    ],
+    "FaceMarks_RawNoseTape_luke137": [
+      "Nose and Eye Tape - Luke 1:37"
+    ],
+    "FaceMarks_RawNoseTape_nolove": [
+      "Nose and Eye Tape - No Love"
+    ],
+    "FaceMarks_RawNoseTape_sickem": [
+      "Nose and Eye Tape - Sick 'Em"
+    ],
+    "FaceMarks_RawNoseTape_talkcrazy": [
+      "Nose and Eye Tape - Talk Crazy"
+    ],
+    "FaceMarks_RawNoseTape_theproblem": [
+      "Nose and Eye Tape - The Problem"
+    ],
+    "FaceMarks_RawNoseTape_watchme": [
+      "Nose and Eye Tape - Watch Me"
+    ],
+    "G_CompressionT_Crew_LongSleeve_NikeHQ_B_BEI": [
+      "Undershirt LongSleeve Secondary Color"
+    ],
+    "G_CompressionT_Crew_LongSleeve_NikeHQ_B_GLD": [
+      "Undershirt LongSleeve White"
+    ],
+    "G_CompressionT_Crew_LongSleeve_NikeHQ_B_GRE": [
+      "Undershirt LongSleeve Team Color"
+    ],
+    "G_CompressionT_Crew_LongSleeve_NikeHQ_B_NAV": [
+      "Undershirt LongSleeve Black"
+    ],
+    "G_Hoodie_Sleeveless_Ravens_ML_PUR": [
+      "Sleeveless Hoodie All Jerseys"
+    ],
+    "GearMouthpiece_PacifierDualHanging_Black4": [
+      "Nike Hanging Mouthpiece Pacifier Black"
+    ],
+    "GearMouthpiece_PacifierDualHanging_SecondaryColor4": [
+      "Battle Hanging Mouthpiece Pacifier Sec and Primary"
+    ],
+    "GearMouthpiece_PacifierDualHanging_TeamColor10": [
+      "Nike Hanging Mouthpiece Pacifier Secondary and White"
+    ],
+    "GearMouthpiece_PacifierDualHanging_TeamColor4": [
+      "Battle Hanging Mouthpiece Pacifier Primary and Sec"
+    ],
+    "GearMouthpiece_PacifierDualHanging_TeamColor5": [
+      "Nike Hanging Mouthpiece Pacifier Primary and Black"
+    ],
+    "GearMouthpiece_PacifierDualHanging_TeamColor6": [
+      "Nike Hanging Mouthpiece Pacifier Primary and White"
+    ],
+    "GearMouthpiece_PacifierDualHanging_TeamColor7": [
+      "Shock Hanging Mouthpiece Pacifier Primary and Sec"
+    ],
+    "GearMouthpiece_PacifierDualHanging_TeamColor8": [
+      "Shock Hanging Mouthpiece Pacifier Primary and White"
+    ],
+    "GearMouthpiece_PacifierDualHanging_TeamColor9": [
+      "Nike Hanging Mouthpiece Pacifier Secondary and Black"
+    ],
+    "GearNeckpad_SkiBlack": [
+      "SkiMask Black"
+    ],
+    "GearNeckpad_VintageSingleNeckRoll": [
+      "Balaclave White"
+    ],
+    "GuardianCap_RawBattleSkullCap": [
+      "Raw Battle skullcap"
+    ],
+    "GuardianCap_RawNikeSkullCap": [
+      "Raw Nike skullcap"
+    ],
+    "NeckWear_Raw_Turtleneck": [
+      "Slim Turtleneck Team Color"
+    ],
+    "NeckWear_Raw_Turtleneck_Secondary": [
+      "Slim Turtleneck Secondary Team Color"
+    ],
+    "NeckWear_Turtleneck_Tight2": [
+      "Battle Turtleneck Primary White"
+    ],
+    "NeckWear_Turtleneck_Tight3": [
+      "Battle Turtleneck Primary Black"
+    ],
+    "NeckWear_Turtleneck_Tight4": [
+      "NXTRND Turtleneck Primary White"
+    ],
+    "NeckWear_Turtleneck_Tight5": [
+      "NXTRND Turtleneck Primary Black"
+    ],
+    "NeckWear_Turtleneck_Tight6": [
+      "Battle Turtleneck White Primary"
+    ],
+    "NeckWear_Turtleneck_Tight7": [
+      "NXTRND Turtleneck White Primary "
+    ],
+    "v_Tattoos_Japanese_05_ArmFloating_v01": [
+      "Japanese V"
+    ],
+    "v_Tattoos_Japanese_07_ArmSleeve_v02": [
+      "Japanese VII"
+    ],
+    "v_Tattoos_Japanese_08_ArmSleeve_v01": [
+      "Japanese VIII"
+    ],
+    "v_Tattoos_Japanese_09_ArmFloating_v02": [
+      "Japanese IX"
+    ],
+    "v_Tattoos_Japanese_10_ArmFloating_v01": [
+      "Japanese X"
+    ],
+    "v_Tattoos_Japanese_12_Arm_v02": [
+      "Japanese XII"
+    ]
+  }
+}

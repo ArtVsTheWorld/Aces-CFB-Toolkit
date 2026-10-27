@@ -1,6 +1,6 @@
 (function(root){
  const positions={QB:['QB'],HB:['HB'],FB:['FB'],WR:['WR'],TE:['TE'],OL:['LT','LG','C','RG','RT'],EDGE:['LE','RE'],DT:['DT'],MIKE:['MLB','LB'],SAM:['LOLB'],WILL:['ROLB'],CB:['CB'],FS:['FS'],SS:['SS','SAFETY'],K:['K'],P:['P']};
- const groups=Object.keys(positions),label=g=>g==='MIKE'?'MLB / MIKE':g;
+ const groups=Object.keys(positions),label=g=>g;
  const groupFor=p=>({MLB:'MIKE',LB:'MIKE',LOLB:'SAM',ROLB:'WILL',SAFETY:'SS',LE:'EDGE',RE:'EDGE',LT:'OL',LG:'OL',C:'OL',RG:'OL',RT:'OL'})[p]??p;
  function normalize(value){if(value==null)return{};if(typeof value!=='object'||Array.isArray(value))throw Error('Choose valid donor sources.');const result={};for(const[g,sources]of Object.entries(value)){if(!groups.includes(g)||!Array.isArray(sources)||sources.some(s=>!groups.includes(s)))throw Error('Choose valid donor positions.');result[g]=[...new Set(sources)];}return result;}
  const expand=values=>[...new Set(values.flatMap(g=>positions[g]))];

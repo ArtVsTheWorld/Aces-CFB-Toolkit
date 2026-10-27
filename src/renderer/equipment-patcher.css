@@ -11,4 +11,8 @@
 [data-option-picker$="equipment-remove-items"] .team-picker-toolbar { display:grid; grid-template-columns:minmax(0,1fr) minmax(150px,220px) auto auto; align-items:end; }
 [data-option-picker$="equipment-remove-items"] .team-picker-toolbar > label { margin:0; min-width:0; }
 [data-option-picker$="equipment-remove-items"] .team-picker-toolbar > input { min-width:0; }
+[data-option-picker$="equipment-remove-items"] .team-picker-toolbar > .input,
+[data-option-picker$="equipment-remove-items"] .team-picker-toolbar > .button,
+[data-option-picker$="equipment-remove-items"] .team-picker-toolbar select { height:38px; min-height:38px; margin:0; }
+[data-option-picker$="equipment-remove-items"] .team-picker-toolbar > .button { align-self:end; }
 @media(max-width:700px) { [data-option-picker$="equipment-remove-items"] .team-picker-toolbar { grid-template-columns:minmax(0,1fr) minmax(0,1fr); } }

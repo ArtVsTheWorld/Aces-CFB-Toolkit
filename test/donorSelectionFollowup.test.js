@@ -20,6 +20,15 @@ test("donor overall ordering is descending, stable on ties, and keeps unknown ra
   assert.deepEqual(restored, rows, "Default restores the original preparation order exactly");
 });
 
+test("Team orders by team, highest overall and alphabetical player name", () => {
+  const context = selectorContext();
+  const donor = (order, team, name, overall) => ({ dataset: { ...row(order, overall).dataset, donorTeam: team, donorName: name } });
+  const rows = [donor(0, "Texas", "Aaron Smith", 99), donor(1, "Alabama", "Zach Jones", 80), donor(2, "Alabama", "Ben Smith", 90), donor(3, "Alabama", "Adam Jones", 90), donor(4, "Alabama", "Alex Brown"), donor(5, "Texas", "Zach Brown", 99)];
+  const sorted = [...rows].sort((a, b) => context.donorRowCompare(a, b, "default"));
+  assert.deepEqual(sorted.map(item => item.dataset.optionOrder), ["3", "2", "1", "4", "0", "5"]);
+  assert.deepEqual(rows.map(item => item.dataset.optionOrder), ["0", "1", "2", "3", "4", "5"], "Sorting does not change selections or preparation order");
+});
+
 test("Shift-click ranges include both endpoints in either direction without changing the input list", () => {
   const context = selectorContext(), values = Array.from({ length: 12 }, (_, index) => String(index));
   assert.deepEqual(Array.from(context.checkboxSelectionRange(values, "0", "9")), values.slice(0, 10));
@@ -37,7 +46,7 @@ test("range selection only includes displayed values and never reaches a hidden 
 test("only manual donor checkboxes expose sorting and the optional Shift-click shortcut", () => {
   const context = selectorContext(), values = [{ value: "1", label: "Donor One", position: "WR", overall: 88 }, { value: "2", label: "Donor Two", position: "WR", overall: 65 }], before = structuredClone(values);
   const donorHtml = context.checkboxPicker("equipment-donor-players", "Donors", values, "Choose donors.", ["2"]);
-  assert.match(donorHtml, /id="equipment-player-sort"/); assert.match(donorHtml, /Overall \(Highest First\)/);
+  assert.match(donorHtml, /id="equipment-player-sort"/); assert.match(donorHtml, /value="overall" selected>Highest Overall/);assert.match(donorHtml, /value="default">Team/);
   assert.match(donorHtml, /data-option-order="0" data-overall="88"/); assert.match(donorHtml, /Shift-click another player/);
   const positions = context.checkboxPicker("equipment-positions", "Positions", ["QB", "WR"], "Leave empty for all.");
   assert.doesNotMatch(positions, /equipment-player-sort|Shift-click/);
@@ -50,7 +59,13 @@ test("manual donor sort is presentation-only and the selected tab style override
   const equipmentOptions = renderer.slice(renderer.indexOf("function equipmentOptions("), renderer.indexOf("function updateEquipmentScopeStats("));
   assert.doesNotMatch(equipmentOptions, /equipment-player-sort/);
   assert.match(css, /\.experimental-ui \.option-position-tabs \.button\[aria-pressed="true"\] \{ background: var\(--action\)/);
-  assert.match(runner, /overall: player.overall, label:/);
+  assert.match(runner, /overall: player.overall, team: player.team, name:/);
+});
+
+test("removal picker searches known display-name aliases without adding visible clutter",()=>{
+ const context=selectorContext(),html=context.checkboxPicker('equipment-remove-items','Items',[{value:'G_Hoodie_Sleeveless_Ravens_ML_PUR',label:'Madden 24 Purple Hoodie',group:'Undershirt',searchAliases:['Sleeveless Hoodie All Jerseys']}],'Choose items');
+ assert.match(html,/data-search="[^"]*sleeveless hoodie all jerseys/);
+ assert.match(html,/<span>Madden 24 Purple Hoodie<\/span>/);
 });
 
 test("top bar and footer both display the existing bootstrap app version", () => {
