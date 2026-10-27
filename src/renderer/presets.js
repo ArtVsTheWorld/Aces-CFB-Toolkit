@@ -6,6 +6,11 @@ function migrateOriginalEaProtectionSettings(values) {
   if(Object.hasOwn(values,'renumber-nil')){values['jersey-protect-ea']??=!values['renumber-nil'];delete values['renumber-nil'];}
   return values;
 }
+function migrateRemovalSettings(values){
+  const removal=document.getElementById('equipment-remove-items');
+  if(removal&&Array.isArray(values['equipment-remove-items'])){const allowed=new Set([...removal.options].map(option=>option.value));values['equipment-remove-items']=values['equipment-remove-items'].filter(id=>allowed.has(id));if(!values['equipment-remove-items'].length)values['fix-remove-equipment']=false;}
+  return values;
+}
 function presetConfiguration() {
   captureToolSettings();
   const values = { ...(state.toolSettings.get(state.page) ?? {}) }, teamSelections = {};
@@ -23,6 +28,8 @@ function presetValues(configuration) {
   const values = { ...configuration.values };
   if(typeof migrateMouthpieceLimitSettings==='function')migrateMouthpieceLimitSettings(values);
   migrateOriginalEaProtectionSettings(values);
+  migrateRemovalSettings(values);
+  if(document.getElementById("equipment-donor-sources-json"))values["equipment-donor-sources-json"]??="{}";
   if (typeof migrateRedshirtFilterSettings === 'function') migrateRedshirtFilterSettings(values);
   delete values['roster-seed']; // Older Roster Generator presets cannot pin a new run's seed.
   if(typeof rosterMigrateTalentValues==='function')rosterMigrateTalentValues(values,configuration.teamSelections?.['roster-teams']);
@@ -38,7 +45,9 @@ function presetValues(configuration) {
     if (excluded.size) { teamSelections["equipment-included"] = included.filter(label => !excluded.has(label.toLowerCase())); if (!teamSelections["equipment-included"].length) throw new Error("Preset not loaded: its older team settings exclude every team. Choose teams manually."); }
     delete teamSelections["equipment-excluded"];
   }
-  for (const [id, labels] of Object.entries(teamSelections)) {
+  for (const [id, originalLabels] of Object.entries(teamSelections)) {
+    const labels=id==="equipment-remove-items"?originalLabels.filter(label=>[...document.getElementById(id)?.options??[]].some(option=>option.textContent.trim().toLowerCase()===label.toLowerCase())):originalLabels;
+    if(id==="equipment-remove-items"&&!labels.length)values["fix-remove-equipment"]=false;
     const select = document.getElementById(id);
     if (!select) throw new Error(`This preset's team settings (${id}) are not available in this tool. Reopen the tool or choose a matching preset.`);
     const wanted = labels.map(label => label === "Choose Specific Players from Active Dynasty" ? "choose specific players from donor source" : label.toLowerCase()), donorPath = configuration.values?.["equipment-donor"]?.trim(), catalog = id === "equipment-donor-players" && donorPath ? equipmentDonorCatalogs.get(donorPath) : null, options = catalog ? catalog.donorPlayers.map(player => ({ value: player.value, textContent: player.label })) : [...select.options];

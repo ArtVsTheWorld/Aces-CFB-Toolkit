@@ -1,3 +1,4 @@
+import donorSources from '../../../../shared/donorSources.cjs';
 import {toolProgressCount} from '../../../services/toolProgress.js';
 import {isOriginalEaPlayer,originalEaProtectionEnabled} from '../../../services/originalEaPlayers.js';
 import { parseRef, sf } from "../openSave.js";
@@ -363,6 +364,7 @@ function shuffle(items, rng) {
 
 export function patchFreshmanEquipment(playerRecords, visualsRecords, visualsTableId, options = {}) {
   const { teamNames = new Map(), teamApparel = new Map(), donorPlayerRecords = playerRecords, donorVisualRecords = visualsRecords, donorVisualsTableId = visualsTableId, donorTeamNames = teamNames, donorTeamApparel = teamApparel, recipientRosterRows = null, donorRosterRows = null, fcsTeamIndexes = new Set(), excludedRecipientTeamIndexes = new Set(), eligiblePlayer = () => true, top = 30, mixedChance = 0.30, crossMixedChance = 0.10, forceCrossPosition = false, usingUnlockedMod = false, noDripProfile = false, protectOriginalEaPlayers = originalEaProtectionEnabled(options), unlockedItemChance = 0.10, seed = 1, apply = false } = options;
+  const sourceOverrides=donorSources.normalize(options.donorSources);
   const disableCrossPosition = options.disableCrossPosition === true;
   const crossDonorGroups = options.crossDonorGroups ? normalizeCrossDonorGroups(options.crossDonorGroups) : null;
   if (disableCrossPosition && forceCrossPosition) throw new Error("Disable cross-position mixing and forced mixing cannot both be enabled.");
@@ -390,8 +392,18 @@ export function patchFreshmanEquipment(playerRecords, visualsRecords, visualsTab
   }
   for (const list of donorsByPosition.values()) list.sort((a, b) => b.overall - a.overall || a.row - b.row);
   const facePaintPool = buildFacePaintPool([...donorsByPosition.values()].flatMap(list => list.slice(0, donorLimit)), options);
+  let neededSources=null;
+  if(Object.keys(sourceOverrides).length){
+    neededSources=new Set();
+    playerRecords.forEach((record,row)=>{
+      if(!record||record.isEmpty||(protectOriginalEaPlayers&&isOriginalEaPlayer(record))||!eligiblePlayer(record)||(recipientRosterRows&&!recipientRosterRows.has(row))||excludedRecipientTeamIndexes.has(Number(sf(record,'TeamIndex'))))return;
+      const position=String(sf(record,'Position')),rule=sourceOverrides[donorSources.groupFor(position)];
+      const sources=rule?donorSources.expand(rule):[...(disableCrossPosition?[position]:getBaseDonorPositions(position)),...(disableCrossPosition?[]:getCrossDonorPositions(position,crossDonorGroups))];
+      for(const source of sources)neededSources.add(source);
+    });
+  }
   const protectedDonorRecords = donorPlayerRecords === playerRecords && !options.randomizeDonors
-    ? new Set([...donorsByPosition.values()].flatMap(list => list.slice(0, donorLimit).map(donor => donor.record)))
+    ? new Set([...donorsByPosition.values()].flatMap(list => list.slice(0, donorLimit).filter(donor=>!neededSources||neededSources.has(donor.position)).map(donor => donor.record)))
     : new Set();
 
   const changes = [];
@@ -413,13 +425,16 @@ export function patchFreshmanEquipment(playerRecords, visualsRecords, visualsTab
     const originalLoadouts = structuredClone(targetVisuals.loadouts);
     const candidatesFor = positions => positions.flatMap(position => (donorsByPosition.get(position) ?? []).slice(0, donorLimit))
       .filter(donor => donor.record !== record && donor.visuals.loadouts.length === targetVisuals.loadouts.length);
-    const crossPositions = disableCrossPosition ? [] : getCrossDonorPositions(target.position, crossDonorGroups);
+    const receiver=donorSources.groupFor(target.position),explicit=sourceOverrides[receiver];
+    const samePositions=explicit?donorSources.expand(explicit.filter(group=>group===receiver)):null;
+    const crossPositions = explicit ? donorSources.expand(explicit.filter(group=>group!==receiver)) : disableCrossPosition ? [] : getCrossDonorPositions(target.position, crossDonorGroups);
     const crossCandidates = candidatesFor(crossPositions);
-    const baseCandidates = candidatesFor(disableCrossPosition ? [target.position] : getBaseDonorPositions(target.position));
-    if (!baseCandidates.length && !(forceCrossPosition && crossCandidates.length)) { skipped.push({ ...target, isFcs, reason: "no compatible upperclassman donor in position pool" }); return; }
-    const ownPositionCandidates = candidatesFor([target.position]);
-    const crossEligible = crossPositions.length > 0 && crossCandidates.length > 0 && (forceCrossPosition || ownPositionCandidates.length > 0);
-    const equipmentMode = forceCrossPosition && crossEligible ? "cross" : rollEquipmentMode(rng, crossEligible, mixedChance, crossMixedChance);
+    const baseCandidates = candidatesFor(explicit?samePositions:disableCrossPosition ? [target.position] : getBaseDonorPositions(target.position));
+    const forceSources=forceCrossPosition || Boolean(explicit&&!baseCandidates.length&&crossCandidates.length);
+    if (!baseCandidates.length && !(forceSources && crossCandidates.length)) { skipped.push({ ...target, isFcs, reason: "no compatible upperclassman donor in position pool" }); return; }
+    const ownPositionCandidates = explicit?baseCandidates:candidatesFor([target.position]);
+    const crossEligible = crossPositions.length > 0 && crossCandidates.length > 0 && (forceSources || ownPositionCandidates.length > 0);
+    const equipmentMode = forceSources && crossEligible ? "cross" : rollEquipmentMode(rng, crossEligible, mixedChance, crossMixedChance);
     const crossPositionMixed = equipmentMode === "cross";
     const mixed = equipmentMode !== "full";
     const donorUses = [];
@@ -427,7 +442,7 @@ export function patchFreshmanEquipment(playerRecords, visualsRecords, visualsTab
     if (mixed) {
       let groupDonors;
       if (crossPositionMixed) {
-        groupDonors = forceCrossPosition
+        groupDonors = forceSources
           ? [...SLOT_GROUPS].map(() => choose(crossCandidates, rng))
           : shuffle([choose(ownPositionCandidates, rng), choose(crossCandidates, rng), choose([...baseCandidates, ...crossCandidates], rng)], rng);
       } else groupDonors = [...SLOT_GROUPS].map(() => choose(baseCandidates, rng));
@@ -448,7 +463,7 @@ export function patchFreshmanEquipment(playerRecords, visualsRecords, visualsTab
     }
     const donorOnly=options.donorOnlyPositions?.includes(target.position)===true;
     if(donorOnly){const donor=usedDonors.find(donor=>donor.position===target.position)??usedDonors[0];targetVisuals.loadouts.forEach((loadout,index)=>{const paint=donor.visuals.loadouts[index].loadoutElements.find(element=>slotOf(element)==='FacePaint');if(paint)setSlot(loadout.loadoutElements,'FacePaint',paint.itemAssetName);});}
-    const brandCandidates = forceCrossPosition && crossEligible ? crossCandidates : crossPositionMixed ? [...baseCandidates, ...crossCandidates] : baseCandidates;
+    const brandCandidates = forceSources && crossEligible ? crossCandidates : crossPositionMixed ? [...baseCandidates, ...crossCandidates] : baseCandidates;
     const branded = assignCompatibleBrandEquipment(targetVisuals.loadouts, target, brandCandidates, usedDonors, rng);
     donorUses.push(...branded.donorUses.map(use => ({ group: use.group, donor: donorSummary(use.donor) })));
     targetVisuals.loadouts.forEach(loadout => {
@@ -470,7 +485,7 @@ export function patchFreshmanEquipment(playerRecords, visualsRecords, visualsTab
     equipmentTruckChanges = finalGeneratedChanges(targetVisuals.loadouts, equipmentTruckChanges, generated?.options);
     const newRawData = JSON.stringify(targetVisuals.parsed);
     if (apply) targetVisuals.visual.RawData = newRawData;
-    changes.push({ fallbackNotes: [...(!ownPositionCandidates.length ? ["Used position-family donors because no eligible same-position donor was available."] : []), ...(crossPositions.length && !crossEligible ? ["Cross-position sources unavailable; used the normal donor pool."] : []), ...(usedDonors.some(donor => donor.bodyType !== target.bodyType) ? ["Kept body-dependent gear where donor and receiver builds differ."] : [])], target, donor: donorUses[0].donor, donorUses, mixed, crossPositionMixed, isFcs, visualsRow: targetVisuals.ref.row, newRawData, brandAssignments: branded.audits, brandCorrections, facePaint, ...(generatedCorrections.length ? { generatedCorrections } : {}), ...(usingUnlockedMod ? { unlockedChanges } : {}), ...(options.usingRawAccessoriesMod ? { rawChanges } : {}), ...(options.usingEquipmentTruckMod ? { equipmentTruckChanges } : {}), ...(noDripProfile ? { noDrip, noDripChanges } : {}) });
+    changes.push({ fallbackNotes: [...(!explicit&&!ownPositionCandidates.length ? ["Used position-family donors because no eligible same-position donor was available."] : []), ...(crossPositions.length && !crossEligible ? [explicit?"Other selected sources unavailable; used allowed own-position donors.":"Cross-position sources unavailable; used the normal donor pool."] : []), ...(usedDonors.some(donor => donor.bodyType !== target.bodyType) ? ["Kept body-dependent gear where donor and receiver builds differ."] : [])], target, donor: donorUses[0].donor, donorUses, mixed, crossPositionMixed, isFcs, visualsRow: targetVisuals.ref.row, newRawData, brandAssignments: branded.audits, brandCorrections, facePaint, ...(generatedCorrections.length ? { generatedCorrections } : {}), ...(usingUnlockedMod ? { unlockedChanges } : {}), ...(options.usingRawAccessoriesMod ? { rawChanges } : {}), ...(options.usingEquipmentTruckMod ? { equipmentTruckChanges } : {}), ...(noDripProfile ? { noDrip, noDripChanges } : {}) });
   });
   return { changes, skipped, facePaintPools: facePaintPool.diagnostics, brandCorrections: changes.reduce((sum, change) => sum + change.brandCorrections.length, 0), fcsChanged: changes.filter(change => change.isFcs).length, donorPositions: donorsByPosition.size, sleeveCompatibilityCorrections, ...(usingUnlockedMod ? { unlockedPlayersChanged: changes.filter(change => change.unlockedChanges.length).length } : {}), ...(options.usingRawAccessoriesMod ? { rawPlayersChanged: changes.filter(change => change.rawChanges.length).length } : {}), ...(options.usingEquipmentTruckMod ? { equipmentTruckPlayersChanged: changes.filter(change => change.equipmentTruckChanges.length).length } : {}), ...(noDripProfile ? { noDripPlayers: changes.filter(change => change.noDrip).length } : {}) };
 }

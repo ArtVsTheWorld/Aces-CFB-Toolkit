@@ -7,3 +7,8 @@
 .patcher-flow #helmet-zero-summary{display:none}
 @media(max-width:1100px){.patcher-flow .patcher-option-groups{grid-template-columns:1fr}.patcher-flow .ui-option-row{min-height:46px}.patcher-flow .ui-option-group{padding-top:14px;padding-bottom:8px}}
 @media(max-width:760px){.patcher-flow .helmet-editor-launch{flex-wrap:wrap}.patcher-flow .helmet-editor-launch>div{flex-basis:100%}}
+
+[data-option-picker$="equipment-remove-items"] .team-picker-toolbar { display:grid; grid-template-columns:minmax(0,1fr) minmax(150px,220px) auto auto; align-items:end; }
+[data-option-picker$="equipment-remove-items"] .team-picker-toolbar > label { margin:0; min-width:0; }
+[data-option-picker$="equipment-remove-items"] .team-picker-toolbar > input { min-width:0; }
+@media(max-width:700px) { [data-option-picker$="equipment-remove-items"] .team-picker-toolbar { grid-template-columns:minmax(0,1fr) minmax(0,1fr); } }

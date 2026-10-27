@@ -55,6 +55,7 @@ app.whenReady().then(async () => {
   const window = new BrowserWindow({ show: false, width: 1480, height: 1000, webPreferences: { preload: path.join(uiRoot, "src/main/preload.cjs"), contextIsolation: true, sandbox: true, offscreen: true, backgroundThrottling: false } });
   const errors = []; window.webContents.on("console-message", details => { const { level, message } = details; if (message.startsWith('[v200]')) console.log(message); if (level === "error" && !message.includes("ERR_FILE_NOT_FOUND") && !message.includes("'frame-ancestors' is ignored")) {errors.push(message);console.error(message);} });
   await window.loadFile(path.join(uiRoot, "src/renderer/index.html"));
+  if(process.argv.includes('--donor-sources-only')){await require('./lib/donor-sources-ui.cjs')(window,root);if(errors.length)throw Error(errors.join('\n'));window.destroy();app.quit();return;}
   if(process.argv.includes('--equipment-removal-only')){await require('./lib/equipment-removal-ui.cjs')(window,root);if(errors.length)throw Error(errors.join('\n'));window.destroy();app.quit();return;}
 
   if(process.argv.includes('--preview-scroll-only')){

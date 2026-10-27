@@ -318,7 +318,7 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
   if (options.clearTattoos && options.unlockedTattooFix) throw new Error('Clear Tattoos and Add Tattoos cannot both be enabled. Choose one tattoo pass.');
   const { helmetFix = false, rolledJerseyFix = false, sockFix = false, sleeveCompatibilityFix = false, nikeThighPads = false, visorFix = false, unlockedRecolorFix = false, unlockedColorTheme = "team", unlockedMouthpieceFix = false, allowRandomMouthpieceColors = false, unlockedTattooFix = false, unlockedTattooCap = 40, undershirtColor = "weighted", pantsFix = false, protectOriginalEaPlayers = originalEaProtectionEnabled(options), seed = 1, teamNames = new Map(), fcsTeamIndexes = new Set(), excludedTeamIndexes = new Set(), activePlayerRows, eligiblePlayer = () => true } = options;
   const removalItems=options.removeEquipment?normalizeRemovalItems(options.removeEquipmentItems??[]):[];
-  if(options.removeEquipment&&!removalItems.length)throw Error('Select at least one item for Remove Equipment.');
+  if(options.removeEquipment&&!removalItems.length)throw Error('Select at least one item for Remove Specific Item(s).');
   const removeEquipmentChanges=[];
   const visorFrequencies = normalizeVisorFrequencies(options.visorFrequencies), facemaskPools = normalizeFacemaskPools(options.facemaskPools);
   const rng = mulberry32((seed ^ 0xA5A5A5A5) >>> 0);

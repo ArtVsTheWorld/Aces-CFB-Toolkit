@@ -337,6 +337,7 @@ function presetCompatibility(configuration) {
   try { const custom = JSON.parse(configuration.values?.['jersey-custom-json'] ?? '{}'); if (custom.lockedRows?.length && custom.lockSourcePath !== state.activeSave?.path) messages.push('Individual jersey locks belong to another save. Re-select those players before loading these settings.'); }
   catch { messages.push('The preset contains invalid jersey number rules.'); }
   for (const [id, labels] of Object.entries(configuration.teamSelections ?? {})) {
+    if(id==='equipment-remove-items')continue; // Old protected-gear removal choices are omitted by presetValues.
     if (id === 'equipment-excluded' && !document.getElementById(id) && document.getElementById('equipment-included')) continue; // Migrated by presetValues.
     const control = document.getElementById(id), available = new Set([...control?.options ?? []].map(option => option.textContent.trim().toLowerCase()));
     const missing = labels.filter(label => !available.has(label.toLowerCase())); if (missing.length) messages.push(`${id}: missing ${missing.slice(0, 3).join(', ')}`);
