@@ -44,7 +44,7 @@ export function buildUniformStylePlan(entries, options, rng) {
       // Rolled-Jersey Undershirts runs before lowering jerseys and cutoff
       // pants. Plan for a possible shirt addition; Apply checks the actual
       // rolled result again, including the optional no-undershirt outcome.
-      if(options.rolledJerseyFix)for(const outfit of projected){const elements=outfit.loadoutElements,shirt=elements.find(e=>e.slotType==='InnerShirt');if(uniformItem(elements,'OuterShirt')==='Gear_JerseyStyle_RolledLow'&&shirt&&['Undershirt_None','Gear_Undershirt_Hoodie'].includes(shirt.itemAssetName))shirt.itemAssetName='Gear_Undershirt_CompressionTCrewSleeveless';}
+      if(options.rolledJerseyFix)for(const outfit of projected){const elements=outfit.loadoutElements,shirt=elements.find(e=>e.slotType==='InnerShirt');if(uniformItem(elements,'OuterShirt')==='Gear_JerseyStyle_RolledLow'&&['Undershirt_None','Gear_Undershirt_Hoodie'].includes(shirt?.itemAssetName??'Undershirt_None')){if(shirt)shirt.itemAssetName='Gear_Undershirt_CompressionTCrewSleeveless';else elements.push({slotType:'InnerShirt',itemAssetName:'Gear_Undershirt_CompressionTCrewSleeveless'});}}
       if (lower.has(entry.visualsRow)) for (const outfit of projected) for (const element of outfit.loadoutElements) if (element.slotType === "OuterShirt" && LOWER_JERSEY_REPLACEMENTS[element.itemAssetName]) element.itemAssetName = LOWER_JERSEY_REPLACEMENTS[element.itemAssetName];
       const source = outfit => uniformItem(outfit.loadoutElements, "OuterPants");
       const applicable = projected.filter(outfit => source(outfit) === ABOVE_KNEE_PANTS || options.replaceStandardWithCutoff && source(outfit) === STANDARD_PANTS);

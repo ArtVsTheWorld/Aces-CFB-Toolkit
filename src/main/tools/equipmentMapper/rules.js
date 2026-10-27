@@ -12,6 +12,10 @@ export function expandMapperRules(rules,items){
   });
 }
 export function mapperMatches(elements,source,rule,resolution,sameColorFamily){
+  if(source&&/(?:^|_)None$/i.test(source.asset)&&!elements.some(element=>element.slotType===source.slot)){
+    const implicit={slotType:source.slot,itemAssetName:source.asset};
+    if(rule.matchMode!=='exact'||mapperDigest({element:implicit,context:mapperContext(elements,source.slot,resolution)})===source.id)return [source.slot];
+  }
   return elements.filter(element=>element.slotType===source.slot&&(rule.matchMode==='exact'?mapperDigest({element,context:mapperContext(elements,element.slotType,resolution)})===source.id:element.itemAssetName===source.asset||rule.matchMode==='item'&&sameColorFamily(element.itemAssetName,source.asset))).map(element=>element.slotType);
 }
 export function mapperRuleCaps(players,rules,items,resolution,inScope,sameColorFamily){

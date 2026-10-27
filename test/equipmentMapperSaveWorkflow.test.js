@@ -41,8 +41,9 @@ test('Mapper real-save sleeve/undershirt workflows preserve the exact plan, all 
     const expected=new Map(plan.assignments.map(change=>[change.row,change.newValue]));assert.equal(expected.size,1);
     const changed=JSON.parse(expected.get(chosen.target.visualRow)),previous=JSON.parse(chosen.target.rawData),changedSlots=new Set(plan.previewRows[0].edits.map(edit=>edit.slot));
     for(let loadout=0;loadout<previous.loadouts.length;loadout++){
-      if(previous.loadouts[loadout].loadoutType!=='PlayerOnField')assert.deepEqual(changed.loadouts[loadout],previous.loadouts[loadout],'Non-player/Base layers preserved');
-      else for(const element of previous.loadouts[loadout].loadoutElements)if(!changedSlots.has(element.slotType))assert.deepEqual(changed.loadouts[loadout].loadoutElements.find(item=>item.slotType===element.slotType&&item.itemAssetName===element.itemAssetName),element,'Unrelated gear preserved');
+      const original=previous.loadouts[loadout],retained=original.loadoutElements?.filter(element=>!/(?:^|_)None$/i.test(element.itemAssetName));
+      if(original.loadoutType!=='PlayerOnField')assert.deepEqual(changed.loadouts[loadout],{...original,...(retained?{loadoutElements:retained}:{})},'Non-player/Base layers preserve every non-placeholder value');
+      else for(const element of retained??[])if(!changedSlots.has(element.slotType))assert.deepEqual(changed.loadouts[loadout].loadoutElements.find(item=>item.slotType===element.slotType&&item.itemAssetName===element.itemAssetName),element,'Every unrelated worn item and its metadata is preserved');
     }
     const applied=await runEquipmentMapper({...context,mode:'apply',options:{planId:result.planId}});assert.equal(fileHash(applied.backupPath),originalHash);assert.equal(applied.status,'completed');
     const reopened=await loadEquipmentTables(savePath,schemaPath,true,false),after=snapshotVisualRawData(reopened.visuals.records);

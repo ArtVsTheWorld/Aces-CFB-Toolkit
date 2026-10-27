@@ -50,7 +50,7 @@ test('Quickstart has one exact backed-up write, protects EA players and tracks o
   assert.equal(applied.status,'completed');assert.equal(applied.details.trackingSaved,true);assert.equal(hash(applied.backupPath),sourceHash);
   assert.equal(memory.snapshot(dynastyId).keys.size,rows.length);assert.equal(memory.snapshot(dynastyId).keys.size,rows.length);
   const reopened=await loadEquipmentTables(savePath,schemaPath);
-  for(const [row,raw]of rawBefore)if(typeof raw==='string')assert.equal(sf(reopened.visuals.records[row],'RawData'),expected.get(row)??raw,'every changed and unchanged visual row matches Preview');
+  for(const [row,raw]of rawBefore)if(typeof raw==='string'){if(expected.has(row))assert.deepEqual(JSON.parse(sf(reopened.visuals.records[row],'RawData')),JSON.parse(expected.get(row)),'every changed row matches all Preview data');else assert.equal(sf(reopened.visuals.records[row],'RawData'),raw,'untouched rows remain byte-for-byte identical');}
   const remembered=memory.snapshot(dynastyId).keys;
   for(const row of rows)assert.ok(remembered.has(quickstartPlayerKey(reopened.players.records[row.row],row.row)));
   const next=await prepareEquipmentQuickstart({...context,savePath:otherPath});assert.equal(next.remembered,rows.length);assert.equal(next.newPlayers,preview.details.skipped);

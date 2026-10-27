@@ -10,6 +10,7 @@ import { configuredModItems, modCategoryChance } from "./modPools.js";
 import {rollCompatibleItem} from './poolRoll.js';
 import {resolveModPoolRolls} from './modPoolArbitration.js';
 import { configuredCrossPositions, normalizeCrossDonorGroups } from './donorGroups.js';
+import { enforceRandomizerPositionRestrictions } from './positionRestrictions.js';
 export { rollFacePaint } from "./facepaint.js";
 
 export const TRUE_FRESHMAN_REDSHIRT = new Set(["eligible", "current"]);
@@ -462,6 +463,7 @@ export function patchFreshmanEquipment(playerRecords, visualsRecords, visualsTab
     const facePaint = targetVisuals.loadouts.map((loadout, index) => { const asset = loadout.loadoutElements.find(element => slotOf(element) === "FacePaint")?.itemAssetName; return { loadout: index, asset, source: facePaintSource(asset, facePaintPool.diagnostics) }; });
     targetVisuals.loadouts.forEach(loadout => { sleeveCompatibilityCorrections += enforceArmSleeveCompatibility(loadout.loadoutElements, { usingUnlockedMod }).length; });
     const generatedCorrections = enforceGeneratedEquipmentCompatibility(targetVisuals.loadouts, generated, target.position);
+    enforceRandomizerPositionRestrictions(targetVisuals.loadouts, target.position);
     sleeveCompatibilityCorrections += generatedCorrections.length;
     unlockedChanges = finalGeneratedChanges(targetVisuals.loadouts, unlockedChanges, generated?.options);
     rawChanges = finalGeneratedChanges(targetVisuals.loadouts, rawChanges, generated?.options);

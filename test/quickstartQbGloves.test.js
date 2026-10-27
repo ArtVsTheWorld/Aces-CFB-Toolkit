@@ -71,8 +71,8 @@ test('QB glove cleanup is the final Quickstart equipment step before exact assig
   const source=fs.readFileSync(new URL('../src/main/tools/equipmentQuickstart/runner.js',import.meta.url),'utf8');
   assert.ok(source.indexOf('  applyQuickstartQbGloves(')>source.indexOf('  applyQuickstartColorAccents('));
   assert.ok(source.indexOf('  applyQuickstartQbGloves(')<source.indexOf('  const assignments='));
-  assert.ok(source.indexOf('  const qbGlovePopulation=capQuickstartQbGloves(')>source.indexOf('  applyQuickstartQbGloves('));
-  assert.ok(source.indexOf('  const qbGlovePopulation=capQuickstartQbGloves(')<source.indexOf('  const assignments='));
+  assert.ok(source.indexOf('  let qbGlovePopulation=capQuickstartQbGloves(')>source.indexOf('  applyQuickstartQbGloves('));
+  assert.ok(source.indexOf('  let qbGlovePopulation=capQuickstartQbGloves(')<source.indexOf('  const assignments='));
 });
 
 const cohort=(count=565)=>({players:Array.from({length:count},(_,row)=>player(row,row%2?'Left':'Right')),visuals:Array.from({length:count},()=>visual(asset,'GearHand_None')),changes:Array.from({length:count},(_,row)=>({target:{row},visualsRow:row})),visualsTableId:10,seed:701,activePlayerRows:new Set(Array.from({length:count},(_,row)=>row))});

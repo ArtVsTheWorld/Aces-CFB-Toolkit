@@ -40,7 +40,7 @@ test("team-level population caps survive exact Preview/Apply/reopen and appear i
   const applied = await runEquipmentPatcher({ savePath, schemaPath, reports, mode: "apply", options: { planId: preview.planId } });
   assert.equal(hash(applied.backupPath), sourceHash);
   const reopened = await loadEquipmentTables(savePath, schemaPath);
-  for (const [row, raw] of rawBefore) if (typeof raw === "string") assert.equal(sf(reopened.visuals.records[row], "RawData"), expected.get(row) ?? raw, "Changed and unchanged rows exactly match the preview");
+  for (const [row, raw] of rawBefore) if (typeof raw === "string") { if (expected.has(row)) assert.deepEqual(JSON.parse(sf(reopened.visuals.records[row], "RawData")), JSON.parse(expected.get(row)), "All changed appearance data matches preview"); else assert.equal(sf(reopened.visuals.records[row], "RawData"), raw, "Untouched appearance remains byte-for-byte identical"); }
   const [headings, first] = parseCsv(fs.readFileSync(applied.reportPath, "utf8"));
   assert.equal(first.length, headings.length);
   const audit = JSON.parse(first[headings.indexOf("PopulationCapsAuditJSON")]);

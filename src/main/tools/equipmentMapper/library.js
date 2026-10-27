@@ -1,5 +1,5 @@
 import {createHash} from 'node:crypto';
-import {equipmentItem,equipmentDisplayName,equipmentSemantics,itemBrand} from '../equipment/catalog.js';
+import {EQUIPMENT_ITEMS,equipmentItem,equipmentDisplayName,equipmentSemantics,itemBrand} from '../equipment/catalog.js';
 
 const clone=value=>structuredClone(value);
 const canonical=value=>Array.isArray(value)?value.map(canonical):value&&typeof value==='object'?Object.fromEntries(Object.keys(value).sort().map(key=>[key,canonical(value[key])])):value;
@@ -47,6 +47,20 @@ export function mapperLibrary(players){
       if(!entries.has(id))entries.set(id,{id,slot:slot??'Unresolved',asset:element.itemAssetName,name:mapperItemName(element.itemAssetName),category:mapperCategoryLabel(known?.category??slot??'Unresolved Gear'),brand:mapperBrandLabel(itemBrand(known)||'Universal / Unknown'),colors:semantic?.colors??[],side:/^(Left|Right)/.exec(slot??'')?.[1]??'Center',element:normalized,context,wearers:[],usage:0,known:Boolean(known),copyable,readOnlyReason:reason,locations:[]});
       const item=entries.get(id);item.usage++;if(!wearerSets.has(id))wearerSets.set(id,new Set());if(!wearerSets.get(id).has(player.row)){item.wearers.push(player.row);wearerSets.get(id).add(player.row);}item.copyable||=copyable;if(item.copyable)item.readOnlyReason=null;
       item.locations.push({row:player.row,loadout:loadoutIndex,layer:loadout.loadoutType??loadout.loadoutCategory??'Other',implicitSlot:!element.slotType});
+    }
+  }
+  // Cleaned saves express empty slots by absence. Keep canonical None choices
+  // available for clearing gear or replacing an empty slot in those saves.
+  const observedSlots=new Set([...entries.values()].filter(item=>item.copyable).map(item=>item.slot)),emptySlots=new Set();
+  for(const known of EQUIPMENT_ITEMS){
+    if(!/(?:^|_)None$/i.test(known.itemName))continue;
+    for(const slot of known.slots){
+      if(!observedSlots.has(slot)||emptySlots.has(slot))continue;emptySlots.add(slot);
+      const missing=parsed.filter(({raw})=>raw.loadouts.some(loadout=>loadout?.loadoutType==='PlayerOnField'&&Array.isArray(loadout.loadoutElements)&&!loadout.loadoutElements.some(element=>resolveMapperSlot(element,evidence)===slot)));
+      if(!missing.length)continue;
+      const element={slotType:slot,itemAssetName:known.itemName},context=Object.fromEntries(dependencySlots(slot).map(key=>[key,null])),id=mapperDigest({element,context});
+      if(entries.has(id))continue;
+      entries.set(id,{id,slot,asset:known.itemName,name:mapperItemName(known.itemName),category:mapperCategoryLabel(known.category??slot),brand:'Universal / Unknown',colors:[],side:/^(Left|Right)/.exec(slot)?.[1]??'Center',element,context,wearers:[...new Set(missing.map(({player})=>player.row))],usage:missing.length,known:true,copyable:true,readOnlyReason:null,locations:[]});
     }
   }
   const items=[...entries.values()].sort((a,b)=>a.category.localeCompare(b.category)||a.name.localeCompare(b.name)||a.slot.localeCompare(b.slot)||a.id.localeCompare(b.id));

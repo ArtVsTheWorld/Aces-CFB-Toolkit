@@ -49,7 +49,7 @@ test('copy mode targets an absent slot and preserves complete item metadata',()=
   const players=[player(1,[]),player(2,[sleeve])],library=mapperLibrary(players),result=buildMapperPreview(players,library,[{action:'copy',replacementId:library.items[0].id,scope:'selected',playerRows:[1],playerIdentities:[{row:1,team:'Test',player:'Player 1'}]}]);assert.equal(result.blocked.length,0);assert.deepEqual(JSON.parse(result.changes[0].newRawData).loadouts[0].loadoutElements,[sleeve]);
 });
 test('opposite-side replacements are rejected even when old Preserve Side is false',()=>{
-  const players=[player(1,[element('RightArmWear','ArmSleeve_None')]),player(2,[sleeve])],library=mapperLibrary(players),before=structuredClone(players);assert.throws(()=>buildMapperPreview(players,library,[rule(library,'ArmSleeve_None',quarter.itemName,{preserveSide:false})]),/Left and right/);assert.deepEqual(players,before);
+  const players=[player(1,[element('RightArmWear','ArmSleeve_None')]),player(2,[sleeve])],library=mapperLibrary(players),before=structuredClone(players);assert.throws(()=>buildMapperPreview(players,library,[rule(library,'ArmSleeve_None',quarter.itemName,{preserveSide:false,sourceId:library.items.find(item=>item.asset==='ArmSleeve_None'&&item.slot==='RightArmWear').id})]),/Left and right/);assert.deepEqual(players,before);
 });
 test('color preservation only uses verified color variants actually present in the library',()=>{
   const black=quarter.itemName.replace(/White$/,'Black');assert.ok(EQUIPMENT_ITEMS.some(item=>item.itemName===black));

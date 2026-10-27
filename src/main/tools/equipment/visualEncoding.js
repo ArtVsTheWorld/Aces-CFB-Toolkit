@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { createRequire } from "node:module";
 import zlib from "node:zlib";
+import { isDeepStrictEqual } from "node:util";
 
 const require = createRequire(import.meta.url), magic = Buffer.from([0x28, 0xb5, 0x2f, 0xfd]);
 let assets;
@@ -114,4 +115,78 @@ export function encodeVisualData(codec, value, old, maxLength, context) {
   const encoded = encodeExactVisualData(codec, value, old, maxLength, context);
   if (context?.gameYear !== 27 || context?.gameType !== 'college' || context?.tableName !== 'CharacterVisuals') return encoded;
   return encodeSaveFriendlyVisualFrame(encoded, maxLength, collegeVisualAssets().dictionary);
+}
+
+// ISON objects carry explicit key names; their field order is not meaningful.
+// Reorder complete key/value byte ranges while retaining every scalar token,
+// exact string spelling, duplicate-key order and array position. This gives
+// compression a consistent layout without changing any appearance data.
+export function reorderVisualIson(ison, lookup) {
+  let offset = 0;
+  const take = count => {
+    if (!Number.isSafeInteger(count) || count < 0 || offset + count > ison.length) throw new Error('Truncated equipment ISON data.');
+    const bytes = ison.subarray(offset, offset + count); offset += count; return bytes;
+  };
+  const token = expected => { const bytes = take(1); if (bytes[0] !== expected) throw new Error('Unexpected equipment ISON token.'); return bytes; };
+  const string = () => {
+    const start = offset, type = take(1)[0];
+    let key;
+    if (type === 0x0a) key = lookup[take(2).readUInt16LE()];
+    else if (type === 0x0b) key = take(take(4).readUInt32LE()).toString('utf8');
+    else throw new Error('Unsupported equipment ISON string.');
+    if (typeof key !== 'string') throw new Error('Unknown equipment ISON string.');
+    return { key, bytes: ison.subarray(start, offset) };
+  };
+  const value = () => {
+    const type = ison[offset];
+    if (type === 0x0f) {
+      const start = token(0x0f), pairs = [];
+      while (ison[offset] !== 0x13) {
+        const marker = token(0x10), name = string(), child = value();
+        pairs.push({ key: name.key, bytes: Buffer.concat([marker, name.bytes, child]) });
+      }
+      const end = token(0x13);
+      pairs.sort((a, b) => a.key < b.key ? 1 : a.key > b.key ? -1 : 0);
+      return Buffer.concat([start, ...pairs.map(pair => pair.bytes), end]);
+    }
+    if (type === 0x0e) {
+      const chunks = [token(0x0e)];
+      while (ison[offset] !== 0x12) chunks.push(value());
+      chunks.push(token(0x12)); return Buffer.concat(chunks);
+    }
+    if (type === 0x0a || type === 0x0b) return string().bytes;
+    if (type === 0x00 || type === 0x03) return take(2);
+    if (type === 0x09) return take(9);
+    throw new Error('Unsupported equipment ISON value.');
+  };
+  const header = token(0x0d), body = value(), end = token(0x11);
+  if (offset !== ison.length) throw new Error('Unexpected trailing equipment ISON data.');
+  return Buffer.concat([header, body, end]);
+}
+
+// Only select a different representation when it saves physical storage rows.
+// Ordinary inline and same-size writes retain their existing encoding. The
+// native dictionary/format and the strict semantic round trip remain required.
+export function encodeStorageFriendlyVisualData(codec, value, old, maxLength, context) {
+  const encoded = encodeVisualData(codec, value, old, maxLength, context), capacity = maxLength + 2;
+  if (context?.gameYear !== 27 || context?.gameType !== 'college' || context?.tableName !== 'CharacterVisuals' || encoded.length <= capacity || !encoded.subarray(2, 6).equals(magic)) return encoded;
+  const { dictionary, lookup } = collegeVisualAssets();
+  let reordered;
+  try {
+    const ison = zlib.zstdDecompressSync(encoded.subarray(2, 2 + encoded.readUInt16LE()), { dictionary });
+    reordered = reorderVisualIson(ison, lookup);
+    if (reordered.equals(ison)) return encoded;
+  } catch { return encoded; } // Unknown representations retain the original guard.
+  let best = encoded, blocks = Math.ceil(encoded.length / capacity);
+  for (const level of [19, 15, 9]) {
+    const compressed = zlib.zstdCompressSync(reordered, { dictionary, params: { [zlib.constants.ZSTD_c_compressionLevel]: level } });
+    const required = Math.ceil((compressed.length + 2) / capacity);
+    if (required >= blocks || compressed.length > 0xffff) continue;
+    const frame = Buffer.alloc(2 + Math.max(compressed.length, maxLength));
+    frame.writeUInt16LE(compressed.length); compressed.copy(frame, 2);
+    best = encodeSaveFriendlyVisualFrame(frame, maxLength, dictionary); blocks = required;
+    if (blocks === 1) break;
+  }
+  if (best !== encoded && !isDeepStrictEqual(JSON.parse(codec.getFormattedValueFromUnformatted(best, context)), JSON.parse(value))) throw new Error('Equipment storage compression changed appearance data. The save has not been written.');
+  return best;
 }

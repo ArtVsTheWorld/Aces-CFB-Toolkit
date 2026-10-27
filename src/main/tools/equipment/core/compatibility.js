@@ -15,6 +15,27 @@ export const LONG_SLEEVE_UNDERSHIRTS = new Set([
   "G_CompressionT_Crew_LongSleeve_NikeHQ_B_BEI", "G_CompressionT_Crew_LongSleeve_NikeHQ_B_NAV"
 ]);
 const slotOf = element => element?.slotType || "";
+export const RELAXED_TEE_REPLACEMENTS = Object.freeze({
+  G_CompressionT_Crew_ShortSleeve_99Club_B_WHI: "Gear_Undershirt_CompressionTCrewSleeveless_Black",
+  G_CompressionT_Crew_ShortSleeve_99Club_B_GOL: "Gear_Undershirt_CompressionTCrewSleeveless_White",
+  G_CompressionT_Crew_LongSleeve_99Club_B_GOL: "Gear_Undershirt_CompressionTCrewSleeveless",
+  G_CompressionT_Crew_LongSleeve_99Club_B_WHI: "Gear_Undershirt_CompressionTCrewSleeveless_Secondary"
+});
+export const RELAXED_TEE_INCOMPATIBLE_JERSEYS = new Set([
+  "Gear_JerseyStyle_LowTuckedBP", "Gear_JerseyStyle_RolledLow", "Gear_JerseyStyle_Rolled",
+  "Gear_Low_TuckedUndershirt", "Gear_JerseyStyle_RolledLowest", "Gear_JerseyStyle_RolledLowest_Untucked"
+]);
+export function enforceRelaxedTeeCompatibility(elements) {
+  if (!elements.some(element => element?.slotType === "OuterShirt" && RELAXED_TEE_INCOMPATIBLE_JERSEYS.has(element.itemAssetName))) return [];
+  const changes = [];
+  for (const element of elements) {
+    const replacement = element?.slotType === "InnerShirt" && RELAXED_TEE_REPLACEMENTS[element.itemAssetName];
+    if (!replacement) continue;
+    changes.push({ kind: "jersey-undershirt", slot: "InnerShirt", oldItem: element.itemAssetName, newItem: replacement });
+    element.itemAssetName = replacement;
+  }
+  return changes;
+}
 export const isElbowLengthUndershirt = asset => /^GearArmSleeve_Undershirt_sleeveLongUnderarmor_normal_(?:Secondary|TeamColor|White|Black)$/i.test(asset ?? "");
 export const isRolledArmSleeve = asset => /^GearArmSleeve_CompressionRolledUpShirt_/i.test(asset ?? "");
 export const isWristCoach = asset => /^GearWrist_wristBandCoach_/i.test(asset ?? "");
@@ -59,7 +80,7 @@ function clearArmAccessories(elements, side, source, corrections, blocked) {
 }
 
 export function enforceEquipmentCompatibility(elements, { usingUnlockedMod = false } = {}) {
-  const corrections = [];
+  const corrections = enforceRelaxedTeeCompatibility(elements);
   const undershirt = elements.find(element => slotOf(element) === "InnerShirt")?.itemAssetName;
   for (const side of ["Left", "Right"]) {
     const sleeve = elements.find(element => slotOf(element) === `${side}ArmWear`)?.itemAssetName;

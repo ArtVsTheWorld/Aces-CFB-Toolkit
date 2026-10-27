@@ -1,0 +1,174 @@
+{
+  "description": "Anonymous native appearance whose exact field values fit inline after ISON object ordering; no player/save identity",
+  "maxLength": 375,
+  "originalFrame": "vgEotS/9Y4tQ/GVrAoUNAMQRBAAKBQEACxQAAABDdWpvTWF0dHlfQXJtVGF0c18zNikTuEgKtQzwLhIqDQARnCopRgEACh1sLgstAAAAR2Vhck1vdXRocGllY2VfUGFjaWZpZXJEdWFsSGFuZ2luZ19UZWFtQ29sb3I4NAo/CwAAChSHIAAAAEZhY2VHZWFyX0JhbGFjbGF2YU92ZXJOb3NlX1doaXRlJw5CQygmCTY3SCUiHQsdTmVja3BhZF9UdXJ0bGVuZWNrX1Ntb290aDssX0NvbXByZXNzaW9uVF9DcmV3X1Nob3J0U2xlZXZlXzk5Q2x1Yl9CX0dPTCwrRx4KM0E+Bz0LDAAAAFRvd2VsMl9Tb3UtCk0vMSEzQAowIwYgS0oGHwATEhMSExFP/KNq5GyaANrofBQJEgte/s64pcEDCBsAEOBAl69HQs6m4A0XBNDpEUMk+cDd5E71GsKO9wAArGAAuOF5ZYDwONAs75DF3g/7i1oApZ26C+UH+lkgwj7A7e/sNngIBGUQAH/LIAAweohhbT9JHsBRDOwkjztZpjTJTZPak3pl/sN49CR+9J7vm3vBN9jA8CHaAQ==",
+  "originalIson": "DQ8QCgwADg8QCgQACgUAEAoCAA4PEAoBAAsUAAAAQ3Vqb01hdHR5X0FybVRhdHNfMzYQCgAACjspEw8QCgEACxQAAABDdWpvTWF0dHlfQXJtVGF0c18zNhAKAAAKuEgTDxAKAQAKtQwQCgAACvAuEw8QCgEACrUMEAoAAAoSKhMSEw8QCgMAChkAEAoCAA4PEAoBAApcABAKAAAKDQATDxAKAQAKXAAQCgAAChEAEw8QCgEACpwAEAoAAAoqABMPEAoBAAqcABAKAAAKKQATDxAKAAAKNQAQCgEACkYAEw8QCgEACvQAEw8QCgEACh1sEAoAAAouABMPEAoBAAstAAAAR2Vhck1vdXRocGllY2VfUGFjaWZpZXJEdWFsSGFuZ2luZ19UZWFtQ29sb3I4EAoAAAo0ABMPEAoBAAo/ABAKAAAKCwATDxAKAAAKFIcQCgEACyAAAABGYWNlR2Vhcl9CYWxhY2xhdmFPdmVyTm9zZV9XaGl0ZRMPEAoBAAonABAKAAAKDgATDxAKOAAODxAKOgAJAAAAAAAA4D8QCjkACQAAAAAAAOA/ExIQCgEACkIAEAoAAApDABMPEAoBAArhABAKAAAKKAATDxAKAQAK4QAQCgAACiYAEw8QCgEACgkAEAoAAAo2ABMPEAoBAAoJABAKAAAKNwATDxAKAQAKSAAQCgAACiUAEw8QCgEACiIAEAoAAAodABMPEAoBAAsdAAAAR2Vhck5lY2twYWRfVHVydGxlbmVja19TbW9vdGgQCgAACjsAEw8QCgEACywAAABHX0NvbXByZXNzaW9uVF9DcmV3X1Nob3J0U2xlZXZlXzk5Q2x1Yl9CX0dPTBAKAAAKLAATDxAKAQAKSAAQCgAACisAEw8QCgEACkcAEAoAAAoeABMPEAoBAAozABAKAAAKQQATDxAKAQAKBwAQCgAACj4AEw8QCgEACgcAEAoAAAo9ABMPEAoBAAsMAAAAVG93ZWwyX1NvdXRoEAoAAAotABMPEAoBAApNABAKAAAKLwATDxAKAQAKMQAQCgAACiEAEw8QCgEACjMAEAoAAApAABMPEAoBAAowABAKAAAKIwATDxAKAQAKBgAQCgAACiAAEw8QCgEACksAEAoAAApKABMPEAoBAAoGABAKAAAKHwATEhMSExE=",
+  "orderedIson": "DQ8QCgwADg8QCgIADg8QCgAACjspEAoBAAsUAAAAQ3Vqb01hdHR5X0FybVRhdHNfMzYTDxAKAAAKuEgQCgEACxQAAABDdWpvTWF0dHlfQXJtVGF0c18zNhMPEAoAAArwLhAKAQAKtQwTDxAKAAAKEioQCgEACrUMExIQCgQACgUAEw8QCgMAChkAEAoCAA4PEAoAAAoNABAKAQAKXAATDxAKAAAKEQAQCgEAClwAEw8QCgAACioAEAoBAAqcABMPEAoAAAopABAKAQAKnAATDxAKAAAKNQAQCgEACkYAEw8QCgEACvQAEw8QCgAACi4AEAoBAAodbBMPEAoAAAo0ABAKAQALLQAAAEdlYXJNb3V0aHBpZWNlX1BhY2lmaWVyRHVhbEhhbmdpbmdfVGVhbUNvbG9yOBMPEAoAAAoLABAKAQAKPwATDxAKAAAKFIcQCgEACyAAAABGYWNlR2Vhcl9CYWxhY2xhdmFPdmVyTm9zZV9XaGl0ZRMPEAoAAAoOABAKAQAKJwATDxAKAAAKQwAQCgEACkIAEAo4AA4PEAo5AAkAAAAAAADgPxAKOgAJAAAAAAAA4D8TEhMPEAoAAAooABAKAQAK4QATDxAKAAAKJgAQCgEACuEAEw8QCgAACjYAEAoBAAoJABMPEAoAAAo3ABAKAQAKCQATDxAKAAAKJQAQCgEACkgAEw8QCgAACh0AEAoBAAoiABMPEAoAAAo7ABAKAQALHQAAAEdlYXJOZWNrcGFkX1R1cnRsZW5lY2tfU21vb3RoEw8QCgAACiwAEAoBAAssAAAAR19Db21wcmVzc2lvblRfQ3Jld19TaG9ydFNsZWV2ZV85OUNsdWJfQl9HT0wTDxAKAAAKKwAQCgEACkgAEw8QCgAACh4AEAoBAApHABMPEAoAAApBABAKAQAKMwATDxAKAAAKPgAQCgEACgcAEw8QCgAACj0AEAoBAAoHABMPEAoAAAotABAKAQALDAAAAFRvd2VsMl9Tb3V0aBMPEAoAAAovABAKAQAKTQATDxAKAAAKIQAQCgEACjEAEw8QCgAACkAAEAoBAAozABMPEAoAAAojABAKAQAKMAATDxAKAAAKIAAQCgEACgYAEw8QCgAACkoAEAoBAApLABMPEAoAAAofABAKAQAKBgATEhMSExE=",
+  "expected": {
+    "loadouts": [
+      {
+        "loadoutCategory": "Base",
+        "loadoutElements": [
+          {
+            "itemAssetName": "CujoMatty_ArmTats_36",
+            "slotType": "LeftArmTattoo"
+          },
+          {
+            "itemAssetName": "CujoMatty_ArmTats_36",
+            "slotType": "RightArmTattoo"
+          },
+          {
+            "itemAssetName": "LegTattoo_None",
+            "slotType": "LeftLegTattoo"
+          },
+          {
+            "itemAssetName": "LegTattoo_None",
+            "slotType": "RightLegTattoo"
+          }
+        ]
+      },
+      {
+        "loadoutType": "PlayerOnField",
+        "loadoutElements": [
+          {
+            "itemAssetName": "GearFootwear_shoe_low_NikeVaporEdge",
+            "slotType": "LeftShoe"
+          },
+          {
+            "itemAssetName": "GearFootwear_shoe_low_NikeVaporEdge",
+            "slotType": "RightShoe"
+          },
+          {
+            "itemAssetName": "GearHand_glove_NikeVaporJet8_White",
+            "slotType": "LeftHandWear"
+          },
+          {
+            "itemAssetName": "GearHand_glove_NikeVaporJet8_White",
+            "slotType": "RightHandWear"
+          },
+          {
+            "slotType": "FacePaint",
+            "itemAssetName": "FaceMarks_None"
+          },
+          {
+            "itemAssetName": "GearFaceMask_SpeedflexRobotJagged"
+          },
+          {
+            "itemAssetName": "GearVisor_visorOakley_clearreflective",
+            "slotType": "Visor"
+          },
+          {
+            "itemAssetName": "GearMouthpiece_PacifierDualHanging_TeamColor8",
+            "slotType": "MouthWear"
+          },
+          {
+            "itemAssetName": "GearHelmet_Speed_Flex",
+            "slotType": "HeadWear"
+          },
+          {
+            "slotType": "FaceWear",
+            "itemAssetName": "FaceGear_BalaclavaOverNose_White"
+          },
+          {
+            "itemAssetName": "Gear_JerseyStyle_SleeveTight",
+            "slotType": "OuterShirt"
+          },
+          {
+            "blends": [
+              {
+                "barycentricBlend": 0.5,
+                "baseBlend": 0.5
+              }
+            ],
+            "itemAssetName": "Backplate_Standard",
+            "slotType": "BackPlate"
+          },
+          {
+            "itemAssetName": "GearArmSleeve_Baggy_White",
+            "slotType": "LeftArmWear"
+          },
+          {
+            "itemAssetName": "GearArmSleeve_Baggy_White",
+            "slotType": "RightArmWear"
+          },
+          {
+            "itemAssetName": "ElbowGear_None",
+            "slotType": "RightElbowWear"
+          },
+          {
+            "itemAssetName": "ElbowGear_None",
+            "slotType": "LeftElbowWear"
+          },
+          {
+            "itemAssetName": "GearWrist_None",
+            "slotType": "LeftWristWear"
+          },
+          {
+            "itemAssetName": "Small_Pads",
+            "slotType": "Shoulderpads"
+          },
+          {
+            "itemAssetName": "GearNeckpad_Turtleneck_Smooth",
+            "slotType": "Neckpad"
+          },
+          {
+            "itemAssetName": "G_CompressionT_Crew_ShortSleeve_99Club_B_GOL",
+            "slotType": "InnerShirt"
+          },
+          {
+            "itemAssetName": "GearWrist_None",
+            "slotType": "RightWristWear"
+          },
+          {
+            "itemAssetName": "Gear_Socks_Low",
+            "slotType": "InnerSocks"
+          },
+          {
+            "itemAssetName": "GearSpats_none",
+            "slotType": "LeftSpat"
+          },
+          {
+            "itemAssetName": "CalfGear_None",
+            "slotType": "LeftCalfWear"
+          },
+          {
+            "itemAssetName": "CalfGear_None",
+            "slotType": "RightCalfWear"
+          },
+          {
+            "itemAssetName": "Towel2_South",
+            "slotType": "Towel"
+          },
+          {
+            "itemAssetName": "Handwarmer_Standard",
+            "slotType": "WaistWear"
+          },
+          {
+            "itemAssetName": "HandwarmerStyle_Back",
+            "slotType": "WaistWearOverride"
+          },
+          {
+            "itemAssetName": "GearSpats_none",
+            "slotType": "RightSpat"
+          },
+          {
+            "itemAssetName": "KneePad_Regular",
+            "slotType": "KneeWear"
+          },
+          {
+            "itemAssetName": "ThighPad_Regular",
+            "slotType": "LeftThighWear"
+          },
+          {
+            "itemAssetName": "GearPants_AboveKnee",
+            "slotType": "OuterPants"
+          },
+          {
+            "itemAssetName": "ThighPad_Regular",
+            "slotType": "RightThighWear"
+          }
+        ]
+      }
+    ]
+  }
+}

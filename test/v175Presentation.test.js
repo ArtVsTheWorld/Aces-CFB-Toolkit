@@ -32,13 +32,13 @@ test("presentation deduplicates matching loadout changes without dropping distin
   assert.deepEqual(changes.map(change => change.type), ["Face Covering", "Mouthpiece"]);
   assert.equal(changes[0].proposedValue, "White Balaclava");
   assert.match(changes[1].proposedValue, /Nike.*Secondary \/ Black/);
-  assert.equal(equipmentPreviewChanges(JSON.stringify({ loadouts: [field([])] }), JSON.stringify({ loadouts: [field([{ slotType: "LeftCalfWear", itemAssetName: "CalfGear_None" }])] }))[0].proposedValue, "None");
+  assert.deepEqual(equipmentPreviewChanges(JSON.stringify({ loadouts: [field([])] }), JSON.stringify({ loadouts: [field([{ slotType: "LeftCalfWear", itemAssetName: "CalfGear_None" }])] })), [], "Missing and None are equivalent after placeholder cleanup");
   const css = fs.readFileSync(new URL("../src/renderer/redesign.css", import.meta.url), "utf8");
   assert.match(css, /\.equipment-card-list \{ display: grid; align-items: start;/, "Opening one player's details must not stretch the neighboring player's content");
 });
 
 test("release versions, normal defaults, and professional control labels are consistent", () => {
-  assert.equal(JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url), "utf8")).version, "24.2.0");
+  assert.equal(JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url), "utf8")).version, "24.3.0");
   for (const id of ["freshman-equipment", "equipment-patcher"]) assert.equal(tools.find(tool => tool.id === id).version, undefined);
   for (const id of ["jersey-renumber", "automatic-force-win"]) assert.equal(tools.find(tool => tool.id === id).version, undefined);
   const randomizer = normalizeEquipmentOptions({}, true), patcher = normalizeEquipmentOptions({}, false);

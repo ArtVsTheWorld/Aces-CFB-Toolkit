@@ -15,7 +15,8 @@ export function equipmentPreviewChanges(beforeRaw, afterRaw) {
       const slots = new Map();
       for (const element of loadout.loadoutElements ?? []) {
         if (!element.slotType || typeof element.itemAssetName !== "string") continue;
-        const ordinal = (slots.get(element.slotType) ?? 0) + 1; slots.set(element.slotType, ordinal);
+        const ordinal = (slots.get(element.slotType) ?? 0) + 1;
+        if (!/(?:^|_)None$/i.test(element.itemAssetName)) slots.set(element.slotType, ordinal);
         entries.set(`${identity}|${number}|${element.slotType}|${ordinal}`, { slot: element.slotType, asset: element.itemAssetName });
       }
     }
@@ -26,6 +27,7 @@ export function equipmentPreviewChanges(beforeRaw, afterRaw) {
     for (const key of new Set([...before.keys(), ...after.keys()])) {
       const oldItem = before.get(key), newItem = after.get(key);
       if (oldItem?.asset === newItem?.asset) continue;
+      if ((!oldItem && /(?:^|_)None$/i.test(newItem?.asset)) || (!newItem && /(?:^|_)None$/i.test(oldItem?.asset))) continue;
       const slot = newItem?.slot ?? oldItem.slot;
       const type = SLOT_LABELS[slot] ?? slot.replace(/([a-z])([A-Z])/g, "$1 $2");
       const change = { type, currentValue: oldItem ? gearLabel(oldItem.asset, slot) : "Not Equipped", proposedValue: newItem ? gearLabel(newItem.asset, slot) : "Not Equipped" };
