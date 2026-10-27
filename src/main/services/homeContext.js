@@ -31,6 +31,9 @@ export async function homeContextFromFranchise(franchise) {
     players: PLAYER_TABLE_UID,
     franchiseUsers: FRANCHISE_USER_TABLE_UID,
     seasonInfo: SEASON_INFO_TABLE_UID
+  },{
+    teams:['TeamIndex','DisplayName','LongName','ShortName','NickName','UserCharacter'],
+    players:['TeamIndex'],franchiseUsers:['UserEntity'],seasonInfo:['CurrentSeasonYear','CurrentWeek','CurrentWeekType']
   });
   const available = availableTeams(teams.records).map(team => {
     const record = teams.records.find(candidate => candidate && !candidate.isEmpty && Number(candidate.TeamIndex) === team.teamIndex && String(candidate.DisplayName ?? candidate.LongName ?? candidate.ShortName ?? "").trim() === team.name);

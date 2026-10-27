@@ -39,7 +39,7 @@ export function generatedItemConflict(elements, item, slots = item.slots, positi
     const blocked = armAccessoryRestrictions(sleeve, get(elements, `${side}WristWear`), get(elements, "InnerShirt"));
     if (semantic.bodyRegion === "wrist" ? blocked.wrist : blocked.elbow) return "Sleeve covers the accessory's physical location";
   }
-  for (const element of elements) {
+  if (semantic.groups.length) for (const element of elements) {
     if (slots.includes(element.slotType) || !active(element.itemAssetName)) continue;
     const other = equipmentSemantics(element.itemAssetName);
     if (other?.groups.some(group => semantic.groups.includes(group))) return "Overlapping neckwear, headwear or shoulder equipment";

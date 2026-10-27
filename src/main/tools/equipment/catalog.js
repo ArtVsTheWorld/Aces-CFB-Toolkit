@@ -249,10 +249,18 @@ export function equipmentItemsFor(category, predicate = () => true) {
   return EQUIPMENT_ITEMS.filter(item => item.category === category && predicate(item));
 }
 
+const brandedItemCache = new Map();
 export function brandedEquipmentItems(category, teamBrand) {
   const brand = normalBrand(teamBrand);
   if (!brand) return [];
-  return equipmentItemsFor(category, item => item.itemName.startsWith("Gear") && itemBrand(item) === brand && item.origin !== "unverified");
+  const key=JSON.stringify([category,brand]);
+  if(!brandedItemCache.has(key)){
+    brandedItemCache.set(key,equipmentItemsFor(category,item=>item.itemName.startsWith("Gear")&&itemBrand(item)===brand&&item.origin!=="unverified"));
+    while(brandedItemCache.size>128)brandedItemCache.delete(brandedItemCache.keys().next().value);
+  }
+  // Callers receive their own array; filtering/sorting a pool must not change
+  // another player's choices. Catalog items themselves are immutable.
+  return [...brandedItemCache.get(key)];
 }
 
 export const UNLOCKED_POOLS = Object.freeze({

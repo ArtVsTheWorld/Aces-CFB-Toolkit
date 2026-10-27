@@ -50,6 +50,9 @@ module.exports=async(window,root)=>{
   document.getElementById('equipment-step-next').click();rCheck([...content.querySelectorAll('.ui-setting-card')].filter(rVisible).length===5,'Only selected extras join donor configuration');
   d=rOpen('[data-mod-pool-open="raw"]');rChange(d.querySelector('[data-pool-category]'),'armSleeves');
   rCheck(d.querySelector('[data-pool-chance]').value==='0'&&!d.querySelector('[data-pool-item]:checked'),'RAW Jamo stays disabled by default');d.querySelector('[data-config-cancel]').click();
+  d=rOpen('[data-mod-pool-open="unlocked"]');rChange(d.querySelector('[data-pool-category]'),'elbowGear');
+  const biceps=[...d.querySelectorAll('[data-pool-item]')].filter(input=>/^GearBicepBand_/.test(input.dataset.poolItem));rCheck(biceps.length===4&&biceps.every(input=>!input.checked),'All four biceps bands start unchecked');
+  biceps[0].click();rCheck(biceps[0].checked,'Biceps bands remain manually selectable');d.querySelector('[data-pool-defaults]').click();rCheck([...d.querySelectorAll('[data-pool-item]')].filter(input=>/^GearBicepBand_/.test(input.dataset.poolItem)).every(input=>!input.checked),'Default Category turns biceps bands back off');d.querySelector('[data-config-cancel]').click();
   for(const [index,origin] of ['unlocked','raw','eljax'].entries()){
    state.equipmentPreviews.set('freshman-equipment',{planId:'existing-plan'});
    const initial=document.getElementById('equipment-mod-pools').value;

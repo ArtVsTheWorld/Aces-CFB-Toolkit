@@ -20,7 +20,7 @@ for (const [name, options] of [
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), "cfb-v185-"));
   t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
   const sourceHash = fileHash(fixture), savePath = path.join(directory, "DYNASTY-TEST"); fs.copyFileSync(fixture, savePath);
-  const context = { savePath, schemaPath, reports: new ReportService(path.join(directory, "reports")), mode: "preview", options: { ...options, skipNilPlayers: false } };
+  const context = { savePath, schemaPath, reports: new ReportService(path.join(directory, "reports")), mode: "preview", options: { ...options, skipNilPlayers: false, ...(process.env.CFB_TEST_TEAM_SCOPE ? {includedTeams:[process.env.CFB_TEST_TEAM_SCOPE]} : {}) } };
   const preview = async () => { const old = Math.random; Math.random = () => 185 / 0x100000000; try { return await runEquipmentPatcher(context); } finally { Math.random = old; } };
   const first = await preview(), plan = takePlan(first.planId), second = await preview();
   assert.ok(plan.assignments.length > 0); assert.deepEqual(takePlan(second.planId).assignments, plan.assignments);

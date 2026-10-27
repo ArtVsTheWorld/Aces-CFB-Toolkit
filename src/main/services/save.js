@@ -26,6 +26,10 @@ export function isDirectionalFcsTeam(record) {
 export function detectSaveSchema(savePath, schemaDirectory) {
   const input = validateSavePath(savePath);
   const header = new Franchise(input, { autoParse: false });
+  return schemaForFranchise(header,schemaDirectory);
+}
+
+function schemaForFranchise(header,schemaDirectory){
   const meta = header.expectedSchemaVersion ?? {};
   const match = resolveBundledSchemaForHeader(header.gameYear, meta.major, meta.minor);
   const displayPart = value => Number.isFinite(Number(value)) ? Number(value) : "?";
@@ -45,8 +49,10 @@ export function inspectSaveSchema(savePath, schemaDirectory) {
 export async function openCfb27Save(savePath, schemaPath) {
   toolProgress(5, 'Reading save data…');
   const input = validateSavePath(savePath);
-  const detected = detectSaveSchema(input, path.dirname(schemaPath));
-  const franchise = await Franchise.create(input, { schemaDirectory: path.dirname(detected.path), schemaOverride: { major: detected.major, minor: detected.minor, gameYear: detected.gameYear, path: detected.path } });
+  const franchise=new Franchise(input,{autoParse:false,saveOnChange:false});
+  const detected=schemaForFranchise(franchise,path.dirname(schemaPath));
+  franchise.settings={schemaDirectory:path.dirname(detected.path),schemaOverride:{major:detected.major,minor:detected.minor,gameYear:detected.gameYear,path:detected.path}};
+  await new Promise((resolve,reject)=>{franchise.once('ready',resolve);franchise.once('error',reject);try{franchise.parse();}catch(error){reject(error);}});
   toolProgress(15, 'Save data loaded');
   return { franchise, savePath: input };
 }
@@ -57,10 +63,10 @@ export function tableByUniqueId(franchise, uniqueId) {
   return table;
 }
 
-export async function readTables(franchise, uniqueIds) {
+export async function readTables(franchise, uniqueIds, fields = {}) {
   const tables = Object.fromEntries(Object.entries(uniqueIds).map(([name, uid]) => [name, tableByUniqueId(franchise, uid)]));
-  const values = Object.values(tables); let completed = 0;
-  await Promise.all(values.map(async table => { await table.readRecords(); completed++; toolProgress(15 + completed / values.length * 10, 'Reading player and team records…'); }));
+  const values = Object.entries(tables); let completed = 0;
+  await Promise.all(values.map(async ([name,table]) => { await table.readRecords(fields[name]); completed++; toolProgress(15 + completed / values.length * 10, 'Reading player and team records…'); }));
   return tables;
 }
 

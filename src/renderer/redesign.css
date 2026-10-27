@@ -652,8 +652,9 @@ body.experimental-ui {
 .team-boost-rating-change strong { font: 850 11px var(--sport-heading); letter-spacing: .025em; }
 .team-boost-rating-change span { color: var(--subtle-ink); white-space: nowrap; }
 .team-boost-rating-change b { text-align: right; }
-.team-boost-rating-change.increase { border-color: color-mix(in srgb, var(--action) 50%, var(--line)); border-left-color: var(--action); background: color-mix(in srgb, var(--action) 8%, var(--surface)); }
-.team-boost-rating-change.increase strong, .team-boost-rating-change.increase b { color: var(--action); }
+.team-boost-rating-change.increase { --boost-positive: #087a45; border-color: color-mix(in srgb, var(--boost-positive) 50%, var(--line)); border-left-color: var(--boost-positive); background: color-mix(in srgb, var(--boost-positive) 8%, var(--surface)); }
+[data-theme="dark"] .team-boost-rating-change.increase { --boost-positive: #31c878; }
+.team-boost-rating-change.increase strong, .team-boost-rating-change.increase b { color: var(--boost-positive); }
 .team-boost-rating-change.decrease { border-color: color-mix(in srgb, var(--danger) 45%, var(--line)); border-left-color: var(--danger); background: color-mix(in srgb, var(--danger) 8%, var(--surface)); }
 .team-boost-rating-change.decrease strong, .team-boost-rating-change.decrease b { color: var(--danger); }
 .team-boost-table td:last-child { min-width: 410px; }

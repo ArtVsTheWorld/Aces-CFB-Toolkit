@@ -7,6 +7,7 @@ import { canGenerateEquipment, createGeneratedEquipmentState, enforceGeneratedEq
 import { BRAND_SLOTS, assignCompatibleBrandEquipment, guardBrandEquipment } from "./brandCompatibility.js";
 import { buildFacePaintPool, facePaintSource, rollFacePaint } from "./facepaint.js";
 import { configuredModItems, modCategoryChance } from "./modPools.js";
+import {rollCompatibleItem} from './poolRoll.js';
 import {resolveModPoolRolls} from './modPoolArbitration.js';
 import { configuredCrossPositions, normalizeCrossDonorGroups } from './donorGroups.js';
 export { rollFacePaint } from "./facepaint.js";
@@ -180,9 +181,8 @@ export function applyUnlockedRandomizerEquipment(loadouts, target, rng, perCateg
   const chance = key => modCategoryChance(configuration, key, key === "undershirts" ? 0 : perCategoryChance);
   const rollItem = (key, label, pool, slots) => {
     pool = selected(key, pool);
-    pool = pool.filter(item => canGenerateEquipment(loadouts, item, slots ?? item.slots, target.position));
-    if (!pool.length || rng() >= chance(key)) return;
-    applyCatalogItem(loadouts, label, choose(pool, rng), slots, changes, state);
+    const item=rollCompatibleItem(pool,item=>canGenerateEquipment(loadouts,item,slots??item.slots,target.position),rng,chance(key));
+    if(item)applyCatalogItem(loadouts,label,item,slots,changes,state);
   };
   const sleeves = selected("armSleeves", UNLOCKED_POOLS.armSleeves);
   if (sleeves.length && rng() < chance("armSleeves")) {
@@ -195,7 +195,7 @@ export function applyUnlockedRandomizerEquipment(loadouts, target, rng, perCateg
       applyCatalogItem(loadouts, "Right arm sleeve", right, ["RightArmWear"], changes, state);
     }
   }
-  const elbowPool = selected("elbowGear", unlockedElbowPoolForPosition(target.position));
+  const elbowPool = selected("elbowGear", unlockedElbowPoolForPosition(target.position)).filter(item=>configuration?.elbowGear?.items!==undefined||!/^GearBicepBand_/i.test(item.itemName));
   if (elbowPool.length && rng() < chance("elbowGear")) applyAsymmetricElbowGear(loadouts, elbowPool, rng, changes, state, target.position, Boolean(configuration));
   rollItem("cleats", "Cleats", brandedEquipmentItems("Cleats", target.branding).filter(canGenerateItem), ["LeftShoe", "RightShoe"]);
   const brandedGloves = brandedEquipmentItems("Gloves", target.branding).filter(item => /^GearHand_(?!None)/i.test(item.itemName));
@@ -216,16 +216,13 @@ export function applyUnlockedRandomizerEquipment(loadouts, target, rng, perCateg
 export function applyRawRandomizerEquipment(loadouts, rng, perCategoryChance = 0.10, state = createGeneratedEquipmentState(loadouts), position = "", configuration) {
   if (state) state.options = {...state.options, usingRawAccessoriesMod: true};
   const changes = [];
-  const neckwear = configuredModItems(RAW_ACCESSORIES_POOLS.neckwear, configuration, "neckwear").filter(item => canGenerateEquipment(loadouts, item, item.slots, position));
-  if (neckwear.length && rng() < modCategoryChance(configuration, "neckwear", perCategoryChance)) {
-    applyCatalogItem(loadouts, "Neckwear", choose(neckwear, rng), null, changes, state);
-  }
-  const caps = configuredModItems(RAW_ACCESSORIES_POOLS.skullcaps, configuration, "skullcaps").filter(item => canGenerateEquipment(loadouts, item, ["GuardianCap"], position));
-  if (caps.length && rng() < modCategoryChance(configuration, "skullcaps", perCategoryChance)) {
-    applyCatalogItem(loadouts, "Skullcap", choose(caps, rng), ["GuardianCap"], changes, state);
-  }
-  const backplates = configuredModItems(RAW_ACCESSORIES_POOLS.backplates ?? [], configuration, "backplates").filter(item => canGenerateEquipment(loadouts, item, ["BackPlate"], position));
-  if (backplates.length && rng() < modCategoryChance(configuration, "backplates", perCategoryChance)) applyCatalogItem(loadouts, "Backplate", choose(backplates, rng), ["BackPlate"], changes, state);
+  const roll=(category,pool,slots)=>rollCompatibleItem(configuredModItems(pool,configuration,category),item=>canGenerateEquipment(loadouts,item,slots??item.slots,position),rng,modCategoryChance(configuration,category,perCategoryChance));
+  const neckwear=roll('neckwear',RAW_ACCESSORIES_POOLS.neckwear,null);
+  if(neckwear)applyCatalogItem(loadouts,'Neckwear',neckwear,null,changes,state);
+  const caps=roll('skullcaps',RAW_ACCESSORIES_POOLS.skullcaps,['GuardianCap']);
+  if(caps)applyCatalogItem(loadouts,'Skullcap',caps,['GuardianCap'],changes,state);
+  const backplate=roll('backplates',RAW_ACCESSORIES_POOLS.backplates??[],['BackPlate']);
+  if(backplate)applyCatalogItem(loadouts,'Backplate',backplate,['BackPlate'],changes,state);
   const sleeves = configuredModItems(RAW_ACCESSORIES_POOLS.armSleeves, configuration, 'armSleeves');
   if (sleeves.length && rng() < modCategoryChance(configuration, 'armSleeves', 0)) {
     for (const side of ['Left', 'Right']) {
@@ -243,9 +240,8 @@ export function applyEquipmentTruckRandomizerEquipment(loadouts, rng, perCategor
     ["chinCovers", "Brand logo chin cover", ["Reserved"]], ["waistPlaycalls", "Waist playcall band", ["HeadBand"]],
     ["handwarmers", "Standard logo handwarmer", ["WaistWear"]], ["thighPads", "Jersey number + cross thigh pads", ["LeftThighWear", "RightThighWear"]]
   ]) {
-    const pool = configuredModItems(EQUIPMENT_TRUCK_POOLS[category], configuration, category).filter(item => slots.every(slot => item.slots.includes(slot)) && canGenerateEquipment(loadouts, item, slots, position));
-    if (!pool.length || rng() >= modCategoryChance(configuration, category, category === "handwarmers" ? 0 : perCategoryChance)) continue;
-    applyCatalogItem(loadouts, label, choose(pool, rng), slots, changes, state, true);
+    const item=rollCompatibleItem(configuredModItems(EQUIPMENT_TRUCK_POOLS[category],configuration,category),item=>slots.every(slot=>item.slots.includes(slot))&&canGenerateEquipment(loadouts,item,slots,position),rng,modCategoryChance(configuration,category,category==='handwarmers'?0:perCategoryChance));
+    if(item)applyCatalogItem(loadouts,label,item,slots,changes,state,true);
   }
   return changes;
 }

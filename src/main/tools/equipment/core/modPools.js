@@ -13,7 +13,7 @@ export function modPoolDefinitions() {
       category("undershirts", "Irish Jamo Sleeves", UNLOCKED_POOLS.undershirts, { defaultChance: 0 }),
       category("wristTape", "Taped Wrist with Cross", UNLOCKED_POOLS.wristTape),
       category("armSleeves", "Arm Sleeves", UNLOCKED_POOLS.armSleeves),
-      category("elbowGear", "Elbow Gear & Bands", [...UNLOCKED_POOLS.elbowSweatbands, ...UNLOCKED_POOLS.bicepBands, ...UNLOCKED_POOLS.elbowPadsAndBraces, ...UNLOCKED_POOLS.shoulderStabilizers]),
+      category("elbowGear", "Elbow Gear & Bands", [...UNLOCKED_POOLS.elbowSweatbands, ...UNLOCKED_POOLS.bicepBands, ...UNLOCKED_POOLS.elbowPadsAndBraces, ...UNLOCKED_POOLS.shoulderStabilizers], {defaultItems:[...UNLOCKED_POOLS.elbowSweatbands, ...UNLOCKED_POOLS.elbowPadsAndBraces, ...UNLOCKED_POOLS.shoulderStabilizers].filter(canGenerateItem).map(item=>item.itemName)}),
       category("cleats", "Additional Cleats", EQUIPMENT_ITEMS.filter(item => item.category === "Cleats" && item.itemName.startsWith("Gear"))),
       category("gloves", "Additional Gloves", gloves, { defaultItems: gloves.filter(item => !teamGloveBrands.has(itemBrand(item)) || /_(?:TeamColor|SecondaryColor)$/i.test(item.itemName)).map(item => item.itemName) }),
       category("mouthpieces", "Mouthpieces", [...UNLOCKED_POOLS.unlockedMouthpieces, ...UNLOCKED_POOLS.colorfulHangingMouthpieces], { defaultItems: UNLOCKED_POOLS.unlockedMouthpieces.map(item => item.itemName) }),
