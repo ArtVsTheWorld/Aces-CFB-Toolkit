@@ -20,7 +20,7 @@ module.exports = async (window, root) => {
     check(equipmentOptions('equipment-patcher').cutoffPantsCaps.WR===17 && equipmentOptions('equipment-patcher').replaceStandardWithCutoff,'Save commits exact settings');
     const preset=presetConfiguration(); check(preset.values['cutoff-uniform-cap-WR']==='17' && preset.values['cutoff-replace-standard'],'preset retains caps and checkbox');
     check(presetCompatibility(preset).messages.length===0,'new settings pass preset compatibility');
-    const review=equipmentReviewMarkup('equipment-patcher',state.prepared.get('equipment-patcher|'+state.activeSave.path)); check(review.includes('WR 17%') && review.includes('All Compatible Standard Pants'),'Review exposes cap and override');
+    const review=equipmentReviewMarkup('equipment-patcher',state.prepared.get('equipment-patcher|'+state.activeSave.path)); check(review.includes('WR 17%') && review.includes('All Compatible Below-Knee Pants'),'Review exposes cap and override');
     check(entry('Cutoff Pants Settings').textContent.includes('WR 17%'),'inline summary reflects edits');
     document.getElementById('fix-unlocked-cutoff-pants').click(); check(entry('Cutoff Pants Settings').hidden,'turning pass off hides editor but preserves options');
     document.getElementById('fix-unlocked-cutoff-pants').click();

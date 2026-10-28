@@ -25,7 +25,7 @@ export function quickstartOptions(input={}){
 export function quickstartSettings(input){
   const mods=quickstartOptions(input);
   const randomizer={...normalizeEquipmentOptions({top:30,classes:[],redshirtGroup:'all',protectOriginalEaPlayers:mods.protectOriginalEaPlayers,noDripProfile:true,usingUnlockedMod:mods.unlocked,usingRawAccessoriesMod:mods.raw,usingEquipmentTruckMod:mods.gameday},true),donorOnlyPositions:['K','P'],donorOnlyGlovesPositions:['QB']};
-  const patcher=normalizeEquipmentOptions({protectOriginalEaPlayers:mods.protectOriginalEaPlayers,helmetFix:true,visorFix:true,oakleyVisorFix:true,usingEquipmentTruckMod:mods.gameday,pantsFix:true,rolledJerseyFix:true,sleeveCompatibilityFix:true,unlockedTattooFix:mods.unlocked,unlockedTattooCap:35,fillFrequencies:{tattoos:true},unlockedMouthpieceFix:mods.unlocked,unlockedRecolorFix:mods.unlocked,unlockedColorTheme:'team',tapeColorMode:'accessory',lowerRolledJerseyFix:mods.unlocked,cutoffPantsFix:mods.unlocked,unlockedSocksFix:mods.unlocked},false);
+  const patcher=normalizeEquipmentOptions({protectOriginalEaPlayers:mods.protectOriginalEaPlayers,helmetFix:true,visorFix:true,oakleyVisorFix:true,usingEquipmentTruckMod:mods.gameday,pantsFix:true,rolledJerseyFix:true,sleeveCompatibilityFix:true,unlockedTattooFix:mods.unlocked,unlockedTattooCap:35,fillFrequencies:{tattoos:true},unlockedMouthpieceFix:mods.unlocked,unlockedRecolorFix:mods.unlocked,unlockedColorTheme:'team',tapeColorMode:'accessory',lowerRolledJerseyFix:mods.unlocked,cutoffPantsFix:mods.unlocked,adjustOutfitForCutoff:mods.unlocked,unlockedSocksFix:mods.unlocked},false);
   return {mods,randomizer,patcher};
 }
 async function scope(loaded,memory,savePath,protectOriginalEaPlayers=true){

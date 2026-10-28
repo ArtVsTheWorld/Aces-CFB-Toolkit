@@ -1,6 +1,7 @@
 import { POSITION_GROUPS, positionGroup } from "../../../../shared/positionGroups.js";
 import { selectFrequencyCandidates } from './frequency.js';
-import { ABOVE_KNEE_PANTS, CUTOFF_PANTS, STANDARD_PANTS, LOWER_JERSEY_REPLACEMENTS, cutoffPantsConflict, uniformItem } from "./uniformCompatibility.js";
+import { ABOVE_KNEE_PANTS, CUTOFF_PANTS, STANDARD_PANTS, LOWER_JERSEY_REPLACEMENTS, CUTOFF_JERSEYS, cutoffPantsConflict, uniformItem } from "./uniformCompatibility.js";
+import { enforceRelaxedTeeCompatibility } from "./compatibility.js";
 
 export const DEFAULT_LOWER_JERSEY_CAPS = Object.freeze(Object.fromEntries(POSITION_GROUPS.map(group => [group, ["OL", "DT"].includes(group) ? 0 : 100])));
 export const DEFAULT_CUTOFF_PANTS_CAPS = Object.freeze(Object.fromEntries(POSITION_GROUPS.map(group => [group, ["WR", "CB", "FS", "SS"].includes(group) ? 5 : 0])));
@@ -17,6 +18,25 @@ const fieldOutfits = raw => { try { return JSON.parse(raw).loadouts.filter(outfi
 const has = (outfits, slot, assets) => outfits.some(outfit => assets.has(uniformItem(outfit.loadoutElements, slot)));
 const lowest = new Set(Object.values(LOWER_JERSEY_REPLACEMENTS));
 const eligibleJerseys = new Set(Object.keys(LOWER_JERSEY_REPLACEMENTS));
+// Only the explicit cutoff pass may change these slots to create eligibility.
+// Keep leg layers and all other equipment, including element metadata, intact.
+function adjustCutoffOutfit(elements) {
+  const base = uniformItem(elements, "InnerPants");
+  if (base && !/(?:^|_)None$/i.test(base)) return null;
+  const changes = [];
+  const set = (slot, newItem) => {
+    const element = elements.find(element => element.slotType === slot), oldItem = element?.itemAssetName;
+    if (element) element.itemAssetName = newItem;
+    else elements.push({ slotType: slot, itemAssetName: newItem });
+    changes.push({ type: "cutoff-outfit", slot, oldItem: oldItem ?? "Not Equipped", newItem });
+  };
+  if (!CUTOFF_JERSEYS.has(uniformItem(elements, "OuterShirt"))) set("OuterShirt", "Gear_JerseyStyle_RolledLowest_Untucked");
+  const shirt = uniformItem(elements, "InnerShirt");
+  if (!shirt || /(?:^|_)None$/i.test(shirt)) set("InnerShirt", "Gear_Undershirt_CompressionTCrewSleeveless");
+  // A newly adjusted rolled jersey can also invalidate an existing relaxed tee.
+  changes.push(...enforceRelaxedTeeCompatibility(elements).map(change => ({ ...change, type: "cutoff-outfit" })));
+  return changes;
+}
 // Includes protected players in the chosen population, but never selects them.
 // Single-owner rows only: a capped addition must not silently affect siblings.
 export function buildUniformStylePlan(entries, options, rng) {
@@ -49,6 +69,7 @@ export function buildUniformStylePlan(entries, options, rng) {
       const source = outfit => uniformItem(outfit.loadoutElements, "OuterPants");
       const applicable = projected.filter(outfit => source(outfit) === ABOVE_KNEE_PANTS || options.replaceStandardWithCutoff && source(outfit) === STANDARD_PANTS);
       if (!applicable.length) continue;
+      if (options.adjustOutfitForCutoff) for (const outfit of applicable) adjustCutoffOutfit(outfit.loadoutElements);
       if (applicable.some(outfit => cutoffPantsConflict(outfit.loadoutElements))) { incompatible++; continue; }
       (applicable.some(outfit => source(outfit) === STANDARD_PANTS) ? standards : candidates).push(entry);
     }
@@ -70,11 +91,17 @@ export function applyUniformStylePlan(loadouts, originalOutfits, visualsRow, pla
         changes.push({ type: "lower", slot: element.slotType, oldItem, newItem: element.itemAssetName });
       }
     }
-    if (!plan.pants.has(visualsRow) || cutoffPantsConflict(outfit.loadoutElements)) return;
+    if (!plan.pants.has(visualsRow)) return;
     const original = uniformItem(originalOutfits[index]?.loadoutElements ?? [], "OuterPants");
     if (original !== ABOVE_KNEE_PANTS && !(options.replaceStandardWithCutoff && original === STANDARD_PANTS)) return;
     const element = outfit.loadoutElements.find(element => element.slotType === "OuterPants");
     if (!element || ![ABOVE_KNEE_PANTS, STANDARD_PANTS].includes(element.itemAssetName)) return;
+    if (options.adjustOutfitForCutoff) {
+      const adjustments = adjustCutoffOutfit(outfit.loadoutElements);
+      if (adjustments === null) return;
+      changes.push(...adjustments);
+    }
+    if (cutoffPantsConflict(outfit.loadoutElements)) return;
     const oldItem = element.itemAssetName; element.itemAssetName = CUTOFF_PANTS;
     changes.push({ type: "cutoff", slot: "OuterPants", oldItem, newItem: CUTOFF_PANTS, originalItem: original });
   });

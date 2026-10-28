@@ -138,6 +138,6 @@ test("Team Boost specific attributes reject empty/unknown fields and retain rati
   assert.equal(result.ratingChanges.length, 1); assert.equal(result.ratingChanges[0].newRating, 99); assert.deepEqual(records, initial);
 });
 test("release versions match the requested increments", () => {
-  assert.equal(JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url))).version, "24.5.0");
+  assert.equal(JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url))).version, "24.5.1");
   assert.equal(tools.find(tool => tool.id === "freshman-equipment").version, undefined); assert.equal(tools.find(tool => tool.id === "equipment-patcher").version, undefined); assert.equal(tools.find(tool => tool.id === "team-boost").version, undefined);
 });

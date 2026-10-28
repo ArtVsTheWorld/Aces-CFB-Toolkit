@@ -1,0 +1,27 @@
+const fs=require('node:fs'),path=require('node:path');
+module.exports=async(window,root)=>{
+ await window.webContents.executeJavaScript(`(async()=>{
+  const check=(ok,message)=>{if(!ok)throw Error(message)},wait=async f=>{for(let i=0;i<800;i++){if(f())return;await new Promise(r=>setTimeout(r,25));}throw Error('Cutoff outfit UI timeout');};
+  await wait(()=>state.bootstrap);navigate('equipment-patcher');await wait(()=>content.querySelector('[data-patcher-flow]')?.patcherCards&&document.getElementById('preset-name'));
+  const original=()=>document.getElementById('cutoff-adjust-outfit');
+  const open=()=>{if(!document.getElementById('fix-unlocked-cutoff-pants').checked)document.getElementById('fix-unlocked-cutoff-pants').click();document.getElementById('equipment-step-next').click();content.querySelector('[data-patcher-setting="fix-unlocked-cutoff-pants"] [data-config-open]').click();const d=document.querySelector('dialog[open]');[...d.querySelectorAll('[role=tab]')].find(n=>n.textContent.includes('Fit & Rules')).click();return d;};
+  check(original().checked&&equipmentOptions('equipment-patcher').adjustOutfitForCutoff,'Patcher default on');
+  console.log('[v200] cutoff default/cancel');let d=open(),toggle=configurationRead(d,'cutoff-adjust-outfit');check(configurationRead(d,'cutoff-replace-standard').closest('label').textContent.includes('Also Replace All Below-Knee Pants'),'Below-knee checkbox label');check(toggle.checked&&toggle.getBoundingClientRect().height>0&&!toggle.closest('[hidden]'),'Checked control visible in Fit & Rules');
+  toggle.click();d.querySelector('[data-config-cancel]').click();check(original().checked,'Cancel preserves true');
+  d=open();configurationRead(d,'cutoff-adjust-outfit').click();d.querySelector('[data-config-save]').click();check(!equipmentOptions('equipment-patcher').adjustOutfitForCutoff,'Save preserves explicit false');
+  const preset=presetConfiguration();check(preset.values['cutoff-adjust-outfit']===false&&presetValues(preset)['cutoff-adjust-outfit']===false,'Preset false retained');
+  await wait(()=>document.getElementById('preset-name'));document.getElementById('preset-name').value='Cutoff adjustment off';document.getElementById('preset-save').click();await wait(()=>state.bootstrap.settings.toolPresets?.some(p=>p.name==='Cutoff adjustment off'));const saved=state.bootstrap.settings.toolPresets.find(p=>p.name==='Cutoff adjustment off');
+  navigate('home');navigate('equipment-patcher');await wait(()=>original()&&!original().checked);check(!original().checked,'Navigation retains unchecked setting');
+  console.log('[v200] cutoff modal reset');d=open();d.querySelector('[data-config-reset]').click();check(configurationRead(d,'cutoff-adjust-outfit').checked,'Modal Reset restores true');d.querySelector('[data-config-cancel]').click();check(!original().checked,'Cancel Reset preserves false');
+  d=open();d.querySelector('[data-config-reset]').click();d.querySelector('[data-config-save]').click();check(original().checked,'Save Reset commits default');
+  console.log('[v200] cutoff actual preset load');await wait(()=>document.getElementById('preset-choice'));document.getElementById('preset-choice').value=saved.id;document.getElementById('preset-choice').dispatchEvent(new Event('change',{bubbles:true}));document.getElementById('preset-load').click();await wait(()=>document.querySelector('dialog.confirmation-editor[open]'));document.querySelector('dialog.confirmation-editor[open] [data-config-save]').click();await wait(()=>original()&&!original().checked);check(!equipmentOptions('equipment-patcher').adjustOutfitForCutoff,'Actual saved preset load retains false');
+  console.log('[v200] cutoff tool reset/legacy preset');await wait(()=>document.getElementById('reset-tool-defaults'));document.getElementById('reset-tool-defaults').click();await wait(()=>original()?.checked);check(original().checked,'Whole-tool Reset defaults true');const legacy=structuredClone(preset);delete legacy.values['cutoff-adjust-outfit'];state.toolSettings.set('equipment-patcher',presetValues(legacy));render();await wait(()=>original()?.checked);check(original().checked,'Older presets without the checkbox use the new true default');
+  await wait(()=>document.getElementById('preset-choice'));window.cutoffUiOpen=open;
+ })()`);
+ const directory=path.join(root,'outputs/v2451-cutoff-ui');fs.mkdirSync(directory,{recursive:true});
+ for(const [theme,width]of [['dark',1480],['light',520]]){
+  window.setSize(width,960);await window.webContents.executeJavaScript(`closeConfigurationDialogs();document.documentElement.dataset.theme='${theme}';applyAccentColor({...state.bootstrap.settings,theme:'${theme}'});cutoffUiOpen();void 0`);await new Promise(r=>setTimeout(r,180));
+  await window.webContents.executeJavaScript(`(()=>{const d=document.querySelector('dialog[open]'),body=d.querySelector('.configuration-body');if(body.scrollWidth>body.clientWidth+1)throw Error('Cutoff dialog horizontal overflow');configurationRead(d,'cutoff-adjust-outfit').scrollIntoView({block:'center',behavior:'instant'});})()`);await new Promise(r=>setTimeout(r,100));fs.writeFileSync(path.join(directory,theme+'.png'),(await window.webContents.capturePage()).toPNG());
+ }
+ await window.webContents.executeJavaScript('closeConfigurationDialogs();void 0');await new Promise(r=>setTimeout(r,120));console.log('PASS Cutoff outfit default, visible Fit & Rules checkbox, Cancel/Save, modal/tool Reset, saved preset false, navigation and responsive themes');
+};

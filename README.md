@@ -1,6 +1,6 @@
 # Ace's CFB Toolkit
 
-A Windows desktop toolkit for College Football 27 Dynasty and Road To Glory save utilities. This repository contains the maintained Electron application source, build resources, and regression tests alongside the official release downloads. Current source: **v24.5**. Source updates and installer releases are published separately.
+A Windows desktop toolkit for College Football 27 Dynasty and Road To Glory save utilities. This repository contains the maintained Electron application source, build resources, and regression tests alongside the official release downloads. Current source: **v24.5.1**. Source updates and installer releases are published separately.
 
 ## Download the app
 

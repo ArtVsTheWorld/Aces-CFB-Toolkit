@@ -32,7 +32,7 @@ test("v20.1 exact uniform Preview/Apply/reopen preserves unrelated equipment, ba
   const scope=new Set(targets.map(target=>String(sf(before.players.records[target.row],"TeamIndex"))));
   const teams=before.teams.records.filter(team=>!team.isEmpty&&scope.has(String(sf(team,"TeamIndex")))).map(team=>String(sf(team,"DisplayName")));
   const caps=Object.fromEntries(["QB","HB","FB","WR","TE","OL","EDGE","DT","LB","CB","FS","SS","K/P"].map(group=>[group,100]));
-  const preview=await runEquipmentPatcher({savePath,schemaPath,reports,mode:"preview",options:{includedTeams:teams,positions:["WR"],skipNilPlayers:false,lowerRolledJerseyFix:true,cutoffPantsFix:true,lowerJerseyCaps:caps,cutoffPantsCaps:caps,replaceStandardWithCutoff:true}});
+  const preview=await runEquipmentPatcher({savePath,schemaPath,reports,mode:"preview",options:{includedTeams:teams,positions:["WR"],skipNilPlayers:false,lowerRolledJerseyFix:true,cutoffPantsFix:true,adjustOutfitForCutoff:false,lowerJerseyCaps:caps,cutoffPantsCaps:caps,replaceStandardWithCutoff:true}});
   assert.equal(hash(savePath),original);const plan=takePlan(preview.planId);assert.ok(plan.assignments.length>=3);
   const applied=await runEquipmentPatcher({savePath,schemaPath,reports,mode:"apply",options:{planId:preview.planId}});
   assert.equal(hash(applied.backupPath),original);assert.deepEqual(applied.details.changes,preview.details.changes);
@@ -40,7 +40,8 @@ test("v20.1 exact uniform Preview/Apply/reopen preserves unrelated equipment, ba
   for(const [row,raw] of rawBefore)if(typeof raw==="string")assert.equal(sf(reopened.visuals.records[row],"RawData"),expected.get(row)??raw,"Every equipment row matches exactly");
   for(const [index,target] of targets.entries()){
     const after=JSON.parse(sf(reopened.visuals.records[target.ref],"RawData")),prior=JSON.parse(rawBefore.get(target.ref));
-    const strip=parsed=>{for(const outfit of parsed.loadouts.filter(outfit=>outfit.loadoutType==="PlayerOnField"))outfit.loadoutElements=outfit.loadoutElements.filter(element=>!["OuterShirt","OuterPants"].includes(element.slotType));return parsed;};
+    // The shared storage fitter omits empty None placeholders before writing.
+    const strip=parsed=>{for(const outfit of parsed.loadouts)if(Array.isArray(outfit.loadoutElements))outfit.loadoutElements=outfit.loadoutElements.filter(element=>!/(?:^|_)None$/i.test(element.itemAssetName)&&(outfit.loadoutType!=="PlayerOnField"||!["OuterShirt","OuterPants"].includes(element.slotType)));return parsed;};
     assert.deepEqual(strip(structuredClone(after)),strip(prior),"Uniform-only run keeps all other appearance data");
     for(const outfit of after.loadouts.filter(outfit=>outfit.loadoutType==="PlayerOnField")){const pants=outfit.loadoutElements.find(element=>element.slotType==="OuterPants")?.itemAssetName;if([1,2].includes(index)){assert.equal(pants,CUTOFF_PANTS);assert.equal(cutoffPantsConflict(outfit.loadoutElements),null);}else assert.notEqual(pants,CUTOFF_PANTS);}
   }
