@@ -4,7 +4,7 @@ const RANDOMIZER_OPTIONS = Object.freeze([
   {id:'equipment-unlocked',title:'Unlocked Equipment',origin:'unlocked',requirement:'Unlocked v0.97+',help:'Allow extra equipment from CFB27 Unlocked. Choose categories, item lists and chances on Configure. These choices add gear; they do not remove modded gear copied from donors. Jamo sleeves start off. Requires CFB27 Unlocked v0.97+ by Orckestra.'},
   {id:'equipment-raw-accessories',title:'RAW Accessories',origin:'raw',requirement:'RAW Accessories v3.1.4+',help:'Allow RAW accessories such as necklaces, skullcaps and facepaint. Choose item lists and chances on Configure. RAW Jamo sleeves start off. Gear already copied from donors is kept. Requires RAW Accessories v3.1.4+ by Delonte RAW.'},
   {id:'equipment-truck',title:'GameDay Gear / Equipment Truck',origin:'eljax',requirement:'GameDay Gear v2.0+',help:'Allow supported Equipment Truck items, including sleeves, visors and other accessories. Choose categories, items and chances on Configure. Logo handwarmers start off. Requires GameDay Gear v2.0+ by ElJax YT.'},
-  {id:'equipment-no-drip',title:'No Drip Profile',field:'equipment-no-drip-chances',help:'Give some players a simpler look by removing selected accessories. Choose how often this happens for each position group.'}
+  {id:'equipment-no-drip',title:'No Drip Profile',field:'equipment-no-drip-chances',help:'Give some players a simpler look by removing selected accessories. Choose how often this happens for each individual position.'}
 ]);
 
 function randomizerWorkspaceMarkup({scope,donor,rules}) {
@@ -22,7 +22,7 @@ function mountRandomizerFlow() {
   const clear=document.getElementById('randomizer-clear-memory');clear.addEventListener('click',()=>clearDynastyEquipmentMemory(clear,()=>{clear.disabled=true;root.querySelector('[data-equipment-memory-count]').textContent='0 players remembered';}));
   const settings=root.querySelector('[data-randomizer-settings]'),source=root.querySelector('.donor-settings-content'),donor=configurationEntries.get(source)?.entry;
   if(!donor)throw Error('Donor Settings editor is unavailable.');
-  const donorCard=ToolkitUI.settingCard({title:'Donor Settings',help:'Choose the players whose equipment is copied. Use your active save or a read-only donor file. Choose top-rated or specific players, mixing chances and allowed cross-position sources.',body:donor});
+  const donorCard=ToolkitUI.settingCard({title:'Donor Settings',help:'Pick whose outfits to copy: the highest-rated players or players you choose yourself. You can use this save or a separate donor file, which stays unchanged.',body:donor});
   donorCard.classList.add('randomizer-donor-card');settings.append(donorCard);
   const cards=[];
   for(const option of RANDOMIZER_OPTIONS){

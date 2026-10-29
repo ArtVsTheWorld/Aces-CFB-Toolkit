@@ -33,7 +33,7 @@ test('actual RAW Jamo IDs form a mod-specific family while generic vanilla and d
 
 test('Jamo pool additions are off in Randomizer, old presets and Quickstart, including the direct fallback path',()=>{
   assert.deepEqual(normalizeModPools().raw.armSleeves,{chance:0,items:[]});assert.deepEqual(normalizeModPools({raw:{neckwear:{chance:10,items:[]}}}).raw.armSleeves,{chance:0,items:[]});
-  const settings=quickstartSettings({raw:true,unlocked:true,gameday:true});assert.deepEqual(settings.randomizer.modPools.raw.armSleeves,{chance:0,items:[]});assert.equal(settings.patcher.usingRawAccessoriesMod,false);
+  const settings=quickstartSettings({raw:true,unlocked:true,gameday:true});assert.deepEqual(settings.randomizer.modPools.raw.armSleeves,{chance:0,items:[]});assert.equal(settings.patcher.usingRawAccessoriesMod,true);
   for(let seed=0;seed<30;seed++){const loadouts=outfit();applyRawRandomizerEquipment(loadouts,mulberry32(seed),1,undefined,'WR');assert.ok(loadouts[0].loadoutElements.filter(e=>e.slotType.endsWith('ArmWear')).every(e=>e.itemAssetName==='ArmSleeve_None'));}
 });
 

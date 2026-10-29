@@ -1,0 +1,6 @@
+function noDripSettingsMarkup(){
+  return ['offense','defense','special'].map(section=>`<section data-no-drip-section="${section}"><div class="probability-grid ${section==='special'?'':'three'}">${NoDrip.rows.filter(row=>row.section===section).map(row=>percentageControl('equipment-no-drip-'+row.position,row.label,row.chance)).join('')}</div></section>`).join('');
+}
+function noDripPositionOptions(root=document){return Object.fromEntries(NoDrip.rows.map(({position})=>[position,Number(configurationRead(root,'equipment-no-drip-'+position).value)]));}
+function noDripPositionSummary(root=document){const values=noDripPositionOptions(root),groups=new Map();for(const row of NoDrip.rows){const value=values[row.position];if(!groups.has(value))groups.set(value,[]);groups.get(value).push(row.label);}return [...groups].map(([value,positions])=>positions.join('/')+': '+value+'%').join(' · ');}
+function paginateNoDripEditor(dialog,root){const sections=[...root.querySelectorAll('[data-no-drip-section]')];if(sections.length)addConfigurationPages(dialog,root,sections.map(section=>({title:{offense:'Offense',defense:'Defense',special:'Special Teams'}[section.dataset.noDripSection],nodes:[section]})));}

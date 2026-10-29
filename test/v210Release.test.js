@@ -30,7 +30,7 @@ test('verified cross wrist tape stays in Unlocked, uses wrist slots and never in
   const rows=loadouts([]);applyUnlockedRandomizerEquipment(rows,{position:'WR',branding:'nike'},()=>0,0,undefined,config);
   assert.ok(rows[0].loadoutElements.some(item=>item.slotType==='LeftWristWear'&&item.itemAssetName===cross));
   assert.ok(!canGenerateEquipment(loadouts([{slotType:'LeftArmWear',itemAssetName:'GearArmSleeve_Full_White'}]),item,item.slots,'WR'));
-  assert.ok(!canGenerateEquipment(loadouts([{slotType:'InnerShirt',itemAssetName:'G_CompressionT_Crew_LongSleeve_Basic_WHI'}]),item,item.slots,'WR'));
+  assert.ok(!canGenerateEquipment(loadouts([{slotType:'InnerShirt',itemAssetName:'G_CompressionT_Crew_LongSleeve_NikeHQ_B_GLD'}]),item,item.slots,'WR'));
   assert.ok(!canGenerateEquipment(loadouts([{slotType:'LeftElbowWear',itemAssetName:'ElbowGear_RubberBands1'}]),item,item.slots,'WR'));
 });
 test('app-only release version is captured by new audits and history; legacy entries remain readable',()=>{

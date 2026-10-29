@@ -5,6 +5,7 @@ app.setPath("userData", fs.mkdtempSync(path.join(os.tmpdir(), "cfb-v190-config-"
 app.whenReady().then(async () => {
   const { registrySnapshot } = await import(pathToFileURL(path.join(root, "src/shared/toolRegistry.js")));
   const { getToolHandler } = await import(pathToFileURL(path.join(root, "src/main/tools/handlers.js")));
+  ipcMain.handle('equipment:mapper-targets',async(_event,payload)=>{const {queryMapperTargets}=await import(pathToFileURL(path.join(root,'src/main/tools/equipmentMapper/targets.js')));return queryMapperTargets(payload);});
   const {QuickstartMemory}=await import(pathToFileURL(path.join(root,'src/main/services/quickstartMemory.js')));
   const quickstartMemory=new QuickstartMemory(path.join(app.getPath('userData'),'quickstart-memory.json'));
   let quickstartCompleted=0;
@@ -35,9 +36,35 @@ app.whenReady().then(async () => {
   ipcMain.handle("settings:update-accent",(_event,accentColor)=>(settings={...settings,accentColor}));
   ipcMain.handle("settings:update-base-color",(_event,baseColor)=>(settings={...settings,baseColor}));
   const updateReplies=[];ipcMain.handle("updates:prompt-response",(_event,request)=>{updateReplies.push(request);return true;});ipcMain.handle("updates:acknowledge-release",(_event,version)=>{updateReplies.push({version});return {};});
-  ipcMain.handle("tools:prepare", async (_event, request) => { if(process.argv.includes('--final-polish-only'))await new Promise(resolve=>setTimeout(resolve,250));if (request.toolId==='equipment-quickstart') { const p=await getToolHandler(request.toolId).prepare({savePath:fixture,schemaPath,quickstartMemory,options:request.options});return {...p,newPlayers:p.newPlayers-quickstartCompleted,remembered:quickstartCompleted,rememberedTotal:quickstartCompleted}; } if (!cache.has(request.toolId)) cache.set(request.toolId, await getToolHandler(request.toolId).prepare({ savePath: request.toolId === "automatic-force-win" ? path.resolve(root, "../EXAMPLE SAVES VANILLA GAME/DYNASTY-LSUTESTSAVEWEEK0") : fixture, schemaPath, toolId:request.toolId,quickstartMemory, options: request.options, defaultMapPath: path.join(root, 'resources/commentary-data/PlayerCommentaryidMap.txt') })); const prepared = cache.get(request.toolId); return request.toolId === "automatic-force-win" ? { ...prepared, userControlledTeams: prepared.userControlledTeams.map(name => ({ name })) } : prepared; });
+  ipcMain.handle("tools:prepare", async (_event, request) => { if(request.toolId==='equipment-mapper'){
+ const prepared=await getToolHandler(request.toolId).prepare({savePath:fixture,schemaPath,options:request.options});
+ if(process.argv.includes('--catalog-mapper-only')){
+ const {mapperPlayers}=await import(pathToFileURL(path.join(root,'src/main/tools/equipmentMapper/runner.js'))),{loadEquipmentTables}=await import(pathToFileURL(path.join(root,'src/main/tools/equipment/shared.js'))),{mapperCatalog}=await import(pathToFileURL(path.join(root,'src/main/tools/equipmentMapper/catalog.js'))),{buildMapperPreview}=await import(pathToFileURL(path.join(root,'src/main/tools/equipmentMapper/core.js'))),players=mapperPlayers(await loadEquipmentTables(fixture,schemaPath)),library=mapperCatalog(request.options.mods),source=library.items.find(i=>i.asset==='Undershirt_None'&&i.slot==='InnerShirt'),replacement=library.items.find(i=>i.asset==='Gear_Undershirt_CompressionTCrewSleeveless_White'&&i.slot==='InnerShirt');
+ prepared.smokeTarget=players.filter(p=>p.team==='LSU'&&p.position==='WR'&&!p.shared).find(player=>{const result=buildMapperPreview([player],library,[{action:'replace',sourceId:source.id,replacementId:replacement.id,matchMode:'asset',scope:'all',frequency:100,fillToFrequency:true}]);return result.changes.length===1&&result.blocked.length===0&&result.compatibilityWarnings.length===0;});
+ if(prepared.smokeTarget){const {row,player}=prepared.smokeTarget;prepared.smokeTarget={row,player};}
+ }return prepared;}
+ if(process.argv.includes('--final-polish-only'))await new Promise(resolve=>setTimeout(resolve,250));if (request.toolId==='equipment-quickstart') { const p=await getToolHandler(request.toolId).prepare({savePath:fixture,schemaPath,quickstartMemory,options:request.options});return {...p,newPlayers:p.newPlayers-quickstartCompleted,remembered:quickstartCompleted,rememberedTotal:quickstartCompleted}; } if (!cache.has(request.toolId)) cache.set(request.toolId, await getToolHandler(request.toolId).prepare({ savePath: request.toolId === "automatic-force-win" ? path.resolve(root, "../EXAMPLE SAVES VANILLA GAME/DYNASTY-LSUTESTSAVEWEEK0") : fixture, schemaPath, toolId:request.toolId,quickstartMemory, options: request.options, defaultMapPath: path.join(root, 'resources/commentary-data/PlayerCommentaryidMap.txt') })); const prepared = cache.get(request.toolId); return request.toolId === "automatic-force-win" ? { ...prepared, userControlledTeams: prepared.userControlledTeams.map(name => ({ name })) } : prepared; });
   ipcMain.handle("tools:run", async (_event, request) => {
     runs.push(request);
+    if(process.argv.includes('--catalog-mapper-only')){
+      if(request.toolId==='equipment-mapper'&&request.mode==='apply'){
+        const {takePlan,pagePlanResult}=await import(pathToFileURL(path.join(root,'src/main/tools/jersey/planStore.js'))),plan=takePlan(request.options.planId);
+        if(request.options.confirmCompatibility!==true||!plan.result.details.requiresCompatibilityConfirmation)throw Error('Only a confirmed compatibility Apply may be simulated.');
+        console.log('PASS simulated Mapper UI Apply sends exact plan and explicit compatibility confirmation; no native write.');
+        return pagePlanResult({...plan.result,mode:'apply',status:'completed',planId:request.options.planId,details:{...plan.result.details,compatibilityAcknowledged:true}});
+      }
+      if(request.toolId!=='equipment-mapper'||request.mode!=='preview')throw Error('Catalog UI checks never write saves.');
+      const {ReportService}=await import(pathToFileURL(path.join(root,'src/main/services/reports.js'))),{pagePlanResult,saveFingerprint}=await import(pathToFileURL(path.join(root,'src/main/tools/jersey/planStore.js'))),before=saveFingerprint(fixture);
+      const result=await getToolHandler(request.toolId).run({savePath:fixture,schemaPath,mode:'preview',options:request.options,reports:new ReportService(path.join(app.getPath('userData'),'reports'))});if(saveFingerprint(fixture)!==before)throw Error('Mapper UI preview modified source.');return pagePlanResult(result);
+    }
+    if(process.argv.includes('--long-snap-depth-only')){
+      if(request.toolId!=='long-snap'||request.mode!=='preview')throw Error('Long Snap UI checks must never Apply.');
+      const {ReportService}=await import(pathToFileURL(path.join(root,'src/main/services/reports.js')));
+      const {pagePlanResult,saveFingerprint}=await import(pathToFileURL(path.join(root,'src/main/tools/jersey/planStore.js'))),before=saveFingerprint(fixture);
+      const result=await getToolHandler(request.toolId).run({savePath:fixture,schemaPath,mode:'preview',options:request.options,reports:new ReportService(path.join(app.getPath('userData'),'reports'))});
+      if(saveFingerprint(fixture)!==before)throw Error('Long Snap Preview modified its source fixture.');
+      return pagePlanResult(result);
+    }
     if(process.argv.includes('--removal-preview-only')){
       if(request.toolId!=='equipment-patcher'||request.mode!=='preview')throw Error('Removal preview checks must never Apply.');
       const hash=()=>require('node:crypto').createHash('sha256').update(fs.readFileSync(fixture)).digest('hex'),before=hash();
@@ -60,9 +87,16 @@ app.whenReady().then(async () => {
     }
     return { resultKind: request.toolId, mode: request.mode, status: "preview", planId: "draft-safety-plan", reportPath: "UI test only", summary: [], details: { changes: [], totalPreviewRows: 0 } };
   });
+  if(process.argv.includes('--long-snap-depth-only')||process.argv.includes('--catalog-mapper-only'))ipcMain.handle('tools:search-preview',async(_event,request)=>{const {searchPlanRows}=await import(pathToFileURL(path.join(root,'src/main/tools/jersey/planStore.js')));return searchPlanRows(request.planId,request.query,100,request.filters,request.page);});
   const window = new BrowserWindow({ show: false, width: 1480, height: 1000, webPreferences: { preload: path.join(uiRoot, "src/main/preload.cjs"), contextIsolation: true, sandbox: true, offscreen: true, backgroundThrottling: false } });
   const errors = []; window.webContents.on("console-message", details => { const { level, message } = details; if (message.startsWith('[v200]')) console.log(message); if (level === "error" && !message.includes("ERR_FILE_NOT_FOUND") && !message.includes("'frame-ancestors' is ignored")) {errors.push(message);console.error(message);} });
   await window.loadFile(path.join(uiRoot, "src/renderer/index.html"));
+  if(process.argv.includes('--v250-tools-only')){await require('./lib/v250-all-tools-ui.cjs')(window,root);if(errors.length)throw Error(errors.join('\n'));window.destroy();app.quit();return;}
+  if(process.argv.includes('--catalog-mapper-only')){await require(process.argv.includes('--mapper-rebuild-only')?'./lib/mapper-rebuild-ui.cjs':'./lib/catalog-mapper-ui.cjs')(window,root);if(errors.length)throw Error(errors.join('\n'));window.destroy();app.quit();return;}
+  if(process.argv.includes('--jersey-promotion-only')){await require('./lib/jersey-promotion-ui.cjs')(window,root);if(errors.length)throw Error(errors.join('\n'));window.destroy();app.quit();return;}
+  if(process.argv.includes('--cutoff-leg-layers-only')){await require('./lib/cutoff-leg-layers-ui.cjs')(window,root);if(errors.length)throw Error(errors.join('\n'));window.destroy();app.quit();return;}
+  if(process.argv.includes('--cutoff-frequency-only')){await require('./lib/cutoff-frequency-ui.cjs')(window,root);if(errors.length)throw Error(errors.join('\n'));window.destroy();app.quit();return;}
+  if(process.argv.includes('--long-snap-depth-only')){await require('./lib/long-snap-depth-ui.cjs')(window,root);if(errors.length)throw Error(errors.join('\n'));window.destroy();app.quit();return;}
   if(process.argv.includes('--cutoff-outfit-only')){await require('./lib/cutoff-outfit-ui.cjs')(window,root);if(errors.length)throw Error(errors.join('\n'));window.destroy();app.quit();return;}
   if(process.argv.includes('--removal-preview-only')){await require('./lib/equipment-removal-preview-ui.cjs')(window,root);if(errors.length)throw Error(errors.join('\n'));window.destroy();app.quit();return;}
   if(process.argv.includes('--donor-sources-only')){await require('./lib/donor-sources-ui.cjs')(window,root);if(errors.length)throw Error(errors.join('\n'));window.destroy();app.quit();return;}

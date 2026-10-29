@@ -7,11 +7,12 @@ import { enforceArmSleeveCompatibility } from "./compatibility.js";
 import { canGenerateEquipment, createGeneratedEquipmentState, enforceGeneratedEquipmentCompatibility, finalGeneratedChanges, recordGeneratedEquipment } from "./generatedCompatibility.js";
 import { BRAND_SLOTS, assignCompatibleBrandEquipment, guardBrandEquipment } from "./brandCompatibility.js";
 import { buildFacePaintPool, facePaintSource, rollFacePaint } from "./facepaint.js";
-import { configuredModItems, modCategoryChance } from "./modPools.js";
+import { configuredModItems, modCategoryChance, UNLOCKED_SPATS, defaultUnlockedElbowItem } from "./modPools.js";
 import {rollCompatibleItem} from './poolRoll.js';
 import {resolveModPoolRolls} from './modPoolArbitration.js';
 import { configuredCrossPositions, normalizeCrossDonorGroups } from './donorGroups.js';
 import { enforceRandomizerPositionRestrictions } from './positionRestrictions.js';
+import NoDrip from '../../../../shared/noDrip.cjs';
 export { rollFacePaint } from "./facepaint.js";
 
 export const TRUE_FRESHMAN_REDSHIRT = new Set(["eligible", "current"]);
@@ -122,11 +123,7 @@ const DEFENSIVE_POSITIONS = new Set(["LE", "RE", "DT", "EDGE", "LOLB", "MLB", "R
 const DEFENSIVE_LINE_POSITIONS = new Set(["LE", "RE", "DT", "EDGE"]);
 
 export function noDripChanceForPosition(position, percentages) {
-  const value = String(position ?? "").toUpperCase();
-  if (["CB", "FS", "SS", "SAFETY", "WR"].includes(value)) return (percentages?.skill ?? 1) / 100;
-  if (["HB", "RB", "TE", "QB", "LOLB", "MLB", "ROLB", "LB"].includes(value)) return (percentages?.balanced ?? 3) / 100;
-  if (OFFENSIVE_LINE_POSITIONS.has(value) || DEFENSIVE_LINE_POSITIONS.has(value) || ["K", "P", "FB"].includes(value)) return (percentages?.heavy ?? 6) / 100;
-  return 0;
+  return NoDrip.chance(position,percentages);
 }
 
 export function unlockedElbowPoolForPosition(position) {
@@ -158,12 +155,12 @@ function applyCatalogItem(loadouts, label, item, slots, changes, state, cleanApp
   if (oldItems.length !== 1 || oldItems[0] !== item.itemName) changes.push({ category: label, slots, oldItems, newItem: item.itemName, displayName: equipmentDisplayName(item.itemName) });
 }
 
-export function applyAsymmetricElbowGear(loadouts, pool, rng, changes, state, position, respectSelection = false) {
+export function applyAsymmetricElbowGear(loadouts, pool, rng, changes, state, position, respectSelection = false, fitOptions={}) {
   if (!pool.length) return;
   let left;
   for (const side of ["Left", "Right"]) {
     const slot = `${side}ElbowWear`;
-    const available = pool.filter(item => canGenerateEquipment(loadouts, item, [slot], position));
+    const available = pool.filter(item => canGenerateEquipment(loadouts, item, [slot], position,fitOptions));
     if (!available.length) continue;
     let chosen = choose(available, rng);
     const bandTypes = ["bicep-band", "sweatband"];
@@ -177,28 +174,29 @@ export function applyAsymmetricElbowGear(loadouts, pool, rng, changes, state, po
   }
 }
 
-export function applyUnlockedRandomizerEquipment(loadouts, target, rng, perCategoryChance = 0.10, state = createGeneratedEquipmentState(loadouts), configuration, allowGloves = true) {
+export function applyUnlockedRandomizerEquipment(loadouts, target, rng, perCategoryChance = 0.10, state = createGeneratedEquipmentState(loadouts), configuration, allowGloves = true, fitOptions={}) {
   const changes = [];
   const selected = (key, pool) => configuredModItems(pool, configuration, key);
-  const chance = key => modCategoryChance(configuration, key, key === "undershirts" ? 0 : perCategoryChance);
+  const chance = key => modCategoryChance(configuration, key, key === "undershirts" ? 0 : ["spats","balaclavas"].includes(key) ? Math.min(perCategoryChance,.05) : perCategoryChance);
   const rollItem = (key, label, pool, slots) => {
     pool = selected(key, pool);
-    const item=rollCompatibleItem(pool,item=>canGenerateEquipment(loadouts,item,slots??item.slots,target.position),rng,chance(key));
+    const item=rollCompatibleItem(pool,item=>canGenerateEquipment(loadouts,item,slots??item.slots,target.position,fitOptions),rng,chance(key));
     if(item)applyCatalogItem(loadouts,label,item,slots,changes,state);
   };
   const sleeves = selected("armSleeves", UNLOCKED_POOLS.armSleeves);
   if (sleeves.length && rng() < chance("armSleeves")) {
-    const left = choose(sleeves, rng);
-    const right = /^GearArmSleeve_Baggy_/i.test(left.itemName) ? left : choose(sleeves, rng);
-    const paired = [left, right].find(item => /^GearArmSleeve_Baggy_/i.test(item.itemName));
+    const available=side=>sleeves.filter(item=>canGenerateEquipment(loadouts,item,/^GearArmSleeve_Baggy_/i.test(item.itemName)?['LeftArmWear','RightArmWear']:[side],target.position,fitOptions));
+    const left = choose(available('LeftArmWear'), rng);
+    const right = /^GearArmSleeve_Baggy_/i.test(left?.itemName??'') ? left : choose(available('RightArmWear'), rng);
+    const paired = [left, right].find(item => /^GearArmSleeve_Baggy_/i.test(item?.itemName??''));
     if (paired) applyCatalogItem(loadouts, "Arm sleeves", paired, ["LeftArmWear", "RightArmWear"], changes, state);
     else {
       applyCatalogItem(loadouts, "Left arm sleeve", left, ["LeftArmWear"], changes, state);
       applyCatalogItem(loadouts, "Right arm sleeve", right, ["RightArmWear"], changes, state);
     }
   }
-  const elbowPool = selected("elbowGear", unlockedElbowPoolForPosition(target.position)).filter(item=>configuration?.elbowGear?.items!==undefined||!/^GearBicepBand_/i.test(item.itemName));
-  if (elbowPool.length && rng() < chance("elbowGear")) applyAsymmetricElbowGear(loadouts, elbowPool, rng, changes, state, target.position, Boolean(configuration));
+  const elbowPool = selected("elbowGear", unlockedElbowPoolForPosition(target.position)).filter(item=>configuration?.elbowGear?.items!==undefined||defaultUnlockedElbowItem(item));
+  if (elbowPool.length && rng() < chance("elbowGear")) applyAsymmetricElbowGear(loadouts, elbowPool, rng, changes, state, target.position, Boolean(configuration),fitOptions);
   rollItem("cleats", "Cleats", brandedEquipmentItems("Cleats", target.branding).filter(canGenerateItem), ["LeftShoe", "RightShoe"]);
   const brandedGloves = brandedEquipmentItems("Gloves", target.branding).filter(item => /^GearHand_(?!None)/i.test(item.itemName));
   const teamColorGloves = brandedGloves.filter(item => /_(?:TeamColor|SecondaryColor)$/i.test(item.itemName));
@@ -212,13 +210,15 @@ export function applyUnlockedRandomizerEquipment(loadouts, target, rng, perCateg
   rollItem("thighPads", "Thigh pads", UNLOCKED_POOLS.thighPads, ["LeftThighWear", "RightThighWear"]);
   rollItem("towels", "Towel", UNLOCKED_POOLS.towels, ["Towel"]);
   rollItem("socks", "Socks", UNLOCKED_POOLS.socks, ["InnerSocks"]);
+  rollItem("spats", "Spats", UNLOCKED_SPATS, ["LeftSpat", "RightSpat"]);
   return changes;
 }
 
-export function applyRawRandomizerEquipment(loadouts, rng, perCategoryChance = 0.10, state = createGeneratedEquipmentState(loadouts), position = "", configuration) {
+export function applyRawRandomizerEquipment(loadouts, rng, perCategoryChance = 0.10, state = createGeneratedEquipmentState(loadouts), position = "", configuration,fitOptions={}) {
+  fitOptions={...fitOptions,usingRawAccessoriesMod:true};
   if (state) state.options = {...state.options, usingRawAccessoriesMod: true};
   const changes = [];
-  const roll=(category,pool,slots)=>rollCompatibleItem(configuredModItems(pool,configuration,category),item=>canGenerateEquipment(loadouts,item,slots??item.slots,position),rng,modCategoryChance(configuration,category,perCategoryChance));
+  const roll=(category,pool,slots)=>rollCompatibleItem(configuredModItems(pool,configuration,category),item=>canGenerateEquipment(loadouts,item,slots??item.slots,position,fitOptions),rng,modCategoryChance(configuration,category,perCategoryChance));
   const neckwear=roll('neckwear',RAW_ACCESSORIES_POOLS.neckwear,null);
   if(neckwear)applyCatalogItem(loadouts,'Neckwear',neckwear,null,changes,state);
   const caps=roll('skullcaps',RAW_ACCESSORIES_POOLS.skullcaps,['GuardianCap']);
@@ -228,21 +228,21 @@ export function applyRawRandomizerEquipment(loadouts, rng, perCategoryChance = 0
   const sleeves = configuredModItems(RAW_ACCESSORIES_POOLS.armSleeves, configuration, 'armSleeves');
   if (sleeves.length && rng() < modCategoryChance(configuration, 'armSleeves', 0)) {
     for (const side of ['Left', 'Right']) {
-      const slots = [`${side}ArmWear`], available = sleeves.filter(item => canGenerateEquipment(loadouts, item, slots, position));
+      const slots = [`${side}ArmWear`], available = sleeves.filter(item => canGenerateEquipment(loadouts, item, slots, position,fitOptions));
       if (available.length) applyCatalogItem(loadouts, `${side} RAW Jamo sleeve`, choose(available, rng), slots, changes, state);
     }
   }
   return changes;
 }
 
-export function applyEquipmentTruckRandomizerEquipment(loadouts, rng, perCategoryChance = 0.10, state = createGeneratedEquipmentState(loadouts), position = "", configuration) {
+export function applyEquipmentTruckRandomizerEquipment(loadouts, rng, perCategoryChance = 0.10, state = createGeneratedEquipmentState(loadouts), position = "", configuration,fitOptions={}) {
   const changes = [];
   for (const [category, label, slots] of [
     ["armSleeves", "Equipment Truck arm sleeves", ["LeftArmWear", "RightArmWear"]], ["visors", "Equipment Truck visor", ["Visor"]],
     ["chinCovers", "Brand logo chin cover", ["Reserved"]], ["waistPlaycalls", "Waist playcall band", ["HeadBand"]],
     ["handwarmers", "Standard logo handwarmer", ["WaistWear"]], ["thighPads", "Jersey number + cross thigh pads", ["LeftThighWear", "RightThighWear"]]
   ]) {
-    const item=rollCompatibleItem(configuredModItems(EQUIPMENT_TRUCK_POOLS[category],configuration,category),item=>slots.every(slot=>item.slots.includes(slot))&&canGenerateEquipment(loadouts,item,slots,position),rng,modCategoryChance(configuration,category,category==='handwarmers'?0:perCategoryChance));
+    const item=rollCompatibleItem(configuredModItems(EQUIPMENT_TRUCK_POOLS[category],configuration,category),item=>slots.every(slot=>item.slots.includes(slot))&&canGenerateEquipment(loadouts,item,slots,position,fitOptions),rng,modCategoryChance(configuration,category,category==='handwarmers'?0:perCategoryChance));
     if(item)applyCatalogItem(loadouts,label,item,slots,changes,state,true);
   }
   return changes;
@@ -251,9 +251,9 @@ export function applyEquipmentTruckRandomizerEquipment(loadouts, rng, perCategor
 export function applyModdedRandomizerEquipment(loadouts,target,rng,chance,state,options={}){
   state??=createGeneratedEquipmentState(loadouts);
   const providers=[
-    ['unlocked',options.usingUnlockedMod,(outfits,local)=>applyUnlockedRandomizerEquipment(outfits,target,rng,chance,local,options.modPools?.unlocked,!options.donorOnlyGlovesPositions?.includes(target.position))],
-    ['raw',options.usingRawAccessoriesMod,(outfits,local)=>applyRawRandomizerEquipment(outfits,rng,chance,local,target.position,options.modPools?.raw)],
-    ['eljax',options.usingEquipmentTruckMod,(outfits,local)=>applyEquipmentTruckRandomizerEquipment(outfits,rng,chance,local,target.position,options.modPools?.eljax)]
+    ['unlocked',options.usingUnlockedMod,(outfits,local)=>applyUnlockedRandomizerEquipment(outfits,target,rng,chance,local,options.modPools?.unlocked,!options.donorOnlyGlovesPositions?.includes(target.position),options)],
+    ['raw',options.usingRawAccessoriesMod,(outfits,local)=>applyRawRandomizerEquipment(outfits,rng,chance,local,target.position,options.modPools?.raw,options)],
+    ['eljax',options.usingEquipmentTruckMod,(outfits,local)=>applyEquipmentTruckRandomizerEquipment(outfits,rng,chance,local,target.position,options.modPools?.eljax,options)]
   ].filter(([,enabled])=>enabled);
   if(state)state.options={...state.options,usingRawAccessoriesMod:Boolean(options.usingRawAccessoriesMod)};
   if(providers.length<2)return Object.fromEntries(providers.map(([origin,,apply])=>[origin,apply(loadouts,state)]));
@@ -288,7 +288,7 @@ export function applyNoDripEquipment(loadouts, position) {
   return { position: String(position ?? ""), changes };
 }
 
-function finalizeEquipment(elements, rng, facePaintPool, position, usingUnlockedMod = false) {
+function finalizeEquipment(elements, rng, facePaintPool, position, usingUnlockedMod = false, fitOptions={}) {
   for (const element of elements) {
     if (slotOf(element) === "InnerShirt" && element.itemAssetName === BROKEN_HOODIE_ASSET) {
       element.itemAssetName = HOODIE_ASSET;
@@ -297,7 +297,7 @@ function finalizeEquipment(elements, rng, facePaintPool, position, usingUnlocked
     element.itemAssetName = normalizeMouthpieceColor(element.itemAssetName, MOUTHGUARD_COLOR_WEIGHTS[Math.floor(rng() * MOUTHGUARD_COLOR_WEIGHTS.length)]);
   }
   setSlot(elements, "FacePaint", rollFacePaint(rng, facePaintPool.options, position, facePaintPool.diagnostics));
-  return enforceArmSleeveCompatibility(elements, { usingUnlockedMod });
+  return enforceArmSleeveCompatibility(elements, { usingUnlockedMod,usingRawAccessoriesMod:fitOptions.usingRawAccessoriesMod===true });
 }
 
 function playerOnFieldLoadouts(rawData) {
@@ -327,15 +327,24 @@ function visualsFor(record, visualsTableId, visualsRecords) {
 const choose = (items, rng) => items[Math.floor(rng() * items.length)];
 const donorSummary = donor => ({ row: donor.row, firstName: donor.firstName, lastName: donor.lastName, team: donor.team, position: donor.position, classYear: donor.classYear, redshirtStatus: donor.redshirtStatus, jersey: donor.jersey, overall: donor.overall });
 
-export function collectEquipmentDonors(playerRecords, visualsRecords, visualsTableId, { rosterRows = null, fcsTeamIndexes = new Set(), teamNames = new Map(), teamApparel = new Map(), playerApparel = new Map() } = {}) {
+export function collectEquipmentDonors(playerRecords, visualsRecords, visualsTableId, { rosterRows = null, fcsTeamIndexes = new Set(), teamNames = new Map(), teamApparel = new Map(), playerApparel = new Map(), topPerPosition = null } = {}) {
+  if(topPerPosition!==null&&(!Number.isInteger(topPerPosition)||topPerPosition<1))throw Error('Donor validation count must be a positive whole number.');
   const donors = [];
-  playerRecords.forEach((record, row) => {
+  const counts=topPerPosition===null?null:new Map();
+  const visit=(record, row) => {
     if (!record || record.isEmpty || isPlaceholder(record) || (rosterRows && !rosterRows.has(row))) return;
     if (fcsTeamIndexes.has(Number(sf(record, "TeamIndex")))) return;
     if (!["sophomore", "junior", "senior"].includes(String(sf(record, "SchoolYear") ?? "").toLowerCase())) return;
-    try { donors.push({ record, ...playerInfo(record, row, teamNames, teamApparel, playerApparel), visuals: visualsFor(record, visualsTableId, visualsRecords) }); }
+    const position=String(sf(record,'Position')??'Unknown');
+    if(counts&&(counts.get(position)??0)>=topPerPosition)return;
+    try { donors.push({ record, ...playerInfo(record, row, teamNames, teamApparel, playerApparel), visuals: visualsFor(record, visualsTableId, visualsRecords) });if(counts)counts.set(position,(counts.get(position)??0)+1); }
     catch { /* Preserve the existing exclusion of unusable donor visuals. */ }
-  });
+  };
+  if(counts){
+    // Quickstart settings only need its actual top donors. Validate in rating
+    // order, falling through unusable outfits until each position is filled.
+    [...playerRecords.entries()].sort(([a,first],[b,second])=>Number(sf(second,'OverallRating')??0)-Number(sf(first,'OverallRating')??0)||a-b).forEach(([row,record])=>visit(record,row));
+  }else playerRecords.forEach(visit);
   return donors;
 }
 
@@ -467,16 +476,16 @@ export function patchFreshmanEquipment(playerRecords, visualsRecords, visualsTab
     const branded = assignCompatibleBrandEquipment(targetVisuals.loadouts, target, brandCandidates, usedDonors, rng);
     donorUses.push(...branded.donorUses.map(use => ({ group: use.group, donor: donorSummary(use.donor) })));
     targetVisuals.loadouts.forEach(loadout => {
-      sleeveCompatibilityCorrections += donorOnly?enforceArmSleeveCompatibility(loadout.loadoutElements,{usingUnlockedMod}).length:finalizeEquipment(loadout.loadoutElements, rng, facePaintPool, target.position, usingUnlockedMod).length;
+      sleeveCompatibilityCorrections += donorOnly?enforceArmSleeveCompatibility(loadout.loadoutElements,{usingUnlockedMod,usingRawAccessoriesMod:options.usingRawAccessoriesMod===true}).length:finalizeEquipment(loadout.loadoutElements, rng, facePaintPool, target.position, usingUnlockedMod,options).length;
     });
     const generated = !donorOnly&&(usingUnlockedMod || options.usingRawAccessoriesMod || options.usingEquipmentTruckMod) ? createGeneratedEquipmentState(targetVisuals.loadouts) : null;
     const pools=donorOnly?{}:applyModdedRandomizerEquipment(targetVisuals.loadouts,target,rng,unlockedItemChance,generated,options);
     let unlockedChanges=pools.unlocked??[],rawChanges=pools.raw??[],equipmentTruckChanges=pools.eljax??[];
-    const noDrip = !donorOnly&&noDripProfile && rng() < noDripChanceForPosition(target.position, options.noDripPercentages);
+    const noDrip = (!donorOnly||options.allowDonorOnlyNoDrip===true)&&noDripProfile && rng() < noDripChanceForPosition(target.position, options.noDripPercentages);
     const noDripChanges = noDrip ? applyNoDripEquipment(targetVisuals.loadouts, target.position).changes : [];
     const brandCorrections = guardBrandEquipment(targetVisuals.loadouts, target, originalLoadouts);
     const facePaint = targetVisuals.loadouts.map((loadout, index) => { const asset = loadout.loadoutElements.find(element => slotOf(element) === "FacePaint")?.itemAssetName; return { loadout: index, asset, source: facePaintSource(asset, facePaintPool.diagnostics) }; });
-    targetVisuals.loadouts.forEach(loadout => { sleeveCompatibilityCorrections += enforceArmSleeveCompatibility(loadout.loadoutElements, { usingUnlockedMod }).length; });
+    targetVisuals.loadouts.forEach(loadout => { sleeveCompatibilityCorrections += enforceArmSleeveCompatibility(loadout.loadoutElements, { usingUnlockedMod,usingRawAccessoriesMod:options.usingRawAccessoriesMod===true }).length; });
     const generatedCorrections = enforceGeneratedEquipmentCompatibility(targetVisuals.loadouts, generated, target.position);
     enforceRandomizerPositionRestrictions(targetVisuals.loadouts, target.position);
     sleeveCompatibilityCorrections += generatedCorrections.length;

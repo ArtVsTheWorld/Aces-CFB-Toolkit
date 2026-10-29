@@ -4,7 +4,7 @@ import { ABOVE_KNEE_PANTS, CUTOFF_PANTS, STANDARD_PANTS, LOWER_JERSEY_REPLACEMEN
 import { enforceRelaxedTeeCompatibility } from "./compatibility.js";
 
 export const DEFAULT_LOWER_JERSEY_CAPS = Object.freeze(Object.fromEntries(POSITION_GROUPS.map(group => [group, ["OL", "DT"].includes(group) ? 0 : 100])));
-export const DEFAULT_CUTOFF_PANTS_CAPS = Object.freeze(Object.fromEntries(POSITION_GROUPS.map(group => [group, ["WR", "CB", "FS", "SS"].includes(group) ? 5 : 0])));
+export const DEFAULT_CUTOFF_PANTS_CAPS = Object.freeze({ QB: 0, HB: 5, FB: 0, WR: 10, TE: 5, OL: 0, EDGE: 5, DT: 0, LB: 5, CB: 10, FS: 10, SS: 10, 'K/P': 20 });
 export function normalizeUniformCaps(value, defaults, label) {
   if (value !== undefined && (!value || typeof value !== "object" || Array.isArray(value))) throw new Error(`${label}: invalid position caps.`);
   for (const group of Object.keys(value ?? {})) if (!POSITION_GROUPS.includes(group)) throw new Error(`${label}: unknown position group ${group}.`);
@@ -18,11 +18,18 @@ const fieldOutfits = raw => { try { return JSON.parse(raw).loadouts.filter(outfi
 const has = (outfits, slot, assets) => outfits.some(outfit => assets.has(uniformItem(outfit.loadoutElements, slot)));
 const lowest = new Set(Object.values(LOWER_JERSEY_REPLACEMENTS));
 const eligibleJerseys = new Set(Object.keys(LOWER_JERSEY_REPLACEMENTS));
+function lowerJerseyReplacement(elements,asset){
+  const replacement=LOWER_JERSEY_REPLACEMENTS[asset];
+  // Keep existing cutoff pants: the lowest untucked equivalent provides the
+  // requested lower jersey without creating an incompatible tucked outfit.
+  return replacement&&uniformItem(elements,'OuterPants')===CUTOFF_PANTS&&!CUTOFF_JERSEYS.has(replacement)
+    ? 'Gear_JerseyStyle_RolledLowest_Untucked' : replacement;
+}
 // Only the explicit cutoff pass may change these slots to create eligibility.
 // Keep leg layers and all other equipment, including element metadata, intact.
-function adjustCutoffOutfit(elements) {
+function adjustCutoffOutfit(elements, options={}) {
   const base = uniformItem(elements, "InnerPants");
-  if (base && !/(?:^|_)None$/i.test(base)) return null;
+  if (!options.allowCutoffLegLayers && base && !/(?:^|_)None$/i.test(base)) return null;
   const changes = [];
   const set = (slot, newItem) => {
     const element = elements.find(element => element.slotType === slot), oldItem = element?.itemAssetName;
@@ -54,7 +61,9 @@ export function buildUniformStylePlan(entries, options, rng) {
     const [cohort, teamIndex, group] = JSON.parse(key), total = values.length;
     const existingLower = values.filter(entry => has(entry.outfits, "OuterShirt", lowest)).length;
     const existingCutoff = values.filter(entry => has(entry.outfits, "OuterPants", new Set([CUTOFF_PANTS]))).length;
-    const lowerTarget = Math.floor(total * lowerCaps[group] / 100), cutoffTarget = Math.floor(total * pantsCaps[group] / 100);
+    // A fractional cutoff allowance needs one whole-player slot. Keep the
+    // chance roll separate so non-fill settings still produce rare additions.
+    const lowerTarget = Math.floor(total * lowerCaps[group] / 100), cutoffTarget = Math.ceil(total * pantsCaps[group] / 100);
     const lowerCandidates = values.filter(entry => entry.editable && !has(entry.outfits, "OuterShirt", lowest) && has(entry.outfits, "OuterShirt", eligibleJerseys));
     if (options.lowerRolledJerseyFix) for (const entry of selectFrequencyCandidates(lowerCandidates, Math.max(0, lowerTarget - existingLower), lowerCaps[group], options.fillFrequencies?.lowerJersey, rng)) lower.add(entry.visualsRow);
     const candidates = [], standards = []; let incompatible = 0;
@@ -65,12 +74,12 @@ export function buildUniformStylePlan(entries, options, rng) {
       // pants. Plan for a possible shirt addition; Apply checks the actual
       // rolled result again, including the optional no-undershirt outcome.
       if(options.rolledJerseyFix)for(const outfit of projected){const elements=outfit.loadoutElements,shirt=elements.find(e=>e.slotType==='InnerShirt');if(uniformItem(elements,'OuterShirt')==='Gear_JerseyStyle_RolledLow'&&['Undershirt_None','Gear_Undershirt_Hoodie'].includes(shirt?.itemAssetName??'Undershirt_None')){if(shirt)shirt.itemAssetName='Gear_Undershirt_CompressionTCrewSleeveless';else elements.push({slotType:'InnerShirt',itemAssetName:'Gear_Undershirt_CompressionTCrewSleeveless'});}}
-      if (lower.has(entry.visualsRow)) for (const outfit of projected) for (const element of outfit.loadoutElements) if (element.slotType === "OuterShirt" && LOWER_JERSEY_REPLACEMENTS[element.itemAssetName]) element.itemAssetName = LOWER_JERSEY_REPLACEMENTS[element.itemAssetName];
+      if (lower.has(entry.visualsRow)) for (const outfit of projected) for (const element of outfit.loadoutElements) if (element.slotType === "OuterShirt" && LOWER_JERSEY_REPLACEMENTS[element.itemAssetName]) element.itemAssetName = lowerJerseyReplacement(outfit.loadoutElements,element.itemAssetName);
       const source = outfit => uniformItem(outfit.loadoutElements, "OuterPants");
       const applicable = projected.filter(outfit => source(outfit) === ABOVE_KNEE_PANTS || options.replaceStandardWithCutoff && source(outfit) === STANDARD_PANTS);
       if (!applicable.length) continue;
-      if (options.adjustOutfitForCutoff) for (const outfit of applicable) adjustCutoffOutfit(outfit.loadoutElements);
-      if (applicable.some(outfit => cutoffPantsConflict(outfit.loadoutElements))) { incompatible++; continue; }
+      if (options.adjustOutfitForCutoff) for (const outfit of applicable) adjustCutoffOutfit(outfit.loadoutElements, options);
+      if (applicable.some(outfit => cutoffPantsConflict(outfit.loadoutElements,{allowLegLayers:options.allowCutoffLegLayers===true}))) { incompatible++; continue; }
       (applicable.some(outfit => source(outfit) === STANDARD_PANTS) ? standards : candidates).push(entry);
     }
     if (options.cutoffPantsFix) {
@@ -87,7 +96,7 @@ export function applyUniformStylePlan(loadouts, originalOutfits, visualsRow, pla
     for (const element of outfit.loadoutElements) {
       const oldItem = element.itemAssetName;
       if (element.slotType === "OuterShirt" && plan.lower.has(visualsRow) && LOWER_JERSEY_REPLACEMENTS[oldItem]) {
-        element.itemAssetName = LOWER_JERSEY_REPLACEMENTS[oldItem];
+        element.itemAssetName = lowerJerseyReplacement(outfit.loadoutElements,oldItem);
         changes.push({ type: "lower", slot: element.slotType, oldItem, newItem: element.itemAssetName });
       }
     }
@@ -97,11 +106,11 @@ export function applyUniformStylePlan(loadouts, originalOutfits, visualsRow, pla
     const element = outfit.loadoutElements.find(element => element.slotType === "OuterPants");
     if (!element || ![ABOVE_KNEE_PANTS, STANDARD_PANTS].includes(element.itemAssetName)) return;
     if (options.adjustOutfitForCutoff) {
-      const adjustments = adjustCutoffOutfit(outfit.loadoutElements);
+      const adjustments = adjustCutoffOutfit(outfit.loadoutElements, options);
       if (adjustments === null) return;
       changes.push(...adjustments);
     }
-    if (cutoffPantsConflict(outfit.loadoutElements)) return;
+    if (cutoffPantsConflict(outfit.loadoutElements,{allowLegLayers:options.allowCutoffLegLayers===true})) return;
     const oldItem = element.itemAssetName; element.itemAssetName = CUTOFF_PANTS;
     changes.push({ type: "cutoff", slot: "OuterPants", oldItem, newItem: CUTOFF_PANTS, originalItem: original });
   });

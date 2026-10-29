@@ -100,10 +100,10 @@ test('Truck sleeves use normal sleeve compatibility; No Drip and final reports d
   const state = createGeneratedEquipmentState(loadouts);
   const changes = applyEquipmentTruckRandomizerEquipment(loadouts, mulberry32(9), 0, state, 'WR', settings('armSleeves', [sleeve.itemName]));
   enforceEquipmentCompatibility(loadouts[0].loadoutElements);
-  assert.equal(get(loadouts, 'LeftWristWear'), 'GearWrist_None');
-  assert.equal(get(loadouts, 'RightElbowWear'), 'ElbowGear_None');
+  assert.equal(get(loadouts, 'LeftWristWear'), 'GearWrist_wristBandCoach_Black');
+  assert.equal(get(loadouts, 'RightElbowWear'), 'ElbowGear_elbowSweatbandThin_White');
   assert.deepEqual(enforceGeneratedEquipmentCompatibility(loadouts, state, 'WR'), []);
-  assert.equal(finalGeneratedChanges(loadouts, changes).length, 1);
+  assert.equal(finalGeneratedChanges(loadouts, changes).length, 0);
   applyNoDripEquipment(loadouts, 'WR');
   assert.equal(get(loadouts, 'LeftArmWear'), 'ArmSleeve_None');
   assert.deepEqual(finalGeneratedChanges(loadouts, changes), []);

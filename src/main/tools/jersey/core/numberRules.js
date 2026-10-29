@@ -1,3 +1,4 @@
+import {promotionChance,rollPromotion} from '../promotionChances.js';
 // Number rules helpers: determine legality, promotion eligibility,
 // whether a player needs renumbering, and a summary reason object.
 import RULES from "./rules.js";
@@ -20,7 +21,7 @@ export function isLegalNumber(player) {
 export function isPromotionEligible(player) {
     if (isPromotionBlockedFreshman(player)) return false;
     const rule = RULES[player.Position];
-    if (!rule || !rule.promoteChance) return false;
+    if (!rule || !promotionChance(player)) return false;
     const secondaryGroup = rule.preferred[1];
     if (!secondaryGroup) return false;
     return secondaryGroup.includes(player.JerseyNum);
@@ -32,10 +33,10 @@ export function needsRenumber(player) {
     if (!rule) return false;
     if (!isLegalNumber(player)) return true;
     if (isPromotionBlockedFreshman(player)) return false;
-    if (!rule.promoteChance) return false;
+    if (!promotionChance(player)) return false;
     const secondaryGroup = rule.preferred[1];
     if (!secondaryGroup || !secondaryGroup.includes(player.JerseyNum)) return false;
-    player.isPromotionAttempt = Math.random() < rule.promoteChance;
+    player.isPromotionAttempt = rollPromotion(player);
     return player.isPromotionAttempt;
 }
 

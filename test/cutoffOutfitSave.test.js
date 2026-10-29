@@ -13,6 +13,18 @@ import { CUTOFF_PANTS, cutoffPantsConflict } from '../src/main/tools/equipment/c
 import { enforceEquipmentCompatibility } from '../src/main/tools/equipment/core/compatibility.js';
 import { takePlan } from '../src/main/tools/jersey/planStore.js';
 
+test('default Patcher cutoff frequency produces a small-roster Preview and applies exactly',{timeout:120000},async t=>{
+ const directory=fs.mkdtempSync(path.join(os.tmpdir(),'cfb-default-cutoff-'));t.after(()=>fs.rmSync(directory,{recursive:true,force:true}));
+ const source=path.resolve('../EXAMPLE SAVES VANILLA GAME/DYNASTY-LSUTESTSAVEPRESZN'),schemaPath=path.resolve('resources/engine-data/C27_486_6.gz'),savePath=path.join(directory,'DYNASTY-DEFAULT-CUTOFF'),hash=file=>createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+ fs.copyFileSync(source,savePath);const original=hash(source),before=await loadEquipmentTables(savePath,schemaPath),old=snapshotVisualRawData(before.visuals.records),reports=new ReportService(path.join(directory,'reports'));
+ const preview=await runEquipmentPatcher({savePath,schemaPath,reports,mode:'preview',options:{cutoffPantsFix:true,includedTeams:['LSU'],positions:['WR'],protectOriginalEaPlayers:false}}),plan=takePlan(preview.planId);
+ assert.equal(hash(savePath),original);assert.ok(preview.details.totalPreviewRows>0);assert.ok(plan.assignments.length>0);const population=preview.details.uniformPopulation.find(p=>p.group==='WR');assert.ok(population.total<20);assert.equal(population.cutoffCap,10);assert.equal(population.cutoffTarget,Math.ceil(population.total*.1));assert.ok(population.cutoffAfter>0&&population.cutoffAfter<=population.cutoffTarget);
+ const expected=new Map(plan.assignments.map(c=>[c.row,c.newValue])),applied=await runEquipmentPatcher({savePath,schemaPath,reports,mode:'apply',options:{planId:preview.planId}}),after=await loadEquipmentTables(savePath,schemaPath);assert.equal(hash(applied.backupPath),original);
+ for(const[row,raw]of old)if(typeof raw==='string')assert.equal(sf(after.visuals.records[row],'RawData'),expected.get(row)??raw);
+ for(const raw of expected.values())for(const outfit of JSON.parse(raw).loadouts.filter(l=>l.loadoutType==='PlayerOnField'))if(outfit.loadoutElements.some(e=>e.slotType==='OuterPants'&&e.itemAssetName===CUTOFF_PANTS))assert.equal(cutoffPantsConflict(outfit.loadoutElements),null);
+ assert.equal(hash(source),original);assert.equal(fs.statSync(savePath).size,fs.statSync(source).size);
+});
+
 const fixture = path.resolve('../EXAMPLE SAVES VANILLA GAME/DYNASTY-LSUTESTSAVEPRESZN'), schemaPath = path.resolve('resources/engine-data/C27_486_6.gz');
 const hash = file => createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 const set = (elements, slotType, itemAssetName) => { const element = elements.find(e => e.slotType === slotType); if (element) element.itemAssetName = itemAssetName; else elements.push({ slotType, itemAssetName }); };

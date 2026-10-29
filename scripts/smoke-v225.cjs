@@ -36,7 +36,14 @@ app.whenReady().then(async()=>{
  await require('./lib/v225-talent-intent.cjs')(window);
  await require('./lib/v225-unified-teams.cjs')(window,root);
  await execute(`document.getElementById('roster-configure-teams').click();void 0;`);
- for(const width of [1500,760,520]){window.setContentSize(width,1050);await execute('new Promise(r=>setTimeout(r,120))');await execute(`uiCheck(document.querySelector('dialog').scrollWidth<=document.querySelector('dialog').clientWidth+2,'Modal fits viewport');uiCheck(document.querySelector('.roster-batch-table').scrollWidth>0,'Table has internal scroll');void 0;`);fs.writeFileSync(path.join(root,'outputs/v225-batch-'+width+'.png'),(await window.webContents.capturePage()).toPNG());}
+ const teamGeometry=[];
+ for(const [width,height] of [[1920,1080],[1500,1050],[1366,768],[760,900],[520,900]]){
+  window.setContentSize(width,height);await execute('new Promise(r=>setTimeout(r,120))');
+  const geometry=await execute(`(()=>{const d=document.querySelector('dialog'),b=d.querySelector('.configuration-body'),t=d.querySelector('.roster-batch-table'),f=d.querySelector('.configuration-footer').getBoundingClientRect();uiCheck(d.scrollWidth<=d.clientWidth+2,'Modal fits viewport');uiCheck(b.scrollWidth<=b.clientWidth+2,'Body fits viewport');uiCheck(f.bottom<=innerHeight+1,'Footer fits viewport');uiCheck(t.scrollWidth>0,'Table has internal scroll');if(innerWidth>=1366){uiCheck(d.clientWidth>=Math.min(1680,innerWidth*.94)-4,'Wide team dialog');uiCheck(t.scrollWidth<=t.clientWidth+2,'All team columns fit without horizontal scroll');}t.scrollLeft=0;b.scrollTop=0;return{viewport:innerWidth,modal:d.clientWidth,table:t.clientWidth,tableScroll:t.scrollWidth,body:b.clientHeight,bodyScroll:b.scrollHeight};})()`);
+  teamGeometry.push(geometry);fs.writeFileSync(path.join(root,'outputs/v250-team-config-'+width+'.png'),(await window.webContents.capturePage()).toPNG());
+ }
+ fs.writeFileSync(path.join(root,'outputs/v250-team-config-geometry.json'),JSON.stringify(teamGeometry,null,2));
+ console.log('PASS team list columns fit at 1366/1500/1920, bounded scrolling on smaller windows and visible footer.');
  await execute(`document.querySelector('dialog [data-config-cancel]').click();schemeEntry=[...document.querySelectorAll('.configuration-entry')].find(e=>e.querySelector('strong')?.textContent==='Offensive & Defensive Schemes');schemeEntry.querySelector('button').click();void 0;`);window.setContentSize(1500,1050);await execute('new Promise(r=>setTimeout(r,120))');fs.writeFileSync(path.join(root,'outputs/v225-schemes.png'),(await window.webContents.capturePage()).toPNG());
  if(errors.length)throw Error(errors.join('\n'));console.log('PASS: native scheme modal, composition, Cancel, materialized batch frequencies, locks, per-team editor, navigation, preset serialization, responsive 1500/760/520.');window.destroy();
  if(path.dirname(directory)!==path.resolve(os.tmpdir())||!path.basename(directory).startsWith('cfb-v225-ui-'))throw Error('Unsafe cleanup');await fs.promises.rm(directory,{recursive:true,force:true,maxRetries:4,retryDelay:150});app.exit(0);

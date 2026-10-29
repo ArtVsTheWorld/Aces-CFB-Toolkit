@@ -1,20 +1,99 @@
-.mapper-workbench .ops-section-header{grid-template-columns:31px minmax(0,1fr) auto}.mapper-workbench .ops-section-header>button{margin-left:auto;flex-shrink:0}.mapper-library-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-bottom:20px}.mapper-library-stats strong{display:block;font-size:26px;line-height:1.2}.mapper-library-stats span{display:block;color:var(--muted);font-size:12px;margin-top:5px}.mapper-library-actions{display:flex;gap:10px;flex-wrap:wrap;margin:0!important}.mapper-rule-actions{display:flex;gap:8px;flex-wrap:wrap}.mapper-empty{padding:22px 0;color:var(--muted)}.mapper-diagnostics{margin-top:14px}
-.mapper-rule-row{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--border)}.mapper-rule-row>div:first-of-type{flex:1;min-width:0;overflow-wrap:anywhere}.mapper-rule-row p{margin:5px 0}.mapper-rule-row small{color:var(--muted)}.mapper-rule-number{background:var(--action-soft);color:var(--action);font-weight:700;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;flex-shrink:0}
-.mapper-dialog{width:min(1080px,95vw)}.mapper-rule-dialog{width:min(880px,95vw)}.mapper-dialog .configuration-body{padding:20px 24px}.mapper-dialog .configuration-description{margin:0;padding:14px 24px}.mapper-dialog label{margin:0}.mapper-dialog label:has(>select),.mapper-dialog label:has(>input:not([type=checkbox])){display:grid;gap:6px;align-items:start}.mapper-dialog h3{margin:0 0 12px;line-height:1.3}.mapper-dialog [hidden]{display:none!important}
-.mapper-browser-filters{display:grid;grid-template-columns:minmax(180px,2fr) repeat(4,minmax(100px,1fr));gap:10px;align-items:end;margin-bottom:16px}.mapper-player-search{display:flex;gap:10px;align-items:end}.mapper-player-search label{flex:1}.mapper-donors{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.mapper-library-toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px 0}.mapper-library-toolbar>div{display:flex;gap:6px;flex-shrink:0}.mapper-item-list{display:grid}.mapper-item{display:grid;grid-template-columns:minmax(0,1fr) minmax(140px,auto);align-items:start;gap:18px;padding:16px 0;border-top:1px solid var(--border)}.mapper-item-description{min-width:0;overflow-wrap:anywhere}.mapper-item-description>strong{display:block;font-size:14px}.mapper-item small{display:block;color:var(--muted);margin-top:5px}.mapper-item-actions{display:grid;gap:8px;justify-items:stretch;max-width:220px}.mapper-slot-tag{font-size:12px;color:var(--muted);text-align:right}.mapper-wearers,.mapper-variants{margin-top:8px;font-size:12px}.mapper-wearers ul{max-height:180px;overflow:auto}.mapper-variants label{margin-top:8px!important;max-width:520px}.mapper-readonly{max-width:540px}.mapper-back{margin-bottom:18px}.mapper-slot-notice{margin:0 0 14px}
-.mapper-rule-form{display:grid;gap:24px}.mapper-flow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.mapper-flow section{display:grid;gap:8px;align-content:start;padding:16px;border:1px solid var(--border);border-radius:5px}.mapper-flow h3{margin:0}.mapper-flow strong{overflow-wrap:anywhere}.mapper-flow small{color:var(--muted);min-height:16px}.mapper-flow button{justify-self:start;margin-top:4px}.mapper-target-section{padding-top:18px;border-top:1px solid var(--border)}.mapper-target-summary{font-size:12px;margin:12px 0;color:var(--muted)}.mapper-target-tabs{display:flex;gap:8px;margin-bottom:14px}.mapper-target-tabs .active{border-color:var(--action);background:var(--action-soft);color:var(--action)}.mapper-target-section .team-picker-list{max-height:220px}.mapper-target-actions{display:flex;align-items:center;gap:8px;margin:12px 0;font-size:12px}.mapper-target-actions span{flex:1}.mapper-target-list{max-height:220px;overflow:auto;display:grid;gap:4px}.mapper-target-row{display:grid;grid-template-columns:20px minmax(0,1fr);align-items:center;gap:8px;padding:9px 10px;background:var(--surface-alt,var(--action-soft));border-radius:3px}.mapper-target-row span{font-size:12px;overflow-wrap:anywhere}.mapper-options-section{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:end;border-top:1px solid var(--border);padding-top:18px}.mapper-options-section .check-row{display:flex;align-items:center;gap:8px;min-height:38px;flex-wrap:wrap}
-@media(max-width:800px){.mapper-browser-filters{grid-template-columns:repeat(2,minmax(0,1fr))}.mapper-browser-filters>label:first-child{grid-column:1/-1}.mapper-flow{grid-template-columns:1fr}.mapper-rule-row{flex-wrap:wrap}.mapper-rule-row>.mapper-rule-actions{margin-left:42px}.mapper-dialog .configuration-body{padding:16px}.mapper-dialog .configuration-description{padding:12px 16px}}
-.mapper-flow:has(>section:only-child){grid-template-columns:minmax(0,1fr)}
-.mapper-pair-settings{display:grid;gap:12px}.mapper-pair-settings>.check-row{display:flex;gap:8px;align-items:center}.mapper-pair-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.mapper-pair-choices select{width:100%;min-width:0}.mapper-variants select{width:100%;min-width:0}.mapper-config-details{font-size:12px;color:var(--muted);white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.5}.mapper-rule-form [data-map-cap]{width:120px}.mapper-cap-table{width:100%;border-collapse:collapse}.mapper-cap-table th,.mapper-cap-table td{text-align:left;padding:8px;border-bottom:1px solid var(--border)}
-@media(max-width:600px){.mapper-pair-choices{grid-template-columns:minmax(0,1fr)}}
-.mapper-browser-filters:not(:has([data-map-slot])){grid-template-columns:minmax(180px,2fr) repeat(3,minmax(100px,1fr))}
-@media(max-width:800px){.mapper-browser-filters:not(:has([data-map-slot])){grid-template-columns:repeat(2,minmax(0,1fr))}}
-.experimental-ui .mapper-target-tabs button[aria-selected="true"]{border-color:var(--action);background:var(--action-soft);color:var(--action)}
-.mapper-rule-form .mapper-target-section{border:0;padding:0;margin:0}
-.mapper-rule-form .mapper-target-section>h3{margin-top:0}
-.mapper-rule-form .mapper-target-tabs{margin:16px 0}
-.mapper-rule-form .mapper-flow section{gap:10px}
-.mapper-rule-form .mapper-flow h3{margin:0}
-.mapper-rule-form .mapper-flow small:empty{display:none}
-.mapper-rule-form .mapper-flow button{margin-top:8px}
-@media(max-width:560px){.mapper-item{grid-template-columns:minmax(0,1fr)}.mapper-item-actions{max-width:none;grid-template-columns:minmax(0,1fr) auto;align-items:end}.mapper-slot-tag{text-align:left}.mapper-options-section{grid-template-columns:1fr}.mapper-library-stats{gap:10px}.mapper-library-stats strong{font-size:22px}.mapper-library-toolbar{font-size:12px}.mapper-target-actions{flex-wrap:wrap}.mapper-target-actions span{flex-basis:100%}.mapper-workbench .ops-section-header{grid-template-columns:31px minmax(0,1fr)}.mapper-workbench .ops-section-header>button{grid-column:2;justify-self:start;margin-left:0}}
+/* Mapper shares the application's configuration frame and controls. */
+.configuration-dialog.mapper-dialog.mapper-rule-dialog{width:min(920px,94vw)}
+.configuration-dialog.mapper-dialog.mapper-library-dialog{width:min(1080px,94vw)}
+.mapper-dialog .configuration-body{padding:20px 24px}
+.mapper-dialog .configuration-description{margin:0;padding:14px 24px;font-size:12px;line-height:1.6}
+.mapper-dialog [hidden]{display:none!important}
+.mapper-dialog h3,.mapper-dialog h4{margin:0;font-size:14px;line-height:1.4}
+.mapper-dialog label{margin:0}
+.mapper-dialog label:has(>select),.mapper-dialog label:has(>input:not([type=checkbox])){display:grid;gap:8px;min-width:0}
+.mapper-dialog select,.mapper-dialog input:not([type=checkbox]){width:100%;min-width:0;min-height:38px;margin:0}
+.mapper-dialog .button{min-height:38px}
+.mapper-dialog .check-row{display:flex;align-items:center;gap:8px;min-height:38px;flex-wrap:wrap}
+.mapper-dialog .check-row>input{flex:none;margin:0;width:16px;height:16px}
+.mapper-rule-form{min-width:0}
+.mapper-editor-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding-bottom:16px;margin-bottom:20px;border-bottom:1px solid var(--border)}
+.mapper-editor-steps .button{display:flex;align-items:center;justify-content:center;gap:8px;white-space:normal}
+.mapper-editor-steps .button>span{font-size:11px;opacity:.75}
+.experimental-ui .mapper-editor-steps .button[aria-selected=true]{background:var(--action);border-color:var(--action);color:var(--action-ink)}
+.mapper-rule-form [data-map-page]{display:grid;gap:20px;min-width:0}
+.mapper-action-choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;border:0;padding:0;margin:0;min-width:0}
+.mapper-action-choices legend{margin:0 0 12px;padding:0;font-weight:600}
+.mapper-action-choices .button{display:flex;flex-direction:column;gap:6px;text-align:left;align-items:flex-start;justify-content:flex-start;white-space:normal;min-height:80px}
+.mapper-action-choices small{font-weight:400;color:var(--muted);font-size:12px;line-height:1.5}
+.experimental-ui .mapper-action-choices .button[aria-pressed=true]{border-color:var(--action);background:var(--action-soft);color:var(--text)}
+.mapper-flow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.mapper-flow:has(>[hidden]){grid-template-columns:minmax(0,1fr)}
+.mapper-equipment-card{display:grid;align-content:start;gap:12px;padding:16px;border:1px solid var(--border);border-radius:var(--ui-radius);min-width:0}
+.mapper-equipment-card strong,.mapper-pair-choices strong{overflow-wrap:anywhere}
+.mapper-equipment-card small,.mapper-slot-tag{font-size:12px;color:var(--muted)}
+.mapper-equipment-card .button{justify-self:start;align-self:end}
+.mapper-editor-section,.mapper-options-section{padding-top:18px;border-top:1px solid var(--border)}
+.mapper-pair-settings{display:grid;gap:14px}
+.mapper-pair-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.mapper-pair-choices:has(>[hidden]){grid-template-columns:minmax(0,1fr)}
+.mapper-pair-choices>section{display:grid;gap:10px;min-width:0}
+.mapper-pair-choices .button{justify-self:start}
+.mapper-options-section{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:end}
+.mapper-options-section:has(>[hidden]){grid-template-columns:minmax(0,1fr)}
+.mapper-editor-intro{margin:-10px 0 0}
+.mapper-filter-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.mapper-filter-card,.mapper-wearing-filter{padding:14px 16px;border:1px solid var(--border);border-radius:var(--ui-radius);min-width:0}
+.mapper-filter-card>summary,.mapper-wearing-filter>summary{cursor:pointer;font-weight:600;line-height:1.5;overflow-wrap:anywhere}
+.mapper-filter-card>summary span,.mapper-wearing-filter>summary span{display:block;margin:4px 0 0 16px;color:var(--muted);font-size:12px;font-weight:400}
+.mapper-filter-card>.team-picker,.mapper-wearing-filter>div{margin-top:16px}
+.mapper-filter-card .team-picker-list{max-height:220px!important}
+.mapper-wearing-filter>div{display:grid;gap:12px}
+.mapper-wearing-filter p,.mapper-match-status{margin:0}
+.mapper-wearing-filter small{color:var(--muted)}
+.mapper-wearing-actions{display:flex;gap:8px;flex-wrap:wrap}
+.mapper-individual-players{display:grid;gap:12px;min-width:0}
+.mapper-player-search{display:flex;gap:12px;align-items:end;margin:14px 0}
+.mapper-player-search>label:first-child{flex:1;min-width:0}
+.mapper-player-search>.check-row{flex:none}
+.mapper-target-actions,.mapper-player-pagination{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0;font-size:12px}
+.mapper-target-actions>span,.mapper-player-pagination>span{flex:1}
+.mapper-player-pagination>div{display:flex;gap:8px}
+.mapper-target-list{max-height:300px;overflow:auto;overscroll-behavior:contain;display:grid;gap:0;border:1px solid var(--border);border-radius:var(--ui-radius)}
+.mapper-target-list>p{padding:16px}
+.mapper-target-row{display:grid;grid-template-columns:18px minmax(0,1fr);align-items:center;gap:10px;padding:12px;border-top:1px solid var(--border);min-height:44px;background:var(--panel)}
+.mapper-target-row:first-child{border-top:0}
+.mapper-target-row:has(input:checked){background:var(--action-soft)}
+.mapper-target-row>input{margin:0}
+.mapper-target-row span{font-size:12px;overflow-wrap:anywhere;line-height:1.5}
+.mapper-frequency-card,.mapper-rule-review{display:grid;gap:14px;padding:16px;border:1px solid var(--border);border-radius:var(--ui-radius)}
+.mapper-frequency-card>label:has([data-map-cap]){max-width:190px}
+.mapper-rule-review>strong{font-size:15px;line-height:1.5;overflow-wrap:anywhere}
+.mapper-rule-review dl{margin:0;display:grid;gap:12px}
+.mapper-rule-review dl>div{display:grid;grid-template-columns:155px minmax(0,1fr);gap:12px}
+.mapper-rule-review dt{color:var(--muted);font-size:12px}
+.mapper-rule-review dd{margin:0;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+.mapper-browser-filters{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:16px;align-items:end;margin-bottom:16px}
+.mapper-slot-notice{margin:0 0 16px}
+.mapper-library-toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;margin:16px 0;font-size:12px}
+.mapper-library-toolbar>div{display:flex;gap:8px;flex:none}
+.mapper-item-list{display:grid}
+.mapper-item{display:grid;grid-template-columns:minmax(0,1fr) 220px;align-items:center;gap:16px;padding:16px 0;border-top:1px solid var(--border)}
+.mapper-item-description{min-width:0;overflow-wrap:anywhere}
+.mapper-item-description>strong{display:block;font-size:14px}
+.mapper-item small{display:block;margin-top:6px;color:var(--muted);font-size:12px}
+.mapper-item-actions{display:grid;gap:8px}
+.mapper-item-actions>label{font-size:12px}
+.mapper-item-actions .mapper-slot-tag{text-align:right}
+.mapper-empty{padding:16px 0;color:var(--muted)}
+.mapper-workbench .ops-section-header{grid-template-columns:31px minmax(0,1fr) auto}
+.mapper-workbench .ops-section-header>button{margin-left:auto;flex:none}
+.mapper-mod-summary{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px;border:1px solid var(--border);border-radius:var(--ui-radius);margin-bottom:20px}
+.mapper-mod-summary p{margin:6px 0 0;color:var(--muted);font-size:12px}
+.mapper-library-actions{display:flex;gap:8px;flex-wrap:wrap;margin:0!important}
+.mapper-rule-row{display:flex;align-items:flex-start;gap:14px;padding:16px 0;border-bottom:1px solid var(--border)}
+.mapper-rule-row>div:first-of-type{flex:1;min-width:0;overflow-wrap:anywhere}
+.mapper-rule-row p{margin:6px 0;line-height:1.5;font-size:12px}
+.mapper-rule-row small{color:var(--muted)}
+.mapper-rule-number{background:var(--action-soft);color:var(--action);font-weight:700;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;flex:none}
+.mapper-rule-actions{display:flex;gap:8px;flex-wrap:wrap}
+.mapper-diagnostics{margin-top:14px}
+.mapper-conflict-actions{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+.mapper-cap-table{width:100%;border-collapse:collapse}.mapper-cap-table th,.mapper-cap-table td{text-align:left;padding:8px;border-bottom:1px solid var(--border)}
+@media(max-width:700px){.mapper-flow,.mapper-pair-choices,.mapper-options-section,.mapper-filter-grid{grid-template-columns:minmax(0,1fr)}.mapper-mod-summary{align-items:flex-start;flex-wrap:wrap}.mapper-rule-row{flex-wrap:wrap}.mapper-rule-actions{margin-left:42px}.mapper-dialog .configuration-body{padding:16px}.mapper-dialog .configuration-description{padding:12px 16px}}
+@media(max-width:560px){.mapper-action-choices small{display:none}.mapper-action-choices .button{min-height:52px;padding:10px;justify-content:center;align-items:center;text-align:center}.mapper-browser-filters{grid-template-columns:minmax(0,1fr)}.mapper-item{grid-template-columns:minmax(0,1fr);gap:12px}.mapper-item-actions{grid-template-columns:minmax(0,1fr) auto;align-items:end}.mapper-item-actions .mapper-slot-tag{text-align:left}.mapper-library-toolbar{flex-wrap:wrap}.mapper-player-search{align-items:stretch;flex-direction:column}.mapper-target-actions>span,.mapper-player-pagination>span{flex-basis:100%}.mapper-rule-review dl>div{grid-template-columns:minmax(0,1fr);gap:4px}.mapper-workbench .ops-section-header{grid-template-columns:31px minmax(0,1fr)}.mapper-workbench .ops-section-header>button{grid-column:2;justify-self:start;margin:0}.mapper-editor-steps .button{padding:10px 6px;gap:5px}}

@@ -10,13 +10,13 @@ const ref = (table, row) => table.toString(2).padStart(15, "0") + row.toString(2
 
 test("arm compatibility covers full families while preserving quarter sleeves and arm tape", () => {
   assert.equal(isWristElbowIncompatibleArmSleeve("GearArmSleeve_Baggy_Black"), true);
-  assert.equal(isWristElbowIncompatibleArmSleeve("GearArmSleeve_CompressionRolledUpShirt_White"), false);
+  assert.equal(isWristElbowIncompatibleArmSleeve("GearArmSleeve_CompressionRolledUpShirt_White"), true);
   assert.equal(isWristElbowIncompatibleArmSleeve("GearArmSleeve_Undershirt_sleeveLongUnderarmor_normal_TeamColor"), false);
   assert.equal(isWristElbowIncompatibleArmSleeve("GearArmSleeve_Quarter_armTape_normal_Black"), false);
   const elements = [{ slotType: "LeftArmWear", itemAssetName: "GearArmSleeve_Baggy_Black" }, { slotType: "LeftWristWear", itemAssetName: "GearWrist_Tape" }, { slotType: "LeftElbowWear", itemAssetName: "ElbowGear_Pad" }, { slotType: "RightArmWear", itemAssetName: "GearArmSleeve_Quarter_armTape_normal_Black" }, { slotType: "RightWristWear", itemAssetName: "GearWrist_Tape" }, { slotType: "RightElbowWear", itemAssetName: "ElbowGear_Pad" }];
   enforceEquipmentCompatibility(elements); const result = slots(elements);
   assert.equal(result.get("LeftWristWear"), "GearWrist_None"); assert.equal(result.get("LeftElbowWear"), "ElbowGear_None");
-  assert.equal(result.get("RightWristWear"), "GearWrist_Tape"); assert.equal(result.get("RightElbowWear"), "ElbowGear_Pad");
+  assert.equal(result.get("RightWristWear"), "GearWrist_Tape"); assert.equal(result.get("RightElbowWear"), "ElbowGear_None");
 });
 
 test("only the verified long-sleeve torso undershirt family conflicts with wrist and elbow gear", () => {

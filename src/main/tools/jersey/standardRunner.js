@@ -1,3 +1,4 @@
+import {PLAYER_PICKER_FIELDS} from '../../services/settingsFields.js';
 import {originalEaProtectionEnabled,originalEaIdentity,originalEaProtectionAudit,isOriginalEaPlayer} from '../../services/originalEaPlayers.js';
 import { jerseyConfigurationCatalog } from './shared.js';
 import { playerScopeCatalog } from "../playerScope.js";
@@ -26,7 +27,7 @@ function validation(groups, names, enableTeamRules) {
 }
 function permittedDuplicates(groups) { let count = 0; for (const team of groups.values()) { const byNumber = new Map(); for (const player of team.offense) { const holders = byNumber.get(player.JerseyNum) ?? []; holders.push(player); byNumber.set(player.JerseyNum, holders); } for (const holders of byNumber.values()) if (holders.length === 2 && isAllowedExistingDuplicate(holders[0], holders[1], team.offense)) count++; } return count; }
 
-export async function prepareJerseyRenumber({ savePath, schemaPath }) { const loaded = await loadJerseyTables(savePath, schemaPath, { franchiseUsers: true }); const names = teamNames(loaded.teams.records); const controlled = userControlledTeams(loaded.teams, loaded.franchiseUsers, loaded.players); return { ...jerseyConfigurationCatalog(loaded.teams.records), ...playerScopeCatalog(loaded.players.records, names), teams: jerseyTeams(loaded.teams.records), userControlledTeams: [...controlled].map(teamIndex => ({ teamIndex, name: names.get(teamIndex) ?? `Team ${teamIndex}` })).sort((a, b) => a.name.localeCompare(b.name)) }; }
+export async function prepareJerseyRenumber({ savePath, schemaPath }) { const loaded = await loadJerseyTables(savePath, schemaPath, { franchiseUsers: true, fields:{players:PLAYER_PICKER_FIELDS} }); const names = teamNames(loaded.teams.records); const controlled = userControlledTeams(loaded.teams, loaded.franchiseUsers, loaded.players); return { ...jerseyConfigurationCatalog(loaded.teams.records), ...playerScopeCatalog(loaded.players.records, names), teams: jerseyTeams(loaded.teams.records), userControlledTeams: [...controlled].map(teamIndex => ({ teamIndex, name: names.get(teamIndex) ?? `Team ${teamIndex}` })).sort((a, b) => a.name.localeCompare(b.name)) }; }
 
 async function preview(context) {
   const options = normalize(context.options); const loaded = await loadJerseyTables(context.savePath, context.schemaPath, { franchiseUsers: true }); const names = teamNames(loaded.teams.records); const skipped = new Set([...names].filter(([, name]) => options.skippedTeams.includes(name)).map(([index]) => index)); const rows = playerRowMap(loaded.players.records);

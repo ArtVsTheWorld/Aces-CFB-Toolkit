@@ -90,11 +90,13 @@ export function createCommentaryMatcher(commentaryMap, { allowPhonetic = false, 
       : null;
   }
 
+  const matches=new Map();
+  const cachedMatch=(name,first)=>{const key=JSON.stringify([first,String(name??'')]);if(!matches.has(key))matches.set(key,matchOne(name,first?{phoneticAllowed:false}:{hyphenAllowed:true}));return matches.get(key);};
   return function matchPlayer(firstName, lastName) {
-    const last = matchOne(lastName, { hyphenAllowed: true });
+    const last = cachedMatch(lastName,false);
     if (last) return { ...last, source: "last" };
     if (!allowFirstName) return { name: null, id: 0, method: "none", source: "none" };
-    const first = matchOne(firstName, { phoneticAllowed: false });
+    const first = cachedMatch(firstName,true);
     if (first) return { ...first, source: "first" };
     return { name: null, id: 0, method: "none", source: "none" };
   };

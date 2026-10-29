@@ -8,17 +8,17 @@ export const LOWER_JERSEY_REPLACEMENTS = Object.freeze({
 });
 export const CUTOFF_JERSEYS = new Set(["Gear_JerseyStyle_RolledLowest_Untucked", "Gear_JerseyStyle_RolledLow", "Gear_JerseyStyle_SleeveTight_Untucked", "Gear_JerseyStyle_Rolled"]);
 export const uniformItem = (elements, slot) => elements.find(element => element.slotType === slot)?.itemAssetName;
-export function cutoffPantsConflict(elements) {
+export function cutoffPantsConflict(elements, {allowLegLayers=false}={}) {
   const base = uniformItem(elements, "InnerPants");
-  if (base && !/(?:^|_)None$/i.test(base)) return "Cutoff pants require no leg base layer";
+  if (!allowLegLayers && base && !/(?:^|_)None$/i.test(base)) return "Cutoff pants require no leg base layer";
   const shirt = uniformItem(elements, "InnerShirt");
   if (!shirt || /(?:^|_)None$/i.test(shirt)) return "Cutoff pants require an undershirt";
   if (!CUTOFF_JERSEYS.has(uniformItem(elements, "OuterShirt"))) return "Cutoff pants require a compatible untucked jersey";
   return null;
 }
-export function enforceCutoffPantsCompatibility(elements) {
+export function enforceCutoffPantsCompatibility(elements, options={}) {
   const pants = elements.find(element => element.slotType === "OuterPants");
-  const reason = pants?.itemAssetName === CUTOFF_PANTS && cutoffPantsConflict(elements);
+  const reason = pants?.itemAssetName === CUTOFF_PANTS && cutoffPantsConflict(elements, options);
   if (!reason) return [];
   pants.itemAssetName = ABOVE_KNEE_PANTS;
   return [{ kind: "cutoff-pants", slot: "OuterPants", oldItem: CUTOFF_PANTS, newItem: ABOVE_KNEE_PANTS, reason }];

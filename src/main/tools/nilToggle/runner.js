@@ -1,3 +1,4 @@
+import {PLAYER_PICKER_FIELDS} from '../../services/settingsFields.js';
 import path from "node:path";
 import { openCfb27Save, readTables, PLAYER_TABLE_UID, TEAM_TABLE_UID, availableTeams } from "../../services/save.js";
 import { createBackup } from "../../services/files.js";
@@ -29,14 +30,14 @@ export function planNilToggle(records, options = {}, { activeRows, teamNames = n
   });
   return rows.sort((a, b) => a.team.localeCompare(b.team) || a.player.localeCompare(b.player) || a.row - b.row);
 }
-async function load(savePath, schemaPath) {
-  const opened = await openCfb27Save(savePath, schemaPath), tables = await readTables(opened.franchise, { players: PLAYER_TABLE_UID, teams: TEAM_TABLE_UID, rosters: ROSTER_TABLE_UID });
+async function load(savePath, schemaPath, settingsOnly=false) {
+  const opened = await openCfb27Save(savePath, schemaPath), tables = await readTables(opened.franchise, { players: PLAYER_TABLE_UID, teams: TEAM_TABLE_UID, rosters: ROSTER_TABLE_UID },settingsOnly?{players:PLAYER_PICKER_FIELDS}:{});
   const activeRows = buildRosterPlayerRows(tables.players, tables.teams, tables.rosters), playerTeamNames = buildRosterTeamNames(tables.players, tables.teams, tables.rosters), teamNames = buildTeamNames(tables.teams.records);
   if (!activeRows.size) throw new Error("This save does not expose active player rosters for NIL Toggle.");
   return { ...opened, ...tables, activeRows, playerTeamNames, teamNames };
 }
 export async function prepareNilToggle({ savePath, schemaPath }) {
-  const loaded = await load(savePath, schemaPath), rows = planNilToggle(loaded.players.records, { targetValue: false }, loaded);
+  const loaded = await load(savePath, schemaPath,true), rows = planNilToggle(loaded.players.records, { targetValue: false }, loaded);
   return { teams: availableTeams(loaded.teams.records), positions: VALID_POSITIONS, classes: VALID_CLASSES, redshirtStatuses: redshirts, players: rows.map(player => ({ value: String(player.row), label: `${player.player} · ${player.team} · ${player.position} · ${player.redshirtStatus === "Previous" ? "RS " : ""}${player.classYear} · ${player.overall} OVR` })) };
 }
 export async function runNilToggle(context) {

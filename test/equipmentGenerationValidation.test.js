@@ -54,7 +54,7 @@ test("blue/pink Nike mouthpiece is shared random-color-only artwork, never a bla
 
 test("bicep bands permit exposed/short sleeves and reject coverage on the actual arm or undershirt", () => {
   const band = equipmentItem("GearBicepBand_Black");
-  for (const sleeve of ["ArmSleeve_None", "GearArmSleeve_Elbow_armTape_normal_Black", "GearArmSleeve_Quarter_armTape_normal_Black"]) assert.ok(canGenerateEquipment(gear(sleeve), band, ["LeftElbowWear"]), sleeve);
+  for (const sleeve of ["ArmSleeve_None", "GearArmSleeve_Quarter_sleeveLongUnderarmor_normal_White", "GearArmSleeve_Undershirt_sleeveLongUnderarmor_normal_White"]) assert.ok(canGenerateEquipment(gear(sleeve), band, ["LeftElbowWear"]), sleeve);
   for (const sleeve of ["GearArmSleeve_Full_sleeveLongUnderarmor_normal_Black", "GearArmSleeve_Half_sleeveLongUnderarmor_normal_Black", "GearArmSleeve_Baggy_Black", "GearArmSleeve_NikeProDriFitSleeve2_Black", "Unknown_Custom_Sleeve"]) assert.equal(canGenerateEquipment(gear(sleeve), band, ["LeftElbowWear"]), false, sleeve);
   assert.equal(canGenerateEquipment(gear("ArmSleeve_None", "G_CompressionT_Crew_LongSleeve_NikeHQ_B_GLD"), band, ["LeftElbowWear"]), false);
   assert.equal(canGenerateEquipment([...gear(), ...gear("GearArmSleeve_Baggy_Black")], band, ["LeftElbowWear"]), false, "all on-field outfits must fit");
@@ -74,7 +74,7 @@ test("generated bicep/sweatbands coordinate colors while retaining asymmetrical 
 test("rubber bands use wrist-region compatibility despite storage in elbow slots", () => {
   for (const item of UNLOCKED_POOLS.elbowSweatbands.filter(item => /RubberBands/.test(item.itemName))) {
     assert.equal(item.semantic.bodyRegion, "wrist"); assert.ok(canGenerateEquipment(gear(), item, ["LeftElbowWear"]));
-    for (const sleeve of ["GearArmSleeve_Undershirt_armTape_normal_Black", "GearArmSleeve_Quarter_armTape_normal_Black", "GearArmSleeve_Full_sleeveLongUnderarmor_normal_Black", "GearArmSleeve_Baggy_White"]) assert.equal(canGenerateEquipment(gear(sleeve), item, ["LeftElbowWear"]), false);
+    for (const sleeve of ["GearArmSleeve_Undershirt_armTape_normal_Black", "GearArmSleeve_Quarter_armTape_normal_Black", "GearArmSleeve_Full_sleeveLongUnderarmor_normal_Black", "GearArmSleeve_Baggy_White"]) assert.equal(canGenerateEquipment(gear(sleeve), item, ["LeftElbowWear"]), /(?:Undershirt|Quarter)_armTape/.test(sleeve));
     for (const wrist of ["GearWrist_wristBandNormal_White", "GearWrist_wristTapeNormal_Black", "Unknown_Custom_WristGear"]) {
       const loadouts = gear(); loadouts[0].loadoutElements.push(element("LeftWristWear", wrist));
       assert.equal(canGenerateEquipment(loadouts, item, ["LeftElbowWear"]), false);

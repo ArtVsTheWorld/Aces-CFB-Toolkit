@@ -27,7 +27,7 @@ test('Quickstart has one exact backed-up write, protects EA players and tracks o
   const before=await loadEquipmentTables(savePath,schemaPath),dynastyId=await equipmentDynastyId(before.franchise),rawBefore=snapshotVisualRawData(before.visuals.records);
   const prepared=await prepareEquipmentQuickstart(context);
   assert.ok(prepared.newPlayers>0);assert.ok(prepared.protectedPlayers>0);
-  const unprotected=await prepareEquipmentQuickstart({...context,options:{protectOriginalEaPlayers:false}});assert.equal(unprotected.protectedPlayers,0);assert.equal(unprotected.newPlayers,prepared.newPlayers+prepared.protectedPlayers);
+  const unprotected=await prepareEquipmentQuickstart({...context,options:{protectOriginalEaPlayers:false}});assert.equal(unprotected.protectedPlayers,0);assert.equal(unprotected.newPlayers+unprotected.donorPlayersProtected,prepared.newPlayers+prepared.protectedPlayers+prepared.donorPlayersProtected);
   const preview=await runEquipmentQuickstart({...context,mode:'preview',options:{unlocked:true,raw:true,gameday:true}});
   assert.equal(hash(savePath),sourceHash);assert.equal(memory.snapshot(dynastyId).keys.size,0);
   const plan=takePlan(preview.planId),rows=plan.previewRows;
@@ -37,6 +37,7 @@ test('Quickstart has one exact backed-up write, protects EA players and tracks o
   assert.ok(rows.every(row=>!isOriginalEaPlayer(before.players.records[row.row])));
   assert.ok(rows.every(row=>!Object.hasOwn(row,'newRaw')&&!Object.hasOwn(row,'oldRaw')),'large raw gear is kept in the CSV, not IPC preview');
   const pending=plan.quickstartTracking.keys;assert.equal(pending.length,rows.length);
+  const donorRows=new Set(rows.flatMap(row=>row.donorUses.map(use=>use.donor.row)));assert.ok(donorRows.size>0);assert.ok(rows.every(row=>!donorRows.has(row.row)),'Quickstart leaves all selected donor players unchanged');
   const expected=new Map(plan.assignments.map(change=>[change.row,change.newValue]));assert.ok(expected.size>0);
   // Clearing memory invalidates an older Preview without writing the save.
   memory.clear(dynastyId);
@@ -59,7 +60,7 @@ test('Quickstart has one exact backed-up write, protects EA players and tracks o
   assert.equal(repeat.details.remembered,rows.length);
   const [headings,first]=parseCsv(fs.readFileSync(applied.reportPath,'utf8'));assert.equal(first.length,headings.length);
   assert.equal(JSON.parse(first[headings.indexOf('RandomizerOptionsJSON')]).top,30);
-  const patcher=JSON.parse(first[headings.indexOf('PatcherOptionsJSON')]);assert.equal(patcher.unlockedColorTheme,'team');assert.equal(patcher.tapeColorMode,'accessory');assert.equal(patcher.unlockedTattooCap,35);assert.equal(patcher.fillFrequencies.tattoos,true);assert.ok(!/noDrip/i.test(first[headings.indexOf('QuickstartOptionsJSON')]));assert.ok(!/noDrip/i.test(first[headings.indexOf('RandomizerOptionsJSON')]));
+  const patcher=JSON.parse(first[headings.indexOf('PatcherOptionsJSON')]);assert.equal(patcher.unlockedColorTheme,'team');assert.equal(patcher.tapeColorMode,'accessory');assert.equal(patcher.unlockedTattooCap,30);assert.equal(patcher.fillFrequencies.tattoos,true);assert.ok(!/noDrip/i.test(first[headings.indexOf('QuickstartOptionsJSON')]));assert.ok(!/noDrip/i.test(first[headings.indexOf('RandomizerOptionsJSON')]));
   assert.equal(JSON.parse(first[headings.indexOf('TrackingAuditJSON')]).scope,'dynasty');
   assert.equal(hash(fixture),sourceHash);
 });

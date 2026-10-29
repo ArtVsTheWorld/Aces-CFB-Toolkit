@@ -29,7 +29,7 @@ module.exports=async(window,root,getReport)=>{
  assert.ok(JSON.parse(report.rows[0][diagnostics]).generationNotes.some(note=>note.includes('Long-snap')),'Routine notes remain in CSV diagnostics');
  for(const theme of ['light','dark'])for(const width of [1480,760,520]){
   window.setContentSize(width,width===1480?1050:780);
-  await execute(`document.documentElement.dataset.theme=${JSON.stringify(theme)};void 0;`);
+  await execute(`document.documentElement.dataset.theme=${JSON.stringify(theme)};applyAccentColor({...state.bootstrap.settings,theme:${JSON.stringify(theme)}});void 0;`);
   for(const view of ['cards','table']){
    await execute(`document.querySelector('[data-generic-view="${view}"]').click();auditRosterReview();const first=document.querySelector(${JSON.stringify(view==='cards'?'.roster-player-card:has([data-roster-position-change])':'.generic-player-table-view')});first.scrollIntoView({block:'start'});new Promise(r=>setTimeout(r,80));`);
    const layout=await execute(`(()=>{const output=document.getElementById('run-output'),table=output.querySelector('.generic-player-table-view'),cards=output.querySelector('.roster-player-grid');rosterReviewCheck(${JSON.stringify(view)}==='cards'?!cards.hidden&&table.hidden:cards.hidden&&!table.hidden,'Cards/table visibility preserved');return{width:innerWidth,scroll:document.documentElement.scrollWidth}})()`);
@@ -38,5 +38,7 @@ module.exports=async(window,root,getReport)=>{
   }
  }
  await execute(`(()=>{const clean=structuredClone(rosterReviewResult);clean.details.warnings=[];renderResult(document.getElementById('run-output'),clean);rosterReviewCheck(!document.querySelector('[data-roster-apply-warnings]'),'No empty warning panel');})()`);
+ const physicalColumn=report.headings.indexOf('AthleticSelectionJSON');assert.ok(physicalColumn>=0);assert.ok(report.rows.every(row=>JSON.parse(row[physicalColumn]).referenceId.startsWith('ea-2026:')));
+ await execute(`(async()=>{document.querySelector('[data-generic-view="cards"]').click();const details=document.querySelector('[data-roster-details="equipment"]');details.open=true;for(let i=0;i<100&&!details.dataset.loaded;i++)await new Promise(r=>setTimeout(r,20));rosterReviewCheck(details.textContent.includes('complete observed player package'),'Physical explanation is inside existing expanded details');rosterReviewCheck(rosterReviewResult.details.teams.every(team=>team.athletics),'Physical summaries reach existing run details');})()`);
  console.log('PASS roster review: '+counts.players+' actual generated players, '+counts.changed+' position changes named/flagged in cards/table and CSV; routine notes excluded from warnings but retained in diagnostics, no empty panel, responsive light/dark views; fixture unchanged, no Apply.');
 };

@@ -1,3 +1,4 @@
+import {PLAYER_PICKER_FIELDS} from '../../services/settingsFields.js';
 import {progressRange} from '../../services/toolProgress.js';
 import path from 'node:path';
 import {planRosterDepthCharts,applyRosterDepthCharts,verifyRosterDepthCharts} from './depthCharts.js';
@@ -31,7 +32,7 @@ import {composeRosterTargets,compositionAudit} from './composition.js';
 import {mulberry32} from '../longSnap/core.js';
 
 import {rosterFile,loadRosterGenerationSource,saveRosterGeneration,buildRosterGenerationCandidate,ROSTER_WARNINGS,ROSTER_FORMAT_NOTES} from './rosterSource.js';
-const loadGenerationSource=async(savePath,schemaPath)=>rosterFile(savePath)?loadRosterGenerationSource(savePath,schemaPath):loadEquipmentTables(savePath,schemaPath,true,false);
+const loadGenerationSource=async(savePath,schemaPath,visuals=true,fields={})=>rosterFile(savePath)?loadRosterGenerationSource(savePath,schemaPath):loadEquipmentTables(savePath,schemaPath,visuals,false,fields);
 const allPresentationIds=loaded=>new Set(loaded.players.records.filter(record=>record&&!record.isEmpty).map(record=>sf(record,'PresentationId')));
 const TOOL_ID='roster-generator',TOOL_NAME='Roster Generator';
 export function teamGenerationConfigurations(options,teams){
@@ -76,7 +77,7 @@ function visualOwners(loaded) {
   const owners=new Map();loaded.players.records.forEach((record,row)=>{if(!record||record.isEmpty)return;const ref=parseRef(sf(record,'CharacterVisuals'));if(ref?.tableId===loaded.visuals.header.tableId){if(!owners.has(ref.row))owners.set(ref.row,[]);owners.get(ref.row).push(row);}});return owners;
 }
 export async function prepareRosterGenerator({savePath,schemaPath}) {
-  const loaded=await loadGenerationSource(savePath,schemaPath);
+  const loaded=await loadGenerationSource(savePath,schemaPath,false,{players:PLAYER_PICKER_FIELDS});
   const season=await rosterGeneratorSeason(loaded);
   const teams=[];
   for(const team of teamsWithRosters(loaded)){
@@ -97,7 +98,7 @@ function previewRow(player,preview) {
 }
 function reportFor(rosters) {
   const parts=rosters.map(roster=>rosterGeneratorCsv(roster));
-  return {prefix:'roster-generator-report',headings:[...parts[0].headings,'CalibrationJSON','OldNILCost','NewNILCost','BrotherRow','OriginalPosition','GeneratedPosition','PositionChanged','NativeSchemeAuditJSON','RosterCompositionAuditJSON','RecruitingNeedsAuditJSON','SchemeFitAuditJSON'],rows:parts.flatMap((part,i)=>part.rows.map((row,j)=>[...row,JSON.stringify(rosters[i].players[j].provenance.calibration),rosters[i].players[j].before.CurrentNILCompensation,rosters[i].players[j].fields.CurrentNILCompensation,rosters[i].players[j].provenance.brother??'',rosters[i].players[j].before.Position,rosters[i].players[j].position,displayPosition(rosters[i].players[j].before.Position)!==displayPosition(rosters[i].players[j].position),j===0?JSON.stringify(rosters[i].summary.settings.schemeContext):'',j===0?JSON.stringify(rosters[i].summary.composition):'',j===0?JSON.stringify(rosters[i].summary.recruitingNeeds):'',j===0?JSON.stringify(rosters[i].summary.schemeFit):'']))};
+  return {prefix:'roster-generator-report',headings:[...parts[0].headings,'CalibrationJSON','OldNILCost','NewNILCost','BrotherRow','OriginalPosition','GeneratedPosition','PositionChanged','NativeSchemeAuditJSON','RosterCompositionAuditJSON','RecruitingNeedsAuditJSON','SchemeFitAuditJSON','AthleticSelectionJSON'],rows:parts.flatMap((part,i)=>part.rows.map((row,j)=>[...row,JSON.stringify(rosters[i].players[j].provenance.calibration),rosters[i].players[j].before.CurrentNILCompensation,rosters[i].players[j].fields.CurrentNILCompensation,rosters[i].players[j].provenance.brother??'',rosters[i].players[j].before.Position,rosters[i].players[j].position,displayPosition(rosters[i].players[j].before.Position)!==displayPosition(rosters[i].players[j].position),j===0?JSON.stringify(rosters[i].summary.settings.schemeContext):'',j===0?JSON.stringify(rosters[i].summary.composition):'',j===0?JSON.stringify(rosters[i].summary.recruitingNeeds):'',j===0?JSON.stringify(rosters[i].summary.schemeFit):'',JSON.stringify(rosters[i].players[j].provenance.athleticSelection??null)]))};
 }
 
 export async function runRosterGenerator(context) {

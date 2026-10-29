@@ -33,7 +33,7 @@ test('calibration preserves observed speed without artificial position floors or
   const model=loadObservedCatalog(),index=RATING_FIELDS.indexOf('SpeedRating'),formerMinimums={WR:74,FS:74,SS:74,HB:75,CB:75,TE:68,FB:68,LOLB:70,MLB:70,ROLB:70};let belowFormerFloor=0;
   for(const [position,floor]of Object.entries(formerMinimums)){const source=[...model.byPosition.get(position)].filter(p=>p.physical.every(t=>t==='None')).sort((a,b)=>a.ratings[index]-b.ratings[index])[0];const profile=calibrateProfile(source,60,model.formulas);assert.equal(profile.ratings[index],source.ratings[index],position);assert.deepEqual(profile.physical,source.physical);if(profile.ratings[index]<floor)belowFormerFloor++;}
   assert.ok(belowFormerFloor>=7,'Observed slower players remain below the old artificial speed floors');
-  assert.equal(rosterPreset('all-time').targetAverage,83);assert.equal(normalizeEquipmentOptions({},false).unlockedTattooCap,40);assert.equal(normalizeEquipmentOptions({unlockedTattooCap:33},false).unlockedTattooCap,33);
+  assert.equal(rosterPreset('all-time').targetAverage,83);assert.equal(normalizeEquipmentOptions({},false).unlockedTattooCap,30);assert.equal(normalizeEquipmentOptions({unlockedTattooCap:33},false).unlockedTattooCap,33);
 });
 test('recruit stars favor better players, retain rare surprises and replay exactly',()=>{
   const sample=overall=>Array.from({length:2000},(_,row)=>generatedRecruitStars({OverallRating:overall,SchoolYear:'Freshman',RedshirtStatus:'Eligible'},741,row)),low=sample(55),high=sample(91),mean=a=>a.reduce((s,v)=>s+RECRUIT_STARS.indexOf(v)+1,0)/a.length;

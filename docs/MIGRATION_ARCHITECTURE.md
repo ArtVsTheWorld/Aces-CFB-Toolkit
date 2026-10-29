@@ -1,5 +1,9 @@
 # CFB Toolkit migration architecture
 
+Current v25.0 equipment settings loading: the background worker retains bounded, detached preparation DTOs for Randomizer, Quickstart and Patcher (8 entries / 16 MiB). Keys include full save-content SHA, bundled schema-content SHA, tracking-file-content SHA, absolute paths, tool and options. Every settings request checks current contents; same filename/size/mtime is insufficient for reuse. Apply and memory clearing invalidate this cache. First visits still prepare normally. No mutable Franchise, table records, preview plans or Apply inputs are reused through this cache. Preview/Apply retain fresh reads, exact-plan validation, backups and candidate verification. Mapper preparation retains its separate target-session lifecycle.
+
+First equipment settings visits now use `loadEquipmentSettingsTables`: only the player identity/donor/tracking fields, team branding/colors/rosters and season gates required by those pages are parsed. Complete equipment JSON and its storage/overflow safeguards remain available for verifying donor eligibility. Quickstart settings validate donors in overall/row order until each position has its same top 30 usable donors, falling through unreadable outfits; Randomizer still returns the entire usable donor catalog. Every Preview and Apply retains the full table loader. No live parsed-save object is shared between tools.
+
 Audit date: 2026-08-20. The five original tool directories at the bundle root were the migration source and are now deprecated, frozen references. The Electron project owns its runtime code and data directly; future changes are made under `cfb-toolkit/` without modifying or importing from those legacy directories. All audited tools are Node.js ES modules using `madden-franchise` 4.3.1 and the C27_486_1 schema. Game tables are resolved by Unique ID, never by array position.
 
 ## 1. Repository architecture summary

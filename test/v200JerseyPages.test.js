@@ -46,9 +46,9 @@ test('retired-number configuration uses the same defaults and aliases as allocat
   assert.deepEqual([...getRetiredNumbers('LSU',{LSU:[]})],[]);
   assert.deepEqual([...getRetiredNumbers('LSU',{LSU:[9]})],[9]);
 });
-test('jersey editor has three real pages, jersey-number visuals, and no section-jump links',()=>{
+test('jersey editor has four real pages, jersey-number visuals, and no section-jump links',()=>{
   const script=fs.readFileSync(new URL('../src/renderer/jersey-settings.js',import.meta.url),'utf8'),refinements=fs.readFileSync(new URL('../src/renderer/refinements.js',import.meta.url),'utf8');
-  for(const page of ['locks','retired','traditions'])assert.ok(script.includes(`data-jersey-page="${page}"`));
+  for(const page of ['locks','retired','traditions','promotions'])assert.ok(script.includes(`data-jersey-page="${page}"`));
   assert.match(script,/jersey-number-art/);assert.match(script,/data-rule-personality/);assert.match(script,/prepared\.retiredNumbers/);
   assert.doesNotMatch(refinements,/function addDialogSections|dialog-section-links/);
   assert.doesNotMatch(refinements,/Details & Exceptions|inline-option-help/);

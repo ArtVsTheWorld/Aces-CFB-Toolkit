@@ -86,8 +86,8 @@ test('only selected players change: team caps, protection, deterministic choice 
   run(players, visuals, extra); run(players, copy, extra); assert.deepEqual(visuals, copy);
   for (const start of [0, 20]) {
     const changed = visuals.slice(start, start + 20).filter((record, index) => record.RawData !== before[start + index].RawData);
-    // 19 eligible players round the 10% cap down to one; excluded players stay untouched.
-    assert.equal(changed.length, 1); assert.deepEqual(visuals[start], before[start]);
+    // 19 eligible players round the 10% cutoff limit up to two; excluded players stay untouched.
+    assert.equal(changed.length, 2); assert.deepEqual(visuals[start], before[start]);
   }
   const after = structuredClone(visuals); assert.equal(run(players, visuals, extra).cutoffPantsChanges.length, 0); assert.deepEqual(visuals, after);
 });

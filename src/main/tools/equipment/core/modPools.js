@@ -3,6 +3,8 @@ import { MOD_FACE_PAINT_ITEMS } from "./facepaint.js";
 
 const unique = items => [...new Map(items.filter(canGenerateItem).map(item => [item.itemName, item])).values()];
 const category = (id, label, items, extra = {}) => ({ id, label, items: unique(items), ...extra });
+export const UNLOCKED_SPATS=Object.freeze(EQUIPMENT_ITEMS.filter(item=>/^GearSpats_spatThin_(?:Black|White|TeamColor|SecondaryColor)$/.test(item.itemName)&&canGenerateItem(item)));
+export const defaultUnlockedElbowItem=item=>!/^GearBicepBand_|^ElbowGear_(?:elbowBrace|elbowpad)/i.test(item.itemName);
 // One allowlisted catalog feeds validation, generation, and the editors. A mod
 // manifest alone is never permission to generate an unknown asset or slot.
 export function modPoolDefinitions() {
@@ -13,16 +15,17 @@ export function modPoolDefinitions() {
       category("undershirts", "Irish Jamo Sleeves", UNLOCKED_POOLS.undershirts, { defaultChance: 0 }),
       category("wristTape", "Taped Wrist with Cross", UNLOCKED_POOLS.wristTape),
       category("armSleeves", "Arm Sleeves", UNLOCKED_POOLS.armSleeves),
-      category("elbowGear", "Elbow Gear & Bands", [...UNLOCKED_POOLS.elbowSweatbands, ...UNLOCKED_POOLS.bicepBands, ...UNLOCKED_POOLS.elbowPadsAndBraces, ...UNLOCKED_POOLS.shoulderStabilizers], {defaultItems:[...UNLOCKED_POOLS.elbowSweatbands, ...UNLOCKED_POOLS.elbowPadsAndBraces, ...UNLOCKED_POOLS.shoulderStabilizers].filter(canGenerateItem).map(item=>item.itemName)}),
+      category("elbowGear", "Elbow Gear & Bands", [...UNLOCKED_POOLS.elbowSweatbands, ...UNLOCKED_POOLS.bicepBands, ...UNLOCKED_POOLS.elbowPadsAndBraces, ...UNLOCKED_POOLS.shoulderStabilizers], {defaultItems:[...UNLOCKED_POOLS.elbowSweatbands, ...UNLOCKED_POOLS.elbowPadsAndBraces, ...UNLOCKED_POOLS.shoulderStabilizers].filter(item=>canGenerateItem(item)&&defaultUnlockedElbowItem(item)).map(item=>item.itemName)}),
       category("cleats", "Additional Cleats", EQUIPMENT_ITEMS.filter(item => item.category === "Cleats" && item.itemName.startsWith("Gear"))),
       category("gloves", "Additional Gloves", gloves, { defaultItems: gloves.filter(item => !teamGloveBrands.has(itemBrand(item)) || /_(?:TeamColor|SecondaryColor)$/i.test(item.itemName)).map(item => item.itemName) }),
       category("mouthpieces", "Mouthpieces", [...UNLOCKED_POOLS.unlockedMouthpieces, ...UNLOCKED_POOLS.colorfulHangingMouthpieces], { defaultItems: UNLOCKED_POOLS.unlockedMouthpieces.map(item => item.itemName) }),
       category("neckwear", "Turtlenecks & Neckwear", UNLOCKED_POOLS.neckwear),
       category("legSleeves", "Leg Base Layers", UNLOCKED_POOLS.legSleeves),
-      category("balaclavas", "Normal Balaclavas", UNLOCKED_POOLS.balaclavas),
+      category("balaclavas", "Normal Balaclavas", UNLOCKED_POOLS.balaclavas, { defaultChance: 5 }),
       category("thighPads", "Thigh Pads", UNLOCKED_POOLS.thighPads),
-      category("towels", "Towels", UNLOCKED_POOLS.towels),
-      category("socks", "Sock Styles", UNLOCKED_POOLS.socks)
+      category("towels", "Towels", UNLOCKED_POOLS.towels, {defaultItems:[]}),
+      category("socks", "Sock Styles", UNLOCKED_POOLS.socks),
+      category("spats", "Spats — Both Feet", UNLOCKED_SPATS, {defaultChance:5})
     ],
     raw: [category("neckwear", "Turtlenecks & Necklaces", RAW_ACCESSORIES_POOLS.neckwear), category("skullcaps", "Skullcaps", RAW_ACCESSORIES_POOLS.skullcaps), category("backplates", "Backplates — No Flak Jacket", RAW_ACCESSORIES_POOLS.backplates ?? []), category('armSleeves', 'RAW Jamo Sleeves', RAW_ACCESSORIES_POOLS.armSleeves, {defaultChance: 0, defaultItems: []})],
     eljax: [category("armSleeves", "Team & Brand Arm Sleeves", EQUIPMENT_TRUCK_POOLS.armSleeves), category("visors", "Team & Brand Visors", EQUIPMENT_TRUCK_POOLS.visors),
@@ -34,7 +37,7 @@ export function modPoolDefinitions() {
   return Object.fromEntries(Object.entries(definitions).map(([origin, categories]) => [origin, [...categories, ...(MOD_FACE_PAINT_ITEMS[origin] ? [{
     id: "facepaint", label: "Facepaint & Eye Tape", defaultChance: 100,
     items: MOD_FACE_PAINT_ITEMS[origin].map(itemName => ({ itemName, displayName: equipmentDisplayName(itemName) }))
-  }] : [])].map(entry => ({ ...entry, defaultItems: entry.defaultItems ?? entry.items.map(item => item.itemName) }))]));
+  }] : [])].map(entry => ({ ...entry, defaultItems: (entry.defaultItems ?? entry.items.map(item => item.itemName)).filter(id=>!/^GearWrist_wristbrace_CompressShort_/i.test(id)) }))]));
 }
 
 export function normalizeModPools(value, defaultPercent = 10) {

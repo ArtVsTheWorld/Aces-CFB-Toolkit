@@ -1,3 +1,4 @@
+import {applyPromotionSettings,promotionChance,promotionAllowed,rollPromotion} from '../promotionChances.js';
 import RULES from "./rules.js";
 import { MINIMUM_PROMOTION_DISTANCE } from "./candidateGenerator.js";
 import { effectiveSchoolYear, TEAM_RULES } from "./teamRules.js";
@@ -80,8 +81,8 @@ function isPromotionCandidate(player, current, candidate) {
 function promotionTarget(player, claimed, retired, random) {
   if (OL.has(player.Position) || SPECIALISTS.has(player.Position) || player.Position === "FB" || isTrueFreshman(player)) return null;
   const rule = RULES[player.Position];
-  if (!rule?.promoteChance || !rule.preferred?.[1]?.includes(number(player.JerseyNum))) return null;
-  if (random() >= rule.promoteChance) return null;
+  if (!promotionChance(player) || !rule.preferred?.[1]?.includes(number(player.JerseyNum))) return null;
+  if (!rollPromotion(player, random)) return null;
   return rule.preferred[0].find(candidate =>
     !claimed.has(candidate) && !retired.has(candidate) &&
     isPromotionCandidate(player, number(player.JerseyNum), candidate)
@@ -154,10 +155,11 @@ export function runNoDuplicatesRoster(roster, teamName, {
   enableTeamRules = true,
   enableRetiredNumbers = true,
   enablePromotions = true,
-  customRetired = {}, customTraditions = [],
+  customRetired = {}, customTraditions = [], promotionChances = {},
   random = Math.random
 } = {}) {
   if (roster.length > 100) throw new Error(`${teamName} has ${roster.length} rostered players but only 100 jersey numbers exist.`);
+  applyPromotionSettings(roster, promotionChances, random);
   const retired = enableRetiredNumbers ? getRetiredNumbers(teamName, customRetired) : new Set();
   const ordered = sortNoDuplicateRoster(roster);
   const claimed = new Set();
@@ -189,7 +191,7 @@ export function runNoDuplicatesRoster(roster, teamName, {
     // A unique fallback QB used to be left untouched because it did not need
     // duplicate repair. Give every QB a deterministic free attempt at a
     // preferred number before accepting that existing fallback.
-    const qbFallbackUpgrade = currentAvailable && player.Position === "QB" && fallback.includes(current)
+    const qbFallbackUpgrade = currentAvailable && promotionAllowed(player) && player.Position === "QB" && fallback.includes(current)
       ? preferred.find(candidate => !claimed.has(candidate) && !retired.has(candidate)) ?? null
       : null;
     const promoted = enablePromotions && currentAvailable

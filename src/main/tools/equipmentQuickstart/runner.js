@@ -12,9 +12,11 @@ import {equipmentPreviewChanges,summarizeVisualChanges,limitEquipmentPreview} fr
 import {sf} from '../equipment/openSave.js';
 import {displayPosition} from '../../../shared/localization.js';
 import {equipmentDisplayValue} from '../equipment/catalog.js';
+import {applyQuickstartSpecialistCutoff} from './specialistCutoff.js';
 import {applyQuickstartColorAccents} from './colorAccents.js';
 import {applyQuickstartQbGloves,capQuickstartQbGloves} from './qbGloves.js';
 import {createVisualDraft,finalizeVisualDraft,sortVisualAssignments,retainRandomizerResults,retainPatcherResults} from '../equipment/visualDraft.js';
+import {loadEquipmentSettingsTables} from '../equipment/shared.js';
 
 export const QUICKSTART_ID='equipment-quickstart',QUICKSTART_NAME='Equipment Quickstart';
 function memoryFor(context){if(!context.quickstartMemory)throw Error('Quickstart player tracking is unavailable. Your save has not been changed.');return context.quickstartMemory;}
@@ -24,33 +26,33 @@ export function quickstartOptions(input={}){
 }
 export function quickstartSettings(input){
   const mods=quickstartOptions(input);
-  const randomizer={...normalizeEquipmentOptions({top:30,classes:[],redshirtGroup:'all',protectOriginalEaPlayers:mods.protectOriginalEaPlayers,noDripProfile:true,usingUnlockedMod:mods.unlocked,usingRawAccessoriesMod:mods.raw,usingEquipmentTruckMod:mods.gameday},true),donorOnlyPositions:['K','P'],donorOnlyGlovesPositions:['QB']};
-  const patcher=normalizeEquipmentOptions({protectOriginalEaPlayers:mods.protectOriginalEaPlayers,helmetFix:true,visorFix:true,oakleyVisorFix:true,usingEquipmentTruckMod:mods.gameday,pantsFix:true,rolledJerseyFix:true,sleeveCompatibilityFix:true,unlockedTattooFix:mods.unlocked,unlockedTattooCap:35,fillFrequencies:{tattoos:true},unlockedMouthpieceFix:mods.unlocked,unlockedRecolorFix:mods.unlocked,unlockedColorTheme:'team',tapeColorMode:'accessory',lowerRolledJerseyFix:mods.unlocked,cutoffPantsFix:mods.unlocked,adjustOutfitForCutoff:mods.unlocked,unlockedSocksFix:mods.unlocked},false);
+  const randomizer={...normalizeEquipmentOptions({top:30,classes:[],redshirtGroup:'all',protectOriginalEaPlayers:mods.protectOriginalEaPlayers,noDripProfile:true,usingUnlockedMod:mods.unlocked,usingRawAccessoriesMod:mods.raw,usingEquipmentTruckMod:mods.gameday},true),donorOnlyPositions:['K','P'],allowDonorOnlyNoDrip:true,donorOnlyGlovesPositions:['QB']};
+  const patcher=normalizeEquipmentOptions({protectOriginalEaPlayers:mods.protectOriginalEaPlayers,helmetFix:true,usingRawAccessoriesMod:mods.raw,visorFix:true,oakleyVisorFix:true,usingEquipmentTruckMod:mods.gameday,pantsFix:true,rolledJerseyFix:true,sleeveCompatibilityFix:true,unlockedTattooFix:mods.unlocked,unlockedTattooCap:30,fillFrequencies:{tattoos:true,cutoffPants:mods.unlocked},unlockedMouthpieceFix:mods.unlocked,unlockedRecolorFix:mods.unlocked,unlockedColorTheme:'team',tapeColorMode:'accessory',lowerRolledJerseyFix:mods.unlocked,cutoffPantsFix:mods.unlocked,adjustOutfitForCutoff:mods.unlocked,unlockedSocksFix:mods.unlocked},false);
   return {mods,randomizer,patcher};
 }
-async function scope(loaded,memory,savePath,protectOriginalEaPlayers=true){
-  const roster=buildRosterPlayerRows(loaded.players,loaded.teams,loaded.rosters),snapshot=memory.snapshot(await equipmentDynastyId(loaded.franchise),{savePath,players:loaded.players}),keys=new Map(),pending=new Set();let protectedPlayers=0,remembered=0;
-  for(const row of roster){const record=loaded.players.records[row];if(!record||record.isEmpty)continue;if(protectOriginalEaPlayers&&isOriginalEaPlayer(record)){protectedPlayers++;continue;}const key=quickstartPlayerKey(record,row);keys.set(row,key);if(snapshot.keys.has(key))remembered++;else pending.add(row);}
-  return {roster,snapshot,keys,pending,protectedPlayers,remembered};
+async function scope(loaded,memory,savePath,protectOriginalEaPlayers=true,settingsOnly=false){
+  const roster=buildRosterPlayerRows(loaded.players,loaded.teams,loaded.rosters),snapshot=memory.snapshot(await equipmentDynastyId(loaded.franchise),{savePath,players:loaded.players}),keys=new Map(),pending=new Set();let protectedPlayers=0,remembered=0,donorPlayersProtected=0;
+  const teamNames=buildTeamNames(loaded.teams.records),teamApparel=buildTeamApparel(loaded.teams.records),playerApparel=buildRosterPlayerApparel(loaded.players,loaded.teams,loaded.rosters),fcs=buildFcsTeamIndexes(loaded.teams.records),preparedDonors=collectEquipmentDonors(loaded.players.records,loaded.visuals.records,loaded.visuals.header.tableId,{rosterRows:roster,fcsTeamIndexes:fcs,teamNames,teamApparel,playerApparel,...(settingsOnly?{topPerPosition:30}:{})}),groups=new Map();
+  for(const donor of preparedDonors){const group=groups.get(donor.position)??[];group.push(donor);groups.set(donor.position,group);}const donorRows=new Set([...groups.values()].flatMap(group=>group.sort((a,b)=>b.overall-a.overall||a.row-b.row).slice(0,30).map(donor=>donor.row)));
+  for(const row of roster){const record=loaded.players.records[row];if(!record||record.isEmpty)continue;if(protectOriginalEaPlayers&&isOriginalEaPlayer(record)){protectedPlayers++;continue;}if(donorRows.has(row)){donorPlayersProtected++;continue;}const key=quickstartPlayerKey(record,row);keys.set(row,key);if(snapshot.keys.has(key))remembered++;else pending.add(row);}
+  return {roster,snapshot,keys,pending,protectedPlayers,remembered,donorPlayersProtected,donorRows,teamNames,teamApparel,playerApparel,fcs,preparedDonors};
 }
 export async function prepareEquipmentQuickstart(context){
-  const loaded=await loadEquipmentTables(context.savePath,context.schemaPath),s=await scope(loaded,memoryFor(context),context.savePath,quickstartOptions(context.options).protectOriginalEaPlayers);
-  return {newPlayers:s.pending.size,remembered:s.remembered,rememberedTotal:s.snapshot.keys.size,protectedPlayers:s.protectedPlayers,memoryScope:'dynasty'};
+  const loaded=await loadEquipmentSettingsTables(context.savePath,context.schemaPath),s=await scope(loaded,memoryFor(context),context.savePath,quickstartOptions(context.options).protectOriginalEaPlayers,true);
+  return {newPlayers:s.pending.size,remembered:s.remembered,rememberedTotal:s.snapshot.keys.size,protectedPlayers:s.protectedPlayers,donorPlayersProtected:s.donorPlayersProtected,memoryScope:'dynasty'};
 }
 async function preview(context){
   const memory=memoryFor(context),fingerprint=saveFingerprint(context.savePath),loaded=await loadEquipmentTables(context.savePath,context.schemaPath),settings=quickstartSettings(context.options),s=await scope(loaded,memory,context.savePath,settings.mods.protectOriginalEaPlayers),seed=randomBytes(4).readUInt32LE();
   settings.randomizer.seed=seed;settings.patcher.seed=seed;
   const draft=createVisualDraft(loaded.visuals);loaded.visuals=draft.table;
-  const teamNames=buildTeamNames(loaded.teams.records),teamApparel=buildTeamApparel(loaded.teams.records),playerApparel=buildRosterPlayerApparel(loaded.players,loaded.teams,loaded.rosters),fcs=buildFcsTeamIndexes(loaded.teams.records),before=snapshotVisualRawData(loaded.visuals.records);
-  const preparedDonors=collectEquipmentDonors(loaded.players.records,loaded.visuals.records,loaded.visuals.header.tableId,{rosterRows:s.roster,fcsTeamIndexes:fcs,teamNames,teamApparel,playerApparel});
-  // Frozen parsed donor outfits prevent feedback from earlier recipients. A
-  // separate donor-record array lets generated top donors be recipients too;
-  // original record identity still excludes copying a player's own outfit.
+  const {teamNames,teamApparel,playerApparel,fcs,preparedDonors}=s,before=snapshotVisualRawData(loaded.visuals.records);
+  // Donor outfits stay frozen and selected donors never become recipients.
   const recordRows=new Map(loaded.players.records.map((record,row)=>[record,row]));
-  const randomized=progressRange(25, 55, () => patchFreshmanEquipment(loaded.players.records,loaded.visuals.records,loaded.visuals.header.tableId,{...settings.randomizer,seed,teamNames,teamApparel,playerApparel,donorPlayerRecords:[...loaded.players.records],preparedDonors,recipientRosterRows:null,eligiblePlayer:record=>s.pending.has(recordRows.get(record)),fcsTeamIndexes:fcs,top:settings.randomizer.top,mixedChance:.30,crossMixedChance:.10,unlockedItemChance:.10,apply:true}));
+  const randomized=progressRange(25, 55, () => patchFreshmanEquipment(loaded.players.records,loaded.visuals.records,loaded.visuals.header.tableId,{...settings.randomizer,seed,teamNames,teamApparel,playerApparel,donorPlayerRecords:loaded.players.records,preparedDonors,recipientRosterRows:null,eligiblePlayer:record=>s.pending.has(recordRows.get(record)),fcsTeamIndexes:fcs,top:settings.randomizer.top,mixedChance:.30,crossMixedChance:.10,unlockedItemChance:.10,apply:true}));
   const processed=new Set(randomized.changes.map(change=>change.target.row));
   const fixes=progressRange(55, 82, () => applyGlobalEquipmentFixes(loaded.players.records,loaded.visuals.records,loaded.visuals.header.tableId,{...settings.patcher,quickstartTapeDefaults:true,teamNames,recolorTeamNames:buildRosterTeamNames(loaded.players,loaded.teams,loaded.rosters),fcsTeamIndexes:fcs,activePlayerRows:s.roster,eligiblePlayer:record=>processed.has(recordRows.get(record))&&!['K','P'].includes(String(sf(record,'Position')).toUpperCase())}));
-  applyQuickstartColorAccents({unlocked:settings.mods.unlocked,changes:randomized.changes,players:loaded.players.records,visuals:loaded.visuals.records,visualsTableId:loaded.visuals.header.tableId,seed,protectOriginalEaPlayers:settings.mods.protectOriginalEaPlayers});
+  applyQuickstartSpecialistCutoff({players:loaded.players.records,visuals:loaded.visuals.records,visualsTableId:loaded.visuals.header.tableId,settings,rosterRows:s.roster,processedRows:processed,teamNames,fcsTeamIndexes:fcs},fixes);
+  applyQuickstartColorAccents({unlocked:settings.mods.unlocked,raw:settings.mods.raw,changes:randomized.changes,players:loaded.players.records,visuals:loaded.visuals.records,visualsTableId:loaded.visuals.header.tableId,seed,protectOriginalEaPlayers:settings.mods.protectOriginalEaPlayers});
   applyQuickstartQbGloves({changes:randomized.changes,players:loaded.players.records,visuals:loaded.visuals.records,visualsTableId:loaded.visuals.header.tableId,protectOriginalEaPlayers:settings.mods.protectOriginalEaPlayers});
   let qbGlovePopulation=capQuickstartQbGloves({changes:randomized.changes,players:loaded.players.records,visuals:loaded.visuals.records,visualsTableId:loaded.visuals.header.tableId,seed,activePlayerRows:s.roster,protectOriginalEaPlayers:settings.mods.protectOriginalEaPlayers});
   const storage=progressRange(82,94,()=>finalizeVisualDraft(draft));
@@ -82,8 +84,8 @@ async function preview(context){
   const skippedCount=randomized.skipped.length+randomized.storageSkipped;
   const warnings=skippedCount?[`${skippedCount.toLocaleString()} players skipped.`]:[];
   const previewRows=rows.map(({oldRaw,newRaw,...row})=>row);
-  const details={seed,mods:settings.mods,top:settings.randomizer.top,totalPreviewRows:rows.length,changes:limitEquipmentPreview(previewRows),newPlayers:s.pending.size,remembered:s.remembered,protectedPlayers:s.protectedPlayers,skipped:skippedCount,storageSkipped:randomized.storageSkipped,warnings,protection:originalEaProtectionAudit([...s.roster].map(row=>loaded.players.records[row]),settings.mods.protectOriginalEaPlayers),qbGlovePopulation,populationSafeguards:fixes.populationSafeguards,unlockedTattooPopulation:fixes.unlockedTattooPopulation,canApply:processed.size>0};
-  const {noDripProfile,noDripPercentages,...reportedRandomizerSettings}=settings.randomizer;
+  const details={seed,mods:settings.mods,top:settings.randomizer.top,totalPreviewRows:rows.length,changes:limitEquipmentPreview(previewRows),newPlayers:s.pending.size,remembered:s.remembered,protectedPlayers:s.protectedPlayers,donorPlayersProtected:s.donorPlayersProtected,skipped:skippedCount,storageSkipped:randomized.storageSkipped,warnings,protection:originalEaProtectionAudit([...s.roster].map(row=>loaded.players.records[row]),settings.mods.protectOriginalEaPlayers),qbGlovePopulation,populationSafeguards:fixes.populationSafeguards,unlockedTattooPopulation:fixes.unlockedTattooPopulation,canApply:processed.size>0};
+  const {noDripProfile,noDripPercentages,allowDonorOnlyNoDrip,...reportedRandomizerSettings}=settings.randomizer;
   const report={prefix:'equipment-quickstart-report',headings:['Team','Player','Position','ClassYear','RedshirtStatus','Overall','PlayerRow','CharacterVisualsRow','ChangedSlotsAndMetadata','BeforeRawData','AfterRawData','DonorAuditJSON','Seed','QuickstartOptionsJSON','RandomizerOptionsJSON','PatcherOptionsJSON','PopulationCapsAuditJSON','TrackingAuditJSON','SkippedPlayers'],rows:rows.map((row,i)=>[row.team,row.player,row.position,row.classYear,row.redshirtStatus,row.overall,row.row,row.visualRow,summarizeVisualChanges(row.oldRaw,row.newRaw),row.oldRaw,row.newRaw,JSON.stringify(donorAudits.get(row.row)),seed,i===0?JSON.stringify(settings.mods):'',i===0?JSON.stringify(reportedRandomizerSettings):'',i===0?JSON.stringify(settings.patcher):'',i===0?JSON.stringify({equipment:fixes.populationSafeguards,tattoos:fixes.unlockedTattooPopulation,qbGloves:qbGlovePopulation}):'',i===0?JSON.stringify({scope:'dynasty',leagueId:s.snapshot.dynastyId,playerIdentityVersion:2,alreadyRemembered:s.remembered,newPlayers:s.pending.size,playersToRemember:keys.length}):'',i===0?skippedCount:''])};
   const result={status:'preview',mode:'preview',resultKind:QUICKSTART_ID,savePath:loaded.savePath,backupPath:null,reportPath:context.reports.create({...report,toolId:QUICKSTART_ID,toolName:QUICKSTART_NAME}),summary:[{label:'Players ready',value:rows.length},{label:'Already equipped',value:s.remembered},{label:'Original EA players protected',value:s.protectedPlayers},{label:'Players skipped',value:skippedCount}],historySummary:[{label:'Players equipped',value:rows.length}],details};
   const planId=cacheEquipmentPlan({toolId:QUICKSTART_ID,toolName:QUICKSTART_NAME,savePath:loaded.savePath,assignments,previewRows,report,result,needsVisuals:true,quickstartTracking:{...s.snapshot,keys}});

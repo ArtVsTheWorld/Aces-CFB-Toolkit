@@ -54,3 +54,10 @@ html[data-theme="dark"] .scope-impact { background: #14271e; color: #e8f2ec; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
 @media (max-width: 620px) { .help-search-controls { grid-template-columns: 1fr; } .dialog-section-links { max-height: 110px; overflow-y: auto; } }
 .reports-library-table{table-layout:fixed}.reports-library-table th:nth-child(1){width:18%}.reports-library-table th:nth-child(2){width:18%}.reports-library-table th:last-child{width:24%}.report-library-name{overflow-wrap:anywhere}.report-library-actions .button{white-space:normal;margin:3px;max-width:100%}
+
+/* Simple, searchable explanations share the same card surfaces as tools. */
+.help-topic > summary{font-size:17px;cursor:pointer;color:var(--ink)}
+.help-topic > p{color:var(--subtle-ink);line-height:1.5}
+.help-topic dl{display:grid;gap:6px;margin-bottom:0}
+.help-topic dt{margin-top:10px}
+.help-topic dd{margin:0;line-height:1.5;color:var(--subtle-ink)}

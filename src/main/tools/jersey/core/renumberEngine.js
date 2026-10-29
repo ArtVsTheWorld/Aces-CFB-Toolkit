@@ -1,3 +1,4 @@
+import {applyPromotionSettings,promotionAllowed,rollPromotion} from '../promotionChances.js';
 import RULES from "./rules.js";
 import { generateCandidates, MINIMUM_PROMOTION_DISTANCE } from "./candidateGenerator.js";
 import { getQuarterbackRank, isNumberAvailable, resolveDuplicates } from "./duplicateResolver.js";
@@ -171,7 +172,7 @@ function collisionUpgradeCandidates(player, enablePromotions) {
     player.isPromotionAttempt = false;
     return generateCandidates(player).candidates.filter(number => preferredSet(player).has(number));
   }
-  if (!enablePromotions) return [];
+  if (!enablePromotions || !promotionAllowed(player)) return [];
   if (!isPromotionEligible(player)) return [];
   player.isPromotionAttempt = true;
   const candidates = generateCandidates(player).candidates;
@@ -186,8 +187,7 @@ function rollPromotionWinners(roster, stats, random, enablePromotions) {
   for (const player of roster) {
     if (!movable(player) || player.wasRenumberedThisRun || !isPromotionEligible(player)) continue;
     stats.promotionEligible++;
-    const chance = Number(RULES[player.Position]?.promoteChance ?? 0);
-    if (random() < chance) winners.add(player);
+    if (rollPromotion(player, random)) winners.add(player);
   }
   return winners;
 }
@@ -465,6 +465,7 @@ function fillPrestigeNumbers(team, teamName, stats) {
     ...team.defense.map(player => ({ player, roster: team.defense }))
   ].filter(({ player }) =>
     movable(player) &&
+    promotionAllowed(player) &&
     !player.wasRenumberedThisRun &&
     !PRESTIGE_NUMBERS.includes(player.JerseyNum)
   ).sort(compareFillCandidates);
@@ -507,13 +508,14 @@ export function runRenumberEngine(teamGroups, teamNames, {
   enableTeamRules = false,
   enableRetiredNumbers = false,
   enablePromotions = true,
-  customRetired = {}, customTraditions = [],
+  customRetired = {}, customTraditions = [], promotionChances = {},
   random = Math.random
 } = {}) {
   const stats = createStats();
   if (enableRetiredNumbers) applyRetiredNumberRules(teamGroups, teamNames, customRetired);
 
   const allPlayers = [...teamGroups.values()].flatMap(team => [...team.offense, ...team.defense, ...(team.specialists ?? [])]);
+  applyPromotionSettings(allPlayers, promotionChances, random);
   const initialSuboptimal = allPlayers.filter(player => !isProtectedPlayer(player) && !isLegalNumber(player)).length;
 
   if (enableTeamRules) applyTeamSpecificRules(teamGroups, teamNames, stats, random, customTraditions);

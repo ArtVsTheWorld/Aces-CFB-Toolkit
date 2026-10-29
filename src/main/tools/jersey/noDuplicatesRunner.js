@@ -1,3 +1,4 @@
+import {PLAYER_PICKER_FIELDS} from '../../services/settingsFields.js';
 import {originalEaProtectionEnabled,originalEaIdentity,originalEaProtectionAudit,isOriginalEaPlayer} from '../../services/originalEaPlayers.js';
 import { jerseyConfigurationCatalog } from './shared.js';
 import { playerScopeCatalog } from "../playerScope.js";
@@ -12,7 +13,7 @@ const TOOL_ID = "jersey-no-duplicates", TOOL_NAME = "Jersey Renumber — No Dupl
 const isPlaceholder = player => player.FirstName === "Omar" && player.LastName === "Omar" && player.Position === "QB" && Number(player.JerseyNum) === 0;
 const isRostered = player => player && !player.isEmpty && Number(player.TeamIndex) >= 0 && Number(player.TeamIndex) !== 255 && !isPlaceholder(player);
 const normalize = options => ({ ...normalizeJerseyCustom(options), skippedTeams: Array.isArray(options?.skippedTeams) ? options.skippedTeams.map(String) : [], enableTeamRules: options?.enableTeamRules !== false, enableRetiredNumbers: options?.enableRetiredNumbers !== false, enablePromotions: options?.enablePromotions !== false });
-export async function prepareJerseyNoDuplicates({ savePath, schemaPath }) { const loaded = await loadJerseyTables(savePath, schemaPath, { franchiseUsers: true }); const names = teamNames(loaded.teams.records), controlled = userControlledTeams(loaded.teams, loaded.franchiseUsers, loaded.players); return { ...jerseyConfigurationCatalog(loaded.teams.records), ...playerScopeCatalog(loaded.players.records, names), teams: jerseyTeams(loaded.teams.records), userControlledTeams: [...controlled].map(index => names.get(index)).filter(Boolean) }; }
+export async function prepareJerseyNoDuplicates({ savePath, schemaPath }) { const loaded = await loadJerseyTables(savePath, schemaPath, { franchiseUsers: true, fields:{players:PLAYER_PICKER_FIELDS} }); const names = teamNames(loaded.teams.records), controlled = userControlledTeams(loaded.teams, loaded.franchiseUsers, loaded.players); return { ...jerseyConfigurationCatalog(loaded.teams.records), ...playerScopeCatalog(loaded.players.records, names), teams: jerseyTeams(loaded.teams.records), userControlledTeams: [...controlled].map(index => names.get(index)).filter(Boolean) }; }
 
 async function preview(context) {
   const options = normalize(context.options); const loaded = await loadJerseyTables(context.savePath, context.schemaPath, { franchiseUsers: true }); const names = teamNames(loaded.teams.records); const rowMap = playerRowMap(loaded.players.records), skipped = new Set([...names].filter(([, name]) => options.skippedTeams.includes(name)).map(([index]) => index));

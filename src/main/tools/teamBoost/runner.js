@@ -1,3 +1,4 @@
+import {PLAYER_PICKER_FIELDS} from '../../services/settingsFields.js';
 import { normalizePlayerScope, playerScopeCatalog } from "../playerScope.js";
 import { POSITION_GROUPS } from "../../../shared/positionGroups.js";
 import path from "node:path";
@@ -12,8 +13,8 @@ import { RATING_LABELS } from "./ratingWeights.js";
 const TOOL_ID = "team-boost", TOOL_NAME = "Team Boost";
 const classYear = record => `${record.RedshirtStatus === "Previous" ? "RS" : "True"} ${record.SchoolYear ?? "Unknown"}`;
 
-async function load(savePath, schemaPath) {
-  const opened = await openCfb27Save(savePath, schemaPath); const tables = await readTables(opened.franchise, { players: PLAYER_TABLE_UID, teams: TEAM_TABLE_UID });
+async function load(savePath, schemaPath, settingsOnly=false) {
+  const opened = await openCfb27Save(savePath, schemaPath); const tables = await readTables(opened.franchise, { players: PLAYER_TABLE_UID, teams: TEAM_TABLE_UID },settingsOnly?{players:[...PLAYER_PICKER_FIELDS,'PlayerType',...Object.keys(RATING_LABELS)]}:{});
   const sample = tables.players.records.find(record => record && !record.isEmpty);
   if (!sample || sample.PlayerType === undefined || sample.Position === undefined || sample.TeamIndex === undefined || sample.SpeedRating === undefined) throw new Error("Player table 1612938518 does not expose the expected Team Boost fields.");
   return { ...opened, ...tables };
@@ -21,7 +22,7 @@ async function load(savePath, schemaPath) {
 
 const eligibleTeams = records => availableTeams(records.filter(record => !isDirectionalFcsTeam(record)));
 const directionalFcsIndexes = records => { const indexes = new Set(); records.forEach((record, row) => { if (!isDirectionalFcsTeam(record)) return; const teamIndex = Number(record.TeamIndex); indexes.add(Number.isInteger(teamIndex) ? teamIndex : row); }); return indexes; };
-export async function prepareTeamBoost({ savePath, schemaPath }) { const loaded = await load(savePath, schemaPath); return { ...playerScopeCatalog(loaded.players.records, new Map(eligibleTeams(loaded.teams.records).map(team => [Number(team.teamIndex), team.name]))), teams: eligibleTeams(loaded.teams.records), positions: VALID_POSITIONS, attributes: Object.entries(RATING_LABELS).filter(([field]) => loaded.players.records.some(record => record && !record.isEmpty && record[field] !== undefined)).map(([value, label]) => ({ value, label })) }; }
+export async function prepareTeamBoost({ savePath, schemaPath }) { const loaded = await load(savePath, schemaPath,true); return { ...playerScopeCatalog(loaded.players.records, new Map(eligibleTeams(loaded.teams.records).map(team => [Number(team.teamIndex), team.name]))), teams: eligibleTeams(loaded.teams.records), positions: VALID_POSITIONS, attributes: Object.entries(RATING_LABELS).filter(([field]) => loaded.players.records.some(record => record && !record.isEmpty && record[field] !== undefined)).map(([value, label]) => ({ value, label })) }; }
 
 function normalized(options, teams) {
   const seed = Math.floor(Math.random() * 0x100000000), minimum = Number(options?.minimum), maximum = Number(options?.maximum), ratingMode = String(options?.ratingMode ?? "nonphysical"), playerScope = String(options?.playerScope ?? "all");

@@ -29,6 +29,7 @@ export const IPC = Object.freeze({
   prepareEquipmentDonors: "equipment:prepare-donors",
   clearQuickstartMemory: 'equipment:clear-quickstart-memory',
   searchPreview: "tools:search-preview",
+  mapperTargets: 'equipment:mapper-targets',
   listReports: "reports:list",
   listHistory: "history:list",
   getHistory: "history:get",

@@ -16,7 +16,7 @@ async function invokeOperation(channel, request = {}) {
   }
 }
 
-const channels = Object.freeze({ bootstrap: "app:bootstrap", chooseSave: "dialog:choose-save", chooseFile: "dialog:choose-file", setActiveSave: "context:set-active-save", clearActiveSave: "context:clear-active-save", updateTheme: "settings:update-theme", homeContext: "home:context", homeLines: "home:lines", chooseTeamArtwork: "settings:choose-team-artwork", clearTeamArtwork: "settings:clear-team-artwork", runTool: "tools:run", prepareTool: "tools:prepare", prepareEquipmentDonors: "equipment:prepare-donors", searchPreview: "tools:search-preview", listReports: "reports:list", listHistory: "history:list", getHistory: "history:get", getReview: "history:get-review", listLogs: "logs:list", clearLogs: "logs:clear", revealReport: "shell:reveal-report", openPath: "shell:open-path" });
+const channels = Object.freeze({ bootstrap: "app:bootstrap", chooseSave: "dialog:choose-save", chooseFile: "dialog:choose-file", setActiveSave: "context:set-active-save", clearActiveSave: "context:clear-active-save", updateTheme: "settings:update-theme", homeContext: "home:context", homeLines: "home:lines", chooseTeamArtwork: "settings:choose-team-artwork", clearTeamArtwork: "settings:clear-team-artwork", runTool: "tools:run", prepareTool: "tools:prepare", prepareEquipmentDonors: "equipment:prepare-donors", searchPreview: "tools:search-preview", mapperTargets: "equipment:mapper-targets", listReports: "reports:list", listHistory: "history:list", getHistory: "history:get", getReview: "history:get-review", listLogs: "logs:list", clearLogs: "logs:clear", revealReport: "shell:reveal-report", openPath: "shell:open-path" });
 contextBridge.exposeInMainWorld("cfbToolkit", Object.freeze({
   bootstrap: () => ipcRenderer.invoke(channels.bootstrap),
   getUpdateStatus: () => ipcRenderer.invoke("updates:status"),
@@ -70,6 +70,7 @@ contextBridge.exposeInMainWorld("cfbToolkit", Object.freeze({
   prepareEquipmentDonors: request => invokeOperation(channels.prepareEquipmentDonors, request),
   clearQuickstartMemory: () => invokeOperation('equipment:clear-quickstart-memory'),
   searchPreview: request => ipcRenderer.invoke(channels.searchPreview, request),
+  mapperTargets: request => ipcRenderer.invoke(channels.mapperTargets, request),
   listReports: () => invokeOperation(channels.listReports),
   listHistory: () => ipcRenderer.invoke(channels.listHistory),
   getHistory: id => ipcRenderer.invoke(channels.getHistory, id),

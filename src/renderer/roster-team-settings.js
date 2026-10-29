@@ -7,7 +7,7 @@ function rosterAffectedSummary(){if(!document.getElementById('roster-caliber'))r
 function mountRosterTeamEditor({host,teams,shared,getOverride,setOverride,isProtected,onChange,onBack}){
   // Keep pane identifiers stable while presenting schemes/makeup before talent spending.
   const sections=[['roster-build-config','Caliber & Age',0],['roster-scheme-config','Schemes',2],['roster-strength-config','Position Strength',1],['roster-appearance-config','Appearance',3]];
-  host.innerHTML=`<div class="roster-team-editor-toolbar"><button type="button" class="button secondary" data-roster-back>← Back to Team List</button><label>Individual Team<select data-roster-edit-team>${teams.map(team=>`<option>${escapeHtml(team.name)}</option>`).join('')}</select></label></div><div class="roster-team-editor-heading"><img data-roster-editor-logo alt=""><div><h3 data-roster-editor-title></h3><p data-roster-editor-status></p></div></div><label class="toggle-card"><input type="checkbox" data-roster-custom><span>Use Individual Settings<small>Turn off to use the main-page settings. Manual edits are protected from bulk changes.</small></span></label><nav class="roster-team-tabs" aria-label="Individual team settings">${sections.map(([,label,i])=>`<button type="button" class="button secondary" data-roster-tab="${i}" aria-pressed="${i===0}">${label}</button>`).join('')}</nav><div data-roster-team-content></div>`;
+  host.innerHTML=`<div class="roster-team-editor-toolbar"><button type="button" class="button secondary" data-roster-back>← Back to Team List</button><label>Team to Edit<select data-roster-edit-team>${teams.map(team=>`<option>${escapeHtml(team.name)}</option>`).join('')}</select></label></div><div class="roster-team-editor-heading"><img data-roster-editor-logo alt=""><div><h3 data-roster-editor-title></h3><p data-roster-editor-status></p></div></div><label class="toggle-card"><input type="checkbox" data-roster-custom><span>Customize This Team<small>Turn off to use the main-page settings. Customized teams are skipped by Group Setup.</small></span></label><nav class="roster-team-tabs" aria-label="Individual team settings">${sections.map(([,label,i])=>`<button type="button" class="button secondary" data-roster-tab="${i}" aria-pressed="${i===0}">${label}</button>`).join('')}</nav><div data-roster-team-content></div>`;
   const workspace=host.querySelector('[data-roster-team-content]'),teamSelect=host.querySelector('[data-roster-edit-team]'),custom=host.querySelector('[data-roster-custom]');
   let current=null,dirty=false;
   sections.forEach(([id,,i])=>{
@@ -17,7 +17,7 @@ function mountRosterTeamEditor({host,teams,shared,getOverride,setOverride,isProt
     workspace.append(pane);
   });
   const values=()=>Object.fromEntries(rosterSettingIds.map(id=>[id,configurationValue(configurationRead(workspace,id))]));
-  const status=()=>{host.querySelector('[data-roster-editor-status]').textContent=(getOverride(current)?'Customized':'Uses Shared Settings')+' · '+(isProtected(current)?'Protected from Bulk Changes':'Available for Bulk Changes');};
+  const status=()=>{host.querySelector('[data-roster-editor-status]').textContent=(getOverride(current)?'Customized':'Main-Page Settings')+' · '+(isProtected(current)?'Skipped by Group Setup':'Included in Group Setup');};
   const store=()=>{
     if(!current||!dirty)return;
     if(custom.checked){const next={...getOverride(current),...values()};delete next.batchSpending;setOverride(current,next);}else setOverride(current,null);

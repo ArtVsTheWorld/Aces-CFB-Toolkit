@@ -15,4 +15,5 @@
 [data-option-picker$="equipment-remove-items"] .team-picker-toolbar > .button,
 [data-option-picker$="equipment-remove-items"] .team-picker-toolbar select { height:38px; min-height:38px; margin:0; }
 [data-option-picker$="equipment-remove-items"] .team-picker-toolbar > .button { align-self:end; }
+body .notice[data-cutoff-leg-warning] { color:var(--danger); border-left-color:var(--danger); background:color-mix(in srgb,var(--danger) 12%,var(--panel)); }
 @media(max-width:700px) { [data-option-picker$="equipment-remove-items"] .team-picker-toolbar { grid-template-columns:minmax(0,1fr) minmax(0,1fr); } }

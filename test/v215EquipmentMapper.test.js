@@ -29,21 +29,21 @@ test('target teams, positions and individual players compose; stale row identiti
   assert.deepEqual(buildMapperPreview(players,library,[mapping]).changes.map(player=>player.row),[1]);mapping.playerIdentities[0].player='Wrong';assert.throws(()=>buildMapperPreview(players,library,[mapping]),/identities/);
 });
 test('copy needs explicit targets; missing or cross-slot replacement fails safely',()=>{
-  assert.throws(()=>normalizeMapperRules([{action:'copy',replacementId:'x'}]),/targets/);assert.throws(()=>buildMapperPreview(sample(),mapperLibrary(sample()),[{action:'copy',scope:'all',replacementId:'gone'}]),/no longer present/);
+  assert.throws(()=>normalizeMapperRules([{action:'copy',replacementId:'x'}]),/targets/);assert.throws(()=>buildMapperPreview(sample(),mapperLibrary(sample()),[{action:'copy',scope:'all',replacementId:'gone'}]),/unavailable in the selected equipment catalog/);
   const players=[...sample(),player(3,[element('InnerSocks','Gear_Socks_Low')])],library=mapperLibrary(players);assert.throws(()=>buildMapperPreview(players,library,[rule(library,'ArmSleeve_None','Gear_Socks_Low')]),/same exact equipment slot/);
 });
 test('shared character visuals are blocked without mutating either player',()=>{
   const players=sample();players[0].shared=true;const result=buildMapperPreview(players,mapperLibrary(players),[rule(mapperLibrary(players),'ArmSleeve_None',quarter.itemName)]);assert.equal(result.changes.length,0);assert.match(result.blocked[0].reason,/shares/);
 });
-test('incompatible brand-sensitive items are rejected instead of replacing unrelated gear',()=>{
-  const nike=EQUIPMENT_ITEMS.find(item=>item.category==='Cleats'&&item.itemName==='GearFootwear_shoe_low_NikeVaporEdge'),adidas=EQUIPMENT_ITEMS.find(item=>item.category==='Cleats'&&/AdidasAdizero_LTA58$/.test(item.itemName)),players=[player(1,[element('LeftShoe',nike.itemName)]),player(2,[element('LeftShoe',adidas.itemName)],{branding:'adidas'})],library=mapperLibrary(players),result=buildMapperPreview(players,library,[rule(library,nike.itemName,adidas.itemName)]);assert.equal(result.changes.length,0);assert.match(result.blocked[0].reason,/brand/);
+test('incompatible brand-sensitive items warn without replacing unrelated gear',()=>{
+  const nike=EQUIPMENT_ITEMS.find(item=>item.category==='Cleats'&&item.itemName==='GearFootwear_shoe_low_NikeVaporEdge'),adidas=EQUIPMENT_ITEMS.find(item=>item.category==='Cleats'&&/AdidasAdizero_LTA58$/.test(item.itemName)),players=[player(1,[element('LeftShoe',nike.itemName)]),player(2,[element('LeftShoe',adidas.itemName)],{branding:'adidas'})],library=mapperLibrary(players),result=buildMapperPreview(players,library,[rule(library,nike.itemName,adidas.itemName)]);assert.equal(result.changes.length,1);assert.equal(result.blocked.length,0);assert.match(result.compatibilityWarnings[0].reason,/brand/);
 });
-test('a newly introduced sleeve conflict blocks; unrelated pre-existing conflicts are not repaired',()=>{
+test('a newly introduced sleeve conflict warns; unrelated pre-existing conflicts are not repaired',()=>{
   const full=EQUIPMENT_ITEMS.find(item=>item.slots.includes('LeftArmWear')&&/GearArmSleeve_NikeProDriFitSleeve_White$/.test(item.itemName)),wrist=element('LeftWristWear','GearWrist_wristBandCoach_White');assert.ok(full);
-  const players=[player(1,[none,wrist]),player(2,[element('LeftArmWear',full.itemName)])],library=mapperLibrary(players),result=buildMapperPreview(players,library,[rule(library,'ArmSleeve_None',full.itemName)]);assert.equal(result.changes.length,0);assert.ok(result.blocked.length);
+  const players=[player(1,[none,wrist]),player(2,[element('LeftArmWear',full.itemName)])],library=mapperLibrary(players),result=buildMapperPreview(players,library,[rule(library,'ArmSleeve_None',full.itemName)]);assert.equal(result.changes.length,1);assert.equal(result.blocked.length,0);assert.ok(result.compatibilityWarnings.length);
 });
-test('batch results are deterministic and rules can resolve each other before final compatibility checks',()=>{
-  const players=sample(),library=mapperLibrary(players),rules=[rule(library,'ArmSleeve_None',quarter.itemName),rule(library,quarter.itemName,'ArmSleeve_None')];assert.deepEqual(buildMapperPreview(players,library,rules),buildMapperPreview(players,library,rules));assert.equal(buildMapperPreview(players,library,rules).changes.length,1);
+test('batch swaps are deterministic and each rule matches the original outfit',()=>{
+  const players=sample(),library=mapperLibrary(players),rules=[rule(library,'ArmSleeve_None',quarter.itemName),rule(library,quarter.itemName,'ArmSleeve_None')];assert.deepEqual(buildMapperPreview(players,library,rules),buildMapperPreview(players,library,rules));assert.equal(buildMapperPreview(players,library,rules).changes.length,2);
 });
 test('copy mode targets an absent slot and preserves complete item metadata',()=>{
   const players=[player(1,[]),player(2,[sleeve])],library=mapperLibrary(players),result=buildMapperPreview(players,library,[{action:'copy',replacementId:library.items[0].id,scope:'selected',playerRows:[1],playerIdentities:[{row:1,team:'Test',player:'Player 1'}]}]);assert.equal(result.blocked.length,0);assert.deepEqual(JSON.parse(result.changes[0].newRawData).loadouts[0].loadoutElements,[sleeve]);

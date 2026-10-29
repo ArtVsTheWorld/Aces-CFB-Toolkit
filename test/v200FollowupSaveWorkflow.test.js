@@ -10,6 +10,7 @@ import { prepareEquipmentTool, runEquipmentPatcher, runFreshmanEquipment } from 
 import { clearPlayerTattoos, hasUnlockedBodyTattoo } from '../src/main/tools/equipment/core/tattoos.js';
 import { ReportService } from '../src/main/services/reports.js';
 import { parseCsv } from '../src/main/services/reportAudit.js';
+import { removeNonePlaceholders } from '../src/main/tools/equipment/visualDraft.js';
 import { takePlan } from '../src/main/tools/jersey/planStore.js';
 
 const source = path.resolve('../EXAMPLE SAVES VANILLA GAME/DYNASTY-LSUTESTSAVEPRESZN');
@@ -56,7 +57,7 @@ test('tattoo Add then Clear uses exact cached Patcher plans, preserves all non-t
   assert.ok(cleared.preview.details.clearedTattooPlayers>0);
   for(const assignment of cleared.assignments) {
     const expected=JSON.parse(assignment.oldValue); assert.ok(clearPlayerTattoos(expected));
-    assert.deepEqual(JSON.parse(assignment.newValue),expected); assert.equal(hasUnlockedBodyTattoo(expected),false);
+    removeNonePlaceholders(expected); assert.deepEqual(JSON.parse(assignment.newValue),expected); assert.equal(hasUnlockedBodyTattoo(expected),false);
   }
   const [headings,...rows] = parseCsv(fs.readFileSync(cleared.applied.reportPath,'utf8'));
   assert.ok(rows.some(row=>row[headings.indexOf('ChangeType')].includes('Clear tattoos')&&row[headings.indexOf('ChangedSlotsAndMetadata')].includes('Tattoo')));

@@ -32,9 +32,16 @@ export function writeCsv(filePath, headings, rows) {
   const temporaryPath = `${filePath}.writing-${randomUUID()}`;
   const descriptor = fs.openSync(temporaryPath, "wx");
   let chunk = "";
+  const cells=new Map();
+  const encode=value=>{
+    if(typeof value!=='string'||value.length>2048)return csvCell(value);
+    if(cells.has(value))return cells.get(value);
+    const result=csvCell(value);if(cells.size<256)cells.set(value,result);return result;
+  };
+  function* reportRows(){yield headings;yield* rows;}
   try {
-    for (const row of [headings, ...rows]) {
-      chunk += `${row.map(csvCell).join(",")}\r\n`;
+    for (const row of reportRows()) {
+      chunk += `${row.map(encode).join(",")}\r\n`;
       if (chunk.length >= 1024 * 1024) { fs.writeFileSync(descriptor, chunk, "utf8"); chunk = ""; }
     }
     if (chunk) fs.writeFileSync(descriptor, chunk, "utf8");

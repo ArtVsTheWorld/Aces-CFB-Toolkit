@@ -60,7 +60,7 @@ test('default caliber frequencies use the requested named preset weights',()=>{
 });
 test('renderer scheme counts reuse constrained allocation and modal controls have distinct meanings',()=>{
   const scripts=['roster-schemes.js','roster-batch.js'].map(file=>fs.readFileSync(new URL('../src/renderer/'+file,import.meta.url),'utf8'));scripts.forEach(source=>assert.doesNotThrow(()=>new vm.Script(source)));
-  const page=fs.readFileSync(new URL('../src/renderer/roster-generator.js',import.meta.url),'utf8');for(const id of ['roster-makeup','roster-configure-teams'])assert.ok(page.includes(id));assert.ok(scripts[0].includes('RosterComposition.counts'));assert.ok(scripts[1].includes('control.value=next'));assert.ok(scripts[1].includes('Keep Their Identity'));assert.ok(scripts[1].includes('Copy to Checked Teams'));assert.ok(scripts[1].includes('dialog.closeEditor()'));
+  const page=fs.readFileSync(new URL('../src/renderer/roster-generator.js',import.meta.url),'utf8');for(const id of ['roster-makeup','roster-configure-teams'])assert.ok(page.includes(id));assert.ok(scripts[0].includes('RosterComposition.counts'));assert.ok(scripts[1].includes('control.value=next'));assert.ok(scripts[1].includes('Keep Each Team Similar'));assert.ok(scripts[1].includes('Copy to Selected Teams'));assert.ok(scripts[1].includes('dialog.closeEditor()'));
 });
 test('one Configure Teams window owns both workflows and only commits its draft on Save',()=>{
   const page=fs.readFileSync(new URL('../src/renderer/roster-generator.js',import.meta.url),'utf8'),batch=fs.readFileSync(new URL('../src/renderer/roster-batch.js',import.meta.url),'utf8'),editor=fs.readFileSync(new URL('../src/renderer/roster-team-settings.js',import.meta.url),'utf8');

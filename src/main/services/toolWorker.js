@@ -6,27 +6,32 @@ import {QuickstartMemory, equipmentDynastyId} from './quickstartMemory.js';
 import {openCfb27Save, inspectSaveSchema} from './save.js';
 import {ReportService} from './reports.js';
 import {ReviewSnapshots} from './reviewSnapshots.js';
-import {readHomeContext} from './homeContext.js';
+import {readToolHomeContext} from './saveMetadata.js';
 import {readSeasonLines} from '../tools/forceWin/runner.js';
 import {withToolProgress, toolProgress, progressRange} from './toolProgress.js';
 import path from 'node:path';
 import {readDynastyIdentity} from './dynastyIdentity.js';
+import {queryMapperTargets} from '../tools/equipmentMapper/targets.js';
+import {EquipmentSettingsCache} from './equipmentSettingsCache.js';
 
 const memory = new QuickstartMemory(workerData.memoryFile);
 const reports = new ReportService(workerData.reportsDirectory);
 const reviews = new ReviewSnapshots(workerData.reviewsDirectory);
+const equipmentSettings=new EquipmentSettingsCache(workerData.memoryFile);
 
 async function execute(action, payload) {
   const context = {...payload, quickstartMemory:memory};
   if (action === 'inspect') return inspectSaveSchema(payload.savePath, payload.schemaDirectory);
   if (action === 'identity') return readDynastyIdentity(payload.savePath,payload.schemaDirectory??path.dirname(payload.schemaPath));
   if (action === 'prepare') {
+    return equipmentSettings.read(payload,async()=>{
     const prepared = await progressRange(0, 80, () => getToolHandler(payload.toolId)?.prepare?.(context) ?? {});
     toolProgress(82, 'Reading controlled teams…');
-    const home = await progressRange(82, 94, () => readHomeContext(payload.savePath, payload.schemaPath)).catch(() => null);
+    const home = await progressRange(82, 94, () => readToolHomeContext(payload.savePath, payload.schemaPath)).catch(() => null);
     if (!home) return prepared;
     const controlled = new Map([...(prepared.userControlledTeams ?? []), ...(home.controlledTeams ?? [])].map(team => [team.name ?? team, team]));
     return {...prepared, userControlledTeams:[...controlled.values()]};
+    },()=>toolProgress(94,'Using current player and team settings…'));
   }
   if (action === 'run') {
     const handler = getToolHandler(payload.toolId);
@@ -35,7 +40,9 @@ async function execute(action, payload) {
     const dynastyId=await readDynastyIdentity(payload.savePath,path.dirname(payload.schemaPath));
     if(payload.mode==='apply'&&previous?.dynastyId!=null&&previous.dynastyId!==dynastyId)throw Error('The save changed after Preview: it belongs to a different dynasty. Run Preview again.');
     const audit = {...payload.audit,dynastyId, options:previous?.options ?? payload.options ?? {}, previewRunId:previous?.runId ?? null};
-    const generated = await progressRange(0, 93, () => handler.run({...context, reports:reports.forRun(audit)}));
+    let generated;
+    try{generated=await progressRange(0,93,()=>handler.run({...context,reports:reports.forRun(audit)}));}
+    finally{if(payload.mode==='apply')equipmentSettings.clear();}
     const result=pagePlanResult({...generated,dynastyId});
     if (payload.mode === 'preview' && result.planId) setPlanAudit(result.planId, audit);
     toolProgress(94, 'Saving review details…');
@@ -45,12 +52,14 @@ async function execute(action, payload) {
     return {result, reviewAvailable, reviewError};
   }
   if (action === 'search') return searchPlanRows(payload.planId, payload.query, 100, payload.filters,payload.page);
+  if (action === 'mapperTargets') return queryMapperTargets(payload);
   if (action === 'donors') return prepareEquipmentDonors(context);
   if (action === 'clearMemory') {
+    equipmentSettings.clear();
     const {franchise} = await openCfb27Save(payload.savePath, payload.schemaPath);
     return memory.clear(await equipmentDynastyId(franchise));
   }
-  if (action === 'home') return readHomeContext(payload.savePath, payload.schemaPath);
+  if (action === 'home') return readToolHomeContext(payload.savePath, payload.schemaPath);
   if (action === 'lines') return readSeasonLines(context);
   if (action === 'review') return reviews.get(payload.id);
   if (action === 'pruneReviews') return reviews.prune(payload.ids);

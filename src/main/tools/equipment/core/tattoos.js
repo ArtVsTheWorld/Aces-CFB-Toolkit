@@ -319,7 +319,7 @@ function buildTeamTattooPlan(entries, capPercentage, rng, selection, settings, f
   };
 }
 
-export function applyUnlockedTattooPlan(parsed, plan) {
+export function applyUnlockedTattooPlan(parsed, plan, {preserveLegLayers=false}={}) {
   if (!plan || hasUnlockedBodyTattoo(parsed)) return null;
   const gearLoadouts = (parsed?.loadouts ?? []).filter(loadout => isPlayerOnFieldLoadout(loadout) && Array.isArray(loadout.loadoutElements));
   if (!gearLoadouts.length) return null;
@@ -329,7 +329,7 @@ export function applyUnlockedTattooPlan(parsed, plan) {
   if (plan.legs) {
     setSlot(tattooElements, "LeftLegTattoo", plan.legs.asset);
     setSlot(tattooElements, "RightLegTattoo", plan.legs.asset);
-    for (const loadout of gearLoadouts) {
+    if(!preserveLegLayers)for (const loadout of gearLoadouts) {
       setSlot(loadout.loadoutElements, "InnerPants", "BottomBase_None");
     }
   }
@@ -339,7 +339,7 @@ export function applyUnlockedTattooPlan(parsed, plan) {
   }
   const parts = [
     ...Object.entries(plan.arms).map(([side, item]) => `${side} arm: ${item.label}`),
-    ...(plan.legs ? [`both legs: ${plan.legs.label}; bare legs`] : [])
+    ...(plan.legs ? [`both legs: ${plan.legs.label}; ${preserveLegLayers?"leg layers retained":"bare legs"}`] : [])
   ];
   return {
     oldItem: "No body tattoo",

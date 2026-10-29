@@ -120,10 +120,10 @@ function mountBoostSettings(workspace){
   const condition=otherToolNode('div','tool-player-condition');condition.append(toolFlowField('player-scope'));condition.append(document.getElementById('player-scope-help'));scope.prepend(condition);
   const range=document.getElementById('minimum').closest('.field-grid'),overrides=document.getElementById('configure-boost-ranges').closest('.configuration-entry'),attributes=toolEditorFor(document.getElementById('boost-attributes').closest('[data-option-picker]'));
   const root=createOtherToolFlow(workspace,{kind:'team-boost',previewId:'preview',twoPages:true});
-  condenseConfiguration(scope,{title:'Player Filters',description:'Filters narrow the teams selected for this run. Above/below-average scope compares each player with their own position room.',summary:s=>[configurationLabel(s,'player-scope'),selectSummary('boost-positions','All Positions'),selectSummary('boost-classes','All Class Years'),selectSummary('boost-redshirt')].join(' · ')});
+  condenseConfiguration(scope,{title:'Player Filters',description:'Choose which players on your selected teams can change. Below Average targets players weaker than teammates at the same position; Above Average does the opposite.',summary:s=>[configurationLabel(s,'player-scope'),selectSummary('boost-positions','All Positions'),selectSummary('boost-classes','All Class Years'),selectSummary('boost-redshirt')].join(' · ')});
   addToolSection(root,0,'Players & Teams','Choose the teams to adjust, then narrow the player list if needed.',toolSettingsGrid(toolFlowCard('Teams','Choose one or more teams whose ratings should change.',teams),toolFlowCard('Player Filters','Combine position, class year, redshirt status, individual players and above/below-average scope.',toolEditorFor(scope))));
   addToolSection(root,0,'Rating Options','Choose which ratings can change.',toolSettingsGrid(toolInlineCard('rating-mode','Ratings to Adjust','Relevant Ratings adjusts the skills used by each player’s position. Specific Attributes changes every supported attribute you select.')));
-  const rangeEntry=condenseToolFields([range],{title:'Rating Adjustments',description:'Positive values raise ratings; negative values lower them. Positions without an override use the main range.',summary:s=>`${configurationRead(s,'minimum').value} to ${configurationRead(s,'maximum').value}`,validate:s=>{const min=configurationNumber(s,'minimum'),max=configurationNumber(s,'maximum');return !Number.isInteger(min)||!Number.isInteger(max)||min < -99||max>99||min>max?'Use whole numbers from -99 to 99, with minimum no greater than maximum.':'';}});
+  const rangeEntry=condenseToolFields([range],{title:'Rating Adjustments',description:'Positive numbers raise ratings. Negative numbers lower them. Example: +2 to +5 gives each player a boost in that range. Positions you do not customize use the main range.',summary:s=>`${configurationRead(s,'minimum').value} to ${configurationRead(s,'maximum').value}`,validate:s=>{const min=configurationNumber(s,'minimum'),max=configurationNumber(s,'maximum');return !Number.isInteger(min)||!Number.isInteger(max)||min < -99||max>99||min>max?'Use whole numbers from -99 to 99, with minimum no greater than maximum.':'';}});
   const grid=toolSettingsGrid(toolFlowCard('Rating Adjustments','Set the minimum and maximum rating change. The limits are inclusive.',rangeEntry),toolFlowCard('Position Adjustments','Give selected position groups their own adjustment range.',overrides),toolFlowCard('Specific Attributes','Choose the attributes to adjust when Specific Attributes is selected.',attributes));
   const attrCard=grid.lastElementChild;
   addToolSection(root,1,'Configure Ratings','Adjust the rating range and any selected attribute or position settings.',grid);
@@ -164,7 +164,7 @@ function mountCommentarySettings(workspace){
   const scope=document.getElementById('commentary-classes').closest('.extra-player-scope');restoreCondensedToolControl(scope);
   scope.append(document.getElementById('freshmen-only').closest('.toggle-card'));
   const root=createOtherToolFlow(workspace,{kind:'commentary-id',previewId:'analyze-commentary',previewLabel:'Analyze Matches'});
-  condenseConfiguration(scope,{title:'Player Filters',description:'All filters work together. Original EA roster players are always protected.',summary:()=>affectedScopeSummary()});
+  condenseConfiguration(scope,{title:'Player Filters',description:'A player must match every filter you choose. Leave a filter empty to include all of its choices. Original EA roster players stay unchanged.',summary:()=>affectedScopeSummary()});
   addToolSection(root,0,'Players & Teams','Choose whose spoken names to check. Original EA roster players stay protected.',toolSettingsGrid(toolFlowCard('Player Filters','Combine teams, positions, class years, redshirt status and individual players. True Freshmen Only is available inside.',toolEditorFor(scope))));
   const choices=otherToolNode('div','ui-option-group');
   for(const [id,title,help]of [['phonetic','Suggest Similar-Sounding Last Names','Suggest spoken names that sound similar when an exact last name is unavailable. You must accept or reject each suggestion before Apply.'],['first-name','Use First Name When Last Name Is Unavailable','Use an exact spoken first name if there is no last-name match.'],['preserve-unmatched','Keep Existing IDs When No Match Is Found','Keep the player’s current commentary ID when the toolkit cannot find a match.']])choices.append(toolFlowChoice(id,title,help));
@@ -180,14 +180,14 @@ function mountQuickstartSettings(workspace){
 }
 function mountLongSnapSettings(workspace){
   const rules=workspace.querySelector('.rule-summary-grid'),root=createOtherToolFlow(workspace,{kind:'long-snap',previewId:'preview'});
-  addToolSection(root,0,'Long Snap Ratings','Only eligible tight ends and offensive linemen outside these ranges change. Other ratings and already-valid players stay unchanged.',rules);
+  addToolSection(root,0,'Long Snap Ratings','Only tight ends, centers and guards outside these ranges receive rating changes. LS depth charts use the highest-rated eligible players on each team. Tackle ratings stay unchanged.',rules);
   root.querySelector('[data-ui-page="0"]').insertAdjacentHTML('beforeend','<p class="ui-intro">No settings are needed. Preview the corrections before applying them.</p>');finishOtherToolFlow(root);
 }
 function mountMapperSettings(workspace){
-  const sections=workspace.querySelectorAll('.ops-section'),library=sections[0].querySelector('.ops-section-body'),rules=sections[1].querySelector('.ops-section-body'),add=document.getElementById('mapper-add'),reload=document.getElementById('mapper-reload');
+  const mods=workspace.querySelector('.mapper-mod-summary'),rules=workspace.querySelector('.ops-section-body'),add=document.getElementById('mapper-add');
   const root=createOtherToolFlow(workspace,{kind:'equipment-mapper',previewId:'mapper-preview'});
-  const first=addToolSection(root,0,'Equipment Library','Browse saved gear or choose equipment from a player. Copy and replacement rules are reviewed before Apply.',library);first.parentElement.querySelector('header').append(reload);
-  const queue=addToolSection(root,0,'Replacement Rules','Rules run in the order shown. Each rule keeps its own target players, colors, pairing and per-team cap.',rules);queue.parentElement.querySelector('header').append(add);
+  root.querySelector('[data-ui-page="0"]').append(mods);
+  const queue=addToolSection(root,0,'Equipment Rules','Replace, remove or assign equipment. Each rule matches the original outfit; Preview flags conflicting assignments.',rules);queue.parentElement.querySelector('header').append(add);
   root.querySelector('.ui-flow-run-status').append(document.getElementById('mapper-status'));finishOtherToolFlow(root);
 }
 function mountForceSettings(workspace){

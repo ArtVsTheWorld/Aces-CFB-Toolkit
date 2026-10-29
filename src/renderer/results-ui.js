@@ -90,21 +90,22 @@ function runIssues(result){
     else warnings.push(message);
   }
   if(d.trackingSaved===false&&!warnings.some(note=>/memory|tracking/i.test(note)))warnings.push('Equipment was saved, but player memory could not be saved. Resolve the memory issue before running equipment tools again.');
-  return {blocked:blocked.map(describe),warnings:[...new Set(warnings)],notes};
+  return {blocked:blocked.map(describe),compatibility:(d.compatibilityWarnings??[]).map(describe),warnings:[...new Set(warnings)],notes};
 }
 function runStatus(result){
   const issues=runIssues(result),preview=result.mode==='preview',readOnly=state.page==='saved-review',blocked=preview&&(result.details?.canApply===false||issues.blocked.length>0);
   if(readOnly&&preview)return {title:'Saved Preview',message:'This is a read-only record of an earlier preview.',tone:'neutral'};
-  if(blocked&&issues.blocked.length)return {title:'Apply Blocked',message:'Resolve the conflicts below before applying this preview.',tone:'error'};
+  if(blocked&&issues.blocked.length)return {title:result.resultKind==='equipment-mapper'?'Equipment Conflicts — Apply Blocked':'Apply Blocked',message:'Resolve the conflicts below before applying this preview.',tone:'error'};
   if(blocked)return {title:'No Changes Ready to Apply',message:'Review the run details or adjust your settings and build a new preview.',tone:'neutral'};
+  if(preview&&issues.compatibility.length)return {title:'Equipment Compatibility Warning',message:'Review the known incompatibilities below. You can choose to apply anyway after confirmation.',tone:'error'};
   if(!preview&&result.details?.trackingSaved===false)return {title:'Equipment Saved — Memory Needs Attention',message:'Your equipment changes were saved. Resolve the player-memory issue below before another run.',tone:'warning'};
   if(result.status==='no-changes')return {title:'No Changes Needed',message:'No changes were written to your save.',tone:'neutral'};
   if(!preview)return {title:'Changes Applied',message:result.backupPath?'Your save was updated and a backup was created.':'The run completed successfully.',tone:'success'};
   return {title:'Preview Ready',message:'Your save is unchanged. Review the affected players before applying.',tone:'neutral'};
 }
 function runIssueMarkup(result){
-  const {blocked,warnings}=runIssues(result),messages=[...blocked,...warnings];if(!messages.length)return '';
-  return `<div class="notice ${blocked.length?'error':'warning'} run-attention-alert" ${result.resultKind==='roster-generator'?'data-roster-apply-warnings':''}><strong>${blocked.length?'Needs attention':'Review before continuing'}</strong><p>${escapeHtml(messages[0])}</p>${messages.length>1?`<details><summary>${messages.length-1} more notices</summary><ul>${messages.slice(1).map(message=>`<li>${escapeHtml(message)}</li>`).join('')}</ul></details>`:''}</div>`;
+  const {blocked,compatibility,warnings}=runIssues(result),messages=[...blocked,...compatibility,...warnings];if(!messages.length)return '';
+  return `<div class="notice ${blocked.length||compatibility.length?'error':'warning'} run-attention-alert" ${result.resultKind==='roster-generator'?'data-roster-apply-warnings':''}><strong>${blocked.length?'Needs attention':compatibility.length?'Known Equipment Incompatibilities':'Review before continuing'}</strong><p>${escapeHtml(messages[0])}</p>${messages.length>1?`<details><summary>${messages.length-1} more notices</summary><ul>${messages.slice(1).map(message=>`<li>${escapeHtml(message)}</li>`).join('')}</ul></details>`:''}</div>`;
 }
 function runDetailsMarkup(result){
   const d=result.details??{},issues=runIssues(result),overview=d.equipmentOverview;

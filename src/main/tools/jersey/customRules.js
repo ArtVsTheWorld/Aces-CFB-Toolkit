@@ -1,3 +1,4 @@
+import {normalizePromotionChances} from './promotionChances.js';
 import {originalEaProtectionEnabled,originalEaIdentity,originalEaProtectionAudit,isOriginalEaPlayer} from '../../services/originalEaPlayers.js';
 import { VALID_POSITIONS } from '../equipment/shared.js';
 import { OFFENSE } from './shared.js';
@@ -16,7 +17,7 @@ export function normalizeJerseyCustom(options = {}) {
   if (customTraditions.length > 500 || lockedRows.length > 50000 || Object.keys(customRetired).length > 1000) throw new Error('This number-rule configuration is too large.');
   const seen = new Set();
   for (const rule of customTraditions) { const key = `${rule.team}|${rule.number}`; if (seen.has(key)) throw new Error(`${rule.team}: add only one custom tradition for #${rule.number}.`); seen.add(key); }
-  return { lockedRows: [...new Set(lockedRows.map(String))], lockIdentities, lockSourcePath: typeof options.lockSourcePath === 'string' ? options.lockSourcePath : null, customRetired, customTraditions: customTraditions.map(rule => ({ teamNames: [rule.team], number: rule.number, side: rule.side === 'all' ? undefined : rule.side, eligiblePositions: rule.positions.length ? rule.positions : undefined, upperclassmenOnly: Boolean(rule.upperclassmenOnly), ...(rule.personality ? { eligiblePersonalities: [rule.personality] } : {}), label: `Custom ${rule.team} #${rule.number} tradition${rule.personality ? ' (' + JERSEY_PERSONALITIES.find(item => item.value === rule.personality).label + ')' : ''}` })) };
+  return { promotionChances: normalizePromotionChances(options.promotionChances), lockedRows: [...new Set(lockedRows.map(String))], lockIdentities, lockSourcePath: typeof options.lockSourcePath === 'string' ? options.lockSourcePath : null, customRetired, customTraditions: customTraditions.map(rule => ({ teamNames: [rule.team], number: rule.number, side: rule.side === 'all' ? undefined : rule.side, eligiblePositions: rule.positions.length ? rule.positions : undefined, upperclassmenOnly: Boolean(rule.upperclassmenOnly), ...(rule.personality ? { eligiblePersonalities: [rule.personality] } : {}), label: `Custom ${rule.team} #${rule.number} tradition${rule.personality ? ' (' + JERSEY_PERSONALITIES.find(item => item.value === rule.personality).label + ')' : ''}` })) };
 }
 export function attachJerseyLocks(records, names, options, noDuplicates = false, savePath) {
   if (options.lockedRows.length && (!options.lockSourcePath || savePath && path.resolve(options.lockSourcePath).toLowerCase() !== path.resolve(savePath).toLowerCase())) throw new Error('Choose player number locks again for this active save. Locks are not portable between dynasties.');

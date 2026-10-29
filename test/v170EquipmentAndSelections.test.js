@@ -1,3 +1,4 @@
+import NoDrip from '../src/shared/noDrip.cjs';
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -20,13 +21,13 @@ const runRandomizer = options => {
 const read = file => fs.readFileSync(new URL(file, import.meta.url), "utf8");
 
 test("v20.7.0 and v5.6 Randomizer and v6.0 Patcher retain all original chance defaults", () => {
-  assert.equal(JSON.parse(read("../package.json")).version, "24.5.1");
+  assert.equal(JSON.parse(read("../package.json")).version, "25.0.0");
   for (const id of ["freshman-equipment", "equipment-patcher"]) assert.equal(tools.find(tool => tool.id === id).version, undefined);
   const normalized = normalizeEquipmentOptions({}, true);
   assert.equal(normalized.crossPositionPercent, 10); assert.equal(normalized.multipleDonorPercent, 30);
   assert.equal(normalized.expandedEquipmentPercent, 10);
-  assert.deepEqual(normalized.noDripPercentages, { skill: 1, balanced: 3, heavy: 6 });
-  assert.equal(normalized.noDripProfile, false); assert.equal(normalized.usingUnlockedMod, false);
+  assert.deepEqual(normalized.noDripPercentages, NoDrip.defaults);
+  assert.equal(normalized.noDripProfile, true); assert.equal(normalized.usingUnlockedMod, false);
 });
 
 test("chance inputs require whole percentages and mixing cannot exceed 100 percent", () => {

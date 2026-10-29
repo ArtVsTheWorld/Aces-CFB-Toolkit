@@ -1,23 +1,32 @@
 import { CUTOFF_PANTS, cutoffPantsConflict, uniformItem } from "./uniformCompatibility.js";
 import { canGenerateItem, equipmentItem, equipmentSemantics } from "../catalog.js";
-import { armAccessoryRestrictions, isElbowLengthUndershirt, isRolledArmSleeve } from "./compatibility.js";
+import { armAccessoryRestrictions, sleeveUndershirtConflict, relaxedTeeNeckwearConflict } from "./compatibility.js";
 
 const active = value => typeof value === "string" && !/(?:^|_)None$/i.test(value) && value !== "FaceGear_BalaclavaNone";
 const get = (elements, slot) => elements.find(element => element.slotType === slot)?.itemAssetName;
-const coverage = asset => {
-  if (!active(asset)) return [];
-  const known = equipmentSemantics(asset)?.coverage;
-  // Uncatalogued sleeve values are not evidence that the body region is free.
-  return known ?? ["bicep", "wrist"];
-};
 
-export function generatedItemConflict(elements, item, slots = item.slots, position = "") {
+
+export function generatedItemConflict(elements, item, slots = item.slots, position = "", options={}) {
   if (!canGenerateItem(item)) return "Item is not eligible for pool generation";
   const semantic = item.semantic;
+  const proposedShirt=slots.includes('InnerShirt')?item.itemName:get(elements,'InnerShirt');
+  if(slots.some(slot=>['InnerShirt','NeckWear','Neckpad','FaceWear'].includes(slot)))for(const slot of ['NeckWear','Neckpad','FaceWear'])if(relaxedTeeNeckwearConflict(proposedShirt,slots.includes(slot)?item.itemName:get(elements,slot)))return 'Relaxed tees cannot be worn with turtlenecks, ski masks or balaclavas';
+  for(const side of ['Left','Right']){
+    const armSlot=`${side}ArmWear`,sleeve=slots.includes(armSlot)?item.itemName:get(elements,armSlot),shirt=slots.includes('InnerShirt')?item.itemName:get(elements,'InnerShirt');
+    if(slots.includes(armSlot)||slots.includes('InnerShirt')){
+      const reason=sleeveUndershirtConflict(sleeve,shirt,options);if(reason)return reason;
+      const blocked=armAccessoryRestrictions(sleeve,get(elements,`${side}WristWear`),shirt,options);
+      for(const accessory of [`${side}WristWear`,`${side}ElbowWear`])if(!slots.includes(accessory)&&active(get(elements,accessory))){const wrist=accessory.endsWith('WristWear')||equipmentSemantics(get(elements,accessory))?.bodyRegion==='wrist';if(wrist?blocked.wrist:blocked.elbow)return 'Arm sleeve or undershirt conflicts with existing wrist/elbow gear';}
+    }
+    for(const slot of slots.filter(slot=>slot===`${side}WristWear`||slot===`${side}ElbowWear`)){
+      const blocked=armAccessoryRestrictions(sleeve,item.itemName,shirt,options);
+      if(slot.endsWith('WristWear')||semantic.bodyRegion==='wrist'?blocked.wrist:blocked.elbow)return 'Sleeve or undershirt covers the wrist/elbow gear';
+    }
+  }
   if (semantic.actualType === "wrist-tape") {
     for (const slot of slots) {
       const side = slot.startsWith("Left") ? "Left" : "Right";
-      if (armAccessoryRestrictions(get(elements, `${side}ArmWear`), item.itemName, get(elements, "InnerShirt")).wrist || coverage(get(elements, "InnerShirt")).includes("wrist") || coverage(get(elements, "OuterShirt")).includes("wrist")) return "Sleeve covers the wrist tape";
+      if (armAccessoryRestrictions(get(elements, `${side}ArmWear`), item.itemName, get(elements, "InnerShirt"),options).wrist) return "Sleeve covers the wrist tape";
       if (equipmentSemantics(get(elements, `${side}ElbowWear`))?.bodyRegion === "wrist") return "Existing elbow-slot wrist accessory occupies this region";
     }
   }
@@ -32,13 +41,6 @@ export function generatedItemConflict(elements, item, slots = item.slots, positi
     if (flak && flak !== "Flakjacket_None") return "RAW backplates cannot be added with a flak jacket";
   }
   if (semantic.excludedPositions.includes(String(position).toUpperCase())) return "Item is not generated for this position";
-  for (const slot of slots.filter(slot => /^(Left|Right)ElbowWear$/.test(slot))) {
-    const side = slot.startsWith("Left") ? "Left" : "Right";
-    const sleeve = get(elements, `${side}ArmWear`);
-    if (!isElbowLengthUndershirt(sleeve) && !isRolledArmSleeve(sleeve)) continue;
-    const blocked = armAccessoryRestrictions(sleeve, get(elements, `${side}WristWear`), get(elements, "InnerShirt"));
-    if (semantic.bodyRegion === "wrist" ? blocked.wrist : blocked.elbow) return "Sleeve covers the accessory's physical location";
-  }
   if (semantic.groups.length) for (const element of elements) {
     if (slots.includes(element.slotType) || !active(element.itemAssetName)) continue;
     const other = equipmentSemantics(element.itemAssetName);
@@ -49,8 +51,7 @@ export function generatedItemConflict(elements, item, slots = item.slots, positi
   if (["bicep-band", "rubber-wristband"].includes(semantic.actualType)) {
     for (const slot of slots) {
       const side = slot.startsWith("Left") ? "Left" : "Right";
-      const covered = [...coverage(get(elements, `${side}ArmWear`)), ...coverage(get(elements, "InnerShirt")), ...coverage(get(elements, "OuterShirt"))];
-      if (covered.includes(semantic.bodyRegion)) return "Sleeve covers the accessory's physical location";
+
       if (semantic.bodyRegion === "wrist" && active(get(elements, `${side}WristWear`))) return "Existing wrist equipment occupies this region";
     }
   }
@@ -58,8 +59,18 @@ export function generatedItemConflict(elements, item, slots = item.slots, positi
 }
 
 // Pool-only targeting must not restrict deliberate Equipment Mapper edits.
-const allowedPoolPosition = (item, position) => Boolean(item) && (!item.allowedPositions || item.allowedPositions.includes(String(position).toUpperCase()));
-export const canGenerateEquipment = (loadouts, item, slots = item?.slots, position = "") => allowedPoolPosition(item, position) && loadouts.every(loadout => !generatedItemConflict(loadout.loadoutElements, item, slots, position));
+export function allowedPoolPosition(item, position){
+  if(!item)return false;const p=String(position).toUpperCase();
+  if(item.allowedPositions&&!item.allowedPositions.includes(p))return false;
+  if(['LT','LG','C','RG','RT','OL','DT','K','P'].includes(p)){
+    if(/balaclava|turtleneck|string towel/i.test(item.displayName??'')||item.itemName==='Towel2_South')return false;
+    if(item.slots?.some(slot=>/^(Left|Right)HandWear$/.test(slot))){
+      const tape=/^GearHand_tapedHand/i.test(item.itemName);if(!tape||['K','P'].includes(p))return false;
+    }
+  }
+  return true;
+}
+export const canGenerateEquipment = (loadouts, item, slots = item?.slots, position = "", options={}) => allowedPoolPosition(item, position) && loadouts.every(loadout => !generatedItemConflict(loadout.loadoutElements, item, slots, position,options));
 
 // Provenance is local to one recipient, not stored in a global cache. Only new
 // pool additions may be restored. Existing donor items are never removed here.
@@ -78,7 +89,7 @@ export function enforceGeneratedEquipmentCompatibility(loadouts, state, position
     for (const [slot, asset] of state.added[index]) {
       const elements = loadout.loadoutElements;
       if (get(elements, slot) !== asset) continue;
-      const item = equipmentItem(asset, state.options), reason = item && (!allowedPoolPosition(item, position) ? "Item is not generated for this position" : generatedItemConflict(elements, item, [slot], position));
+      const item = equipmentItem(asset, state.options), reason = item && (!allowedPoolPosition(item, position) ? "Item is not generated for this position" : generatedItemConflict(elements, item, [slot], position,state.options));
       // A paired band/cleat shares a type on two sides but is not a conflict.
       if (!reason) continue;
       const at = elements.findIndex(element => element.slotType === slot);

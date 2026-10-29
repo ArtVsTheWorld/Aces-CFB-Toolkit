@@ -23,19 +23,19 @@ const undershirt = "GearArmSleeve_Undershirt_sleeveLongUnderarmor_normal_TeamCol
 for (const sleeve of [undershirt, rolled]) for (const wrist of ["GearWrist_wristBandNormal_White", "GearWrist_wristTapedNormal_White", "GearWrist_wristBandCoach_White"]) test(`elbow-length sleeve compatibility: ${sleeve}/${wrist}`, () => {
   const elements = [item("LeftArmWear", sleeve), item("LeftElbowWear", "ElbowGear_elbowSweatband_White"), item("LeftWristWear", wrist), item("RightArmWear", sleeve), item("RightElbowWear", "ElbowGear_elbowSweatband_White"), item("RightWristWear", wrist)];
   const direct = structuredClone(elements); enforceEquipmentCompatibility(direct);
-  const expectedWrist = sleeve === rolled && wrist.includes("Coach") ? "GearWrist_None" : wrist;
-  for (const side of ["Left", "Right"]) { assert.equal(get(direct, side + "WristWear"), expectedWrist); assert.equal(get(direct, side + "ElbowWear"), "ElbowGear_None"); }
+  const expectedWrist = sleeve === rolled ? "GearWrist_None" : wrist;
+  for (const side of ["Left", "Right"]) { assert.equal(get(direct, side + "WristWear"), expectedWrist); assert.equal(get(direct, side + "ElbowWear"), sleeve===rolled?"ElbowGear_None":"ElbowGear_elbowSweatband_White"); }
   const visuals = [visual(elements)]; applyGlobalEquipmentFixes([player(0)], visuals, 10, { sleeveCompatibilityFix: true }); assert.deepEqual(parsed(visuals[0]), direct);
   const recipients = [player(0), { ...player(1), SchoolYear: "Senior", OverallRating: 90 }], raw = [visual([]), visual(elements)];
   const result = patchFreshmanEquipment(recipients, raw, 10, { top: 1, seed: 50, apply: true, mixedChance: 0, crossMixedChance: 0 });
-  assert.equal(result.changes.length, 1); assert.equal(get(parsed(raw[0]), "LeftWristWear"), expectedWrist); assert.equal(get(parsed(raw[0]), "LeftElbowWear"), "ElbowGear_None");
+  assert.equal(result.changes.length, 1); assert.equal(get(parsed(raw[0]), "LeftWristWear"), expectedWrist); assert.equal(get(parsed(raw[0]), "LeftElbowWear"), sleeve===rolled?"ElbowGear_None":"ElbowGear_elbowSweatband_White");
 });
-test("generation metadata blocks elbow/bicep additions but leaves the wrist free for both short sleeve styles", () => {
+test("generation uses the agreed shoulder-to-elbow allowance and rolled-sleeve restrictions", () => {
   for (const sleeve of [undershirt, rolled]) {
     assert.deepEqual(equipmentSemantics(sleeve).coverage, ["bicep", "elbow"]);
     const loadouts = [field([item("LeftArmWear", sleeve), item("InnerShirt", "Undershirt_None"), item("OuterShirt", "Gear_JerseyStyle_Normal")])];
-    assert.equal(canGenerateEquipment(loadouts, equipmentItem("ElbowGear_RubberBands1"), ["LeftElbowWear"], "WR"), true);
-    assert.equal(canGenerateEquipment(loadouts, equipmentItem("ElbowGear_elbowSweatband_White"), ["LeftElbowWear"], "WR"), false);
+    assert.equal(canGenerateEquipment(loadouts, equipmentItem("ElbowGear_RubberBands1"), ["LeftElbowWear"], "WR"), sleeve!==rolled);
+    assert.equal(canGenerateEquipment(loadouts, equipmentItem("ElbowGear_elbowSweatbandFull_White"), ["LeftElbowWear"], "WR"), sleeve!==rolled);
   }
 });
 for (const mode of ["distribution", "accessory"]) test(`tape colors follow ${mode} independently and deterministically`, () => {
@@ -138,6 +138,6 @@ test("Team Boost specific attributes reject empty/unknown fields and retain rati
   assert.equal(result.ratingChanges.length, 1); assert.equal(result.ratingChanges[0].newRating, 99); assert.deepEqual(records, initial);
 });
 test("release versions match the requested increments", () => {
-  assert.equal(JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url))).version, "24.5.1");
+  assert.equal(JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url))).version, "25.0.0");
   assert.equal(tools.find(tool => tool.id === "freshman-equipment").version, undefined); assert.equal(tools.find(tool => tool.id === "equipment-patcher").version, undefined); assert.equal(tools.find(tool => tool.id === "team-boost").version, undefined);
 });

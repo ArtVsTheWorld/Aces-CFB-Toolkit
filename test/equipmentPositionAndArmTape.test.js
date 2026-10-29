@@ -182,8 +182,8 @@ test("repurposed balaclavas keep the hanging-only mouthpiece safeguard without t
 test("both pool controls share the extra-gear chance and explain neckwear plus the arm-tape scope", () => {
   const renderer = fs.readFileSync(new URL("../src/renderer/renderer.js", import.meta.url), "utf8");
   assert.match(renderer, /equipment-raw-accessories"\)\?\.addEventListener\("change", updateExtraGearChance/);
-  assert.match(renderer, /Raw turtlenecks, diamond and gold\/silver cross necklaces/);
-  assert.match(renderer, /spats, wrist tape, and long\/short arm tape/);
+  assert.match(renderer, /RAW Accessories v3.1.4/);
+  assert.match(renderer, /Match Player Accessory Color/);
 });
 
 test("the separate NeckWear field is donor-copied in full, mixed, cross-position, and selected modes", () => {

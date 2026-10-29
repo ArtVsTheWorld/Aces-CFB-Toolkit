@@ -17,19 +17,30 @@ export function normalizeRemovalItems(items){
   if(!Array.isArray(items)||items.some(item=>typeof item!=='string'||!catalog.has(item)))throw Error('Choose removable items with a supported None option. Helmets, facemasks and cleats cannot be removed.');
   return [...new Set(items)];
 }
-export function removeSelectedEquipment(parsed,selected){
+const eligibleSlot=element=>element?.slotType?noneSlots.has(element.slotType)&&!blocked.has(element.slotType):!catalog.get(element?.itemAssetName)?.requiresExplicitSlot;
+// Keep object identity rather than array indices: tattoos may insert a Base
+// layer or move an existing tattoo entry before the final removal pass.
+export function captureRemovalItems(parsed,selected){
+  const chosen=new Set(normalizeRemovalItems(selected)),originalItems=new WeakMap();
+  for(const loadout of parsed.loadouts??[])for(const element of Array.isArray(loadout?.loadoutElements)?loadout.loadoutElements:[]){
+    if(element&&chosen.has(element.itemAssetName)&&eligibleSlot(element))originalItems.set(element,element.itemAssetName);
+  }
+  return originalItems;
+}
+export function removeSelectedEquipment(parsed,selected,{originalItems}={}){
   const chosen=new Set(normalizeRemovalItems(selected)),changes=[];
   // A known label can describe a backing clothing asset. Removal is allowed
   // only when its actual saved slot supports None; never clear required gear
   // merely because the same asset name appears in another layer or slot.
-  const removable=element=>chosen.has(element?.itemAssetName)&&(element.slotType?noneSlots.has(element.slotType):!catalog.get(element.itemAssetName)?.requiresExplicitSlot)&&!blocked.has(element?.slotType);
+  const removable=element=>(chosen.has(element?.itemAssetName)||originalItems?.has(element))&&eligibleSlot(element)&&!blocked.has(element?.slotType);
   for(const [index,loadout]of (parsed.loadouts??[]).entries()){
     if(!Array.isArray(loadout?.loadoutElements))continue;
     const removed=loadout.loadoutElements.filter(removable);
     const dependent=new Set(removed.filter(element=>['WaistWear','LeftShoe','RightShoe'].includes(element.slotType)).map(element=>element.slotType+'Override'));
     loadout.loadoutElements=loadout.loadoutElements.filter(element=>{
       if(blocked.has(element?.slotType)||(!removable(element)&&!dependent.has(element?.slotType)))return true;
-      changes.push({loadout:index,slot:element.slotType,oldItem:element.itemAssetName,newItem:'Not Equipped'});return false;
+      const originalItem=originalItems?.get(element);
+      changes.push({loadout:index,slot:element.slotType,oldItem:element.itemAssetName,newItem:'Not Equipped',...(originalItem&&originalItem!==element.itemAssetName?{originalItem}:{})});return false;
     });
   }
   return changes;

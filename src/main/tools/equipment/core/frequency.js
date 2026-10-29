@@ -1,9 +1,9 @@
 export const FREQUENCY_PASSES = ['visors', 'mouthpieces', 'tattoos', 'lowerJersey', 'cutoffPants'];
-export function normalizeFillFrequencies(value = {}) {
+export function normalizeFillFrequencies(value = {}, defaults = {}) {
   if (!value || typeof value !== 'object' || Array.isArray(value) || Object.keys(value).some(key => !FREQUENCY_PASSES.includes(key))) throw Error('Invalid fill-to-frequency settings.');
   return Object.fromEntries(FREQUENCY_PASSES.map(key => {
     if (value[key] !== undefined && typeof value[key] !== 'boolean') throw Error('Fill to Frequency must be on or off.');
-    return [key, value[key] === true];
+    return [key, value[key] === undefined ? defaults[key] === true : value[key] === true];
   }));
 }
 export function shuffledFrequencyCandidates(values, rng) {

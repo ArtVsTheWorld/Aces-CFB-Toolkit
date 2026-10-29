@@ -33,6 +33,7 @@
 .configuration-header>div{min-width:0}.configuration-header h2{overflow-wrap:anywhere}.configuration-header>.button{flex:none}
 .configuration-dialog .configuration-body .button{max-width:100%}.configuration-body .actions,.configuration-body .percentage-total,.configuration-body .helmet-editor-total{flex-wrap:wrap;gap:10px}
 .configuration-footer-actions{max-width:100%;flex-shrink:1}.configuration-footer-actions .button{white-space:normal}
+@media(max-width:680px){.configuration-footer>div:first-child{flex:0 0 auto;width:100%}.configuration-footer-actions{flex:0 0 auto;width:100%;justify-content:flex-end}.configuration-footer{gap:12px}}
 .configuration-page-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 22px;padding-bottom:16px;border-bottom:1px solid var(--border)}
 .configuration-page-tabs .button{white-space:normal;min-height:38px;color:var(--text)}
 .experimental-ui .configuration-page-tabs .button[aria-selected="true"]{background:var(--action);border-color:var(--action);color:var(--action-ink,#fff)}

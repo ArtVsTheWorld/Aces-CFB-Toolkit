@@ -35,10 +35,10 @@ const player = (row, position = "WR", visualRow = row, teamIndex = 1) => ({
 const tattooedCount = visuals => visuals.filter(item => hasUnlockedBodyTattoo(JSON.parse(item.RawData))).length;
 const activeRows = count => new Set(Array.from({ length: count }, (_, row) => row));
 
-test("CFB27 Unlocked tattoos are disabled by default with a validated 40% cap", () => {
+test("CFB27 Unlocked tattoos are disabled by default with a validated 30% cap", () => {
   const defaults = normalizeEquipmentOptions({}, false);
   assert.equal(defaults.unlockedTattooFix, false);
-  assert.equal(defaults.unlockedTattooCap, 40);
+  assert.equal(defaults.unlockedTattooCap, 30);
   assert.equal(normalizeEquipmentOptions({ fillFrequencies: {tattoos:true}, unlockedTattooFix: true, unlockedTattooCap: 25 }, false).unlockedTattooCap, 25);
   assert.throws(() => normalizeEquipmentOptions({ unlockedTattooCap: 15.5 }, false), /whole percentage/);
   assert.throws(() => normalizeEquipmentOptions({ unlockedTattooCap: 101 }, false), /whole percentage/);
@@ -288,7 +288,7 @@ test("leg tattoos use both tattoo slots, preserve socks, and retain bare legs", 
 test("tattoo option is user-visible, off by default, and included in review/help text", () => {
   const renderer = fs.readFileSync(new URL("../src/renderer/renderer.js", import.meta.url), "utf8");
   assert.match(renderer, /optionalPass\("fix-unlocked-tattoos", "Add Tattoos"/);
-  assert.match(renderer, /id="unlocked-tattoo-cap"[^>]+value="40"/);
+  assert.match(renderer, /id="unlocked-tattoo-cap"[^>]+value="30"/);
   assert.match(renderer, /Existing sleeves and tattoos are preserved/);
   assert.match(renderer, /Each team is capped separately/);
   assert.match(renderer, /Requires CFB27 Unlocked/);

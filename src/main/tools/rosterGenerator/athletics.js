@@ -19,7 +19,7 @@ const variants=new WeakMap();
 export function athleticVariant(model,base,id='balanced'){
   if(!ATHLETICISM_PROFILES.some(profile=>profile.id===id))throw new Error('Unknown athleticism profile.');
   if(id==='balanced'||id==='outlier')return base;
-  if(!variants.has(model))variants.set(model,new Map());const cache=variants.get(model),key=base.id+'|'+id;if(cache.has(key))return cache.get(key);
+  if(!variants.has(model))variants.set(model,new Map());const cache=variants.get(model),key=base.id+'|'+id+'|'+base.overall+'|'+base.ratings.join(',');if(cache.has(key))return cache.get(key);
   const observed=model.observedById?.get(base.id)??base,active=observed.physical.some(tier=>tier!=='None'),floors=[...(active?observed.ratings:RATING_FIELDS.map(()=>1))],ceilings=RATING_FIELDS.map((field,i)=>id==='drill'&&MENTAL_RATINGS.has(field)?Math.max(floors[i],55):99),formula=model.formulas.get(base.position+'|'+base.archetype);
   const skills=new Set(Object.entries(formula.coefficients).filter(([field,weight])=>weight>0&&!ATHLETIC.has(field)).map(([field])=>field));
   if(id==='cerebral')RATING_FIELDS.forEach((field,i)=>{if(MENTAL_RATINGS.has(field))floors[i]=Math.max(floors[i],88);});

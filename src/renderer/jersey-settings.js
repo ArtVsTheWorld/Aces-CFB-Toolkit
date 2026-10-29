@@ -3,22 +3,25 @@ function openJerseyCustomization(prepared, input) {
   const original = JSON.parse(input.value), draft = structuredClone(original);
   const teams = prepared.teams.map(team => team.name ?? team.label ?? team.value);
   const personalities = prepared.personalities ?? [];
-  const dialog = createConfigurationDialog({ title: 'Player Locks & Team Number Rules', description: 'Configure each page, then save all your jersey settings together. Cancel discards changes on every page.', className: 'jersey-custom-editor', saveLabel: 'Save Jersey Settings' });
+  const dialog = createConfigurationDialog({ title: 'Jersey Settings', description: 'Choose the numbers players must keep, retired numbers, team traditions and promotion chances. Save keeps all pages together. Cancel discards this window’s changes.', className: 'jersey-custom-editor', saveLabel: 'Save Jersey Settings' });
   if (!dialog) return;
   draft.lockedRows ??= [];
   if (draft.lockSourcePath && draft.lockSourcePath !== state.activeSave.path) draft.lockedRows = [];
-  draft.customRetired ??= {}; draft.customTraditions ??= [];
-  const baseline = JSON.stringify({ ...original, lockedRows: original.lockedRows ?? [], customRetired: original.customRetired ?? {}, customTraditions: original.customTraditions ?? [] });
-  const pages = [['locks','Player Locks'],['retired','Retired Numbers'],['traditions','Team Traditions']];
+  draft.customRetired ??= {}; draft.customTraditions ??= []; draft.promotionChances ??= {};
+  const baseline = JSON.stringify({ ...original, lockedRows: original.lockedRows ?? [], customRetired: original.customRetired ?? {}, customTraditions: original.customTraditions ?? [], promotionChances: original.promotionChances ?? {} });
+  const pages = [['locks','Player Locks'],['retired','Retired Numbers'],['traditions','Team Traditions'],['promotions','Promotion Chances']];
   const prefix = `jersey-editor-${configurationSequence}-`;
   const jersey = '<svg class="jersey-number-art" viewBox="0 0 64 64" aria-hidden="true"><path d="M21 5 10 10 2 25l12 7 4-8v34h28V24l4 8 12-7-8-15-11-5-7 7h-8Z"/><path class="jersey-neckline" d="m21 5 7 7h8l7-7"/></svg>';
   const pageChoices = pages.map(([id,label]) => `<option value="${id}">${label}</option>`).join('');
   dialog.querySelector('.configuration-body').innerHTML = `<label class="jersey-page-choice">Settings Page<select class="input" data-jersey-page-select>${pageChoices}</select></label><div class="jersey-editor-layout"><nav class="jersey-editor-nav" role="tablist" aria-label="Jersey Settings Pages" aria-orientation="vertical">${pages.map(([id,label],index)=>`<button class="button secondary jersey-page-tab" type="button" role="tab" id="${prefix}tab-${id}" aria-controls="${prefix}page-${id}" aria-selected="${index===0}" tabindex="${index===0?0:-1}" data-jersey-page-tab="${id}"><small>${index+1}</small><span>${label}</span></button>`).join('')}</nav><div class="jersey-editor-pages">
     <section role="tabpanel" aria-labelledby="${prefix}tab-locks" id="${prefix}page-locks" data-jersey-page="locks"><h3>Player Locks</h3><p>Checked players keep their current jersey number. Selections stay checked when you switch position groups or settings pages.</p>${multiSelect('jersey-lock-players','Locked Players',prepared.players,'Locks apply only to these players in this save.',draft.lockedRows)}</section>
     <section role="tabpanel" aria-labelledby="${prefix}tab-retired" id="${prefix}page-retired" data-jersey-page="retired" hidden><h3>Retired Numbers</h3><p>Highlighted jerseys are retired and unavailable for new assignments when Protect Retired Numbers is enabled. Click a jersey to retire or allow that number.</p><label>Team<select class="input" data-retired-team>${teams.map(team=>`<option>${escapeHtml(team)}</option>`).join('')}</select></label><div class="retired-list-toolbar"><strong data-retired-status role="status"></strong><button class="button secondary compact" type="button" data-retired-default>Use Toolkit Defaults</button></div><div data-retired-grid class="retired-jersey-grid" role="group" aria-label="Retired Jersey Numbers">${Array.from({length:100},(_,number)=>`<label class="jersey-number-choice"><input class="jersey-number-input" type="checkbox" value="${number}" data-retired-number aria-label="Retire number ${number}">${jersey}<span class="jersey-number-value" aria-hidden="true">${number}</span></label>`).join('')}</div></section>
-    <section role="tabpanel" aria-labelledby="${prefix}tab-traditions" id="${prefix}page-traditions" data-jersey-page="traditions" hidden><h3>Custom Team Traditions</h3><p>A tradition awards its number to the highest-rated eligible player. Side, position, personality, and upperclassman filters work together; player locks and the mode’s original EA player protections still apply.</p><div data-tradition-rows></div><button class="button secondary" type="button" data-tradition-add>Add Tradition</button></section>
+    <section role="tabpanel" aria-labelledby="${prefix}tab-traditions" id="${prefix}page-traditions" data-jersey-page="traditions" hidden><h3>Custom Team Traditions</h3><p>Give a special number to the best eligible player. Choose which positions, player styles and class years can earn it. Locked or protected players keep their numbers.</p><div data-tradition-rows></div><button class="button secondary" type="button" data-tradition-add>Add Tradition</button></section>
+    <section role="tabpanel" aria-labelledby="${prefix}tab-promotions" id="${prefix}page-promotions" data-jersey-page="promotions" hidden><h3>Promotion Chances</h3><p>How often a player gets a chance at a more preferred number. 0% turns off these optional moves. The tool still fixes invalid numbers and follows team traditions. A suitable number must be available.</p><div class="probability-grid three">${Object.entries(prepared.promotionChances ?? {}).filter(([position])=>position!=='EDGE').sort(([a],[b])=>positionCompare(a,b)).map(([position,chance])=>percentageControl('jersey-promotion-'+position,localizedPosition(position),draft.promotionChances[position]??chance)).join('')}</div></section>
   </div></div>`;
   bindMultiSelectEnhancements(dialog);
+  for(const position of ['LT','LG','C','RG','RT','K','P']){const control=dialog.querySelector('#jersey-promotion-'+position);if(control){control.disabled=true;control.title='This position keeps valid numbers and does not use optional promotions.';}}
+  for(const control of dialog.querySelectorAll('[id^=jersey-promotion-]'))control.addEventListener('input',()=>{draft.promotionChances[control.id.slice('jersey-promotion-'.length)]=Number(control.value);sync();});
   const lockSelect = dialog.querySelector('#jersey-lock-players'), teamSelect = dialog.querySelector('[data-retired-team]');
   const defaults = team => prepared.retiredNumbers?.[team] ?? [];
   const retired = team => draft.customRetired[team] ?? defaults(team);
@@ -32,6 +35,7 @@ function openJerseyCustomization(prepared, input) {
     }
   };
   const validate = () => {
+    for(const value of Object.values(draft.promotionChances))if(!Number.isInteger(value)||value<0||value>100)return 'Use whole promotion percentages from 0 to 100.';
     const seen = new Set();
     for (const rule of draft.customTraditions) {
       if (!Number.isInteger(rule.number) || rule.number < 0 || rule.number > 99) return 'Use whole jersey numbers from 0 to 99.';
@@ -95,6 +99,7 @@ function openJerseyCustomization(prepared, input) {
   dialog.querySelector('[data-tradition-add]').onclick = () => { draft.customTraditions.push({team:teams[0],number:0,side:'all',positions:[],personality:'',upperclassmenOnly:false}); drawTraditions(); sync(); };
   lockSelect.addEventListener('change',sync);
   dialog.querySelector('[data-config-reset]').onclick = () => {
+    draft.promotionChances={};for(const [position,chance]of Object.entries(prepared.promotionChances??{})){const control=dialog.querySelector('#jersey-promotion-'+position);if(control)control.value=chance;}
     draft.customRetired={}; draft.customTraditions=[]; for(const option of lockSelect.options) option.selected=false;
     lockSelect.dispatchEvent(new Event('change',{bubbles:true})); renderRetired(); drawTraditions(); sync();
   };

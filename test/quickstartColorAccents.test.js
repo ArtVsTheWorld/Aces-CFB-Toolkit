@@ -10,7 +10,7 @@ import {recolorQuickstartAccent,applyQuickstartColorAccents} from '../src/main/t
 import {equipmentColorVariant,RAW_314} from '../src/main/tools/equipment/catalog.js';
 
 const whiteMix={white:95,black:5,primary:0,secondary:0},blackMix={white:0,black:100,primary:0,secondary:0},schools=['Alabama','Georgia','Nebraska','Penn State','USC'];
-const element=(slotType,itemAssetName)=>({slotType,itemAssetName,keep:'metadata'}),glove='GearHand_glove_AdidasAdizero11_white',sleeve='GearArmSleeve_Half_sleeveLongUnderarmor_normal_White',shirt='Gear_Undershirt_CompressionTCrewSleeveless_White';
+const element=(slotType,itemAssetName)=>({slotType,itemAssetName,keep:'metadata'}),glove='GearHand_glove_AdidasAdizero11_white',sleeve='GearArmSleeve_Quarter_sleeveLongUnderarmor_normal_White',shirt='Gear_Undershirt_CompressionTCrewSleeveless_White';
 const outfit=()=>[{loadoutType:'PlayerOnField',loadoutElements:[element('LeftHandWear',glove),element('RightHandWear',glove),element('LeftArmWear',sleeve),element('RightArmWear',sleeve),element('InnerShirt',shirt),element('LeftWristWear','GearWrist_wristTapedLite_TeamColor'),element('RightWristWear','GearWrist_wristTapedLite_TeamColor'),element('LeftSpat','GearSpats_spatThin_TeamColor'),element('RightSpat','GearSpats_spatThin_TeamColor'),element('MouthWear','GearMouthpiece_PacifierDualHanging_Black')]},{loadoutType:'Base',loadoutElements:[element('LeftHandWear',glove),element('LeftArmTattoo','KeepTattoo')]}];
 const ref=(row,table=10)=>table.toString(2).padStart(15,'0')+row.toString(2).padStart(17,'0');
 const player=row=>({isEmpty:false,FirstName:'Example',LastName:String(row),TeamIndex:1,Position:'WR',SchoolYear:'Junior',CharacterVisuals:ref(row)});

@@ -56,7 +56,7 @@ export function modelForPreset(model,preset,settings=null,talentTargets={}) {
     // Development quotas, rather than an OVR cutoff, control roster potential.
   const byPosition=new Map(),byId=new Map(),profiles=[];
   for(const position of model.byPosition.keys()) {
-    const pool=candidates.filter(profile=>profile.position===position&&(profile.physical.every(tier=>tier==='None')||profile.overall<=(talentTargets[positionGroup(position)]??preset.targetAverage)+8));
+    const pool=candidates.filter(profile=>profile.position===position);
     if(!pool.length)throw new Error(`No observed ${position} eligibility/ability packages support this preset. Choose another caliber.`);
     const means=new Map();for(const profile of pool){const key=profile.classYear+'|'+profile.redshirt,entry=means.get(key)??{sum:0,count:0};entry.sum+=profile.overall;entry.count++;means.set(key,entry);}
     for(const source of pool) {

@@ -26,7 +26,7 @@ test("v20.1 defaults are opt-in, retain old configs, and use the requested posit
   assert.equal(value.lowerRolledJerseyFix, false); assert.equal(value.cutoffPantsFix, false); assert.equal(value.replaceStandardWithCutoff, false);
   assert.equal(value.lowerJerseyCaps.OL, 0); assert.equal(value.lowerJerseyCaps.EDGE, 100); assert.equal(value.lowerJerseyCaps.DT, 0);
   assert.equal(value.lowerJerseyCaps.QB, 100); assert.equal(value.lowerJerseyCaps.WR, 100); assert.equal(value.lowerJerseyCaps.LB, 100);
-  assert.equal(value.cutoffPantsCaps.WR, 5); assert.equal(value.cutoffPantsCaps.CB, 5); assert.equal(value.cutoffPantsCaps.QB, 0); assert.equal(value.cutoffPantsCaps.FS, 5); assert.equal(value.cutoffPantsCaps.SS, 5);
+  assert.equal(value.cutoffPantsCaps.WR, 10); assert.equal(value.cutoffPantsCaps.CB, 10); assert.equal(value.cutoffPantsCaps.QB, 0); assert.equal(value.cutoffPantsCaps.FS, 10); assert.equal(value.cutoffPantsCaps.SS, 10);
   assert.equal(normalizeEquipmentOptions({ lowerRolledJerseyFix: true, cutoffPantsFix: true }, true).lowerRolledJerseyFix, false);
   assert.deepEqual(normalizeEquipmentOptions(JSON.parse(JSON.stringify(value)), false).cutoffPantsCaps, value.cutoffPantsCaps);
   for (const number of [-1, 101, 1.5, "5", "", null]) assert.throws(() => normalizeUniformCaps({ WR: number }, DEFAULT_CUTOFF_PANTS_CAPS, "Cutoff"), /whole/);
@@ -44,7 +44,7 @@ test("rolled undershirts precede lower jerseys, then cutoff pants, then recolor"
   const players=[{...player(0),CharacterBodyType:'Thin'}],visuals=[visual(outfit('Gear_JerseyStyle_RolledLow','GearPants_AboveKnee','BottomBase_None','Undershirt_None'))];
   const result=run(players,visuals,{rolledJerseyFix:true,undershirtColor:'black',lowerRolledJerseyFix:true,cutoffPantsFix:true,cutoffPantsCaps:caps(100),unlockedRecolorFix:true,unlockedColorTheme:'white',teamNames:new Map([[1,'San Jose State']])});
   assert.equal(get(visuals[0],'OuterShirt'),'Gear_JerseyStyle_RolledLowest_Untucked');assert.equal(get(visuals[0],'OuterPants'),CUTOFF_PANTS);assert.equal(get(visuals[0],'InnerShirt'),'Gear_Undershirt_CompressionTCrewSleeveless_White');assert.equal(result.rolledJerseyChanges.length,1);assert.equal(result.lowerJerseyChanges.length,1);assert.equal(result.cutoffPantsChanges.length,1);assert.ok(result.unlockedRecolorChanges.length);
-  const source=fs.readFileSync(new URL('../src/main/tools/equipment/core/globalFixes.js',import.meta.url),'utf8');assert.ok(source.indexOf('if (rolledJerseyFix)')<source.indexOf('const uniformChanges ='));assert.ok(source.indexOf('const uniformChanges =')<source.indexOf('const recolorTeams ='));assert.ok(source.indexOf('const recolorTeams =')<source.indexOf('// Tattoos are the last correction'));
+  const source=fs.readFileSync(new URL('../src/main/tools/equipment/core/globalFixes.js',import.meta.url),'utf8');assert.ok(source.indexOf('if (rolledJerseyFix)')<source.indexOf('const uniformChanges ='));assert.ok(source.indexOf('const uniformChanges =')<source.indexOf('const recolorTeams ='));assert.ok(source.indexOf('const tattooChange = applyUnlockedTattooPlan')<source.indexOf('const uniformChanges ='));
 });
 test("caps count existing items, protect players, separate cohorts, and select deterministically", () => {
   const entries = Array.from({ length: 200 }, (_, index) => ({ visualsRow: index, position: index % 2 ? "WR" : "CB", cohort: index < 100 ? "fbs" : "fcs", editable: index % 9 !== 0, raw: raw(outfit(index % 10 === 1 ? "Gear_JerseyStyle_RolledLowest_Untucked" : "Gear_JerseyStyle_RolledLow")) }));
@@ -68,12 +68,12 @@ test("both passes interact safely: lowest untucked qualifies but lowest tucked n
   assert.equal(get(visuals[0], "OuterShirt"), "Gear_JerseyStyle_RolledLowest"); assert.equal(get(visuals[0], "OuterPants"), "GearPants_AboveKnee");
   assert.equal(get(visuals[1], "OuterPants"), CUTOFF_PANTS); assert.equal(result.cutoffPantsChanges.length, 1);
 });
-test("cutoff cap defaults permit exactly 5% WR/CB, not other positions, and repeated runs do not add more", () => {
+test("cutoff defaults fill 10% WR/CB, leave QB untouched, and repeated runs do not add more", () => {
   const positions = ["WR", "CB", "QB"], players = Array.from({ length: 60 }, (_, row) => player(row, positions[Math.floor(row / 20)])), visuals = players.map(() => visual(outfit()));
   const result = run(players, visuals, { cutoffPantsFix: true, fillFrequencies:{cutoffPants:true} });
-  assert.equal(result.cutoffPantsChanges.length, 2); assert.equal(visuals.slice(40).filter(row => get(row, "OuterPants") === CUTOFF_PANTS).length, 0);
+  assert.equal(result.cutoffPantsChanges.length, 4); assert.equal(visuals.slice(40).filter(row => get(row, "OuterPants") === CUTOFF_PANTS).length, 0);
   assert.equal(run(players, visuals, { cutoffPantsFix: true, fillFrequencies:{cutoffPants:true} }).cutoffPantsChanges.length, 0);
-  assert.equal(result.uniformPopulation.find(row => row.group === "WR").cutoffAfter, 1);
+  assert.equal(result.uniformPopulation.find(row => row.group === "WR").cutoffAfter, 2);
 });
 test("Standard Pants override is off by default, explicit, uncapped, and never bypasses fit", () => {
   const players = [player(0), player(1), player(2)], initial = [visual(outfit(undefined, "GearPants_Standard")), visual(outfit(undefined, "GearPants_Standard", "UnknownTights")), visual(outfit())];

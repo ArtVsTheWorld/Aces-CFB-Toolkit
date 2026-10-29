@@ -21,6 +21,13 @@ export const mapperCategoryLabel=value=>({Reserved:'Chin Cover',HeadBand:'Waist 
 export const mapperBrandLabel=value=>({nike:'Nike',adidas:'Adidas',underarmour:'Under Armour',underarmor:'Under Armour',ua:'Under Armour',jordan:'Jordan',battle:'Battle',nxtrnd:'NXTRND'})[String(value).toLowerCase()]??String(value).replace(/[_-]+/g,' ').replace(/\b[a-z]/g,letter=>letter.toUpperCase());
 const isGearElement=(loadout,element)=>loadout.loadoutCategory!=='Base'||equipmentItem(element.itemAssetName)||/^(?:Gear|Tattoo|FaceMarks|ArmSleeve|Undershirt|G_)|tattoo/i.test(element.itemAssetName);
 export const mapperItemName=asset=>({Gear_Socks_Low:'Low Socks',Gear_Socks_Mid:'Mid Socks',Gear_Socks_High:'High Socks'})[asset]??equipmentDisplayName(asset);
+export const mapperTattooItem=item=>Boolean(item?.catalog&&/^(Left|Right)(Arm|Leg)Tattoo$/.test(item.slot));
+export function mapperRuleLoadouts(raw,item,create=false){
+ if(!mapperTattooItem(item))return (raw.loadouts??[]).filter(loadout=>loadout?.loadoutType==='PlayerOnField'&&Array.isArray(loadout.loadoutElements));
+ const layers=(raw.loadouts??[]).filter(loadout=>loadout?.loadoutCategory==='Base'&&loadout.loadoutType!=='PlayerOnField'&&Array.isArray(loadout.loadoutElements)&&loadout.loadoutElements.some(element=>/^(Left|Right)(Arm|Leg)Tattoo$/.test(element?.slotType)));
+ if(layers.length)return layers;
+ const empty={loadoutCategory:'Base',loadoutElements:[]};if(create)raw.loadouts.push(empty);return [empty];
+}
 
 // Read every observed gear asset, without using the bundled catalog as an
 // inclusion whitelist. Catalog/observations only help resolve missing slots.

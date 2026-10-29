@@ -1,3 +1,4 @@
+import {PLAYER_PICKER_FIELDS} from '../../services/settingsFields.js';
 import { normalizePlayerScope, playerScopeCatalog } from "../playerScope.js";
 import path from "node:path";
 import {loadEquipmentTables,snapshotVisualRawData} from '../equipment/shared.js';
@@ -14,8 +15,8 @@ const read = (record, field) => { try { return record?.[field]; } catch { return
 const label = value => ({ Invalid: "None", PlayingTime: "Playing Time", ProPotential: "Pro Potential", PlayingStyle: "Playing Style", ChampionshipContender: "Championship Contender", BrandExposure: "Brand Exposure", ProximityToHome: "Proximity To Home", CoachPrestige: "Coach Prestige", ConferencePrestige: "Conference Prestige" }[value] ?? value);
 const classLabel = record => { const year = read(record, "SchoolYear") ?? "Unknown", redshirt = read(record, "RedshirtStatus"); return redshirt === "Previous" ? `RS ${year}` : redshirt === "Current" ? `${year} (redshirting)` : String(year); };
 
-async function load(savePath, schemaPath) {
-  const opened=await loadEquipmentTables(savePath,schemaPath,true,false),tables={players:opened.players,teams:opened.teams};
+async function load(savePath, schemaPath, settingsOnly=false) {
+  const opened=await loadEquipmentTables(savePath,schemaPath,!settingsOnly,false,settingsOnly?{players:[...PLAYER_PICKER_FIELDS,'Age',DEALBREAKER_FIELD,'IdealRecruitingPitch']}:{} ),tables={players:opened.players,teams:opened.teams};
   const sample = tables.players.records.find(record => record && !record.isEmpty);
   for (const field of ["FirstName", "LastName", "Position", "SchoolYear", "RedshirtStatus", "Age", "OverallRating", "TeamIndex", DEALBREAKER_FIELD, "IdealRecruitingPitch"]) if (read(sample, field) === undefined) throw new Error(`Player table does not expose required Dealbreaker Fixer field ${field}.`);
   const teamNames = new Map(); tables.teams.records.forEach((record, row) => { if (!record || record.isEmpty) return; const name = String(read(record, "DisplayName") || read(record, "LongName") || read(record, "ShortName") || `Team ${row}`); const index = Number(read(record, "TeamIndex")); if (Number.isInteger(index)) teamNames.set(index, name); if (!teamNames.has(row)) teamNames.set(row, name); });
@@ -32,7 +33,7 @@ function normalize(options = {}) {
   return { seed, distribution, protectedRows, protectedValues, restrictPlayingStylePositions, fixInvalidPlayingStyle: restrictPlayingStylePositions && Boolean(options.fixInvalidPlayingStyle) };
 }
 
-export async function prepareDealbreaker(context) { const loaded = context?.savePath ? await load(context.savePath, context.schemaPath) : null; return { ...(loaded ? playerScopeCatalog(loaded.players.records, loaded.teamNames) : {}), defaults: DEFAULT_DISTRIBUTION, values: ALLOWED_DEALBREAKERS.map(value => ({ value, label: label(value) })) }; }
+export async function prepareDealbreaker(context) { const loaded = context?.savePath ? await load(context.savePath, context.schemaPath,true) : null; return { ...(loaded ? playerScopeCatalog(loaded.players.records, loaded.teamNames) : {}), defaults: DEFAULT_DISTRIBUTION, values: ALLOWED_DEALBREAKERS.map(value => ({ value, label: label(value) })) }; }
 
 async function applyPlan(context) {
   const plan = takePlan(context.options?.planId);

@@ -223,6 +223,7 @@ function registerIpc() {
     return toolWorker.request('prepare', {toolId:tool.id, savePath, options:request.options ?? {}, schemaPath:schema.path, defaultMapPath:commentaryMapPath()}, progressFor(event,request));
   }));
   ipcMain.handle(IPC.searchPreview, (_event, request) => toolWorker.request('search', request));
+  ipcMain.handle(IPC.mapperTargets, (_event, request) => toolWorker.request('mapperTargets', {...request,savePath:validateSavePath(request?.savePath||sessionActiveSave)}));
   ipcMain.handle(IPC.runTool, async (event, request) => toolOperation(async () => {
     const tool = getTool(request?.toolId);
     const handler = getToolHandler(request?.toolId);

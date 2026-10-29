@@ -1,3 +1,4 @@
+import {PLAYER_PICKER_FIELDS} from '../../services/settingsFields.js';
 import {originalEaProtectionAudit} from '../../services/originalEaPlayers.js';
 import { normalizePlayerScope, playerScopeCatalog, matchesPlayerScope } from "../playerScope.js";
 import crypto from "node:crypto";
@@ -19,9 +20,9 @@ function normalizeOptions(options, defaultMapPath) {
   return { scope: normalizePlayerScope(options?.scope), phonetic: Boolean(options?.phonetic), firstName: options?.firstName !== false, preserveUnmatched: Boolean(options?.preserveUnmatched), freshmenOnly: Boolean(options?.freshmenOnly), showAll: Boolean(options?.showAll), playerTableUid, teamTableUid, mapPath };
 }
 
-async function readPlayerTable(franchise, uniqueId) {
+async function readPlayerTable(franchise, uniqueId,fields) {
   let table; try { table = tableByUniqueId(franchise, uniqueId); } catch { throw new Error(`Main Player table Unique ID ${uniqueId} was not found.`); }
-  await table.readRecords(); const sample = table.records.find(record => record && !record.isEmpty); const values = sample && ["FirstName", "LastName", "TeamIndex", "Position", "SchoolYear", "RedshirtStatus", "PLYR_ASSETNAME", "PLYR_COMMENT"].map(field => sf(sample, field));
+  await table.readRecords(fields); const sample = table.records.find(record => record && !record.isEmpty); const values = sample && ["FirstName", "LastName", "TeamIndex", "Position", "SchoolYear", "RedshirtStatus", "PLYR_ASSETNAME", "PLYR_COMMENT"].map(field => sf(sample, field));
   if (!sample || values.some(value => value === undefined)) throw new Error(`Unique ID ${uniqueId} is not the expected Player table (name, team, school year, redshirt status, asset identity, and commentary fields required).`); return table;
 }
 
@@ -45,7 +46,7 @@ async function analyze({ savePath, options, schemaPath, defaultMapPath }) {
 const serialProposal = item => ({ row: item.row, team: item.teamName, player: `${item.firstName} ${item.lastName}`.trim(), currentId: item.oldId, proposedId: item.newId, matchedName: item.match.name, method: item.match.method, source: item.match.source, requiresDecision: item.match.method === "phonetic" });
 
 export async function prepareCommentary(context) {
-  if (context.options?.scopeCatalogOnly) { const opened = await openCfb27Save(context.savePath, context.schemaPath), players = await readPlayerTable(opened.franchise, DEFAULT_PLAYER_TABLE_UID), teams = await readTeamTable(opened.franchise, DEFAULT_TEAM_TABLE_UID), names = buildTeamNames(teams.records); return { ...playerScopeCatalog(players.records, names), teams: [...new Set(names.values())].map(name => ({ value: name, label: name })) }; }
+  if (context.options?.scopeCatalogOnly) { const opened = await openCfb27Save(context.savePath, context.schemaPath), players = await readPlayerTable(opened.franchise, DEFAULT_PLAYER_TABLE_UID,[...PLAYER_PICKER_FIELDS,'PLYR_COMMENT']), teams = await readTeamTable(opened.franchise, DEFAULT_TEAM_TABLE_UID), names = buildTeamNames(teams.records); return { ...playerScopeCatalog(players.records, names), teams: [...new Set(names.values())].map(name => ({ value: name, label: name })) }; }
   const analysis = await analyze(context); const matched = analysis.result.players.filter(player => player.match.method !== "none").length;
   const reviewItems = analysis.result.changes.filter(item => item.match.method === "phonetic");
   return { ...analysis.catalog, analysisSignature: analysis.analysisSignature, commentaryMapSize: analysis.commentaryMapSize, summary: { ...analysis.result.summary, matched, coverage: analysis.result.summary.scanned ? matched / analysis.result.summary.scanned * 100 : 0, proposals: analysis.result.changes.length, reviewRequired: analysis.phoneticRows.length }, proposals: reviewItems.map(item => ({ ...serialProposal(item), isChange: true, requiresDecision: true })) };

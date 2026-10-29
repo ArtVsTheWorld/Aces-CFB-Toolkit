@@ -4,22 +4,27 @@ import {enforceEquipmentCompatibility} from '../equipment/core/compatibility.js'
 import {BRAND_SLOTS,isBrandCompatibleItem} from '../equipment/core/brandCompatibility.js';
 import {generatedItemConflict} from '../equipment/core/generatedCompatibility.js';
 import {facemaskFitsHelmet,helmetModel} from '../equipment/core/helmets.js';
-import {mapperLibrary,mapperDigest as digest,resolveMapperSlot,mapperElements,mapperContext} from './library.js';
+import {mapperLibrary,mapperDigest as digest,resolveMapperSlot,mapperElements,mapperContext,mapperRuleLoadouts,mapperTattooItem} from './library.js';
 export {mapperLibrary} from './library.js';
-import {expandMapperRules,mapperMatches,mapperRuleCaps} from './rules.js';
+import {expandMapperRules,mapperMatches,mapperRuleCaps,mapperWearingMatches} from './rules.js';
 const clone=value=>structuredClone(value);
 const active=asset=>asset&&!/(?:^|_)none$/i.test(asset)&&asset!=='FaceGear_BalaclavaNone';
 const itemAt=(elements,slot)=>elements.find(item=>item?.slotType===slot);
-const inScope=(player,rule)=>(!rule.teams?.length||rule.teams.includes(player.team))&&(!rule.positions?.length||rule.positions.includes(player.position))&&(!rule.playerRows?.length||rule.playerRows.map(Number).includes(player.row));
+const scopeIndexes=new WeakMap();
+const inScope=(player,rule)=>{if(!scopeIndexes.has(rule))scopeIndexes.set(rule,{teams:new Set(rule.teams??[]),positions:new Set(rule.positions??[]),rows:new Set((rule.playerRows??[]).map(Number))});const s=scopeIndexes.get(rule);return(!s.teams.size||s.teams.has(player.team))&&(!s.positions.size||s.positions.has(player.position))&&(!s.rows.size||s.rows.has(player.row));};
 
-function compatible(elements,changedSlots,player,originalElements){
+function compatible(elements,changedSlots,player,originalElements,options={}){
   const get=slot=>itemAt(elements,slot)?.itemAssetName;
   for(const slot of changedSlots){
     const element=itemAt(elements,slot);if(!element)continue;
     const item=equipmentItem(element.itemAssetName);
-    if(item&&!item.slots.includes(slot.replace(/Override$/,'')))return `${equipmentDisplayName(element.itemAssetName)} does not fit ${slot}.`;
+    if(item&&!item.slots.includes(slot.replace(/Override$/,'')))return {blocking:true,reason:`${equipmentDisplayName(element.itemAssetName)} does not fit ${slot}.`};
+  }
+  for(const slot of changedSlots){
+    const element=itemAt(elements,slot);if(!element)continue;
+    const item=equipmentItem(element.itemAssetName);
     if(BRAND_SLOTS.has(slot)&&!isBrandCompatibleItem(slot,element.itemAssetName,player.branding))return `The selected ${slot.includes('Shoe')?'cleats':'gloves'} are not verified for this team's ${normalBrand(player.branding)||'unknown'} brand.`;
-    if(item){const conflict=generatedItemConflict(elements,item,[slot],player.position);if(conflict&&!conflict.startsWith('Item is not eligible'))return conflict;}
+    if(item){const conflict=generatedItemConflict(elements,item,[slot],player.position,options);if(conflict&&!conflict.startsWith('Item is not eligible'))return conflict;}
   }
   if(changedSlots.some(slot=>['HeadWear','FaceMask','Visor','HelmetAccessory','MouthWear'].includes(slot))){
     const helmet=get('HeadWear'),mask=get('FaceMask'),model=helmetModel(helmet);
@@ -29,15 +34,15 @@ function compatible(elements,changedSlots,player,originalElements){
   }
   // Named balaclavas are always checked. Do not reinterpret vanilla vintage
   // neck rolls as old mod replacements when the save cannot prove mod usage.
-  const repaired=clone(elements),corrections=enforceEquipmentCompatibility(repaired),existing=enforceEquipmentCompatibility(clone(originalElements));
+  const repaired=clone(elements),corrections=enforceEquipmentCompatibility(repaired,options),existing=enforceEquipmentCompatibility(clone(originalElements),options);
   if(corrections.some(issue=>!existing.some(old=>isDeepStrictEqual(old,issue))))return 'This mapping conflicts with sleeves, wrist/elbow gear, neckwear, mouthpiece, or pants. Adjust the scope or queue compatible items in the same batch.';
   // Check both directions: adding a flak jacket can conflict with an unchanged
   // RAW backplate, just as copying the backplate can conflict with a jacket.
   for(const element of elements){
     const item=equipmentItem(element.itemAssetName);if(!item||!element.slotType)continue;
-    const reason=generatedItemConflict(elements,item,[element.slotType],player.position);
+    const reason=generatedItemConflict(elements,item,[element.slotType],player.position,options);
     if(!reason||reason.startsWith('Item is not eligible'))continue;
-    const previous=itemAt(originalElements,element.slotType),oldReason=previous?.itemAssetName===element.itemAssetName?generatedItemConflict(originalElements,item,[element.slotType],player.position):null;
+    const previous=itemAt(originalElements,element.slotType),oldReason=previous?.itemAssetName===element.itemAssetName?generatedItemConflict(originalElements,item,[element.slotType],player.position,options):null;
     if(reason!==oldReason)return reason;
   }
   return null;
@@ -50,15 +55,18 @@ export function normalizeMapperRules(value){
     if(!['exact','asset','item'].includes(rule.matchMode??'exact'))throw new Error('Choose Exact Configuration or Item Only matching.');
     if(rule.scope!==undefined&&!['all','selected'].includes(rule.scope))throw new Error('Choose All Matching Players or Selected Targets.');
     for(const key of ['teams','positions','playerRows'])if(rule[key]!==undefined&&(!Array.isArray(rule[key])||rule[key].length>30000||rule[key].some(value=>typeof value!=='string'&&!(key==='playerRows'&&Number.isInteger(value)))))throw new Error('Invalid equipment targeting filters.');
-    if((rule.action==='copy'||rule.scope==='selected')&&rule.scope!=='all'&&!rule.playerRows?.length&&!rule.teams?.length&&!rule.positions?.length)throw new Error('Choose targets, or explicitly select All Players.');
+    if((rule.action==='copy'||rule.scope==='selected')&&rule.scope!=='all'&&!rule.playerRows?.length&&!rule.teams?.length&&!rule.positions?.length&&!rule.wearingItemId)throw new Error('Choose targets, or explicitly select All Players.');
     if(rule.pairSides!==undefined&&typeof rule.pairSides!=='boolean')throw new Error('Choose whether to copy one side or a pair.');
+    if(rule.wearingItemId!==undefined&&(typeof rule.wearingItemId!=='string'||!rule.wearingItemId))throw new Error('Choose a Wearing Item from the equipment catalog.');
+    if(rule.wearingMatchMode!==undefined&&!['asset','item'].includes(rule.wearingMatchMode))throw new Error('Choose selected color or all colors for Wearing Item.');
     return {...rule,matchMode:rule.matchMode??'exact',preserveColor:rule.preserveColor===true,preserveSide:true};
   });
 }
 export function buildMapperPreview(players,library,inputRules){
-  const resolution=library.resolution??{},originalRules=normalizeMapperRules(inputRules),items=new Map(library.items.map(item=>[item.id,item])),rules=expandMapperRules(originalRules,items),changes=[],blocked=[],statistics=originalRules.map((_,index)=>({rule:index+1,matched:0,changed:0}));
+  const resolution=library.resolution??{},originalRules=normalizeMapperRules(inputRules),items=new Map(library.items.map(item=>[item.id,item])),rules=expandMapperRules(originalRules,items),changes=[],blocked=[],compatibilityWarnings=[],statistics=originalRules.map((_,index)=>({rule:index+1,matched:0,changed:0}));
   for(const rule of rules){
-    if(!items.has(rule.replacementId)||rule.action==='replace'&&!items.has(rule.sourceId))throw new Error('An item in this mapping is no longer present in the save. Reload Equipment Mapper and select it again.');
+    if(rule.wearingItemId&&(!items.has(rule.wearingItemId)||items.get(rule.wearingItemId).copyable===false))throw new Error('The Wearing Item filter is unavailable in the selected equipment catalog. Check your mods and reselect the item.');
+    if(!items.has(rule.replacementId)||rule.action==='replace'&&!items.has(rule.sourceId))throw new Error('An item in this mapping is unavailable in the selected equipment catalog. Check your mods and reselect items from older saved rules.');
     if(items.get(rule.replacementId).copyable===false||rule.action==='replace'&&items.get(rule.sourceId).copyable===false)throw new Error('This item is browse-only because its equipment slot or player layer cannot be verified.');
     if(rule.action==='replace'&&items.get(rule.sourceId).slot!==items.get(rule.replacementId).slot)throw new Error('Source and replacement must use the same exact equipment slot. Left and right slots cannot be interchanged.');
     for(const [key,field]of [['teams','team'],['positions','position'],['playerRows','row']])if(rule[key]?.some(value=>!players.some(player=>String(player[field])===String(value))))throw new Error('A selected team, position, or player is no longer available. Review the mapping targets.');
@@ -70,49 +78,66 @@ export function buildMapperPreview(players,library,inputRules){
     if(!rules.some(rule=>selected(player,rule)))continue;
     let raw;try{raw=JSON.parse(player.rawData);}catch{blocked.push({row:player.row,player:player.player,team:player.team,reason:'Target equipment cannot be read. Narrow the scope or repair the original data before mapping.'});continue;}
     if(!Array.isArray(raw?.loadouts)){blocked.push({row:player.row,player:player.player,team:player.team,reason:'Target equipment has no valid loadout array.'});continue;}
-    const audits=[],touched=new Set(),failure=[];
+    const originalRaw=clone(raw),audits=[],touched=new Set(),failure=[],outfitWarnings=[],claims=new Map(),playerCounts=originalRules.map(()=>({matched:0,changed:0}));
     for(const [ruleIndex,rule]of rules.entries()){
       if(!selected(player,rule))continue;
       const source=items.get(rule.sourceId),replacement=items.get(rule.replacementId);
-      for(const [loadoutIndex,loadout]of (raw.loadouts??[]).entries()){
-        if(loadout?.loadoutType!=='PlayerOnField'||!Array.isArray(loadout.loadoutElements))continue;
+      const applicable=mapperRuleLoadouts(raw,replacement,true);
+      if(mapperTattooItem(replacement)&&applicable.length>1){failure.push('Multiple tattoo layers cannot be safely mapped.');continue;}
+      for(const loadout of applicable){
+        const loadoutIndex=raw.loadouts.indexOf(loadout);
+        if(!mapperWearingMatches(originalRaw,originalRaw.loadouts[loadoutIndex]??loadout,rule,items,resolution,sameColorFamily))continue;
         const elements=loadout.loadoutElements;
         if(elements.some(element=>!element||typeof element!=='object')){failure.push('Target equipment contains malformed slot entries.');continue;}
-        const resolved=mapperElements(elements,resolution);
+        // Every source matches the original outfit, just like frequency
+        // allocation. One mapping must not manufacture another rule's source.
+        const resolved=mapperElements(originalRaw.loadouts[loadoutIndex]?.loadoutElements??[],resolution);
         const matches=rule.action==='copy'?[replacement.slot]:mapperMatches(resolved,source,rule,resolution,sameColorFamily);
         for(const matchedSlot of matches){
-          statistics[rule.reportRule-1].matched++;
+          playerCounts[rule.reportRule-1].matched++;
           const slot=matchedSlot;
           if(matchedSlot!==replacement.slot){failure.push(`Mapping ${ruleIndex+1}: source and target must use the same equipment slot.`);continue;}
           if(elements.filter(element=>resolveMapperSlot(element,resolution)===slot).length>1){failure.push(`Duplicate ${slot} entries cannot be safely mapped.`);continue;}
-          let chosen=replacement;const before=elements.find(element=>resolveMapperSlot(element,resolution)===matchedSlot),currentColors=equipmentSemantics(before?.itemAssetName)?.colors??[];
+          let chosen=replacement;const before=elements.find(element=>resolveMapperSlot(element,resolution)===matchedSlot),originalBefore=resolved.find(element=>element.slotType===matchedSlot),currentColors=equipmentSemantics(originalBefore?.itemAssetName)?.colors??[];
           if(rule.preserveColor&&currentColors.length){
             chosen=library.items.find(item=>item.copyable!==false&&item.slot===replacement.slot&&item.asset===replacement.asset&&isDeepStrictEqual(item.colors,currentColors))??library.items.find(item=>item.copyable!==false&&item.slot===replacement.slot&&equipmentItem(item.asset)&&equipmentItem(replacement.asset)&&sameColorFamily(item.asset,replacement.asset)&&isDeepStrictEqual(item.colors,currentColors));
-            if(!chosen){failure.push(`Mapping ${ruleIndex+1}: no matching color variant of the replacement exists in this save.`);continue;}
+            if(!chosen){failure.push(`Mapping ${ruleIndex+1}: no matching color variant of the replacement is available in the selected catalog.`);continue;}
           }
-          const proposals=[[slot,{...clone(chosen.element),slotType:slot}]];
+          const proposals=[[slot,{...(chosen.catalog?clone(before??{}):{}),...clone(chosen.element),slotType:slot}]];
           for(const [dependent,element]of Object.entries(chosen.context))proposals.push([dependent,element]);
           for(const [targetSlot,proposal]of proposals){
+            const claimKey=`${loadoutIndex}|${targetSlot}`,claim=claims.get(claimKey);
+            if(claim&&!isDeepStrictEqual(claim.proposal,proposal)){
+              failure.push(`Mappings ${claim.rule} and ${rule.reportRule} assign different equipment to ${targetSlot.replace(/([a-z])([A-Z])/g,'$1 $2')}. Choose one assignment or separate their player filters.`);
+              continue;
+            }
+            claims.set(claimKey,{rule:rule.reportRule,proposal:clone(proposal)});
             const previous=elements.find(element=>resolveMapperSlot(element,resolution)===targetSlot);if(isDeepStrictEqual(previous??null,proposal))continue;
             if(previous)elements.splice(elements.indexOf(previous),1);if(proposal)elements.push(clone(proposal));
-            audits.push({rule:rule.reportRule,loadout:loadoutIndex,slot:targetSlot,before:clone(previous??null),after:clone(proposal),sourceId:source?.id??null,replacementId:chosen.id});touched.add(`${loadoutIndex}|${targetSlot}`);statistics[rule.reportRule-1].changed++;
+            audits.push({rule:rule.reportRule,loadout:loadoutIndex,slot:targetSlot,before:clone(previous??null),after:clone(proposal),sourceId:source?.id??null,replacementId:chosen.id});touched.add(`${loadoutIndex}|${targetSlot}`);playerCounts[rule.reportRule-1].changed++;
           }
         }
       }
     }
+    for(const [index,counts]of playerCounts.entries())statistics[index].matched+=counts.matched;
     if(!audits.length&&!failure.length)continue;
     if(player.shared)failure.push('This player shares CharacterVisuals with another player. No shared row will be changed.');
     for(const [index,loadout]of (raw.loadouts??[]).entries()){
       const slots=[...touched].filter(key=>key.startsWith(`${index}|`)).map(key=>key.split('|')[1]);
-      if(slots.length){const reason=compatible(mapperElements(loadout.loadoutElements,resolution),slots,player,mapperElements(JSON.parse(player.rawData).loadouts[index].loadoutElements,resolution));if(reason)failure.push(reason);}
+      if(slots.length){const issue=compatible(mapperElements(loadout.loadoutElements,resolution),slots,player,mapperElements(originalRaw.loadouts[index]?.loadoutElements??[],resolution),{usingRawAccessoriesMod:library.mods?.raw===true});if(issue){if(issue.blocking)failure.push(issue.reason);else outfitWarnings.push(issue);}}
     }
     if(failure.length){blocked.push({row:player.row,player:player.player,team:player.team,reason:[...new Set(failure)].join(' ')});continue;}
-    if(!isDeepStrictEqual(raw,JSON.parse(player.rawData)))changes.push({...player,newRawData:JSON.stringify(raw),edits:audits});
+    for(const [index,counts]of playerCounts.entries())statistics[index].changed+=counts.changed;
+    if(!isDeepStrictEqual(raw,originalRaw)){
+      changes.push({...player,newRawData:JSON.stringify(raw),edits:audits});
+      if(outfitWarnings.length)compatibilityWarnings.push({row:player.row,player:player.player,team:player.team,reason:[...new Set(outfitWarnings)].join(' ')});
+    }
   }
-  return {changes,blocked,statistics,allocations};
+  return {changes,blocked,compatibilityWarnings,statistics,allocations};
 }
 
 // The catalog's explicit mappings include repurposed mod colors. Never infer a
 // color by rewriting asset strings, or manufacture an item not found in the save.
 import {recolorEquipmentItem} from '../equipment/catalog.js';
 function sameColorFamily(asset,other){return ['white','black','primary','secondary'].some(theme=>recolorEquipmentItem(asset,theme)===other||recolorEquipmentItem(other,theme)===asset);}
+export {sameColorFamily};

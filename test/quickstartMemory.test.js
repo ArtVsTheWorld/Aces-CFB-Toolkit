@@ -71,7 +71,7 @@ test('Quickstart mod switches enable the correct default pools and Unlocked corr
   assert.equal(randomizer.noDripProfile,true,'legacy No Drip opt-out is ignored in Quickstart');
   for(const name of ['unlockedTattooFix','unlockedMouthpieceFix','unlockedRecolorFix','lowerRolledJerseyFix','cutoffPantsFix','unlockedSocksFix'])assert.equal(patcher[name],true,name);
   assert.equal(patcher.unlockedColorTheme,'team');assert.equal(patcher.tapeColorMode,'accessory');
-  assert.equal(patcher.allowRandomMouthpieceColors,false);assert.equal(patcher.unlockedTattooCap,35);assert.equal(patcher.fillFrequencies.tattoos,true);
+  assert.equal(patcher.allowRandomMouthpieceColors,false);assert.equal(patcher.unlockedTattooCap,30);assert.equal(patcher.fillFrequencies.tattoos,true);
   assert.deepEqual(randomizer.donorOnlyPositions,['K','P']);
   const unprotected=quickstartSettings({protectOriginalEaPlayers:false});assert.equal(unprotected.randomizer.protectOriginalEaPlayers,false);assert.equal(unprotected.patcher.protectOriginalEaPlayers,false);
   assert.equal(quickstartSettings({raw:true,gameday:true}).patcher.unlockedMouthpieceFix,false);

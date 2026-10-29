@@ -99,3 +99,28 @@
 .ui-setup-flow .player-pool-layout .configuration-entry p{font-size:11px;line-height:1.5}
 
 @media(max-width:760px){.ui-setup-flow .player-pool-layout{grid-template-columns:1fr}}
+
+/* Team setup needs room for its comparison table, beyond the standard editor. */
+.configuration-dialog.tool-ui-dialog.roster-batch-dialog{width:min(1680px,96vw);max-width:96vw;max-height:94vh}
+.roster-batch-dialog .roster-batch-table table{min-width:1200px;width:100%;table-layout:fixed}
+.roster-batch-dialog .batch-check-column{width:3%}
+.roster-batch-dialog .batch-team-column{width:17%}
+.roster-batch-dialog .batch-caliber-column{width:16%}
+.roster-batch-dialog .batch-age-column,.roster-batch-dialog .batch-potential-column{width:10%}
+.roster-batch-dialog .batch-scheme-column{width:18%}
+.roster-batch-dialog .batch-mix-column{width:15%}
+.roster-batch-dialog .batch-reroll-column{width:11%}
+.roster-batch-dialog .batch-team-toolbar{flex-wrap:wrap;align-items:center}
+.roster-batch-dialog .batch-team-actions{flex-wrap:wrap}
+@media(min-width:1200px){
+ .roster-batch-dialog [data-roster-list-view]{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:stretch}
+ .roster-batch-dialog [data-roster-list-view]>.batch-advanced,.roster-batch-dialog [data-roster-list-view]>.batch-team-panel{grid-column:1/-1}
+ .roster-batch-dialog .batch-team-toolbar{flex-direction:row}
+}
+
+.roster-batch-dialog .batch-section-header{align-items:flex-start}
+.roster-batch-dialog .batch-section-header>div{display:block}
+.roster-batch-dialog .batch-section-header p{margin-top:4px}
+.roster-batch-dialog .roster-batch-locks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:680px){.roster-batch-dialog .roster-batch-locks{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:380px){.roster-batch-dialog .roster-batch-locks{grid-template-columns:1fr}}

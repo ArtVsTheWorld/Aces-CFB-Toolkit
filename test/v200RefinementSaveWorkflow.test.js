@@ -62,13 +62,14 @@ test('Commentary real save scoped review skips NIL players and protects against 
   const context = copy(t), seeded = await players(context), chosen = seeded.players.records.filter(record => record && !record.isEmpty && record.Position === 'WR' && Number(record.TeamIndex) !== 255).slice(0, 2);
   assert.equal(chosen.length, 2);
   for (const [index, player] of chosen.entries()) { player.LastName = 'James'; player.PLYR_COMMENT = 0; player.IsNIL = index === 1; }
+  chosen[0].PLYR_ASSETNAME='Toolkit_Control_Fictional';
   await seeded.franchise.save(); const baseline = hash(context.savePath), before = await players(context), rows = chosen.map(record => seeded.players.records.indexOf(record));
   const options = { scope: { positions: ['WR'], playerRows: rows.map(String) }, phonetic: false, firstName: false };
   const prepared = await prepareCommentary({ ...context, options });
   const analyzed = { ...options, analysisSignature: prepared.analysisSignature, decisions: {} };
   await assert.rejects(runCommentary({ ...context, mode: 'preview', options: { ...analyzed, scope: { playerRows: [String(rows[1])] } } }), /changed.*Analyze/i);
   const preview = await runCommentary({ ...context, mode: 'preview', options: analyzed });
-  assert.equal(preview.details.skippedNil, 1); assert.equal(preview.details.changes.length, 1); assert.equal(hash(context.savePath), baseline);
+  assert.equal(preview.details.skippedOriginalEa, 1); assert.equal(preview.details.changes.length, 1); assert.equal(hash(context.savePath), baseline);
   const applied = await runCommentary({ ...context, mode: 'apply', options: analyzed }), after = await players(context);
   assert.equal(hash(applied.backupPath), baseline);
   compareRecords(before.players.records, after.players.records, preview.details.changes.map(change => ({ row: change.row, field: 'PLYR_COMMENT', newValue: change.proposedId })));
@@ -80,13 +81,17 @@ test('Jersey real save preserves individual locks and validates custom retired/t
   const chosen = seeded.players.records.filter(record => record && !record.isEmpty && record.Position === 'WR' && record.TeamIndex === team.TeamIndex).slice(0, 2);
   assert.equal(chosen.length, 2);
   for (const [index, player] of chosen.entries()) { player.JerseyNum = 9; player.IsNIL = false; player.OverallRating = index ? 99 : 50; }
+  // Keep the custom recipient out of LSU's higher-priority built-in #7/#18 rules.
+  const other=seeded.players.records.find(record=>!record.isEmpty&&record.TeamIndex===team.TeamIndex&&record.Position==='WR'&&!chosen.includes(record));assert.ok(other);
+  for(const record of seeded.players.records.filter(record=>!record.isEmpty&&record.TeamIndex===team.TeamIndex&&record.Position==='WR'&&!chosen.includes(record)))record.OverallRating=90;
+  other.OverallRating=99;chosen[1].OverallRating=97;chosen[1].SchoolYear='Freshman';chosen[1].RedshirtStatus='Eligible';chosen[1].CaptainsPatch='None';
   await seeded.franchise.save(); const baseline = hash(context.savePath), before = await players(context), locked = seeded.players.records.indexOf(chosen[0]), recipient = seeded.players.records.indexOf(chosen[1]);
   const reserved = new Set([0,7,9,18, ...before.players.records.filter(record => record && !record.isEmpty && record.TeamIndex === team.TeamIndex).map(record => record.JerseyNum)]);
   const customNumber = Array.from({ length: 20 }, (_, number) => number).find(number => !reserved.has(number)); assert.ok(customNumber !== undefined);
   const options = { skippedTeams: seeded.teams.records.filter(record => record && !record.isEmpty && record.DisplayName !== 'LSU').map(record => record.DisplayName), lockedRows: [String(locked)], lockSourcePath: context.savePath, customRetired: { LSU: [0] }, customTraditions: [{ team: 'LSU', number: customNumber, side: 'offense', positions: ['WR'] }], enablePromotions: false };
-  await assert.rejects(runJerseyRenumber({ ...context, mode: 'preview', options: { ...options, customTraditions: [{ team: 'LSU', number: 3, side: 'offense', positions: ['WR'] }] } }), /held by protected NIL player/);
+  await assert.rejects(runJerseyRenumber({ ...context, mode: 'preview', options: { ...options, customTraditions: [{ team: 'LSU', number: 3, side: 'offense', positions: ['WR'] }] } }), /held by protected original EA roster player/);
   assert.equal(hash(context.savePath), baseline);
-  const preview = await runJerseyRenumber({ ...context, mode: 'preview', options }), plan = takePlan(preview.planId);
+  const preview = await runJerseyRenumber({ ...context, mode: 'preview', options:{...options,protectOriginalEaPlayers:false} }), plan = takePlan(preview.planId);
   assert.ok(!plan.assignments.some(change => change.row === locked)); assert.ok(plan.assignments.some(change => change.row === recipient && change.newNumber === customNumber));
   const applied = await runJerseyRenumber({ ...context, mode: 'apply', options: { planId: preview.planId } }), after = await players(context);
   assert.equal(hash(applied.backupPath), baseline);
@@ -123,7 +128,7 @@ for (const [mode, run] of [['standard',runJerseyRenumber],['no-duplicates',runJe
   const number=Array.from({length:20},(_,index)=>index).find(number=>!held.has(number));assert.ok(number!==undefined);
   const recipient=seeded.players.records.indexOf(chosen[1]); await seeded.franchise.save();
   const baseline=hash(context.savePath), before=await players(context);
-  const options={skippedTeams:seeded.teams.records.filter(record=>!record.isEmpty&&record.DisplayName!=='LSU').map(record=>record.DisplayName),customRetired:{LSU:[]},customTraditions:[{team:'LSU',number,side:'offense',positions:['WR'],personality:'Leader'}],enablePromotions:false};
+  const options={protectOriginalEaPlayers:false,skippedTeams:seeded.teams.records.filter(record=>!record.isEmpty&&record.DisplayName!=='LSU').map(record=>record.DisplayName),customRetired:{LSU:[]},customTraditions:[{team:'LSU',number,side:'offense',positions:['WR'],personality:'Leader'}],enablePromotions:false};
   const preview=await run({...context,mode:'preview',options}), plan=takePlan(preview.planId);
   assert.ok(plan.assignments.some(change=>change.row===recipient&&change.newNumber===number));assert.equal(hash(context.savePath),baseline);
   const applied=await run({...context,mode:'apply',options:{planId:preview.planId}}), after=await players(context);

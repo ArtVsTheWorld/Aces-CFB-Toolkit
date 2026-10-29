@@ -29,6 +29,7 @@ function presetValues(configuration) {
   if(typeof migrateMouthpieceLimitSettings==='function')migrateMouthpieceLimitSettings(values);
   migrateOriginalEaProtectionSettings(values);
   migrateRemovalSettings(values);
+  if(typeof NoDrip!=='undefined')NoDrip.migrateSettings(values);
   if(document.getElementById("equipment-donor-sources-json"))values["equipment-donor-sources-json"]??="{}";
   if (typeof migrateRedshirtFilterSettings === 'function') migrateRedshirtFilterSettings(values);
   delete values['roster-seed']; // Older Roster Generator presets cannot pin a new run's seed.
