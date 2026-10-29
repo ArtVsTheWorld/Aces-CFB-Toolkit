@@ -23,7 +23,7 @@ function openModPoolEditor(origin, prepared) {
   const defaults = () => Object.fromEntries(categories.map(category => [category.id, { chance: category.defaultChance ?? defaultPercent, items: [...category.defaultItems] }]));
   let draft = { ...defaults(), ...structuredClone(previous[origin] ?? {}) }, active = categories[0].id;
   const initialDraft = JSON.stringify(draft);
-  const dialog = createConfigurationDialog({ title: `${modPoolName(origin)} Equipment Pool`, eyebrow: "Equipment Randomizer", className: "mod-pool-editor", description: "Choose extra items and how often each category is added. Category chances are independent; they do not need to add up to 100%. Gear copied from donors is kept.", saveLabel: "Save Settings" });
+  const dialog = createConfigurationDialog({ title: `${modPoolName(origin)} Equipment Pool`, eyebrow: "Equipment Randomizer", className: "mod-pool-editor", description: "Choose extra items and how often each category is added. Category chances are independent; they do not need to add up to 100%. Pool choices do not remove donor gear. Outfit fit and position rules still apply.", saveLabel: "Save Settings" });
   if (!dialog) return;
   const body = dialog.querySelector(".configuration-body");
   body.innerHTML = `<p class="notice">${origin === "eljax" ? "Requires GameDay Gear v2.0+ (ELJAX's Equipment Truck) by ElJax YT." : origin === "raw" ? "Requires RAW Accessories v3.1.4+ by Delonte RAW." : "Requires CFB27 Unlocked v0.97+ by Orckestra."}</p>${modPoolCategoryMarkup(origin, categories)}<input type="search" class="input" data-pool-search aria-label="Find an equipment item" placeholder="Find an item…"><div class="actions"><button class="button secondary" type="button" data-pool-all>Select All</button><button class="button secondary" type="button" data-pool-clear>Clear</button><button class="button secondary" type="button" data-pool-defaults>Default Category</button></div><p data-pool-count></p><div class="mod-pool-items" data-pool-items></div>`;
@@ -48,7 +48,8 @@ function openModPoolEditor(origin, prepared) {
       : active === "backplates" ? "Adds only to outfits without a flak jacket. A jacket in any on-field loadout blocks the addition."
       : active === "waistPlaycalls" ? "Adds only to quarterbacks. Playcall bands and handwarmers use separate slots and can be worn together. White, Black, and Team Primary are supported."
       : active === "handwarmers" ? "Disabled by default. Select the logo handwarmer and set a chance above 0% to allow it. This does not replace a waist playcall band."
-      : ["cleats", "gloves"].includes(active) ? "Only selected items compatible with the player's apparel brand may be picked. No compatible items means this category is skipped."
+      : active === "gloves" ? "QBs use donor gloves only and keep at most one. OL, DT, K and P do not receive pool gloves. Taped hands can roll for OL and DT. Other positions use selected styles that match their team’s brand."
+      : active === "cleats" ? "Only selected items compatible with the player's apparel brand may be picked. No compatible items means this category is skipped."
       : "Chance for this category to receive an additional item. Selected items are equally likely when compatible; position and outfit safeguards still apply. 0% disables this category.";
     renderItems(); validate();
   };

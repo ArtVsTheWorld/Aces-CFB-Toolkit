@@ -23,7 +23,7 @@ test('Quickstart QBs never roll additional gloves, while other mod gear, positio
     for(const item of loadouts[0].loadoutElements.filter(item=>['LeftHandWear','RightHandWear'].includes(item.slotType)))assert.equal(item.itemAssetName,'GearHand_None');
     assert.ok(Object.values(changes).some(items=>items.some(change=>!change.slots.some(slot=>['LeftHandWear','RightHandWear'].includes(slot)))),'Other mod categories remain eligible');
   }
-  for(const [position,options] of [['WR',settings.randomizer],['QB',{...settings.randomizer,donorOnlyGlovesPositions:undefined}]]){
+  for(const [position,options] of [['WR',settings.randomizer],['WR',{...settings.randomizer,donorOnlyGlovesPositions:undefined}]]){
     const loadouts=blank(),changes=applyModdedRandomizerEquipment(loadouts,{position,branding:'adidas'},mulberry32(701),1,createGeneratedEquipmentState(loadouts),{...options,modPools:pools});
     assert.ok(changes.unlocked.some(change=>change.category==='Gloves'),'Nonexcluded mod glove rolls still work');
   }

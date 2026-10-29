@@ -200,7 +200,7 @@ export function applyUnlockedRandomizerEquipment(loadouts, target, rng, perCateg
   rollItem("cleats", "Cleats", brandedEquipmentItems("Cleats", target.branding).filter(canGenerateItem), ["LeftShoe", "RightShoe"]);
   const brandedGloves = brandedEquipmentItems("Gloves", target.branding).filter(item => /^GearHand_(?!None)/i.test(item.itemName));
   const teamColorGloves = brandedGloves.filter(item => /_(?:TeamColor|SecondaryColor)$/i.test(item.itemName));
-  if (allowGloves) rollItem("gloves", "Gloves", configuration ? brandedGloves : teamColorGloves.length ? teamColorGloves : brandedGloves, ["LeftHandWear", "RightHandWear"]);
+  if (allowGloves && target.position!=="QB") rollItem("gloves", "Gloves", configuration ? brandedGloves : teamColorGloves.length ? teamColorGloves : brandedGloves, ["LeftHandWear", "RightHandWear"]);
   rollItem("mouthpieces", "Mouthpiece", configuration ? [...UNLOCKED_POOLS.unlockedMouthpieces, ...UNLOCKED_POOLS.colorfulHangingMouthpieces] : UNLOCKED_POOLS.unlockedMouthpieces, ["MouthWear"]);
   rollItem("neckwear", "Neckwear", UNLOCKED_POOLS.neckwear, null);
   rollItem("undershirts", "Undershirt", UNLOCKED_POOLS.undershirts, ["InnerShirt"]);
@@ -487,7 +487,7 @@ export function patchFreshmanEquipment(playerRecords, visualsRecords, visualsTab
     const facePaint = targetVisuals.loadouts.map((loadout, index) => { const asset = loadout.loadoutElements.find(element => slotOf(element) === "FacePaint")?.itemAssetName; return { loadout: index, asset, source: facePaintSource(asset, facePaintPool.diagnostics) }; });
     targetVisuals.loadouts.forEach(loadout => { sleeveCompatibilityCorrections += enforceArmSleeveCompatibility(loadout.loadoutElements, { usingUnlockedMod,usingRawAccessoriesMod:options.usingRawAccessoriesMod===true }).length; });
     const generatedCorrections = enforceGeneratedEquipmentCompatibility(targetVisuals.loadouts, generated, target.position);
-    enforceRandomizerPositionRestrictions(targetVisuals.loadouts, target.position);
+    enforceRandomizerPositionRestrictions(targetVisuals.loadouts, target.position, sf(record,'PLYR_HANDEDNESS'));
     sleeveCompatibilityCorrections += generatedCorrections.length;
     unlockedChanges = finalGeneratedChanges(targetVisuals.loadouts, unlockedChanges, generated?.options);
     rawChanges = finalGeneratedChanges(targetVisuals.loadouts, rawChanges, generated?.options);

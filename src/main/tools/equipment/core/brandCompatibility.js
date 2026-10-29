@@ -20,6 +20,8 @@ export function assignCompatibleBrandEquipment(loadouts, target, candidates, pre
   const audits = [], donorUses = [];
   if (!normalBrand(target.branding)) return { audits, donorUses };
   for (const group of GROUPS) {
+    // QB gloves follow the copied outfit; do not fill bare hands from another donor.
+    if(group.name==='gloves'&&String(target.position).toUpperCase()==='QB')continue;
     const usable = donor => donor.visuals.loadouts.some(loadout => loadout.loadoutElements.some(element => group.slots.includes(element.slotType) && isBrandCompatibleItem(element.slotType, element.itemAssetName, target.branding)));
     const favorites = preferred.filter(usable), pool = favorites.length ? favorites : candidates.filter(usable);
     const donor = pool.length ? pool[Math.floor(rng() * pool.length)] : null;

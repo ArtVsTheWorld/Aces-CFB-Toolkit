@@ -1,13 +1,7 @@
-import {equipmentItem} from '../equipment/catalog.js';
-import {ACCESSORY_RECOLOR_CONTEXT} from '../equipment/core/recolor.js';
+import {isQbGlove as glove,limitQbGloves} from '../equipment/core/positionRestrictions.js';
 import {parseRef,sf} from '../equipment/openSave.js';
 import {isOriginalEaPlayer} from '../../services/originalEaPlayers.js';
 import {mulberry32} from '../equipment/core/patcher.js';
-
-const glove = element => {
-  const asset=element?.itemAssetName;
-  return typeof asset==='string'&&!/(?:^|_)None$/i.test(asset)&&(equipmentItem(asset,ACCESSORY_RECOLOR_CONTEXT)?.category==='Gloves'||/^GearHand_glove_/i.test(asset));
-};
 
 // Run after all additions and recolors so a mod pool cannot restore the pair.
 // Keep a single existing glove; when both hands have gloves, clear the throwing
@@ -21,15 +15,7 @@ export function applyQuickstartQbGloves({changes,players,visuals,visualsTableId,
     if(ref?.tableId!==visualsTableId||ref.row!==change.visualsRow||references.get(ref.row)!==1)continue;
     const visual=visuals[ref.row];if(!visual||visual.isEmpty)continue;
     let parsed;try{parsed=JSON.parse(sf(visual,'RawData'));}catch{continue;}
-    const slot=String(sf(record,'PLYR_HANDEDNESS')).toLowerCase()==='left'?'LeftHandWear':'RightHandWear',removed=[];
-    for(const loadout of parsed?.loadouts??[]){
-      if(loadout?.loadoutType!=='PlayerOnField'||!Array.isArray(loadout.loadoutElements))continue;
-      const elements=loadout.loadoutElements;
-      if(!['LeftHandWear','RightHandWear'].every(side=>elements.some(element=>element.slotType===side&&glove(element))))continue;
-      for(const element of elements)if(element.slotType===slot&&glove(element)){
-        removed.push({slot,oldItem:element.itemAssetName,newItem:'GearHand_None'});element.itemAssetName='GearHand_None';
-      }
-    }
+    const removed=limitQbGloves(parsed?.loadouts??[],sf(record,'PLYR_HANDEDNESS'));
     if(removed.length){visual.RawData=JSON.stringify(parsed);change.qbGloveCorrections=removed;corrections.push({row:change.target.row,visualsRow:ref.row,changes:removed});}
   }
   return corrections;
