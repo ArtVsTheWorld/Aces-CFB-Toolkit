@@ -1,7 +1,12 @@
 /* One catalog picker for existing items, replacements and conditions. */
 function mapperLibraryPanel(root,prepared,onChoose,{slot=null,filter=()=>true,state={}}={}){
-  const items=new Map(prepared.items.map(item=>[item.id,item]));
-  const groups=prepared.groups.map(group=>({...group,choices:group.variantIds.map(id=>items.get(id)).filter(item=>item.copyable!==false&&(!slot||item.slot===slot)&&filter(item))})).filter(group=>group.choices.length);
+  const allItems=MapperEditor.withCategories(prepared.items),items=new Map(allItems.map(item=>[item.id,item]));
+  const bulkGroups=new Map();
+  for(const item of allItems.filter(i=>i.categorySelection)){
+    if(!bulkGroups.has(item.category))bulkGroups.set(item.category,{id:'all:'+item.category,name:item.name,category:item.category,categorySelection:true,variantIds:[]});
+    bulkGroups.get(item.category).variantIds.push(item.id);
+  }
+  const groups=[...bulkGroups.values(),...prepared.groups.map(group=>({...group,category:MapperEditor.categoryOf(group)}))].map(group=>({...group,choices:group.variantIds.map(id=>items.get(id)).filter(item=>item.copyable!==false&&(!slot||item.slot===slot)&&filter(item))})).filter(group=>group.choices.length).sort((a,b)=>a.category.localeCompare(b.category)||Number(Boolean(b.categorySelection))-Number(Boolean(a.categorySelection))||a.name.localeCompare(b.name));
   const categories=[...new Set(groups.map(group=>group.category))].sort();state.page??=0;state.query??='';state.category??='';state.choices??={};
   if(!categories.includes(state.category))state.category='';
   root.innerHTML=`${slot?`<p class="mapper-slot-notice">Equipment side: <strong>${escapeHtml(mapperSlotLabel(slot))}</strong></p>`:''}<div class="mapper-browser-filters"><label>Search Equipment<input class="input" data-map-search type="search" placeholder="Search by equipment name"></label><label>Category<select data-map-category><option value="">All Categories</option>${categories.map(category=>`<option>${escapeHtml(category)}</option>`).join('')}</select></label></div><div class="mapper-library-toolbar"><span data-map-count role="status"></span><div><button type="button" class="button secondary" data-map-prev>Previous</button><button type="button" class="button secondary" data-map-next>Next</button></div></div><div class="mapper-item-list" data-map-items></div>`;
@@ -13,12 +18,13 @@ function mapperLibraryPanel(root,prepared,onChoose,{slot=null,filter=()=>true,st
     root.querySelector('[data-map-prev]').disabled=state.page===0;root.querySelector('[data-map-next]').disabled=start+100>=matches.length;
     root.querySelector('[data-map-items]').innerHTML=matches.slice(start,start+100).map(group=>{
       const selected=group.choices.find(item=>item.id===state.choices[group.id])??group.choices[0];
-      return `<article class="mapper-item"><div class="mapper-item-description"><strong>${escapeHtml(group.name)}</strong><small>${escapeHtml(group.category)}</small></div><div class="mapper-item-actions">${group.choices.length>1?`<label>Equipment Side<select data-map-choice data-map-group="${escapeHtml(group.id)}">${group.choices.map(item=>`<option value="${escapeHtml(item.id)}"${item.id===selected.id?' selected':''}>${escapeHtml(mapperSlotLabel(item.slot))}</option>`).join('')}</select></label>`:`<span class="mapper-slot-tag">${escapeHtml(mapperSlotLabel(selected.slot))}</span>`}<button type="button" class="button secondary" data-map-choose="${escapeHtml(selected.id)}">Select Item</button></div></article>`;
+      return `<article class="mapper-item${group.categorySelection?' mapper-category-item':''}"><div class="mapper-item-description"><strong>${escapeHtml(group.name)}</strong><small>${escapeHtml(group.category)}${group.categorySelection?` · ${selected.memberIds.length} items`:''}</small>${group.categorySelection?`<details data-map-members="${escapeHtml(selected.id)}"><summary>Included Items</summary><ul></ul></details>`:''}</div><div class="mapper-item-actions">${group.choices.length>1?`<label>Equipment Side<select data-map-choice data-map-group="${escapeHtml(group.id)}">${group.choices.map(item=>`<option value="${escapeHtml(item.id)}"${item.id===selected.id?' selected':''}>${escapeHtml(mapperSlotLabel(item.slot))}</option>`).join('')}</select></label>`:`<span class="mapper-slot-tag">${escapeHtml(mapperSlotLabel(selected.slot))}</span>`}<button type="button" class="button secondary" data-map-choose="${escapeHtml(selected.id)}">Select Item</button></div></article>`;
     }).join('')||'<p class="mapper-empty">No equipment matches. Try another name or category.</p>';
+    for(const detail of root.querySelectorAll('[data-map-members]'))detail.ontoggle=()=>{if(detail.open&&!detail.dataset.loaded){detail.querySelector('ul').innerHTML=items.get(detail.dataset.mapMembers).memberIds.map(id=>`<li>${escapeHtml(items.get(id).name)}</li>`).join('');detail.dataset.loaded='true';}};
   };
   search.oninput=()=>{state.query=search.value;state.page=0;render();};category.onchange=()=>{state.category=category.value;state.page=0;render();};
   root.querySelector('[data-map-prev]').onclick=()=>{state.page--;render();};root.querySelector('[data-map-next]').onclick=()=>{state.page++;render();};
-  root.querySelector('[data-map-items]').onchange=event=>{if(event.target.matches('[data-map-choice]'))state.choices[event.target.dataset.mapGroup]=event.target.value;};
+  root.querySelector('[data-map-items]').onchange=event=>{if(event.target.matches('[data-map-choice]')){state.choices[event.target.dataset.mapGroup]=event.target.value;render();}};
   root.querySelector('[data-map-items]').onclick=event=>{const button=event.target.closest('[data-map-choose]');if(button)onChoose(items.get(button.closest('article').querySelector('[data-map-choice]')?.value??button.dataset.mapChoose));};render();
 }
 

@@ -1,0 +1,4337 @@
+{
+  "schemaVersion": 2,
+  "evidenceSources": {
+    "unmodded-menu-accessories-2026-10-29": "User confirmed baggy sleeves, all sweatband sizes, Arm/Elbow Brace, Shoulder Stabilizer, all normal/striped elbow pads, nine bright hanging pacifiers and team-color Taped Finger in the game with no equipment mods.",
+    "unmodded-menu-gloves-2026-10-29": "User confirmed standard glove families and black/white/primary/secondary colors; Adidas Adizero11,Jordan VaporJet5,UA Blur absent; Nike VaporJet5 present and VaporJet9 absent.",
+    "unmodded-menu-cleats-2026-10-29": "User confirmed all six newer Nike styles and listed older standard cleats. Known base counterparts also observed in original vanilla fixtures. No base counterpart is offered for unverified 99ClubAlphaMenacePro2 or UA MidSpotlight.",
+    "unmodded-menu-absences-2026-10-29": "User confirmed three glove families absent, FOTF PE absent, and all eight named replacement cleat styles absent.",
+    "original-vanilla-fixtures": "Exact on-field IDs observed in supplied unmodded LSU preseason/week0 saves; hashes checked unchanged. Evidence of stock equipment, not proof of global menu access on its own.",
+    "prior-user-confirmation": "Prior user confirmation identifies normal balaclavas, branded Unlocked turtlenecks, Crew Cut and High Socks as Unlocked. Later explicit confirmation corrects plain Scrunched/Tight Turtlenecks to vanilla.",
+    "unlocked097-prefab-comparison": "Supplied Unlocked0.97 SHA256 0d2c7ba8f1a8237e6ffd2cf67cbfda92e1e079c5ac7277fee5990404c085d2b2, full770EBX inventory incl modified character prefab. Added entries, gating/slot changes and replacement labels compared against base prefab. Presence/unchanged flags alone are NOT vanilla evidence.",
+    "existing-mod-catalog": "Existing exact-name/slot equipped-save, user/menu and decoded mod catalog evidence retained.",
+    "unmodded-menu-turtlenecks-2026-10-29": "User explicitly confirmed Scrunched and Tight Turtlenecks are vanilla. Applies to their four standard color variants; branded Battle/NXTRND variants remain Unlocked.",
+    "unmodded-menu-full-families-2026-10-29": "User explicitly identified these jersey, undershirt, neck-roll, sleeve, wrist, sock-height, guardian-cap and pacifier families in the unmodded menu. Exact IDs/labels/slots matched against stock ItemInfo. User clarified leg layers are one entry each; colored and variant-2 Unlocked leg layers are distinct."
+  },
+  "vanillaItems": {
+    "ElbowGear_armBraceSmall": {
+      "displayName": "Arm Brace",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "ElbowGear_bicepShoulderStabilizer": {
+      "displayName": "Shoulder Stabilizer",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "ElbowGear_elbowBrace_TeamColor": {
+      "displayName": "Elbow Brace Team Color",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "ElbowGear_elbowSweatbandFull_Black": {
+      "displayName": "Elbow Sweat Band Full Black",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "ElbowGear_elbowSweatbandFull_SecondaryColor": {
+      "displayName": "Elbow Sweat Band Full Secondary Color",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "ElbowGear_elbowSweatbandFull_TeamColor": {
+      "displayName": "Elbow Sweat Band Full Team Color",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "ElbowGear_elbowSweatbandFull_White": {
+      "displayName": "Elbow Sweat Band Full White",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "ElbowGear_elbowSweatbandMedium_Black": {
+      "displayName": "Elbow Sweat Band Medium Black",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "ElbowGear_elbowSweatbandMedium_SecondaryColor": {
+      "displayName": "Elbow Sweat Band Medium Secondary Color",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "ElbowGear_elbowSweatbandMedium_TeamColor": {
+      "displayName": "Elbow Sweat Band Medium Team Color",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "ElbowGear_elbowSweatbandMedium_White": {
+      "displayName": "Elbow Sweat Band Medium White",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "ElbowGear_elbowSweatbandThin_Black": {
+      "displayName": "Elbow Sweat Band Thin Black",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "ElbowGear_elbowSweatbandThin_SecondaryColor": {
+      "displayName": "Elbow Sweat Band Thin Secondary Color",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "ElbowGear_elbowSweatbandThin_TeamColor": {
+      "displayName": "Elbow Sweat Band Thin Team Color",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "ElbowGear_elbowSweatbandThin_White": {
+      "displayName": "Elbow Sweat Band Thin White",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "ElbowGear_elbowpadRubber_Black": {
+      "displayName": "Elbow Pad Rubber Black",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "ElbowGear_elbowpad_Black": {
+      "displayName": "Elbow Pad Black",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "ElbowGear_elbowpad_Stripe_Black": {
+      "displayName": "Elbow Pad Black Stripe",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "ElbowGear_elbowpad_Stripe_White": {
+      "displayName": "Elbow Pad White Stripe",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "ElbowGear_elbowpad_TeamColor": {
+      "displayName": "Elbow Pad Team Color",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "ElbowGear_elbowpad_White": {
+      "displayName": "Elbow Pad White",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "FaceMarks_EyePaint": {
+      "displayName": "Eye Paint",
+      "evidence": [
+        "original-vanilla-fixtures"
+      ]
+    },
+    "FaceMarks_EyePaint2": {
+      "displayName": "Eye Paint 2",
+      "evidence": [
+        "original-vanilla-fixtures"
+      ]
+    },
+    "FaceMarks_EyePaint3": {
+      "displayName": "Eye Paint 3",
+      "evidence": [
+        "original-vanilla-fixtures"
+      ]
+    },
+    "FaceMarks_EyePaintCross": {
+      "displayName": "Eye Paint Cross",
+      "evidence": [
+        "original-vanilla-fixtures"
+      ]
+    },
+    "FaceMarks_EyeTape": {
+      "displayName": "Eye Tape",
+      "evidence": [
+        "original-vanilla-fixtures"
+      ]
+    },
+    "FaceMarks_EyeTapeLeft": {
+      "displayName": "Eye Tape Right",
+      "evidence": [
+        "original-vanilla-fixtures"
+      ]
+    },
+    "FaceMarks_EyeTapeRight": {
+      "displayName": "Eye Tape Left",
+      "evidence": [
+        "original-vanilla-fixtures"
+      ]
+    },
+    "FaceMarks_NoseEyeTape": {
+      "displayName": "Nose and Eye Tape",
+      "evidence": [
+        "original-vanilla-fixtures"
+      ]
+    },
+    "FaceMarks_NoseTape": {
+      "displayName": "Nose Tape",
+      "evidence": [
+        "original-vanilla-fixtures"
+      ]
+    },
+    "FaceMarks_NoseTapeEyePaint": {
+      "displayName": "Nose Tape Eye Paint",
+      "evidence": [
+        "original-vanilla-fixtures"
+      ]
+    },
+    "G_CompressionT_Crew_ShortSleeve_Basic_BLA": {
+      "displayName": "Black Compression Tee",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "undershirts",
+      "newPoolEntry": true
+    },
+    "G_CompressionT_Crew_ShortSleeve_Basic_PRI": {
+      "displayName": "Primary Compression Tee",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "undershirts",
+      "newPoolEntry": true
+    },
+    "G_CompressionT_Crew_ShortSleeve_Basic_SEC": {
+      "displayName": "Secondary Compression Tee",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "undershirts",
+      "newPoolEntry": true
+    },
+    "G_CompressionT_Crew_ShortSleeve_Basic_WHI": {
+      "displayName": "White Compression Tee",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "undershirts",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Baggy_Black": {
+      "displayName": "Baggy Arm Sleeve Black",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "GearArmSleeve_Baggy_SecondaryColor": {
+      "displayName": "Baggy Arm Sleeve Secondary Color",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "GearArmSleeve_Baggy_TeamColor": {
+      "displayName": "Baggy Arm Sleeve Team Color",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "GearArmSleeve_Baggy_White": {
+      "displayName": "Baggy Arm Sleeve White",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "GearArmSleeve_CompressionRolledUpShirt_Black": {
+      "displayName": "Black Rolled Sleeve",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_CompressionRolledUpShirt_SecondaryColor": {
+      "displayName": "Secondary Color Rolled Sleeve",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_CompressionRolledUpShirt_TeamColor": {
+      "displayName": "Team Color Rolled Sleeve",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_CompressionRolledUpShirt_White": {
+      "displayName": "White Rolled Sleeve",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Full_sleeveLongUnderarmor_normal_Black": {
+      "displayName": "Arm Sleeve Full Black",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Full_sleeveLongUnderarmor_normal_SecondaryColor": {
+      "displayName": "Arm Sleeve Full Secondary Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Full_sleeveLongUnderarmor_normal_TeamColor": {
+      "displayName": "Arm Sleeve Full Team Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Full_sleeveLongUnderarmor_normal_White": {
+      "displayName": "Arm Sleeve Full White",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Half_sleeveLongUnderarmor_normal_Black": {
+      "displayName": "Arm Sleeve Half Black",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Half_sleeveLongUnderarmor_normal_SecondaryColor": {
+      "displayName": "Arm Sleeve Half Secondary Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Half_sleeveLongUnderarmor_normal_TeamColor": {
+      "displayName": "Arm Sleeve Half Team Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Half_sleeveLongUnderarmor_normal_White": {
+      "displayName": "Arm Sleeve Half White",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_McDavidPaddedCompressionSleeve_Black": {
+      "displayName": "Black Honeycomb Padded Sleeve",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_McDavidPaddedCompressionSleeve_SecondaryColor": {
+      "displayName": "Secondary Color Honeycomb Padded Sleeve",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_McDavidPaddedCompressionSleeve_TeamColor": {
+      "displayName": "Team Color Honeycomb Padded Sleeve",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_McDavidPaddedCompressionSleeve_White": {
+      "displayName": "White Honeycomb Padded Sleeve",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_NikeHyperstrongPaddedSleeve_Black": {
+      "displayName": "Black Multi Padded Sleeve",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_NikeHyperstrongPaddedSleeve_SecondaryColor": {
+      "displayName": "Secondary Color Multi Padded Sleeve",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_NikeHyperstrongPaddedSleeve_TeamColor": {
+      "displayName": "Team Color Multi Padded Sleeve",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_NikeHyperstrongPaddedSleeve_White": {
+      "displayName": "White Multi Padded Sleeve",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_NikePaddedElbowCompressionSleeve_Black": {
+      "displayName": "Black Padded Sleeve",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_NikePaddedElbowCompressionSleeve_SecondaryColor": {
+      "displayName": "Secondary Color Padded Sleeve",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_NikePaddedElbowCompressionSleeve_TeamColor": {
+      "displayName": "Team Color Padded Sleeve",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_NikePaddedElbowCompressionSleeve_White": {
+      "displayName": "White Padded Sleeve",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_NikeProDriFitSleeve_Black": {
+      "displayName": "Black Compression Sleeve",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_NikeProDriFitSleeve_SecondaryColor": {
+      "displayName": "Secondary Color Compression Sleeve",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_NikeProDriFitSleeve_TeamColor": {
+      "displayName": "Team Color Compression Sleeve",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_NikeProDriFitSleeve_White": {
+      "displayName": "White Compression Sleeve",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Quarter_armTape_normal_Black": {
+      "displayName": "Arm Tape Short Black",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Quarter_armTape_normal_OffWhite": {
+      "displayName": "Arm Tape Short Off White",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Quarter_armTape_normal_SecondaryColor": {
+      "displayName": "Arm Tape Short Secondary Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Quarter_armTape_normal_TeamColor": {
+      "displayName": "Arm Tape Short Team Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Quarter_sleeveLongUnderarmor_normal_Black": {
+      "displayName": "Arm Sleeve Quarter Black",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Quarter_sleeveLongUnderarmor_normal_SecondaryColor": {
+      "displayName": "Arm Sleeve Quarter Secondary Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Quarter_sleeveLongUnderarmor_normal_TeamColor": {
+      "displayName": "Arm Sleeve Quarter Team Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Quarter_sleeveLongUnderarmor_normal_White": {
+      "displayName": "Arm Sleeve Quarter White",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Shooter_sleeveLongUnderarmor_normal_Black": {
+      "displayName": "Arm Sleeve Shooter Black",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Shooter_sleeveLongUnderarmor_normal_SecondaryColor": {
+      "displayName": "Arm Sleeve Shooter Secondary Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Shooter_sleeveLongUnderarmor_normal_TeamColor": {
+      "displayName": "Arm Sleeve Shooter Team Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Shooter_sleeveLongUnderarmor_normal_White": {
+      "displayName": "Arm Sleeve Shooter White",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Undershirt_armTape_normal_Black": {
+      "displayName": "Arm Tape Long Black",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Undershirt_armTape_normal_OffWhite": {
+      "displayName": "Arm Tape Long Off White",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Undershirt_armTape_normal_SecondaryColor": {
+      "displayName": "Arm Tape Long Secondary Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Undershirt_armTape_normal_TeamColor": {
+      "displayName": "Arm Tape Long Team Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Undershirt_sleeveLongUnderarmor_normal_Black": {
+      "displayName": "Undershirt Black",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Undershirt_sleeveLongUnderarmor_normal_Secondary": {
+      "displayName": "Undershirt Secondary Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Undershirt_sleeveLongUnderarmor_normal_TeamColor": {
+      "displayName": "Undershirt Team Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearArmSleeve_Undershirt_sleeveLongUnderarmor_normal_White": {
+      "displayName": "Undershirt White",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "armSleeves",
+      "newPoolEntry": true
+    },
+    "GearFootwear_shoeLowVintage_nike": {
+      "displayName": "Nike Vintage 70's 80's",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_High_NikeForceSavageEliteTDW": {
+      "displayName": "Nike Force Savage Elite",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_Low_NikeAlphaMenaceElite": {
+      "displayName": "Nike Alpha Menace Elite",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_Low_NikeVaporCarbonEliteTD": {
+      "displayName": "Nike Vapor Carbon Elite TD",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_Low_NikeVaporUntouchable": {
+      "displayName": "Nike Vapor Untouchable",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_Low_NikeVaporUntouchable2": {
+      "displayName": "Nike Vapor Untouchable 2 Low",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_Mid_NikeAlphaPro34TD": {
+      "displayName": "Nike Alpha Pro 2 3/4 TD",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_Mid_NikeCodeEliteProShark": {
+      "displayName": "Nike Zoom Code Elite",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_Mid_NikeLunarBeast": {
+      "displayName": "Nike Lunar Beast",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_Mid_NikeVaporEdge360Untouchable": {
+      "displayName": "Nike Vapor Edge 360 Untouchable",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_high_AdidasAdizeroChaos2": {
+      "displayName": "Adidas Adizero Chaos II",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_high_AdidasFreakInline23": {
+      "displayName": "Adidas Freak Inline 23",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_high_AdidasFreakUltra22": {
+      "displayName": "Adidas Freak Ultra",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_high_AdidasFreakUltra23": {
+      "displayName": "Adidas Freak Ultra 23",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_high_Adidas_AdizeroChaos": {
+      "displayName": "Adidas Adizero Chaos",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_high_Adidas_AdizeroChaosSnake": {
+      "displayName": "Adidas Adizero Chaos Snakeskin",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_high_NikeAlphaMenaceElite2": {
+      "displayName": "Nike Alpha Menace Elite 2",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_high_NikeForceSavageElite2": {
+      "displayName": "Nike Force Savage Elite 2",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_high_NikeVaporUntouchablePro3": {
+      "displayName": "Nike Vapor Untouchable Pro 3 High",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_high_UnderArmourHammer2024": {
+      "displayName": "Under Armour Hammer 2.0",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_high_UnderArmourUAFHighlight2024": {
+      "displayName": "Under Armour UAF Highlight",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_AdidasAdizero_LTA58": {
+      "displayName": "Adidas Adizero",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_AdidasAdizone11Turbo": {
+      "displayName": "Adidas Adizone 11 Turbo Low",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_AdidasFreak22": {
+      "displayName": "Adidas Freak",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_Adidas_AdizeroElectric": {
+      "displayName": "Adidas Adizero Electric",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_Adidas_AdizeroElectric1": {
+      "displayName": "Adidas Adizero Electric 1",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_Adidas_AdizeroElectricPlus": {
+      "displayName": "Adidas Adizero Electric+",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_Adidas_AdizeroElectricSnake": {
+      "displayName": "Adidas Adizero Electric 2 Snakeskin",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_AdizeroElectric2": {
+      "displayName": "Adidas Adizero Electric 2",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_AdizeroElectric3": {
+      "displayName": "Adidas Adizero Electric 3",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_AdizeroElectricExoticSpeed": {
+      "displayName": "Adidas Adizero Electric 2 Exotic Speed",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_AdizeroElectricPlus2": {
+      "displayName": "Adidas Adizero Electric+ 2",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_AdizeroElectricPlusII": {
+      "displayName": "Adidas Adizero Electric Plus II",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_AirJordanRetro1": {
+      "displayName": "Air Jordan Retro Low",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_AirJordanX": {
+      "displayName": "Jordan Low X",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_AirJordanXI": {
+      "displayName": "Jordan XI Low",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_Jordan5_99Club": {
+      "displayName": "Jordan Low 5",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_Jordan7": {
+      "displayName": "Jordan Low 7",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_NewBalance_Prodigy": {
+      "displayName": "New Balance Skill",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_NikeAlphaMenaceElite3": {
+      "displayName": "Nike Alpha Menace Elite 3",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_NikeAlphaMenacePro4": {
+      "displayName": "Nike Alpha Menace Pro 4",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_NikeDiamondTurf93": {
+      "displayName": "Nike Diamond Turf 93",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_NikeEdgeSpeed3062": {
+      "displayName": "Nike Vapor Edge Speed 360 2",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_NikeEquinox": {
+      "displayName": "Nike Vapor Edge Elite 360 2",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_NikeKobeVenom": {
+      "displayName": "Nike Vapor Edge Kobe 6",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_NikeLebronIV": {
+      "displayName": "Nike Lebron IV Menace",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_NikeVaporEdge": {
+      "displayName": "Nike Vapor Edge",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_NikeVaporEdgePro3602": {
+      "displayName": "Nike Vapor Edge Pro 360 2",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_NikeVaporSpeed3": {
+      "displayName": "Nike Vapor Untouchable Speed 3",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_NikeVaporUntouchablePro": {
+      "displayName": "Nike Vapor Untouchable Pro",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_NikeVaporUntouchablePro3": {
+      "displayName": "Nike Vapor Untouchable Pro 3 Mid",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_NikeZoomVaporSpeed3": {
+      "displayName": "Nike Vapor Speed 3",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_UnderArmourBlurPro2025": {
+      "displayName": "Under Armour Blur Pro 2025",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_UnderArmourBlurPro2026": {
+      "displayName": "Under Armour Blur Pro 2026",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_UnderArmourCloneFlow2025": {
+      "displayName": "Under Armour Clone Flow",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_low_UnderArmourSpotlightSuedeRevamp2025": {
+      "displayName": "Under Armour Spotlight Suede Pro",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_AdidasAdizeroPrimeKnit": {
+      "displayName": "Adidas AdiZero Primeknit",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_AdidasFreak": {
+      "displayName": "Adidas Freak Mid",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_AdidasFreakUltraCleat": {
+      "displayName": "Adidas Freak Ultra Mid",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_AdidasNasty": {
+      "displayName": "Adidas Nasty",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_Adidas_AdizeroImpact2": {
+      "displayName": "Adidas Adizero Impact 2",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_Adidas_AdizeroImpactSnake": {
+      "displayName": "Adidas Adizero Impact Snakeskin",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_AdizeroImpactII": {
+      "displayName": "Adidas Adizero Impact II",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_AdizeroImpactPlusII": {
+      "displayName": "Adidas Adizero Impact Plus II",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_AirJordan3Cement": {
+      "displayName": "Jordan 3 Cement",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_AirJordanRetro1": {
+      "displayName": "Air Jordan Retro",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_AirJordanRetroCement": {
+      "displayName": "Air Jordan Retro Cement",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_AirJordanX": {
+      "displayName": "Jordan X Mid",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_Jordan11TD": {
+      "displayName": "Jordan XI Mid",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_Jordan5": {
+      "displayName": "Jordan Mid 5",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_Jordan7": {
+      "displayName": "Jordan Mid 7",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_NewBalance_Fortress": {
+      "displayName": "New Balance Power",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_NewBalance_Trench": {
+      "displayName": "New Balance Big Power",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_NikeAlphaMenaceElite5": {
+      "displayName": "Nike Alpha Menace Elite 5",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_NikeAlphaMenacePro": {
+      "displayName": "Nike Alpha Menace Pro",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_NikeAlphaMenacePro2": {
+      "displayName": "Nike Alpha Menace Pro 2",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_NikeAlphaMenacePro3WDP": {
+      "displayName": "Nike Alpha Menace Pro 3",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_NikeAlphaMenacePro5": {
+      "displayName": "Nike Alpha Menace Pro 5",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_NikeAlphaMenaceStrong": {
+      "displayName": "Nike Alpha Menace Strong",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_NikeDiamondTURF": {
+      "displayName": "Nike Diamond Turf DT96",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_NikeDiamondTURF2": {
+      "displayName": "Nike Diamond Turf 2",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_NikeFieldGeneral": {
+      "displayName": "Nike Field General",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_NikeFoamposite": {
+      "displayName": "Nike Foamposite Pro",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_NikeForceSavagePro": {
+      "displayName": "Nike Force Savage Pro",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_NikeForceSavagePro2": {
+      "displayName": "Nike Force Savage Pro 2",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_NikeVaporEdgeDunk": {
+      "displayName": "Nike Vapor Edge Dunk",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_NikeVaporPro1": {
+      "displayName": "Nike Vapor Pro 1",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_UnderArmourBlurSmoke2024": {
+      "displayName": "Under Armour Blur Smoke 2.0",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_UnderArmourC1N2019": {
+      "displayName": "Player Exclusive Super",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearFootwear_shoe_mid_UnderArmourSpotlightClone2024": {
+      "displayName": "Under Armour Spotlight Clone 4.0",
+      "evidence": [
+        "unmodded-menu-cleats-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_AdidasFreak_Black": {
+      "displayName": "Adidas Freak Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_AdidasFreak_SecondaryColor": {
+      "displayName": "Adidas Freak Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_AdidasFreak_TeamColor": {
+      "displayName": "Adidas Freak Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_AdidasFreak_White": {
+      "displayName": "Adidas Freak Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_AdidasImpact2_Black": {
+      "displayName": "Adidas Impact 2 Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_AdidasImpact2_SecondaryColor": {
+      "displayName": "Adidas Impact 2 Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_AdidasImpact2_TeamColor": {
+      "displayName": "Adidas Impact 2 Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_AdidasImpact2_White": {
+      "displayName": "Adidas Impact 2 Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_Adizero13MistmatchDSG_Black": {
+      "displayName": "Adizero 13 Mismatch Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_Adizero13MistmatchDSG_SecondaryColor": {
+      "displayName": "Adizero 13 Mismatch Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_Adizero13MistmatchDSG_TeamColor": {
+      "displayName": "Adizero 13 Mismatch Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_Adizero13MistmatchDSG_White": {
+      "displayName": "Adizero 13 Mismatch Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_Adizero13_Black": {
+      "displayName": "Adizero 13 Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_Adizero13_SecondaryColor": {
+      "displayName": "Adizero 13 Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_Adizero13_TeamColor": {
+      "displayName": "Adizero 13 Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_Adizero13_White": {
+      "displayName": "Adizero 13 Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_Adizero15ElectricExoticDSG_Black": {
+      "displayName": "Adizero 15 Electric Exotic Speed DSG Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_Adizero15ElectricExoticDSG_SecondaryColor": {
+      "displayName": "Adizero 15 Electric Exotic Speed DSG Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_Adizero15ElectricExoticDSG_TeamColor": {
+      "displayName": "Adizero 15 Electric Exotic Speed DSG Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_Adizero15ElectricExoticDSG_White": {
+      "displayName": "Adizero 15 Electric Exotic Speed DSG Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_Adizero15Electric_Black": {
+      "displayName": "Adizero 15 Electric Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_Adizero15Electric_SecondaryColor": {
+      "displayName": "Adizero 15 Electric Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_Adizero15Electric_TeamColor": {
+      "displayName": "Adizero 15 Electric Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_Adizero15Electric_White": {
+      "displayName": "Adizero 15 Electric Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_GenericCutter_Black": {
+      "displayName": "Player Exclusive Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_GenericCutter_SecondaryColor": {
+      "displayName": "Player Exclusive Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_GenericCutter_TeamColor": {
+      "displayName": "Player Exclusive Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_GenericCutter_White": {
+      "displayName": "Player Exclusive Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_JordanFlyLock2_White": {
+      "displayName": "Jordan Fly Lock 2.0 White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_JordanFlyLock_Black": {
+      "displayName": "Jordan Fly Lock Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_JordanFlyLock_SecondaryColor": {
+      "displayName": "Jordan Fly Lock Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_JordanFlyLock_TeamColor": {
+      "displayName": "Jordan Fly Lock Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_JordanFlyLock_White": {
+      "displayName": "Jordan Fly Lock White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_JordanFlylock2_Black": {
+      "displayName": "Jordan Fly Lock 2.0 Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_JordanFlylock2_SecondaryColor": {
+      "displayName": "Jordan Fly Lock 2.0 Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_JordanFlylock2_TeamColor": {
+      "displayName": "Jordan Fly Lock 2.0 Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_JordanSuperbad6_Black": {
+      "displayName": "Jordan Superbad 6 Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_JordanSuperbad6_SecondaryColor": {
+      "displayName": "Jordan Superbad 6 Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_JordanSuperbad6_TeamColor": {
+      "displayName": "Jordan Superbad 6 Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_JordanSuperbad6_White": {
+      "displayName": "Jordan Superbad 6 Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_JordanVaporJet7_Black": {
+      "displayName": "Jordan Vapor Jet 7 Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_JordanVaporJet7_SecondaryColor": {
+      "displayName": "Jordan Vapor Jet 7 Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_JordanVaporJet7_TeamColor": {
+      "displayName": "Jordan Vapor Jet 7 Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_JordanVaporJet7_White": {
+      "displayName": "Jordan Vapor Jet 7 Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_JordanVaporKnit4_Black": {
+      "displayName": "Jordan Vapor Knit 4 Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_JordanVaporKnit4_SecondaryColor": {
+      "displayName": "Jordan Vapor Knit 4 Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_JordanVaporKnit4_TeamColor": {
+      "displayName": "Jordan Vapor Knit 4 Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_JordanVaporKnit4_White": {
+      "displayName": "Jordan Vapor Knit 4 White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeDTack7FG_Black": {
+      "displayName": "Nike D Tack FG Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeDTack7FG_Secondarycolor": {
+      "displayName": "Nike D Tack FG Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeDTack7FG_Teamcolor": {
+      "displayName": "Nike D Tack FG Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeDTack7FG_White": {
+      "displayName": "Nike D Tack FG Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeDTack_Black": {
+      "displayName": "Nike D Tack Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeDTack_White": {
+      "displayName": "Nike D Tack Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeHyperBeast_Black": {
+      "displayName": "Nike Hyper Beast Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeHyperBeast_White": {
+      "displayName": "Nike Hyper Beast Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeSuperBad3_Black": {
+      "displayName": "Nike Super Bad 3 Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeSuperBad3_SecondaryColor": {
+      "displayName": "Nike Super Bad 3 Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeSuperBad3_TeamColor": {
+      "displayName": "Nike Super Bad 3 Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeSuperBad3_White": {
+      "displayName": "Nike Super Bad 3 Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeSuperBad5_Black": {
+      "displayName": "Nike Super Bad 4.5 Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeSuperBad5_SecondaryColor": {
+      "displayName": "Nike Super Bad 4.5 Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeSuperBad5_TeamColor": {
+      "displayName": "Nike Super Bad 4.5 Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeSuperBad5_White": {
+      "displayName": "Nike Super Bad 4.5 Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeSuperbad5_2019_Black": {
+      "displayName": "Nike Super Bad 5 Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeSuperbad5_2019_SecondaryColor": {
+      "displayName": "Nike Super Bad 5 Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeSuperbad5_2019_TeamColor": {
+      "displayName": "Nike Super Bad 5 Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeSuperbad5_2019_White": {
+      "displayName": "Nike Super Bad 5 Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeSuperbad6_Black": {
+      "displayName": "Nike Superbad 6 Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeSuperbad6_SecondaryColor": {
+      "displayName": "Nike Superbad 6 Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeSuperbad6_TeamColor": {
+      "displayName": "Nike Superbad 6 Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeSuperbad6_White": {
+      "displayName": "Nike Superbad 6 Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeSuperbad7_Black": {
+      "displayName": "Nike Superbad 7 Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeSuperbad7_SecondaryColor": {
+      "displayName": "Nike Superbad 7 Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeSuperbad7_TeamColor": {
+      "displayName": "Nike Superbad 7 Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeSuperbad7_White": {
+      "displayName": "Nike Superbad 7 Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet4_Black": {
+      "displayName": "Nike Vapor Jet 4 Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet4_SecondaryColor": {
+      "displayName": "Nike Vapor Jet 4 Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet4_TeamColor": {
+      "displayName": "Nike Vapor Jet 4 Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet4_White": {
+      "displayName": "Nike Vapor Jet 4 Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet5_Black": {
+      "displayName": "Nike Vapor Jet 5 Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet5_SecondaryColor": {
+      "displayName": "Nike Vapor Jet 5 Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet5_TeamColor": {
+      "displayName": "Nike Vapor Jet 5 Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet5_White": {
+      "displayName": "Nike Vapor Jet 5 Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet6_Black": {
+      "displayName": "Nike Vapor Jet 6 Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet6_SecondaryColor": {
+      "displayName": "Nike Vapor Jet 6 Glove Secondary",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet6_TeamColor": {
+      "displayName": "Nike Vapor Jet 6 Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet6_White": {
+      "displayName": "Nike Vapor Jet 6 Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet7_Black": {
+      "displayName": "Nike Vapor Jet 7 Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet7_SecondaryColor": {
+      "displayName": "Nike Vapor Jet 7 Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet7_TeamColor": {
+      "displayName": "Nike Vapor Jet 7 Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet7_White": {
+      "displayName": "Nike Vapor Jet 7 Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet8_Black": {
+      "displayName": "Nike Vapor Jet 8 Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet8_SecondaryColor": {
+      "displayName": "Nike Vapor Jet 8 Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet8_TeamColor": {
+      "displayName": "Nike Vapor Jet 8 Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet8_White": {
+      "displayName": "Nike Vapor Jet 8 Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet_Black": {
+      "displayName": "Nike Vapor Jet Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet_SecondaryColor": {
+      "displayName": "Nike Vapor Jet Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet_TeamColor": {
+      "displayName": "Nike Vapor Jet Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet_White": {
+      "displayName": "Nike Vapor Jet Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporKnit2_Black": {
+      "displayName": "Nike Vapor Knit 2 Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporKnit2_SecondaryColor": {
+      "displayName": "Nike Vapor Knit 2 Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporKnit2_TeamColor": {
+      "displayName": "Nike Vapor Knit 2 Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporKnit2_White": {
+      "displayName": "Nike Vapor Knit 2 Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporKnit3_Black": {
+      "displayName": "Nike Vapor Knit 3 Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporKnit3_SecondaryColor": {
+      "displayName": "Nike Vapor Knit 3 Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporKnit3_TeamColor": {
+      "displayName": "Nike Vapor Knit 3 Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporKnit3_White": {
+      "displayName": "Nike Vapor Knit 3 Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporKnit4_Black": {
+      "displayName": "Nike Vapor Knit 4 Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporKnit4_SecondaryColor": {
+      "displayName": "Nike Vapor Knit 4 Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporKnit4_TeamColor": {
+      "displayName": "Nike Vapor Knit 4 Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporKnit4_White": {
+      "displayName": "Nike Vapor Knit 4 Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporKnit_Black": {
+      "displayName": "Nike Vapor Knit Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporKnit_SecondaryColor": {
+      "displayName": "Nike Vapor Knit Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporKnit_TeamColor": {
+      "displayName": "Nike Vapor Knit Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_NikeVaporKnit_White": {
+      "displayName": "Nike Vapor Knit Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_UnderArmourCombat_Black": {
+      "displayName": "Under Armour Combat Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_UnderArmourCombat_SecondaryColor": {
+      "displayName": "Under Armour Combat Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_UnderArmourCombat_TeamColor": {
+      "displayName": "Under Armour Combat Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_UnderArmourCombat_White": {
+      "displayName": "Under Armour Combat Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_UnderArmourF9_Black": {
+      "displayName": "Under Armour F9 Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_UnderArmourF9_SecondaryColor": {
+      "displayName": "Under Armour F9 Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_UnderArmourF9_TeamColor": {
+      "displayName": "Under Armour F9 Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_UnderArmourF9_White": {
+      "displayName": "Under Armour F9 Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_UnderArmourInfrared_Black": {
+      "displayName": "Under Armour Infrared Glove Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_UnderArmourInfrared_SecondaryColor": {
+      "displayName": "Under Armour Infrared Glove Secondary Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_UnderArmourInfrared_TeamColor": {
+      "displayName": "Under Armour Infrared Glove Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_glove_UnderArmourInfrared_White": {
+      "displayName": "Under Armour Infrared Glove White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_tapedHandCombo_White": {
+      "displayName": "Taped Hand Combo White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_tapedHandFinger_Black": {
+      "displayName": "Taped Finger Black",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_tapedHandFinger_TeamColor": {
+      "displayName": "Taped Finger Team Color",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_tapedHandFinger_White": {
+      "displayName": "Taped Finger White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_tapedHandMax_White": {
+      "displayName": "Taped Hand Max White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearHand_tapedHandNormal_White": {
+      "displayName": "Taped Hand Normal White",
+      "evidence": [
+        "unmodded-menu-gloves-2026-10-29",
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearLegBase_Socks_Under_Both": {
+      "displayName": "Compression Pants",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "legSleeves",
+      "newPoolEntry": true
+    },
+    "GearLegsBase_LeftSleeve": {
+      "displayName": "Leg Sleeve Left",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "legSleeves",
+      "newPoolEntry": true
+    },
+    "GearLegsBase_RightSleeve": {
+      "displayName": "Leg Sleeve Right",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "legSleeves",
+      "newPoolEntry": true
+    },
+    "GearMouthpiece_PacifierDualHanging_Black": {
+      "displayName": "Hanging Mouthpiece Pacifier Black",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "mouthpieces",
+      "newPoolEntry": true
+    },
+    "GearMouthpiece_PacifierDualHanging_Blue": {
+      "displayName": "Hanging Mouthpiece Pacifier Blue",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_Green": {
+      "displayName": "Hanging Mouthpiece Pacifier Green",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_LightBlue": {
+      "displayName": "Hanging Mouthpiece Pacifier Light Blue",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_Neon": {
+      "displayName": "Hanging Mouthpiece Pacifier Neon",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_Orange": {
+      "displayName": "Hanging Mouthpiece Pacifier Orange",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_Pink": {
+      "displayName": "Hanging Mouthpiece Pacifier Pink",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_Purple": {
+      "displayName": "Hanging Mouthpiece Pacifier Purple",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_Red": {
+      "displayName": "Hanging Mouthpiece Pacifier Red",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_SecondaryColor": {
+      "displayName": "Hanging Mouthpiece Pacifier Secondary Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "mouthpieces",
+      "newPoolEntry": true
+    },
+    "GearMouthpiece_PacifierDualHanging_TeamColor": {
+      "displayName": "Hanging Mouthpiece Pacifier Team Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "mouthpieces",
+      "newPoolEntry": true
+    },
+    "GearMouthpiece_PacifierDualHanging_White": {
+      "displayName": "Hanging Mouthpiece Pacifier White",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "mouthpieces",
+      "newPoolEntry": true
+    },
+    "GearMouthpiece_PacifierDualHanging_Yellow": {
+      "displayName": "Hanging Mouthpiece Pacifier Yellow",
+      "evidence": [
+        "unmodded-menu-accessories-2026-10-29"
+      ]
+    },
+    "GearMouthpiece_PacifierDual_Black": {
+      "displayName": "Mouthpiece Pacifier Black",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "mouthpieces",
+      "newPoolEntry": true
+    },
+    "GearMouthpiece_PacifierDual_SecondaryColor": {
+      "displayName": "Mouthpiece Pacifier Secondary Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "mouthpieces",
+      "newPoolEntry": true
+    },
+    "GearMouthpiece_PacifierDual_TeamColor": {
+      "displayName": "Mouthpiece Pacifier Team Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "mouthpieces",
+      "newPoolEntry": true
+    },
+    "GearMouthpiece_PacifierDual_White": {
+      "displayName": "Mouthpiece Pacifier White",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "mouthpieces",
+      "newPoolEntry": true
+    },
+    "GearNeckpad_ButterflyNeckRoll": {
+      "displayName": "Butterfly Neck Roll",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "neckPads",
+      "newPoolEntry": true
+    },
+    "GearNeckpad_CowboyCollarNeckRoll": {
+      "displayName": "Cowboy Collar Neck Roll",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "neckPads",
+      "newPoolEntry": true
+    },
+    "GearNeckpad_VintageNeckRoll": {
+      "displayName": "Vintage Neck Roll",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "neckPads",
+      "newPoolEntry": true,
+      "disabledWithUnlocked": true,
+      "unlockedDisplayName": "Balaclava Black"
+    },
+    "GearNeckpad_VintageSingleNeckRoll": {
+      "displayName": "Vintage Single Neck Roll",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "neckPads",
+      "newPoolEntry": true,
+      "disabledWithUnlocked": true,
+      "unlockedDisplayName": "Balaclava White"
+    },
+    "GearSpats_spatThin_Black": {
+      "displayName": "Spats Black Thin",
+      "evidence": [
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearSpats_spatThin_SecondaryColor": {
+      "displayName": "Spats Secondary Color",
+      "evidence": [
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearSpats_spatThin_TeamColor": {
+      "displayName": "Spats Team Color",
+      "evidence": [
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearSpats_spatThin_White": {
+      "displayName": "Spats White Thin",
+      "evidence": [
+        "original-vanilla-fixtures"
+      ]
+    },
+    "GearWrist_armgear_playbookWristbandOpen_black": {
+      "displayName": "Opened Coach Wristband Black",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_armgear_playbookWristbandOpen_secondaryColor": {
+      "displayName": "Opened Coach Wristband Secondary Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_armgear_playbookWristbandOpen_teamColor": {
+      "displayName": "Opened Coach Wristband Team Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_armgear_playbookWristbandOpen_white": {
+      "displayName": "Opened Coach Wristband White",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_gloveTapedLarge_Black": {
+      "displayName": "Glove Taped Large Black",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_gloveTapedLarge_White": {
+      "displayName": "Glove Taped Large White",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_gloveTapedNormal_Black": {
+      "displayName": "Glove Taped Normal Black",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_gloveTapedNormal_White": {
+      "displayName": "Glove Taped Normal White",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_gloveWristBrace_Black": {
+      "displayName": "Wrist Brace Black",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_wristBandCoach_Black": {
+      "displayName": "Wrist Band Coach Black",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_wristBandCoach_TeamColor": {
+      "displayName": "Wrist Band Coach Team Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_wristBandCoach_White": {
+      "displayName": "Wrist Band Coach White",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_wristBandDouble_Black": {
+      "displayName": "Wrist Band Double Black",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_wristBandDouble_SecondaryColor": {
+      "displayName": "Wrist Band Double Secondary Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_wristBandDouble_TeamColor": {
+      "displayName": "Wrist Band Double Team Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_wristBandDouble_White": {
+      "displayName": "Wrist Band Double White",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_wristBandNormal_Black": {
+      "displayName": "Wrist Band Normal Black",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_wristBandNormal_SecondaryColor": {
+      "displayName": "Wrist Band Normal Secondary Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_wristBandNormal_TeamColor": {
+      "displayName": "Wrist Band Normal Team Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_wristBandNormal_White": {
+      "displayName": "Wrist Band Normal White",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_wristTapedLite_Black": {
+      "displayName": "Wrist Taped Lite Black",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_wristTapedLite_SecondaryColor": {
+      "displayName": "Wrist Taped Lite Secondary Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_wristTapedLite_TeamColor": {
+      "displayName": "Wrist Taped Lite Team Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_wristTapedLite_White": {
+      "displayName": "Wrist Taped Lite White",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_wristTapedMax_Black": {
+      "displayName": "Wrist Taped Max Black",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_wristTapedMax_SecondaryColor": {
+      "displayName": "Wrist Taped Max Secondary Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_wristTapedMax_TeamColor": {
+      "displayName": "Wrist Taped Max Team Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_wristTapedMax_White": {
+      "displayName": "Wrist Taped Max White",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_wristTapedNormal_Black": {
+      "displayName": "Wrist Taped Normal Black",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_wristTapedNormal_SecondaryColor": {
+      "displayName": "Wrist Taped Normal Secondary Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_wristTapedNormal_TeamColor": {
+      "displayName": "Wrist Taped Normal Team Color",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_wristTapedNormal_White": {
+      "displayName": "Wrist Taped Normal White",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "GearWrist_wristbrace_CompressShort_Black": {
+      "displayName": "Wrist Brace Support Black",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "wristGear",
+      "newPoolEntry": true
+    },
+    "Gear_JerseyStyle_Rolled": {
+      "displayName": "Rolled Jersey",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "jerseyStyles",
+      "newPoolEntry": true
+    },
+    "Gear_JerseyStyle_RolledLow": {
+      "displayName": "Rolled Jersey Low",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "jerseyStyles",
+      "newPoolEntry": true
+    },
+    "Gear_JerseyStyle_SleeveLong": {
+      "displayName": "Long Sleeves",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "jerseyStyles",
+      "newPoolEntry": true
+    },
+    "Gear_JerseyStyle_SleeveStandard": {
+      "displayName": "Loose Sleeves",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "jerseyStyles",
+      "newPoolEntry": true
+    },
+    "Gear_JerseyStyle_SleeveTight": {
+      "displayName": "Tight Sleeves",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "jerseyStyles",
+      "newPoolEntry": true
+    },
+    "Gear_Socks_High": {
+      "displayName": "High Socks",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "socks",
+      "newPoolEntry": true
+    },
+    "Gear_Socks_Low": {
+      "displayName": "Low Socks",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "socks",
+      "newPoolEntry": true
+    },
+    "Gear_Socks_Mid": {
+      "displayName": "Mid Socks",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "socks",
+      "newPoolEntry": true
+    },
+    "Gear_Socks_Under": {
+      "displayName": "Tucked Socks",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "socks",
+      "newPoolEntry": true
+    },
+    "Gear_Undershirt_CompressionTCrewSleeveless": {
+      "displayName": "Primary Sleeveless Compression Undershirt",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "undershirts",
+      "newPoolEntry": true
+    },
+    "Gear_Undershirt_CompressionTCrewSleeveless_Black": {
+      "displayName": "Black Sleeveless Compression Undershirt",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "undershirts",
+      "newPoolEntry": true
+    },
+    "Gear_Undershirt_CompressionTCrewSleeveless_Secondary": {
+      "displayName": "Secondary Sleeveless Compression Undershirt",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "undershirts",
+      "newPoolEntry": true
+    },
+    "Gear_Undershirt_CompressionTCrewSleeveless_White": {
+      "displayName": "White Sleeveless Compression Undershirt",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "undershirts",
+      "newPoolEntry": true
+    },
+    "Gear_Undershirt_HoodieSleeveless": {
+      "displayName": "Sleeveless Hoodie",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "undershirts",
+      "newPoolEntry": true
+    },
+    "GuardianCap_GuardianXT2": {
+      "displayName": "Guardian Cap XT 2.0",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "guardianCaps",
+      "newPoolEntry": true
+    },
+    "NeckWear_Turtleneck_Scrunched": {
+      "displayName": "Scrunched Turtleneck Primary Color",
+      "evidence": [
+        "unmodded-menu-turtlenecks-2026-10-29"
+      ]
+    },
+    "NeckWear_Turtleneck_Scrunched_Black": {
+      "displayName": "Scrunched Turtleneck Black",
+      "evidence": [
+        "unmodded-menu-turtlenecks-2026-10-29"
+      ]
+    },
+    "NeckWear_Turtleneck_Scrunched_Secondary": {
+      "displayName": "Scrunched Turtleneck Secondary Color",
+      "evidence": [
+        "unmodded-menu-turtlenecks-2026-10-29"
+      ]
+    },
+    "NeckWear_Turtleneck_Scrunched_White": {
+      "displayName": "Scrunched Turtleneck White",
+      "evidence": [
+        "unmodded-menu-turtlenecks-2026-10-29"
+      ]
+    },
+    "NeckWear_Turtleneck_Tight": {
+      "displayName": "Tight Turtleneck Primary Color",
+      "evidence": [
+        "unmodded-menu-turtlenecks-2026-10-29"
+      ]
+    },
+    "NeckWear_Turtleneck_Tight_Black": {
+      "displayName": "Tight Turtleneck Black",
+      "evidence": [
+        "unmodded-menu-turtlenecks-2026-10-29"
+      ]
+    },
+    "NeckWear_Turtleneck_Tight_Secondary": {
+      "displayName": "Tight Turtleneck Secondary Color",
+      "evidence": [
+        "unmodded-menu-turtlenecks-2026-10-29"
+      ]
+    },
+    "NeckWear_Turtleneck_Tight_White": {
+      "displayName": "Tight Turtleneck White",
+      "evidence": [
+        "unmodded-menu-turtlenecks-2026-10-29"
+      ]
+    },
+    "Undershirt_Untucked": {
+      "displayName": "Relaxed T Shirt",
+      "evidence": [
+        "unmodded-menu-full-families-2026-10-29"
+      ],
+      "poolCategory": "undershirts",
+      "newPoolEntry": true
+    }
+  },
+  "unlockedItems": {
+    "ElbowGear_RubberBands1": {
+      "displayName": "Rubber Bands 1",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "ElbowGear_RubberBands2": {
+      "displayName": "Rubber Bands 2",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "ElbowGear_RubberBands3": {
+      "displayName": "Rubber Bands 3",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "FaceGear_BalaclavaOverNose": {
+      "displayName": "Black Balaclava",
+      "kind": "unlocked-existing",
+      "evidence": [
+        "prior-user-confirmation",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "FaceGear_BalaclavaOverNose_Primary": {
+      "displayName": "Team Color Balaclava",
+      "kind": "unlocked-existing",
+      "evidence": [
+        "prior-user-confirmation",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "FaceGear_BalaclavaOverNose_Secondary": {
+      "displayName": "Secondary Color Balaclava",
+      "kind": "unlocked-existing",
+      "evidence": [
+        "prior-user-confirmation",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "FaceGear_BalaclavaOverNose_White": {
+      "displayName": "White Balaclava",
+      "kind": "unlocked-existing",
+      "evidence": [
+        "prior-user-confirmation",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "FaceMarks_NoseTape_C1": {
+      "displayName": "Nose Tape Custom 1",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "FaceMarks_NoseTape_C10": {
+      "displayName": "Nose Tape Custom 10",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "FaceMarks_NoseTape_C2": {
+      "displayName": "Nose Tape Custom 2",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "FaceMarks_NoseTape_C3": {
+      "displayName": "Nose Tape Custom 3",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "FaceMarks_NoseTape_C4": {
+      "displayName": "Nose Tape Custom 4",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "FaceMarks_NoseTape_C5": {
+      "displayName": "Nose Tape Custom 5",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "FaceMarks_NoseTape_C6": {
+      "displayName": "Nose Tape Custom 6",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "FaceMarks_NoseTape_C7": {
+      "displayName": "Nose Tape Custom 7",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "FaceMarks_NoseTape_C8": {
+      "displayName": "Nose Tape Custom 8",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "FaceMarks_NoseTape_C9": {
+      "displayName": "Nose Tape Custom 9",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "FaceMarks_NoseTape_G": {
+      "displayName": "Nose Tape GABOS",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "FaceMarks_NoseTape_KE": {
+      "displayName": "Nose Tape Kill Everybody",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "FaceMarks_NoseTape_T": {
+      "displayName": "Nose Tape Trust God",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "G_CompressionT_Crew_ShortSleeve_BasicJ_BLA": {
+      "displayName": "Irish Jamo Sleeves Black",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "G_CompressionT_Crew_ShortSleeve_BasicJ_PRI": {
+      "displayName": "Irish Jamo Sleeves Primary",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "G_CompressionT_Crew_ShortSleeve_BasicJ_SEC": {
+      "displayName": "Irish Jamo Sleeves Secondary",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "G_CompressionT_Crew_ShortSleeve_BasicJ_WHI": {
+      "displayName": "Irish Jamo Sleeves White",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearArmSleeve_Elbow_armTape_normal_Black": {
+      "displayName": "Elbow Sleeve Black",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearArmSleeve_Elbow_armTape_normal_OffWhite": {
+      "displayName": "Elbow Sleeve White",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearArmSleeve_Elbow_armTape_normal_SecondaryColor": {
+      "displayName": "Elbow Sleeve Secondary",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearArmSleeve_Elbow_armTape_normal_TeamColor": {
+      "displayName": "Elbow Sleeve Primary",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearArmSleeve_NikeProDriFitSleeve2_Black": {
+      "displayName": "Double Sleeve Black and Primary",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearArmSleeve_NikeProDriFitSleeve2_SecondaryColor": {
+      "displayName": "Double Sleeve Secondary and Primary",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearArmSleeve_NikeProDriFitSleeve2_TeamColor": {
+      "displayName": "Double Sleeve Primary and Secondary",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearArmSleeve_NikeProDriFitSleeve2a_Black": {
+      "displayName": "Double Sleeve Black and Secondary",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearBicepBand_Black": {
+      "displayName": "Bicep Band Black",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearBicepBand_SecondaryColor": {
+      "displayName": "Bicep Band Secondary",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearBicepBand_TeamColor": {
+      "displayName": "Bicep Band Primary",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearBicepBand_White": {
+      "displayName": "Bicep Band White",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearFootwear_shoeLowVintage_nike": {
+      "displayName": "Nike Foamposite Pro - School PE",
+      "kind": "replacement",
+      "evidence": [
+        "unmodded-menu-absences-2026-10-29",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "GearFootwear_shoe_Low_NikeVaporUntouchable2": {
+      "displayName": "Jordan 4 Alpha Menace",
+      "kind": "replacement",
+      "evidence": [
+        "unmodded-menu-absences-2026-10-29",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "GearFootwear_shoe_Mid_NikeAlphaPro34TD": {
+      "displayName": "Nike Vapor Speed Kobe 5",
+      "kind": "replacement",
+      "evidence": [
+        "unmodded-menu-absences-2026-10-29",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "GearFootwear_shoe_high_NikeAlphaMenaceElite2": {
+      "displayName": "Nike Vapor Edge Pro 360 2 KD 4",
+      "kind": "replacement",
+      "evidence": [
+        "unmodded-menu-absences-2026-10-29",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "GearFootwear_shoe_low_NikeVaporEdge_zebra": {
+      "displayName": "Nike Vapor Edge Speed FOTF PE",
+      "kind": "unlocked-existing",
+      "evidence": [
+        "unmodded-menu-absences-2026-10-29",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "GearFootwear_shoe_low_NikeVaporUntouchablePro_v3": {
+      "displayName": "Nike Vapor Untouchable Pro Customs",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearFootwear_shoe_mid_NikeAlphaMenacePro": {
+      "displayName": "Nike Vapor Edge Pro 360 VC",
+      "kind": "replacement",
+      "evidence": [
+        "unmodded-menu-absences-2026-10-29",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "GearFootwear_shoe_mid_NikeAlphaMenacePro2": {
+      "displayName": "Nike Vapor Untouchable Pro 3 OBJ Uptempo",
+      "kind": "replacement",
+      "evidence": [
+        "unmodded-menu-absences-2026-10-29",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "GearFootwear_shoe_mid_NikeAlphaMenacePro299Club": {
+      "displayName": "Nike Vapor Edge Pro 360 2 Spat",
+      "kind": "replacement",
+      "evidence": [
+        "unmodded-menu-absences-2026-10-29",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "GearFootwear_shoe_mid_UnderArmourClone2025": {
+      "displayName": "Under Armour Clone",
+      "kind": "replacement",
+      "evidence": [
+        "unmodded-menu-absences-2026-10-29",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "GearHand_glove_AdidasAdizero11_black": {
+      "displayName": "Adidas Adizero 11 Black",
+      "kind": "unlocked-existing",
+      "evidence": [
+        "unmodded-menu-absences-2026-10-29",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "GearHand_glove_AdidasAdizero11_secondaryColor": {
+      "displayName": "Adidas Adizero 11 Secondary Color",
+      "kind": "unlocked-existing",
+      "evidence": [
+        "unmodded-menu-absences-2026-10-29",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "GearHand_glove_AdidasAdizero11_teamColor": {
+      "displayName": "Adidas Adizero 11 Team Color",
+      "kind": "unlocked-existing",
+      "evidence": [
+        "unmodded-menu-absences-2026-10-29",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "GearHand_glove_AdidasAdizero11_white": {
+      "displayName": "Adidas Adizero 11 White",
+      "kind": "unlocked-existing",
+      "evidence": [
+        "unmodded-menu-absences-2026-10-29",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "GearHand_glove_JordanVaporJet5_Black": {
+      "displayName": "Jordan Vapor Jet 5 Glove Black",
+      "kind": "unlocked-existing",
+      "evidence": [
+        "unmodded-menu-absences-2026-10-29",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "GearHand_glove_JordanVaporJet5_SecondaryColor": {
+      "displayName": "Jordan Vapor Jet 5 Glove Secondary Color",
+      "kind": "unlocked-existing",
+      "evidence": [
+        "unmodded-menu-absences-2026-10-29",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "GearHand_glove_JordanVaporJet5_TeamColor": {
+      "displayName": "Jordan Vapor Jet 5 Glove Team Color",
+      "kind": "unlocked-existing",
+      "evidence": [
+        "unmodded-menu-absences-2026-10-29",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "GearHand_glove_JordanVaporJet5_White": {
+      "displayName": "Jordan Vapor Jet 5 Glove White",
+      "kind": "unlocked-existing",
+      "evidence": [
+        "unmodded-menu-absences-2026-10-29",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet5_Black": {
+      "displayName": "Nike Vapor Jet 9 Glove Black",
+      "kind": "replacement",
+      "evidence": [
+        "unmodded-menu-absences-2026-10-29",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet5_SecondaryColor": {
+      "displayName": "Nike Vapor Jet 9 Glove Secondary Color",
+      "kind": "replacement",
+      "evidence": [
+        "unmodded-menu-absences-2026-10-29",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet5_TeamColor": {
+      "displayName": "Nike Vapor Jet 9 Glove Team Color",
+      "kind": "replacement",
+      "evidence": [
+        "unmodded-menu-absences-2026-10-29",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "GearHand_glove_NikeVaporJet5_White": {
+      "displayName": "Nike Vapor Jet 9 Glove White",
+      "kind": "replacement",
+      "evidence": [
+        "unmodded-menu-absences-2026-10-29",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "GearHand_glove_UnderArmourBlur_Black": {
+      "displayName": "Under Armour Blur Glove Black",
+      "kind": "unlocked-existing",
+      "evidence": [
+        "unmodded-menu-absences-2026-10-29",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "GearHand_glove_UnderArmourBlur_SecondaryColor": {
+      "displayName": "Under Armour Blur Glove Secondary Color",
+      "kind": "unlocked-existing",
+      "evidence": [
+        "unmodded-menu-absences-2026-10-29",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "GearHand_glove_UnderArmourBlur_TeamColor": {
+      "displayName": "Under Armour Blur Glove Team Color",
+      "kind": "unlocked-existing",
+      "evidence": [
+        "unmodded-menu-absences-2026-10-29",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "GearHand_glove_UnderArmourBlur_White": {
+      "displayName": "Under Armour Blur Glove White",
+      "kind": "unlocked-existing",
+      "evidence": [
+        "unmodded-menu-absences-2026-10-29",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "GearLegBase_Socks_Under_Both_Black": {
+      "displayName": "Compression Pants Black",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearLegBase_Socks_Under_Both_Black2": {
+      "displayName": "Compression Pants \u2014 variant 2 Black",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearLegBase_Socks_Under_Both_Primary": {
+      "displayName": "Compression Pants Primary",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearLegBase_Socks_Under_Both_Primary2": {
+      "displayName": "Compression Pants \u2014 variant 2 Primary",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearLegBase_Socks_Under_Both_Secondary": {
+      "displayName": "Compression Pants Secondary",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearLegBase_Socks_Under_Both_Secondary2": {
+      "displayName": "Compression Pants \u2014 variant 2 Secondary",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearLegBase_Socks_Under_Both_White": {
+      "displayName": "Compression Pants White",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearLegBase_Socks_Under_Both_White2": {
+      "displayName": "Compression Pants \u2014 variant 2 White",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearLegsBase_LeftSleeve_Black": {
+      "displayName": "Leg Sleeve Left Black",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearLegsBase_LeftSleeve_Primary": {
+      "displayName": "Leg Sleeve Left Primary",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearLegsBase_LeftSleeve_Secondary": {
+      "displayName": "Leg Sleeve Left Secondary",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearLegsBase_LeftSleeve_White": {
+      "displayName": "Leg Sleeve Left White",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearLegsBase_RightSleeve_Black": {
+      "displayName": "Leg Sleeve Right Black",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearLegsBase_RightSleeve_Primary": {
+      "displayName": "Leg Sleeve Right Primary",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearLegsBase_RightSleeve_Secondary": {
+      "displayName": "Leg Sleeve Right Secondary",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearLegsBase_RightSleeve_White": {
+      "displayName": "Leg Sleeve Right White",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_Black2": {
+      "displayName": "Battle Hanging Mouthpiece Pacifier Black",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_Black3": {
+      "displayName": "NXTRND Hanging Mouthpiece Pacifier Black",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_Black4": {
+      "displayName": "Nike Hanging Mouthpiece \u2014 Light Blue / Pink",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_Blue2": {
+      "displayName": "Battle Hanging Mouthpiece Pacifier Blue",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_Blue3": {
+      "displayName": "NXTRND Hanging Mouthpiece Pacifier Blue",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_Green2": {
+      "displayName": "Battle Hanging Mouthpiece Pacifier Green",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_Green3": {
+      "displayName": "NXTRND Hanging Mouthpiece Pacifier Green",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_LightBlue2": {
+      "displayName": "Battle Hanging Mouthpiece Pacifier Light Blue",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_LightBlue3": {
+      "displayName": "NXTRND Hanging Mouthpiece Pacifier Light Blue",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_Neon2": {
+      "displayName": "Battle Mouthpiece Pacifier Neon",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_Neon3": {
+      "displayName": "NXTRND Mouthpiece Pacifier Neon",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_Orange2": {
+      "displayName": "Battle Hanging Mouthpiece Pacifier Orange",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_Orange3": {
+      "displayName": "NXTRND Hanging Mouthpiece Pacifier Orange",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_Pink2": {
+      "displayName": "Battle Hanging Mouthpiece Pacifier Pink",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_Pink3": {
+      "displayName": "NXTRND Hanging Mouthpiece Pacifier Pink",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_Purple2": {
+      "displayName": "Battle Hanging Mouthpiece Pacifier Purple",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_Purple3": {
+      "displayName": "NXTRND Hanging Mouthpiece Pacifier Purple",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_Red2": {
+      "displayName": "Battle Hanging Mouthpiece Pacifier Red",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_Red3": {
+      "displayName": "NXTRND Hanging Mouthpiece Pacifier Red",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_SecondaryColor2": {
+      "displayName": "Battle Hanging Mouthpiece Pacifier Secondary Color",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_SecondaryColor3": {
+      "displayName": "NXTRND Hanging Mouthpiece Pacifier Secondary Color",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_SecondaryColor4": {
+      "displayName": "Battle Hanging Mouthpiece Secondary / Primary",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_TeamColor10": {
+      "displayName": "Nike Hanging Mouthpiece Secondary / White",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_TeamColor2": {
+      "displayName": "Battle Hanging Mouthpiece Pacifier Team Color",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_TeamColor3": {
+      "displayName": "NXTRND Hanging Mouthpiece Pacifier Team Color",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_TeamColor4": {
+      "displayName": "Battle Hanging Mouthpiece Primary / Secondary",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_TeamColor5": {
+      "displayName": "Nike Hanging Mouthpiece Primary / Black",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_TeamColor6": {
+      "displayName": "Nike Hanging Mouthpiece Primary / White",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_TeamColor7": {
+      "displayName": "Shock Hanging Mouthpiece Primary / Secondary",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_TeamColor8": {
+      "displayName": "Shock Hanging Mouthpiece Primary / White",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_TeamColor9": {
+      "displayName": "Nike Hanging Mouthpiece Secondary / Black",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_White10": {
+      "displayName": "Hanging Mouthpiece Pacifier Smoke Green",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_White11": {
+      "displayName": "Hanging Mouthpiece Pacifier Pure Gray",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_White12": {
+      "displayName": "Hanging Mouthpiece Pacifier Purple and Green",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_White2": {
+      "displayName": "Battle Hanging Mouthpiece Pacifier White",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_White3": {
+      "displayName": "NXTRND Hanging Mouthpiece Pacifier White",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_White4": {
+      "displayName": "Hanging Mouthpiece Pacifier Black and Green",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_White5": {
+      "displayName": "Hanging Mouthpiece Pacifier Smoke Blue and Pink",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_White6": {
+      "displayName": "Hanging Mouthpiece Pacifier Cosmic Peach",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_White7": {
+      "displayName": "Hanging Mouthpiece Pacifier Neon Blue and Pink",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_White8": {
+      "displayName": "Hanging Mouthpiece Pacifier Smoke Blue",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_White9": {
+      "displayName": "Hanging Mouthpiece Pacifier Pink and Green",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_Yellow2": {
+      "displayName": "Battle Hanging Mouthpiece Pacifier Yellow",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearMouthpiece_PacifierDualHanging_Yellow3": {
+      "displayName": "NXTRND Hanging Mouthpiece Pacifier Yellow",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "GearWrist_wristTapedMax_WhiteCross": {
+      "displayName": "Taped Wrist with Cross",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "NeckWear_Turtleneck_Tight2": {
+      "displayName": "Battle Turtleneck Primary / White Logo",
+      "kind": "mod-defined",
+      "evidence": [
+        "prior-user-confirmation",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "NeckWear_Turtleneck_Tight3": {
+      "displayName": "Battle Turtleneck Primary / Black Logo",
+      "kind": "mod-defined",
+      "evidence": [
+        "prior-user-confirmation",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "NeckWear_Turtleneck_Tight4": {
+      "displayName": "NXTRND Turtleneck Primary / White Logo",
+      "kind": "mod-defined",
+      "evidence": [
+        "prior-user-confirmation",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "NeckWear_Turtleneck_Tight5": {
+      "displayName": "NXTRND Turtleneck Primary / Black Logo",
+      "kind": "mod-defined",
+      "evidence": [
+        "prior-user-confirmation",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "NeckWear_Turtleneck_Tight6": {
+      "displayName": "Battle Turtleneck White / Primary Logo",
+      "kind": "mod-defined",
+      "evidence": [
+        "prior-user-confirmation",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "NeckWear_Turtleneck_Tight7": {
+      "displayName": "NXTRND Turtleneck White / Primary Logo",
+      "kind": "mod-defined",
+      "evidence": [
+        "prior-user-confirmation",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "Socks_CrewCut": {
+      "displayName": "Crew Cut (CFB27 Unlocked)",
+      "kind": "unlocked-existing",
+      "evidence": [
+        "prior-user-confirmation",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "Socks_High": {
+      "displayName": "High Socks (CFB27 Unlocked)",
+      "kind": "unlocked-existing",
+      "evidence": [
+        "prior-user-confirmation",
+        "unlocked097-prefab-comparison"
+      ]
+    },
+    "ThighPad_BeastMode_Logo": {
+      "displayName": "Beast Mode Thigh Pads",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "ThighPad_CheatCode_Logo": {
+      "displayName": "Cheat Code Thigh Pads",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "ThighPad_Chosen_Logo": {
+      "displayName": "Chosen 1 Thigh Pads",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "ThighPad_Joker_Logo": {
+      "displayName": "Joker Thigh Pads",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "ThighPad_Lion_Logo": {
+      "displayName": "Lion Thigh Pads",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "ThighPad_Shells": {
+      "displayName": "Shell Thigh Pads",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    },
+    "Towel2_South": {
+      "displayName": "String Towel",
+      "kind": "mod-defined",
+      "evidence": [
+        "unlocked097-prefab-comparison",
+        "existing-mod-catalog"
+      ]
+    }
+  },
+  "replacements": {
+    "GearFootwear_shoeLowVintage_nike": "Nike Foamposite Pro - School PE",
+    "GearFootwear_shoe_Low_NikeVaporUntouchable2": "Jordan 4 Alpha Menace",
+    "GearFootwear_shoe_Mid_NikeAlphaPro34TD": "Nike Vapor Speed Kobe 5",
+    "GearFootwear_shoe_high_NikeAlphaMenaceElite2": "Nike Vapor Edge Pro 360 2 KD 4",
+    "GearFootwear_shoe_mid_NikeAlphaMenacePro": "Nike Vapor Edge Pro 360 VC",
+    "GearFootwear_shoe_mid_NikeAlphaMenacePro2": "Nike Vapor Untouchable Pro 3 OBJ Uptempo",
+    "GearFootwear_shoe_mid_NikeAlphaMenacePro299Club": "Nike Vapor Edge Pro 360 2 Spat",
+    "GearFootwear_shoe_mid_UnderArmourClone2025": "Under Armour Clone",
+    "GearHand_glove_NikeVaporJet5_Black": "Nike Vapor Jet 9 Glove Black",
+    "GearHand_glove_NikeVaporJet5_SecondaryColor": "Nike Vapor Jet 9 Glove Secondary Color",
+    "GearHand_glove_NikeVaporJet5_TeamColor": "Nike Vapor Jet 9 Glove Team Color",
+    "GearHand_glove_NikeVaporJet5_White": "Nike Vapor Jet 9 Glove White"
+  },
+  "scope": "Previously supported expanded pool, ten standard facepaint styles, and 116 additional user-confirmed vanilla menu choices. Shared IDs follow installed-mod context. Vanilla generation excludes styles replaced by selected Unlocked or RAW mods; new choices preserve existing default selections.",
+  "previousReviewDefaults": {
+    "undershirts": {
+      "vanilla": [],
+      "unlocked": [
+        "G_CompressionT_Crew_ShortSleeve_BasicJ_WHI",
+        "G_CompressionT_Crew_ShortSleeve_BasicJ_BLA",
+        "G_CompressionT_Crew_ShortSleeve_BasicJ_PRI",
+        "G_CompressionT_Crew_ShortSleeve_BasicJ_SEC"
+      ]
+    },
+    "wristTape": {
+      "vanilla": [],
+      "unlocked": [
+        "GearWrist_wristTapedMax_WhiteCross"
+      ]
+    },
+    "armSleeves": {
+      "vanilla": [
+        "GearArmSleeve_Baggy_Black",
+        "GearArmSleeve_Baggy_SecondaryColor",
+        "GearArmSleeve_Baggy_TeamColor",
+        "GearArmSleeve_Baggy_White"
+      ],
+      "unlocked": [
+        "GearArmSleeve_NikeProDriFitSleeve2_Black",
+        "GearArmSleeve_NikeProDriFitSleeve2a_Black",
+        "GearArmSleeve_NikeProDriFitSleeve2_TeamColor",
+        "GearArmSleeve_NikeProDriFitSleeve2_SecondaryColor",
+        "GearArmSleeve_Elbow_armTape_normal_Black",
+        "GearArmSleeve_Elbow_armTape_normal_TeamColor",
+        "GearArmSleeve_Elbow_armTape_normal_SecondaryColor",
+        "GearArmSleeve_Elbow_armTape_normal_OffWhite"
+      ]
+    },
+    "elbowGear": {
+      "vanilla": [
+        "ElbowGear_elbowSweatbandFull_Black",
+        "ElbowGear_elbowSweatbandFull_SecondaryColor",
+        "ElbowGear_elbowSweatbandFull_TeamColor",
+        "ElbowGear_elbowSweatbandFull_White",
+        "ElbowGear_elbowSweatbandMedium_Black",
+        "ElbowGear_elbowSweatbandMedium_SecondaryColor",
+        "ElbowGear_elbowSweatbandMedium_TeamColor",
+        "ElbowGear_elbowSweatbandMedium_White",
+        "ElbowGear_elbowSweatbandThin_Black",
+        "ElbowGear_elbowSweatbandThin_SecondaryColor",
+        "ElbowGear_elbowSweatbandThin_TeamColor",
+        "ElbowGear_elbowSweatbandThin_White",
+        "ElbowGear_armBraceSmall",
+        "ElbowGear_bicepShoulderStabilizer"
+      ],
+      "unlocked": [
+        "ElbowGear_RubberBands1",
+        "ElbowGear_RubberBands2",
+        "ElbowGear_RubberBands3"
+      ]
+    },
+    "cleats": {
+      "vanilla": [
+        "GearFootwear_shoe_mid_NikeAlphaMenacePro299Club",
+        "GearFootwear_shoe_low_AdidasAdizero_LTA58",
+        "GearFootwear_shoe_high_Adidas_AdizeroChaos",
+        "GearFootwear_shoe_high_AdidasAdizeroChaos2",
+        "GearFootwear_shoe_high_Adidas_AdizeroChaosSnake",
+        "GearFootwear_shoe_low_Adidas_AdizeroElectric",
+        "GearFootwear_shoe_low_Adidas_AdizeroElectric1",
+        "GearFootwear_shoe_low_AdizeroElectric2",
+        "GearFootwear_shoe_low_AdizeroElectricExoticSpeed",
+        "GearFootwear_shoe_low_Adidas_AdizeroElectricSnake",
+        "GearFootwear_shoe_low_AdizeroElectric3",
+        "GearFootwear_shoe_low_AdizeroElectricPlusII",
+        "GearFootwear_shoe_low_Adidas_AdizeroElectricPlus",
+        "GearFootwear_shoe_low_AdizeroElectricPlus2",
+        "GearFootwear_shoe_mid_Adidas_AdizeroImpact2",
+        "GearFootwear_shoe_mid_AdizeroImpactII",
+        "GearFootwear_shoe_mid_AdizeroImpactPlusII",
+        "GearFootwear_shoe_mid_Adidas_AdizeroImpactSnake",
+        "GearFootwear_shoe_mid_AdidasAdizeroPrimeKnit",
+        "GearFootwear_shoe_low_AdidasAdizone11Turbo",
+        "GearFootwear_shoe_low_AdidasFreak22",
+        "GearFootwear_shoe_high_AdidasFreakInline23",
+        "GearFootwear_shoe_mid_AdidasFreak",
+        "GearFootwear_shoe_high_AdidasFreakUltra22",
+        "GearFootwear_shoe_high_AdidasFreakUltra23",
+        "GearFootwear_shoe_mid_AdidasFreakUltraCleat",
+        "GearFootwear_shoe_mid_AdidasNasty",
+        "GearFootwear_shoe_mid_AirJordanRetro1",
+        "GearFootwear_shoe_mid_AirJordanRetroCement",
+        "GearFootwear_shoe_low_AirJordanRetro1",
+        "GearFootwear_shoe_mid_AirJordan3Cement",
+        "GearFootwear_shoe_low_Jordan5_99Club",
+        "GearFootwear_shoe_low_Jordan7",
+        "GearFootwear_shoe_low_AirJordanX",
+        "GearFootwear_shoe_mid_Jordan5",
+        "GearFootwear_shoe_mid_Jordan7",
+        "GearFootwear_shoe_mid_AirJordanX",
+        "GearFootwear_shoe_low_AirJordanXI",
+        "GearFootwear_shoe_mid_Jordan11TD",
+        "GearFootwear_shoe_mid_NewBalance_Trench",
+        "GearFootwear_shoe_mid_NewBalance_Fortress",
+        "GearFootwear_shoe_low_NewBalance_Prodigy",
+        "GearFootwear_shoe_Low_NikeAlphaMenaceElite",
+        "GearFootwear_shoe_high_NikeAlphaMenaceElite2",
+        "GearFootwear_shoe_low_NikeAlphaMenaceElite3",
+        "GearFootwear_shoe_mid_NikeAlphaMenacePro3WDP",
+        "GearFootwear_shoe_low_NikeAlphaMenacePro4",
+        "GearFootwear_shoe_mid_NikeAlphaMenaceStrong",
+        "GearFootwear_shoe_mid_NikeDiamondTURF",
+        "GearFootwear_shoe_mid_NikeFieldGeneral",
+        "GearFootwear_shoe_High_NikeForceSavageEliteTDW",
+        "GearFootwear_shoe_high_NikeForceSavageElite2",
+        "GearFootwear_shoe_mid_NikeForceSavagePro",
+        "GearFootwear_shoe_mid_NikeForceSavagePro2",
+        "GearFootwear_shoe_low_NikeLebronIV",
+        "GearFootwear_shoe_Mid_NikeLunarBeast",
+        "GearFootwear_shoe_Low_NikeVaporCarbonEliteTD",
+        "GearFootwear_shoe_low_NikeVaporEdge",
+        "GearFootwear_shoe_Mid_NikeVaporEdge360Untouchable",
+        "GearFootwear_shoe_mid_NikeVaporEdgeDunk",
+        "GearFootwear_shoe_low_NikeEquinox",
+        "GearFootwear_shoe_mid_NikeAlphaMenacePro",
+        "GearFootwear_shoe_Mid_NikeAlphaPro34TD",
+        "GearFootwear_shoe_low_NikeVaporEdgePro3602",
+        "GearFootwear_shoe_low_NikeEdgeSpeed3062",
+        "GearFootwear_shoe_low_NikeVaporEdge_zebra",
+        "GearFootwear_shoe_mid_NikeVaporPro1",
+        "GearFootwear_shoe_low_NikeZoomVaporSpeed3",
+        "GearFootwear_shoe_Low_NikeVaporUntouchable",
+        "GearFootwear_shoe_Low_NikeVaporUntouchable2",
+        "GearFootwear_shoe_low_NikeVaporUntouchablePro",
+        "GearFootwear_shoe_high_NikeVaporUntouchablePro3",
+        "GearFootwear_shoe_low_NikeVaporUntouchablePro3",
+        "GearFootwear_shoe_mid_NikeAlphaMenacePro2",
+        "GearFootwear_shoe_low_NikeVaporSpeed3",
+        "GearFootwear_shoeLowVintage_nike",
+        "GearFootwear_shoe_Mid_NikeCodeEliteProShark",
+        "GearFootwear_shoe_mid_UnderArmourC1N2019",
+        "GearFootwear_shoe_low_UnderArmourBlurPro2025",
+        "GearFootwear_shoe_low_UnderArmourBlurPro2026",
+        "GearFootwear_shoe_mid_UnderArmourBlurSmoke2024",
+        "GearFootwear_shoe_mid_UnderArmourClone2025",
+        "GearFootwear_shoe_low_UnderArmourCloneFlow2025",
+        "GearFootwear_shoe_high_UnderArmourHammer2024",
+        "GearFootwear_shoe_mid_UnderArmourSpotlightClone2024",
+        "GearFootwear_shoe_low_UnderArmourSpotlightSuedeRevamp2025",
+        "GearFootwear_shoe_high_UnderArmourUAFHighlight2024",
+        "GearFootwear_shoe_low_NikeDiamondTurf93",
+        "GearFootwear_shoe_low_NikeKobeVenom",
+        "GearFootwear_shoe_mid_NikeFoamposite",
+        "GearFootwear_shoe_mid_NikeDiamondTURF2",
+        "GearFootwear_shoe_mid_NikeAlphaMenaceElite5",
+        "GearFootwear_shoe_mid_NikeAlphaMenacePro5"
+      ],
+      "unlocked": [
+        "GearFootwear_shoe_low_NikeVaporUntouchablePro_v3"
+      ]
+    },
+    "gloves": {
+      "vanilla": [
+        "GearHand_glove_AdidasAdizero11_secondaryColor",
+        "GearHand_glove_AdidasAdizero11_teamColor",
+        "GearHand_glove_AdidasFreak_SecondaryColor",
+        "GearHand_glove_AdidasFreak_TeamColor",
+        "GearHand_glove_AdidasImpact2_SecondaryColor",
+        "GearHand_glove_AdidasImpact2_TeamColor",
+        "GearHand_glove_Adizero13_SecondaryColor",
+        "GearHand_glove_Adizero13_TeamColor",
+        "GearHand_glove_Adizero13MistmatchDSG_SecondaryColor",
+        "GearHand_glove_Adizero13MistmatchDSG_TeamColor",
+        "GearHand_glove_Adizero15ElectricExoticDSG_SecondaryColor",
+        "GearHand_glove_Adizero15ElectricExoticDSG_TeamColor",
+        "GearHand_glove_Adizero15Electric_SecondaryColor",
+        "GearHand_glove_Adizero15Electric_TeamColor",
+        "GearHand_glove_JordanFlylock2_SecondaryColor",
+        "GearHand_glove_JordanFlylock2_TeamColor",
+        "GearHand_glove_JordanFlyLock_SecondaryColor",
+        "GearHand_glove_JordanFlyLock_TeamColor",
+        "GearHand_glove_JordanSuperbad6_SecondaryColor",
+        "GearHand_glove_JordanSuperbad6_TeamColor",
+        "GearHand_glove_JordanVaporJet5_SecondaryColor",
+        "GearHand_glove_JordanVaporJet5_TeamColor",
+        "GearHand_glove_JordanVaporJet7_SecondaryColor",
+        "GearHand_glove_JordanVaporJet7_TeamColor",
+        "GearHand_glove_JordanVaporKnit4_SecondaryColor",
+        "GearHand_glove_JordanVaporKnit4_TeamColor",
+        "GearHand_glove_NikeDTack7FG_Secondarycolor",
+        "GearHand_glove_NikeDTack7FG_Teamcolor",
+        "GearHand_glove_NikeSuperBad3_SecondaryColor",
+        "GearHand_glove_NikeSuperBad3_TeamColor",
+        "GearHand_glove_NikeSuperBad5_SecondaryColor",
+        "GearHand_glove_NikeSuperBad5_TeamColor",
+        "GearHand_glove_NikeSuperbad5_2019_SecondaryColor",
+        "GearHand_glove_NikeSuperbad5_2019_TeamColor",
+        "GearHand_glove_NikeSuperbad6_SecondaryColor",
+        "GearHand_glove_NikeSuperbad6_TeamColor",
+        "GearHand_glove_NikeSuperbad7_SecondaryColor",
+        "GearHand_glove_NikeSuperbad7_TeamColor",
+        "GearHand_glove_NikeVaporJet4_SecondaryColor",
+        "GearHand_glove_NikeVaporJet4_TeamColor",
+        "GearHand_glove_NikeVaporJet6_SecondaryColor",
+        "GearHand_glove_NikeVaporJet6_TeamColor",
+        "GearHand_glove_NikeVaporJet7_SecondaryColor",
+        "GearHand_glove_NikeVaporJet7_TeamColor",
+        "GearHand_glove_NikeVaporJet8_SecondaryColor",
+        "GearHand_glove_NikeVaporJet8_TeamColor",
+        "GearHand_glove_NikeVaporJet5_SecondaryColor",
+        "GearHand_glove_NikeVaporJet5_TeamColor",
+        "GearHand_glove_NikeVaporJet_SecondaryColor",
+        "GearHand_glove_NikeVaporJet_TeamColor",
+        "GearHand_glove_NikeVaporKnit2_SecondaryColor",
+        "GearHand_glove_NikeVaporKnit2_TeamColor",
+        "GearHand_glove_NikeVaporKnit3_SecondaryColor",
+        "GearHand_glove_NikeVaporKnit3_TeamColor",
+        "GearHand_glove_NikeVaporKnit4_SecondaryColor",
+        "GearHand_glove_NikeVaporKnit4_TeamColor",
+        "GearHand_glove_NikeVaporKnit_SecondaryColor",
+        "GearHand_glove_NikeVaporKnit_TeamColor",
+        "GearHand_glove_GenericCutter_SecondaryColor",
+        "GearHand_glove_GenericCutter_TeamColor",
+        "GearHand_tapedHandFinger_TeamColor",
+        "GearHand_glove_UnderArmourBlur_SecondaryColor",
+        "GearHand_glove_UnderArmourBlur_TeamColor",
+        "GearHand_glove_UnderArmourCombat_SecondaryColor",
+        "GearHand_glove_UnderArmourCombat_TeamColor",
+        "GearHand_glove_UnderArmourF9_SecondaryColor",
+        "GearHand_glove_UnderArmourF9_TeamColor",
+        "GearHand_glove_UnderArmourInfrared_SecondaryColor",
+        "GearHand_glove_UnderArmourInfrared_TeamColor"
+      ],
+      "unlocked": []
+    },
+    "mouthpieces": {
+      "vanilla": [],
+      "unlocked": [
+        "GearMouthpiece_PacifierDualHanging_Black2",
+        "GearMouthpiece_PacifierDualHanging_SecondaryColor2",
+        "GearMouthpiece_PacifierDualHanging_TeamColor2",
+        "GearMouthpiece_PacifierDualHanging_White2",
+        "GearMouthpiece_PacifierDualHanging_Black3",
+        "GearMouthpiece_PacifierDualHanging_SecondaryColor3",
+        "GearMouthpiece_PacifierDualHanging_TeamColor3",
+        "GearMouthpiece_PacifierDualHanging_White3",
+        "GearMouthpiece_PacifierDualHanging_SecondaryColor4",
+        "GearMouthpiece_PacifierDualHanging_TeamColor4",
+        "GearMouthpiece_PacifierDualHanging_TeamColor5",
+        "GearMouthpiece_PacifierDualHanging_TeamColor6",
+        "GearMouthpiece_PacifierDualHanging_TeamColor7",
+        "GearMouthpiece_PacifierDualHanging_TeamColor8",
+        "GearMouthpiece_PacifierDualHanging_TeamColor9",
+        "GearMouthpiece_PacifierDualHanging_TeamColor10"
+      ]
+    },
+    "neckwear": {
+      "vanilla": [
+        "NeckWear_Turtleneck_Scrunched",
+        "NeckWear_Turtleneck_Scrunched_Black",
+        "NeckWear_Turtleneck_Scrunched_White",
+        "NeckWear_Turtleneck_Scrunched_Secondary",
+        "NeckWear_Turtleneck_Tight",
+        "NeckWear_Turtleneck_Tight_Black",
+        "NeckWear_Turtleneck_Tight_White",
+        "NeckWear_Turtleneck_Tight_Secondary"
+      ],
+      "unlocked": [
+        "NeckWear_Turtleneck_Tight2",
+        "NeckWear_Turtleneck_Tight3",
+        "NeckWear_Turtleneck_Tight4",
+        "NeckWear_Turtleneck_Tight5",
+        "NeckWear_Turtleneck_Tight6",
+        "NeckWear_Turtleneck_Tight7"
+      ]
+    },
+    "legSleeves": {
+      "vanilla": [],
+      "unlocked": [
+        "GearLegsBase_LeftSleeve_Black",
+        "GearLegsBase_LeftSleeve_Primary",
+        "GearLegsBase_LeftSleeve_Secondary",
+        "GearLegsBase_LeftSleeve_White",
+        "GearLegsBase_RightSleeve_Black",
+        "GearLegsBase_RightSleeve_Primary",
+        "GearLegsBase_RightSleeve_Secondary",
+        "GearLegsBase_RightSleeve_White",
+        "GearLegBase_Socks_Under_Both_Black",
+        "GearLegBase_Socks_Under_Both_White",
+        "GearLegBase_Socks_Under_Both_Primary",
+        "GearLegBase_Socks_Under_Both_Secondary",
+        "GearLegBase_Socks_Under_Both_Black2",
+        "GearLegBase_Socks_Under_Both_White2",
+        "GearLegBase_Socks_Under_Both_Primary2",
+        "GearLegBase_Socks_Under_Both_Secondary2"
+      ]
+    },
+    "balaclavas": {
+      "vanilla": [
+        "FaceGear_BalaclavaOverNose",
+        "FaceGear_BalaclavaOverNose_White",
+        "FaceGear_BalaclavaOverNose_Primary",
+        "FaceGear_BalaclavaOverNose_Secondary"
+      ],
+      "unlocked": []
+    },
+    "thighPads": {
+      "vanilla": [],
+      "unlocked": [
+        "ThighPad_BeastMode_Logo",
+        "ThighPad_CheatCode_Logo",
+        "ThighPad_Chosen_Logo",
+        "ThighPad_Joker_Logo",
+        "ThighPad_Lion_Logo",
+        "ThighPad_Shells"
+      ]
+    },
+    "towels": {
+      "vanilla": [],
+      "unlocked": []
+    },
+    "socks": {
+      "vanilla": [
+        "Socks_CrewCut",
+        "Socks_High"
+      ],
+      "unlocked": []
+    },
+    "spats": {
+      "vanilla": [
+        "GearSpats_spatThin_Black",
+        "GearSpats_spatThin_SecondaryColor",
+        "GearSpats_spatThin_TeamColor",
+        "GearSpats_spatThin_White"
+      ],
+      "unlocked": []
+    },
+    "facepaint": {
+      "vanilla": [],
+      "unlocked": [
+        "FaceMarks_NoseTape_C1",
+        "FaceMarks_NoseTape_C2",
+        "FaceMarks_NoseTape_C3",
+        "FaceMarks_NoseTape_C4",
+        "FaceMarks_NoseTape_C5",
+        "FaceMarks_NoseTape_C6",
+        "FaceMarks_NoseTape_C7",
+        "FaceMarks_NoseTape_C8",
+        "FaceMarks_NoseTape_C9",
+        "FaceMarks_NoseTape_C10",
+        "FaceMarks_NoseTape_G",
+        "FaceMarks_NoseTape_KE",
+        "FaceMarks_NoseTape_T"
+      ]
+    }
+  },
+  "additionalVanillaCategoryLabels": {
+    "jerseyStyles": "Jersey Styles",
+    "undershirts": "Undershirts",
+    "neckPads": "Neck Rolls",
+    "armSleeves": "Arm Sleeves",
+    "wristGear": "Wrist Gear",
+    "legSleeves": "Leg Base Layers",
+    "socks": "Sock Heights",
+    "guardianCaps": "Guardian Caps",
+    "mouthpieces": "Mouthpieces"
+  }
+}

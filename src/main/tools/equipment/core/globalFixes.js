@@ -760,7 +760,7 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
     // Removal wins; repair pants instead of putting a removed shirt back.
     if (sleeveCompatibilityFix) {
       const corrections = loadouts.flatMap(loadout => enforceArmSleeveCompatibility(loadout.loadoutElements, {
-        usingUnlockedMod: unlockedMouthpieceFix || unlockedRecolorFix || unlockedTattooFix,
+        usingUnlockedMod: options.usingUnlockedMod || unlockedMouthpieceFix || unlockedTattooFix || options.cutoffPantsFix || options.unlockedSocksFix,
         usingRawAccessoriesMod: options.usingRawAccessoriesMod === true,
         allowCutoffLegLayers: options.cutoffPantsFix && options.allowCutoffLegLayers === true
       }));

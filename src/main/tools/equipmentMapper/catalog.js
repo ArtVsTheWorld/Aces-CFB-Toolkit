@@ -1,4 +1,4 @@
-import {EQUIPMENT_ITEMS,RAW_314,equipmentSemantics,itemBrand} from '../equipment/catalog.js';
+import {EQUIPMENT_ITEMS,RAW_314,equipmentSemantics,itemBrand,equipmentForSelectedMods} from '../equipment/catalog.js';
 import {REMOVAL_NAMED_ITEMS} from '../equipment/core/removalInventory.js';
 import {MOD_FACE_PAINT_ITEMS,VANILLA_FACE_PAINT_OPTIONS} from '../equipment/core/facepaint.js';
 import {UNLOCKED_TATTOO_POOL} from '../equipment/core/tattoos.js';
@@ -26,7 +26,8 @@ export function mapperCatalog(mods){
  if(mods.raw)for(const item of RAW_314.jamoItems)catalog.set(item.itemName,{...item,origin:'raw'});
  for(const tattoo of UNLOCKED_TATTOO_POOL)catalog.set(tattoo.value,{itemName:tattoo.value,displayName:tattoo.label,origin:'unlocked',category:'Tattoo',slots:tattoo.type==='leg'?['LeftLegTattoo','RightLegTattoo']:['LeftArmTattoo','RightArmTattoo']});
  const items=[],groups=[];
- for(const known of catalog.values()){
+ for(const original of catalog.values()){
+  const known=equipmentForSelectedMods(original,{usingUnlockedMod:mods.unlocked,usingRawAccessoriesMod:mods.raw});
   if(known.origin==='unverified'||!known.slots?.length)continue;
   const required=['unlocked','raw','eljax'].includes(known.origin)?known.origin:null;if(required&&!mods[required])continue;
   const name=known.displayName??mapperItemName(known.itemName),category=mapperCategoryLabel(known.category),colors=equipmentSemantics(known.itemName)?.colors??[],brand=mapperBrandLabel(itemBrand(known)||'Universal'),variants=[];

@@ -1,3 +1,4 @@
+import {finalGeneratedChanges} from '../equipment/core/generatedCompatibility.js';
 import {progressRange} from '../../services/toolProgress.js';
 import {randomBytes} from 'node:crypto';
 import path from 'node:path';
@@ -70,11 +71,13 @@ async function preview(context){
   for(const row of [...processed])if(!acceptedPlayers.has(row))processed.delete(row);
   const assignments=[],rows=[],donorAudits=new Map();
   for(const change of randomized.changes){
-    const {newRawData,noDrip,noDripChanges,...audit}=change;donorAudits.set(change.target.row,audit);
     const newRaw=sf(loaded.visuals.records[change.visualsRow],'RawData'),oldRaw=before.get(change.visualsRow);
+    const finalLoadouts=JSON.parse(newRaw).loadouts.filter(l=>l.loadoutType==='PlayerOnField'),context={usingUnlockedMod:settings.mods.unlocked,usingRawAccessoriesMod:settings.mods.raw};
+    for(const key of ['vanillaChanges','unlockedChanges','rawChanges','equipmentTruckChanges'])change[key]=finalGeneratedChanges(finalLoadouts,change[key]??[],context);
+    const {newRawData,noDrip,noDripChanges,...audit}=change;donorAudits.set(change.target.row,audit);
     if(newRaw!==oldRaw)assignments.push({table:'visuals',row:change.visualsRow,field:'RawData',oldValue:oldRaw,newValue:newRaw});
-    const displayBrands=items=>(items??[]).map(item=>({...item,oldItem:equipmentDisplayValue(item.oldItem),newItem:equipmentDisplayValue(item.newItem)}));
-    rows.push({row:change.target.row,team:change.target.team,player:change.target.firstName+' '+change.target.lastName,position:displayPosition(change.target.position),classYear:change.target.classYear,redshirtStatus:change.target.redshirtStatus,overall:change.target.overall,currentValue:change.crossPositionMixed?'Cross-position mix':change.mixed?'Multiple donors':'Single donor',proposedValue:'Quickstart equipment',donor:change.donorUses.map(use=>`${use.donor.firstName} ${use.donor.lastName} (${use.donor.team}) — ${use.group}`).join('; '),donorUses:change.donorUses,facePaint:(change.facePaint??[]).map(item=>({...item,displayName:equipmentDisplayValue(item.asset)})),brandAssignments:displayBrands(change.brandAssignments),brandCorrections:displayBrands(change.brandCorrections),modPoolAdditions:{unlocked:change.unlockedChanges??[],raw:change.rawChanges??[],eljax:change.equipmentTruckChanges??[]},changes:equipmentPreviewChanges(oldRaw,newRaw),visualRow:change.visualsRow,oldRaw,newRaw,fallbackNotes:change.fallbackNotes??[]});
+    const displayBrands=items=>(items??[]).map(item=>({...item,oldItem:equipmentDisplayValue(item.oldItem,{usingUnlockedMod:settings.mods.unlocked,usingRawAccessoriesMod:settings.mods.raw}),newItem:equipmentDisplayValue(item.newItem,{usingUnlockedMod:settings.mods.unlocked,usingRawAccessoriesMod:settings.mods.raw})}));
+    rows.push({row:change.target.row,team:change.target.team,player:change.target.firstName+' '+change.target.lastName,position:displayPosition(change.target.position),classYear:change.target.classYear,redshirtStatus:change.target.redshirtStatus,overall:change.target.overall,currentValue:change.crossPositionMixed?'Cross-position mix':change.mixed?'Multiple donors':'Single donor',proposedValue:'Quickstart equipment',donor:change.donorUses.map(use=>`${use.donor.firstName} ${use.donor.lastName} (${use.donor.team}) — ${use.group}`).join('; '),donorUses:change.donorUses,facePaint:(change.facePaint??[]).map(item=>({...item,displayName:equipmentDisplayValue(item.asset,{usingUnlockedMod:settings.mods.unlocked,usingRawAccessoriesMod:settings.mods.raw})})),brandAssignments:displayBrands(change.brandAssignments),brandCorrections:displayBrands(change.brandCorrections),modPoolAdditions:{vanilla:change.vanillaChanges??[],unlocked:change.unlockedChanges??[],raw:change.rawChanges??[],eljax:change.equipmentTruckChanges??[]},changes:equipmentPreviewChanges(oldRaw,newRaw,{usingUnlockedMod:settings.mods.unlocked,usingRawAccessoriesMod:settings.mods.raw}),visualRow:change.visualsRow,oldRaw,newRaw,fallbackNotes:change.fallbackNotes??[]});
   }
   rows.sort((a,b)=>a.team.localeCompare(b.team)||a.player.localeCompare(b.player)||a.row-b.row);
   sortVisualAssignments(assignments,storage.assignments);

@@ -6,6 +6,8 @@ module.exports=async(window,root)=>{
   const tools=[['jersey-renumber','jersey-preview'],['jersey-no-duplicates','jersey-preview'],['commentary-id','commentary-classes'],['freshman-equipment','equipment-preview'],['equipment-patcher','equipment-preview'],['equipment-quickstart','quickstart-raw'],['equipment-mapper','mapper-mod-unlocked'],['roster-generator','roster-caliber'],['team-boost','boost-classes'],['long-snap','preview'],['nil-toggle','nil-target'],['dealbreaker-fixer','db-protected-values'],['automatic-force-win','force-profile']];
   const results=[];
   for(const [tool,ready]of tools){
+    const paused=await execute(`state.bootstrap.registry.tools.find(t=>t.id===${JSON.stringify(tool)})?.status==='maintenance'`);
+    if(paused){await execute(`(async()=>{navigate(${JSON.stringify(tool)});await pWait(()=>document.getElementById('maintenance-title'));pCheck(!document.getElementById('preview')&&!document.getElementById('apply'),'Maintenance tool has no run actions');})()`);results.push({tool,maintenance:true,editors:0});console.log('PASS maintenance screen: '+tool);continue;}
     const result=await execute(`(async()=>{await pWait(()=>state.bootstrap);closeConfigurationDialogs();${tool.startsWith('jersey')?`state.jerseyMode=${JSON.stringify(tool==='jersey-no-duplicates'?'no-duplicates':'standard')};`:''}navigate(${JSON.stringify(tool==='jersey-no-duplicates'?'jersey-renumber':tool)});await pWait(()=>document.getElementById(${JSON.stringify(ready)}));await new Promise(r=>setTimeout(r,150));
       const inputs=()=>JSON.stringify([...content.querySelectorAll('input[id],select[id],textarea[id]')].filter(n=>!n.closest('.config-presets')).map(n=>[n.id,n.multiple?[...n.selectedOptions].map(o=>o.value):n.type==='checkbox'?n.checked:n.value]));
       const before=inputs(),entries=[...content.querySelectorAll('.configuration-entry button')].filter(n=>n.getBoundingClientRect().width>0&&!n.disabled);let count=0;
@@ -25,5 +27,5 @@ module.exports=async(window,root)=>{
     return sections.map(s=>s.querySelector('summary').textContent);})()`);
   for(const [width,height,theme]of[[1480,1000,'dark'],[760,900,'light']]){window.setSize(width,height);await execute(`document.documentElement.dataset.theme=${JSON.stringify(theme)};applyAccentColor(state.bootstrap.settings);void 0`);await new Promise(r=>setTimeout(r,100));fs.writeFileSync(path.join(out,'help-'+theme+'.png'),(await window.webContents.capturePage()).toPNG());}
   fs.writeFileSync(path.join(out,'evidence.json'),JSON.stringify({tools:results,help},null,2));
-  console.log('PASS all 13 tool settings, Cancel preservation, 14 Help sections and tattoo defaults.');
+  console.log('PASS available tool settings and Cancel preservation, maintenance screen, 14 Help sections and tattoo defaults.');
 };

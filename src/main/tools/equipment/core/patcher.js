@@ -2,13 +2,13 @@ import donorSources from '../../../../shared/donorSources.cjs';
 import {toolProgressCount} from '../../../services/toolProgress.js';
 import {isOriginalEaPlayer,originalEaProtectionEnabled} from '../../../services/originalEaPlayers.js';
 import { parseRef, sf } from "../openSave.js";
-import { brandedEquipmentItems, canGenerateItem, equipmentDisplayName, equipmentItem, isInvalidMouthpieceAsset, recolorEquipmentItem, recolorMouthpieceItem, UNLOCKED_POOLS, RAW_ACCESSORIES_POOLS, EQUIPMENT_TRUCK_POOLS } from "../catalog.js";
+import { RETIRED_EQUIPMENT_ITEMS, isRawJamoItem, brandedEquipmentItems, canGenerateItem, equipmentDisplayName, equipmentItem, isInvalidMouthpieceAsset, recolorEquipmentItem, recolorMouthpieceItem, UNLOCKED_POOLS, RAW_ACCESSORIES_POOLS, EQUIPMENT_TRUCK_POOLS } from "../catalog.js";
 import { enforceArmSleeveCompatibility } from "./compatibility.js";
 import { canGenerateEquipment, createGeneratedEquipmentState, enforceGeneratedEquipmentCompatibility, finalGeneratedChanges, recordGeneratedEquipment } from "./generatedCompatibility.js";
 import { BRAND_SLOTS, assignCompatibleBrandEquipment, guardBrandEquipment } from "./brandCompatibility.js";
-import { buildFacePaintPool, facePaintSource, rollFacePaint } from "./facepaint.js";
-import { configuredModItems, modCategoryChance, UNLOCKED_SPATS, defaultUnlockedElbowItem } from "./modPools.js";
-import {rollCompatibleItem} from './poolRoll.js';
+import { buildFacePaintPool, facePaintOptionsForPosition, VANILLA_FACE_PAINT_OPTIONS, MOD_FACE_PAINT_ITEMS, rollFacePaint } from "./facepaint.js";
+import { configuredModItems, modCategoryChance, UNLOCKED_SPATS, defaultUnlockedElbowItem, modPoolDefinitions, POOL_OWNERSHIP } from "./modPools.js";
+import {rollCompatibleItem,rollConfiguredItem} from './poolRoll.js';
 import {resolveModPoolRolls} from './modPoolArbitration.js';
 import { configuredCrossPositions, normalizeCrossDonorGroups } from './donorGroups.js';
 import { enforceRandomizerPositionRestrictions } from './positionRestrictions.js';
@@ -25,7 +25,7 @@ export const TEAM_SECONDARY_MOUTHGUARD = "GearMouthpiece_PacifierDualHanging_Sec
 const BROKEN_HOODIE_ASSET = "Gear_Undershirt_Hoodie";
 const HOODIE_ASSET = "Gear_Undershirt_HoodieSleeveless";
 const SLOT_GROUPS = new Map([
-  ["helmet", new Set(["HeadWear", "FaceMask", "Visor", "MouthWear", "GuardianCap", "FaceWear"])],
+  ["helmet", new Set(["HeadWear", "FaceMask", "Visor", "MouthWear", "GuardianCap", "FaceWear", "FacePaint"])],
   ["upper body + arms", new Set(["OuterShirt", "InnerShirt", "Shoulderpads", "BackPlate", "FlakJacket", "Neckpad", "NeckWear", "LeftArmWear", "RightArmWear", "LeftElbowWear", "RightElbowWear", "LeftWristWear", "RightWristWear"])],
   ["lower body + waist", new Set(["OuterPants", "Towel", "WaistWear", "WaistWearOverride", "InnerPants", "InnerSocks", "KneeWear", "LeftThighWear", "RightThighWear", "LeftKneeBrace", "RightKneeBrace", "LeftCalfWear", "RightCalfWear", "LeftSpat", "RightSpat"])]]
 );
@@ -152,7 +152,7 @@ function applyCatalogItem(loadouts, label, item, slots, changes, state, cleanApp
     delete element.blends;
   }
   recordGeneratedEquipment(state, slots, item.itemName);
-  if (oldItems.length !== 1 || oldItems[0] !== item.itemName) changes.push({ category: label, slots, oldItems, newItem: item.itemName, displayName: equipmentDisplayName(item.itemName) });
+  if (oldItems.length !== 1 || oldItems[0] !== item.itemName) changes.push({ category: label, slots, oldItems, newItem: item.itemName, displayName: item.displayName ?? equipmentDisplayName(item.itemName) });
 }
 
 export function applyAsymmetricElbowGear(loadouts, pool, rng, changes, state, position, respectSelection = false, fitOptions={}) {
@@ -174,19 +174,32 @@ export function applyAsymmetricElbowGear(loadouts, pool, rng, changes, state, po
   }
 }
 
-export function applyUnlockedRandomizerEquipment(loadouts, target, rng, perCategoryChance = 0.10, state = createGeneratedEquipmentState(loadouts), configuration, allowGloves = true, fitOptions={}) {
+const categoryMaps=new WeakMap();
+function categoryItemMap(category){if(!category)return new Map();if(!categoryMaps.has(category))categoryMaps.set(category,new Map(category.items.map(item=>[item.itemName,item])));return categoryMaps.get(category);}
+
+export function applyUnlockedRandomizerEquipment(loadouts, target, rng, perCategoryChance = 0.10, state = createGeneratedEquipmentState(loadouts), configuration, allowGloves = true, fitOptions={}, origin="unlocked") {
   const changes = [];
-  const selected = (key, pool) => configuredModItems(pool, configuration, key);
-  const chance = key => modCategoryChance(configuration, key, key === "undershirts" ? 0 : ["spats","balaclavas"].includes(key) ? Math.min(perCategoryChance,.05) : perCategoryChance);
+  if(state)state.options={...state.options,usingUnlockedMod:origin==='unlocked'||Boolean(fitOptions.usingUnlockedMod),usingRawAccessoriesMod:Boolean(fitOptions.usingRawAccessoriesMod)};
+  const definitions = modPoolDefinitions()[origin];
+  const selected = (key, pool) => {
+    const category=definitions.find(entry=>entry.id===key),allowed=categoryItemMap(category);
+    const configured=new Set(configuration?.[key]?.items??category?.defaultItems??[]);
+    if(origin==='vanilla'){const existing=new Set(pool.map(item=>item.itemName));pool=[...pool,...(category?.items??[]).filter(item=>POOL_OWNERSHIP.vanillaItems[item.itemName]?.newPoolEntry&&!existing.has(item.itemName))];}
+    return pool.filter(item=>allowed.has(item.itemName)&&configured.has(item.itemName)&&!(origin==='vanilla'&&fitOptions.usingUnlockedMod&&(POOL_OWNERSHIP.replacements[item.itemName]||POOL_OWNERSHIP.vanillaItems[item.itemName]?.disabledWithUnlocked))&&!(origin==='vanilla'&&fitOptions.usingRawAccessoriesMod&&isRawJamoItem(item.itemName))).map(item=>allowed.get(item.itemName));
+  };
+  const chance = key => modCategoryChance(configuration,key,perCategoryChance===0?0:["spats","balaclavas"].includes(key)?Math.min(perCategoryChance,.05):(definitions.find(c=>c.id===key)?.defaultChance??perCategoryChance*100)/100);
   const rollItem = (key, label, pool, slots) => {
     pool = selected(key, pool);
-    const item=rollCompatibleItem(pool,item=>canGenerateEquipment(loadouts,item,slots??item.slots,target.position,fitOptions),rng,chance(key));
+    const item=rollConfiguredItem(pool,item=>canGenerateEquipment(loadouts,item,slots??item.slots,target.position,fitOptions),rng,chance(key),configuration?.[key]);
     if(item)applyCatalogItem(loadouts,label,item,slots,changes,state);
   };
-  const sleeves = selected("armSleeves", UNLOCKED_POOLS.armSleeves);
-  if (sleeves.length && rng() < chance("armSleeves")) {
+  let sleeves = selected("armSleeves", UNLOCKED_POOLS.armSleeves);
+  const sleeveChoice=configuration?.armSleeves,groupedSleeves=Boolean(sleeveChoice?.rollGroups);
+  const sleeveWinner=groupedSleeves?rollConfiguredItem(sleeves,item=>canGenerateEquipment(loadouts,item,/^GearArmSleeve_Baggy_/i.test(item.itemName)?['LeftArmWear','RightArmWear']:['LeftArmWear'],target.position,fitOptions),rng,chance('armSleeves'),sleeveChoice):null;
+  if(groupedSleeves){const group=sleeveChoice.rollGroups.find(g=>g.items.includes(sleeveWinner?.itemName));sleeves=sleeves.filter(i=>group?.items.includes(i.itemName));}
+  if (sleeves.length && (groupedSleeves?Boolean(sleeveWinner):rng() < chance("armSleeves"))) {
     const available=side=>sleeves.filter(item=>canGenerateEquipment(loadouts,item,/^GearArmSleeve_Baggy_/i.test(item.itemName)?['LeftArmWear','RightArmWear']:[side],target.position,fitOptions));
-    const left = choose(available('LeftArmWear'), rng);
+    const left = sleeveWinner??choose(available('LeftArmWear'), rng);
     const right = /^GearArmSleeve_Baggy_/i.test(left?.itemName??'') ? left : choose(available('RightArmWear'), rng);
     const paired = [left, right].find(item => /^GearArmSleeve_Baggy_/i.test(item?.itemName??''));
     if (paired) applyCatalogItem(loadouts, "Arm sleeves", paired, ["LeftArmWear", "RightArmWear"], changes, state);
@@ -196,7 +209,10 @@ export function applyUnlockedRandomizerEquipment(loadouts, target, rng, perCateg
     }
   }
   const elbowPool = selected("elbowGear", unlockedElbowPoolForPosition(target.position)).filter(item=>configuration?.elbowGear?.items!==undefined||defaultUnlockedElbowItem(item));
-  if (elbowPool.length && rng() < chance("elbowGear")) applyAsymmetricElbowGear(loadouts, elbowPool, rng, changes, state, target.position, Boolean(configuration),fitOptions);
+  if(configuration?.elbowGear?.rollGroups){
+    const winner=rollConfiguredItem(elbowPool,item=>['LeftElbowWear','RightElbowWear'].some(slot=>canGenerateEquipment(loadouts,item,[slot],target.position,fitOptions)),rng,chance('elbowGear'),configuration.elbowGear),group=configuration.elbowGear.rollGroups.find(g=>g.items.includes(winner?.itemName));
+    if(winner)applyAsymmetricElbowGear(loadouts,elbowPool.filter(i=>group.items.includes(i.itemName)),rng,changes,state,target.position,true,fitOptions);
+  }else if (elbowPool.length && rng() < chance("elbowGear")) applyAsymmetricElbowGear(loadouts, elbowPool, rng, changes, state, target.position, Boolean(configuration),fitOptions);
   rollItem("cleats", "Cleats", brandedEquipmentItems("Cleats", target.branding).filter(canGenerateItem), ["LeftShoe", "RightShoe"]);
   const brandedGloves = brandedEquipmentItems("Gloves", target.branding).filter(item => /^GearHand_(?!None)/i.test(item.itemName));
   const teamColorGloves = brandedGloves.filter(item => /_(?:TeamColor|SecondaryColor)$/i.test(item.itemName));
@@ -211,6 +227,8 @@ export function applyUnlockedRandomizerEquipment(loadouts, target, rng, perCateg
   rollItem("towels", "Towel", UNLOCKED_POOLS.towels, ["Towel"]);
   rollItem("socks", "Socks", UNLOCKED_POOLS.socks, ["InnerSocks"]);
   rollItem("spats", "Spats", UNLOCKED_SPATS, ["LeftSpat", "RightSpat"]);
+  if(origin==='vanilla')for(const [key,label,slots]of [['jerseyStyles','Jersey style',['OuterShirt']],['neckPads','Neck roll',['Neckpad']],['wristGear','Wrist gear',['LeftWristWear','RightWristWear']],['guardianCaps','Guardian cap',['GuardianCap']]])rollItem(key,label,[],slots);
+  applyPoolFacePaint(loadouts, origin, rng, perCategoryChance, state, target.position, configuration, changes);
   return changes;
 }
 
@@ -218,20 +236,23 @@ export function applyRawRandomizerEquipment(loadouts, rng, perCategoryChance = 0
   fitOptions={...fitOptions,usingRawAccessoriesMod:true};
   if (state) state.options = {...state.options, usingRawAccessoriesMod: true};
   const changes = [];
-  const roll=(category,pool,slots)=>rollCompatibleItem(configuredModItems(pool,configuration,category),item=>canGenerateEquipment(loadouts,item,slots??item.slots,position,fitOptions),rng,modCategoryChance(configuration,category,perCategoryChance));
+  const roll=(category,pool,slots)=>rollConfiguredItem(configuredModItems(pool,configuration,category),item=>canGenerateEquipment(loadouts,item,slots??item.slots,position,fitOptions),rng,modCategoryChance(configuration,category,perCategoryChance),configuration?.[category]);
   const neckwear=roll('neckwear',RAW_ACCESSORIES_POOLS.neckwear,null);
   if(neckwear)applyCatalogItem(loadouts,'Neckwear',neckwear,null,changes,state);
   const caps=roll('skullcaps',RAW_ACCESSORIES_POOLS.skullcaps,['GuardianCap']);
   if(caps)applyCatalogItem(loadouts,'Skullcap',caps,['GuardianCap'],changes,state);
   const backplate=roll('backplates',RAW_ACCESSORIES_POOLS.backplates??[],['BackPlate']);
   if(backplate)applyCatalogItem(loadouts,'Backplate',backplate,['BackPlate'],changes,state);
-  const sleeves = configuredModItems(RAW_ACCESSORIES_POOLS.armSleeves, configuration, 'armSleeves');
-  if (sleeves.length && rng() < modCategoryChance(configuration, 'armSleeves', 0)) {
+  let sleeves = configuredModItems(RAW_ACCESSORIES_POOLS.armSleeves, configuration, 'armSleeves');
+  const sleeveChoice=configuration?.armSleeves,winner=sleeveChoice?.rollGroups?rollConfiguredItem(sleeves,item=>canGenerateEquipment(loadouts,item,['LeftArmWear'],position,fitOptions),rng,0,sleeveChoice):null;
+  if(sleeveChoice?.rollGroups){const group=sleeveChoice.rollGroups.find(g=>g.items.includes(winner?.itemName));sleeves=sleeves.filter(i=>group?.items.includes(i.itemName));}
+  if (sleeves.length && (sleeveChoice?.rollGroups?Boolean(winner):rng() < modCategoryChance(configuration, 'armSleeves', 0))) {
     for (const side of ['Left', 'Right']) {
       const slots = [`${side}ArmWear`], available = sleeves.filter(item => canGenerateEquipment(loadouts, item, slots, position,fitOptions));
       if (available.length) applyCatalogItem(loadouts, `${side} RAW Jamo sleeve`, choose(available, rng), slots, changes, state);
     }
   }
+  applyPoolFacePaint(loadouts, "raw", rng, perCategoryChance, state, position, configuration, changes);
   return changes;
 }
 
@@ -242,20 +263,31 @@ export function applyEquipmentTruckRandomizerEquipment(loadouts, rng, perCategor
     ["chinCovers", "Brand logo chin cover", ["Reserved"]], ["waistPlaycalls", "Waist playcall band", ["HeadBand"]],
     ["handwarmers", "Standard logo handwarmer", ["WaistWear"]], ["thighPads", "Jersey number + cross thigh pads", ["LeftThighWear", "RightThighWear"]]
   ]) {
-    const item=rollCompatibleItem(configuredModItems(EQUIPMENT_TRUCK_POOLS[category],configuration,category),item=>slots.every(slot=>item.slots.includes(slot))&&canGenerateEquipment(loadouts,item,slots,position,fitOptions),rng,modCategoryChance(configuration,category,category==='handwarmers'?0:perCategoryChance));
+    const item=rollConfiguredItem(configuredModItems(EQUIPMENT_TRUCK_POOLS[category],configuration,category),item=>slots.every(slot=>item.slots.includes(slot))&&canGenerateEquipment(loadouts,item,slots,position,fitOptions),rng,modCategoryChance(configuration,category,category==='handwarmers'?0:perCategoryChance),configuration?.[category]);
     if(item)applyCatalogItem(loadouts,label,item,slots,changes,state,true);
   }
   return changes;
 }
 
+function applyPoolFacePaint(loadouts, origin, rng, defaultChance, state, position, configuration, changes) {
+  const assets=origin==='vanilla'?VANILLA_FACE_PAINT_OPTIONS:MOD_FACE_PAINT_ITEMS[origin]??[];
+  const selected=configuration?.facepaint?.items??assets;
+  const allowed=facePaintOptionsForPosition(assets,position).filter(asset=>selected.includes(asset));
+  const winner=rollConfiguredItem(allowed.map(itemName=>({itemName})),()=>true,rng,modCategoryChance(configuration,'facepaint',defaultChance),configuration?.facepaint);
+  if(!winner)return;
+  const itemName=winner.itemName;
+  applyCatalogItem(loadouts,'Facepaint',{itemName,slots:['FacePaint']},['FacePaint'],changes,state,true);
+}
+
 export function applyModdedRandomizerEquipment(loadouts,target,rng,chance,state,options={}){
   state??=createGeneratedEquipmentState(loadouts);
   const providers=[
+    ['vanilla',options.usingVanillaPool,(outfits,local)=>applyUnlockedRandomizerEquipment(outfits,target,rng,chance,local,options.modPools?.vanilla,!options.donorOnlyGlovesPositions?.includes(target.position),options,"vanilla")],
     ['unlocked',options.usingUnlockedMod,(outfits,local)=>applyUnlockedRandomizerEquipment(outfits,target,rng,chance,local,options.modPools?.unlocked,!options.donorOnlyGlovesPositions?.includes(target.position),options)],
     ['raw',options.usingRawAccessoriesMod,(outfits,local)=>applyRawRandomizerEquipment(outfits,rng,chance,local,target.position,options.modPools?.raw,options)],
     ['eljax',options.usingEquipmentTruckMod,(outfits,local)=>applyEquipmentTruckRandomizerEquipment(outfits,rng,chance,local,target.position,options.modPools?.eljax,options)]
   ].filter(([,enabled])=>enabled);
-  if(state)state.options={...state.options,usingRawAccessoriesMod:Boolean(options.usingRawAccessoriesMod)};
+  if(state)state.options={...state.options,usingRawAccessoriesMod:Boolean(options.usingRawAccessoriesMod),usingUnlockedMod:Boolean(options.usingUnlockedMod)};
   if(providers.length<2)return Object.fromEntries(providers.map(([origin,,apply])=>[origin,apply(loadouts,state)]));
   const candidates=providers.map(([origin,,apply])=>{const outfits=structuredClone(loadouts),local=createGeneratedEquipmentState(outfits);local.options=state.options;return {origin,loadouts:outfits,state:local,changes:finalGeneratedChanges(outfits,apply(outfits,local),local.options)};});
   return resolveModPoolRolls(loadouts,candidates,rng,state,target.position);
@@ -296,7 +328,6 @@ function finalizeEquipment(elements, rng, facePaintPool, position, usingUnlocked
     if (slotOf(element) !== "MouthWear" || typeof element.itemAssetName !== "string" || /(?:^|_)none$/i.test(element.itemAssetName)) continue;
     element.itemAssetName = normalizeMouthpieceColor(element.itemAssetName, MOUTHGUARD_COLOR_WEIGHTS[Math.floor(rng() * MOUTHGUARD_COLOR_WEIGHTS.length)]);
   }
-  setSlot(elements, "FacePaint", rollFacePaint(rng, facePaintPool.options, position, facePaintPool.diagnostics));
   return enforceArmSleeveCompatibility(elements, { usingUnlockedMod,usingRawAccessoriesMod:fitOptions.usingRawAccessoriesMod===true });
 }
 
@@ -349,13 +380,14 @@ export function collectEquipmentDonors(playerRecords, visualsRecords, visualsTab
 }
 
 function copySlots(targetElements, donorElements, allowedSlots = null, { allowBrandSlots = false, preserveSlots = new Set() } = {}) {
+  const retiredSlots = new Set(donorElements.filter(element=>RETIRED_EQUIPMENT_ITEMS.has(element.itemAssetName)).map(slotOf));
   const donorHasPants = donorElements.some(element => slotOf(element) === "OuterPants");
   const donorHasInvalidMouthpiece = donorElements.some(element => slotOf(element) === "MouthWear" && isInvalidMouthpieceAsset(element.itemAssetName));
-  const mustPreserve = slot => preserveSlots.has(slot) || (!allowBrandSlots && PROTECTED_BRAND_SLOTS.has(slot)) || PERSONAL_SLOTS.has(slot) || (slot === "OuterPants" && !donorHasPants) || (slot === "MouthWear" && donorHasInvalidMouthpiece);
+  const mustPreserve = slot => retiredSlots.has(slot) || preserveSlots.has(slot) || (!allowBrandSlots && PROTECTED_BRAND_SLOTS.has(slot)) || PERSONAL_SLOTS.has(slot) || (slot === "OuterPants" && !donorHasPants) || (slot === "MouthWear" && donorHasInvalidMouthpiece);
   const preserved = targetElements.filter(element => mustPreserve(slotOf(element)));
   const copied = donorElements.filter(element => {
     const slot = slotOf(element);
-    return !mustPreserve(slot) && slot !== "FacePaint" && (!allowedSlots || allowedSlots.has(slot));
+    return !mustPreserve(slot) && (!allowedSlots || allowedSlots.has(slot));
   }).map(element => structuredClone(element));
   if (!allowedSlots) return [...copied, ...preserved.map(element => structuredClone(element))];
   const allowed = allowedSlots;
@@ -400,7 +432,7 @@ export function patchFreshmanEquipment(playerRecords, visualsRecords, visualsTab
     list.push(donor); donorsByPosition.set(donor.position, list);
   }
   for (const list of donorsByPosition.values()) list.sort((a, b) => b.overall - a.overall || a.row - b.row);
-  const facePaintPool = buildFacePaintPool([...donorsByPosition.values()].flatMap(list => list.slice(0, donorLimit)), options);
+  const facePaintPool = buildFacePaintPool([], options);
   let neededSources=null;
   if(Object.keys(sourceOverrides).length){
     neededSources=new Set();
@@ -471,20 +503,20 @@ export function patchFreshmanEquipment(playerRecords, visualsRecords, visualsTab
       targetVisuals.loadouts.forEach((loadout, index) => { loadout.loadoutElements = copySlots(loadout.loadoutElements, donor.visuals.loadouts[index].loadoutElements, null, { preserveSlots }); });
     }
     const donorOnly=options.donorOnlyPositions?.includes(target.position)===true;
-    if(donorOnly){const donor=usedDonors.find(donor=>donor.position===target.position)??usedDonors[0];targetVisuals.loadouts.forEach((loadout,index)=>{const paint=donor.visuals.loadouts[index].loadoutElements.find(element=>slotOf(element)==='FacePaint');if(paint)setSlot(loadout.loadoutElements,'FacePaint',paint.itemAssetName);});}
+
     const brandCandidates = forceSources && crossEligible ? crossCandidates : crossPositionMixed ? [...baseCandidates, ...crossCandidates] : baseCandidates;
     const branded = assignCompatibleBrandEquipment(targetVisuals.loadouts, target, brandCandidates, usedDonors, rng);
     donorUses.push(...branded.donorUses.map(use => ({ group: use.group, donor: donorSummary(use.donor) })));
     targetVisuals.loadouts.forEach(loadout => {
       sleeveCompatibilityCorrections += donorOnly?enforceArmSleeveCompatibility(loadout.loadoutElements,{usingUnlockedMod,usingRawAccessoriesMod:options.usingRawAccessoriesMod===true}).length:finalizeEquipment(loadout.loadoutElements, rng, facePaintPool, target.position, usingUnlockedMod,options).length;
     });
-    const generated = !donorOnly&&(usingUnlockedMod || options.usingRawAccessoriesMod || options.usingEquipmentTruckMod) ? createGeneratedEquipmentState(targetVisuals.loadouts) : null;
+    const generated = !donorOnly&&(options.usingVanillaPool || usingUnlockedMod || options.usingRawAccessoriesMod || options.usingEquipmentTruckMod) ? createGeneratedEquipmentState(targetVisuals.loadouts) : null;
     const pools=donorOnly?{}:applyModdedRandomizerEquipment(targetVisuals.loadouts,target,rng,unlockedItemChance,generated,options);
-    let unlockedChanges=pools.unlocked??[],rawChanges=pools.raw??[],equipmentTruckChanges=pools.eljax??[];
+    let vanillaChanges=pools.vanilla??[],unlockedChanges=pools.unlocked??[],rawChanges=pools.raw??[],equipmentTruckChanges=pools.eljax??[];
     const noDrip = (!donorOnly||options.allowDonorOnlyNoDrip===true)&&noDripProfile && rng() < noDripChanceForPosition(target.position, options.noDripPercentages);
     const noDripChanges = noDrip ? applyNoDripEquipment(targetVisuals.loadouts, target.position).changes : [];
     const brandCorrections = guardBrandEquipment(targetVisuals.loadouts, target, originalLoadouts);
-    const facePaint = targetVisuals.loadouts.map((loadout, index) => { const asset = loadout.loadoutElements.find(element => slotOf(element) === "FacePaint")?.itemAssetName; return { loadout: index, asset, source: facePaintSource(asset, facePaintPool.diagnostics) }; });
+
     targetVisuals.loadouts.forEach(loadout => { sleeveCompatibilityCorrections += enforceArmSleeveCompatibility(loadout.loadoutElements, { usingUnlockedMod,usingRawAccessoriesMod:options.usingRawAccessoriesMod===true }).length; });
     const generatedCorrections = enforceGeneratedEquipmentCompatibility(targetVisuals.loadouts, generated, target.position);
     enforceRandomizerPositionRestrictions(targetVisuals.loadouts, target.position, sf(record,'PLYR_HANDEDNESS'));
@@ -492,9 +524,15 @@ export function patchFreshmanEquipment(playerRecords, visualsRecords, visualsTab
     unlockedChanges = finalGeneratedChanges(targetVisuals.loadouts, unlockedChanges, generated?.options);
     rawChanges = finalGeneratedChanges(targetVisuals.loadouts, rawChanges, generated?.options);
     equipmentTruckChanges = finalGeneratedChanges(targetVisuals.loadouts, equipmentTruckChanges, generated?.options);
+    vanillaChanges = finalGeneratedChanges(targetVisuals.loadouts, vanillaChanges, generated?.options);
+    const facePaint = targetVisuals.loadouts.map((loadout,index)=>{
+      const asset=loadout.loadoutElements.find(element=>slotOf(element)==='FacePaint')?.itemAssetName;
+      const origin=Object.entries({vanilla:vanillaChanges,unlocked:unlockedChanges,raw:rawChanges,eljax:equipmentTruckChanges}).find(([,changes])=>changes.some(change=>change.slots.includes('FacePaint')&&change.newItem===asset))?.[0];
+      return {loadout:index,asset,source:origin?({vanilla:'CFB 27 Equipment Pool',unlocked:'Unlocked Equipment Pool',raw:'RAW Accessories Equipment Pool',eljax:'Equipment Truck Pool'})[origin]:'Copied from donor',...(origin?{origin}:{})};
+    });
     const newRawData = JSON.stringify(targetVisuals.parsed);
     if (apply) targetVisuals.visual.RawData = newRawData;
-    changes.push({ fallbackNotes: [...(!explicit&&!ownPositionCandidates.length ? ["Used position-family donors because no eligible same-position donor was available."] : []), ...(crossPositions.length && !crossEligible ? [explicit?"Other selected sources unavailable; used allowed own-position donors.":"Cross-position sources unavailable; used the normal donor pool."] : []), ...(usedDonors.some(donor => donor.bodyType !== target.bodyType) ? ["Kept body-dependent gear where donor and receiver builds differ."] : [])], target, donor: donorUses[0].donor, donorUses, mixed, crossPositionMixed, isFcs, visualsRow: targetVisuals.ref.row, newRawData, brandAssignments: branded.audits, brandCorrections, facePaint, ...(generatedCorrections.length ? { generatedCorrections } : {}), ...(usingUnlockedMod ? { unlockedChanges } : {}), ...(options.usingRawAccessoriesMod ? { rawChanges } : {}), ...(options.usingEquipmentTruckMod ? { equipmentTruckChanges } : {}), ...(noDripProfile ? { noDrip, noDripChanges } : {}) });
+    changes.push({ fallbackNotes: [...(!explicit&&!ownPositionCandidates.length ? ["Used position-family donors because no eligible same-position donor was available."] : []), ...(crossPositions.length && !crossEligible ? [explicit?"Other selected sources unavailable; used allowed own-position donors.":"Cross-position sources unavailable; used the normal donor pool."] : []), ...(usedDonors.some(donor => donor.bodyType !== target.bodyType) ? ["Kept body-dependent gear where donor and receiver builds differ."] : [])], target, donor: donorUses[0].donor, donorUses, mixed, crossPositionMixed, isFcs, visualsRow: targetVisuals.ref.row, newRawData, brandAssignments: branded.audits, brandCorrections, facePaint, ...(generatedCorrections.length ? { generatedCorrections } : {}), ...(options.usingVanillaPool ? { vanillaChanges } : {}), ...(usingUnlockedMod ? { unlockedChanges } : {}), ...(options.usingRawAccessoriesMod ? { rawChanges } : {}), ...(options.usingEquipmentTruckMod ? { equipmentTruckChanges } : {}), ...(noDripProfile ? { noDrip, noDripChanges } : {}) });
   });
-  return { changes, skipped, facePaintPools: facePaintPool.diagnostics, brandCorrections: changes.reduce((sum, change) => sum + change.brandCorrections.length, 0), fcsChanged: changes.filter(change => change.isFcs).length, donorPositions: donorsByPosition.size, sleeveCompatibilityCorrections, ...(usingUnlockedMod ? { unlockedPlayersChanged: changes.filter(change => change.unlockedChanges.length).length } : {}), ...(options.usingRawAccessoriesMod ? { rawPlayersChanged: changes.filter(change => change.rawChanges.length).length } : {}), ...(options.usingEquipmentTruckMod ? { equipmentTruckPlayersChanged: changes.filter(change => change.equipmentTruckChanges.length).length } : {}), ...(noDripProfile ? { noDripPlayers: changes.filter(change => change.noDrip).length } : {}) };
+  return { changes, skipped, facePaintPools: facePaintPool.diagnostics, brandCorrections: changes.reduce((sum, change) => sum + change.brandCorrections.length, 0), fcsChanged: changes.filter(change => change.isFcs).length, donorPositions: donorsByPosition.size, sleeveCompatibilityCorrections, ...(options.usingVanillaPool ? { vanillaPlayersChanged: changes.filter(change => change.vanillaChanges.length).length } : {}), ...(usingUnlockedMod ? { unlockedPlayersChanged: changes.filter(change => change.unlockedChanges.length).length } : {}), ...(options.usingRawAccessoriesMod ? { rawPlayersChanged: changes.filter(change => change.rawChanges.length).length } : {}), ...(options.usingEquipmentTruckMod ? { equipmentTruckPlayersChanged: changes.filter(change => change.equipmentTruckChanges.length).length } : {}), ...(noDripProfile ? { noDripPlayers: changes.filter(change => change.noDrip).length } : {}) };
 }

@@ -1,6 +1,6 @@
 import { CUTOFF_PANTS, cutoffPantsConflict, uniformItem } from "./uniformCompatibility.js";
-import { canGenerateItem, equipmentItem, equipmentSemantics } from "../catalog.js";
-import { armAccessoryRestrictions, sleeveUndershirtConflict, relaxedTeeNeckwearConflict } from "./compatibility.js";
+import { canGenerateItem, equipmentItem, equipmentSemantics, equipmentDisplayName, equipmentTags } from "../catalog.js";
+import { armAccessoryRestrictions, sleeveUndershirtConflict, relaxedTeeNeckwearConflict, equippedMask, isMaskOrBalaclava, isHangingMouthpiece } from "./compatibility.js";
 
 const active = value => typeof value === "string" && !/(?:^|_)None$/i.test(value) && value !== "FaceGear_BalaclavaNone";
 const get = (elements, slot) => elements.find(element => element.slotType === slot)?.itemAssetName;
@@ -9,6 +9,15 @@ const get = (elements, slot) => elements.find(element => element.slotType === sl
 export function generatedItemConflict(elements, item, slots = item.slots, position = "", options={}) {
   if (!canGenerateItem(item)) return "Item is not eligible for pool generation";
   const semantic = item.semantic;
+  const proposed=elements.filter(element=>!slots.includes(element.slotType)).concat(slots.map(slotType=>({slotType,itemAssetName:item.itemName})));
+  if(slots.some(slot=>['FaceWear','NeckWear','Neckpad','MouthWear'].includes(slot))){
+    const mask=equippedMask(proposed,options.usingUnlockedMod),mouth=get(proposed,'MouthWear');
+    if(mask&&active(mouth)&&!isHangingMouthpiece(mouth))return 'Masks and balaclavas require a hanging mouthpiece or no mouthpiece';
+  }
+  const helmet=get(proposed,'HeadWear');
+  if(helmet&&slots.includes('MouthWear')&&isHangingMouthpiece(item.itemName)&&!equipmentTags(helmet).includes('HangingMouthpiece'))return 'This helmet does not support hanging mouthpieces';
+  if(helmet&&slots.includes('GuardianCap')&&/^GuardianCap_GuardianXT/.test(item.itemName)&&!equipmentTags(helmet).includes('GuardianCap'))return 'This helmet does not support a guardian cap';
+
   const proposedShirt=slots.includes('InnerShirt')?item.itemName:get(elements,'InnerShirt');
   if(slots.some(slot=>['InnerShirt','NeckWear','Neckpad','FaceWear'].includes(slot)))for(const slot of ['NeckWear','Neckpad','FaceWear'])if(relaxedTeeNeckwearConflict(proposedShirt,slots.includes(slot)?item.itemName:get(elements,slot)))return 'Relaxed tees cannot be worn with turtlenecks, ski masks or balaclavas';
   for(const side of ['Left','Right']){
@@ -21,6 +30,7 @@ export function generatedItemConflict(elements, item, slots = item.slots, positi
     for(const slot of slots.filter(slot=>slot===`${side}WristWear`||slot===`${side}ElbowWear`)){
       const blocked=armAccessoryRestrictions(sleeve,item.itemName,shirt,options);
       if(slot.endsWith('WristWear')||semantic.bodyRegion==='wrist'?blocked.wrist:blocked.elbow)return 'Sleeve or undershirt covers the wrist/elbow gear';
+      if(slot.endsWith('WristWear')&&equipmentSemantics(get(elements,`${side}ElbowWear`),options)?.bodyRegion==='wrist')return 'Existing elbow-slot wrist accessory occupies this region';
     }
   }
   if (semantic.actualType === "wrist-tape") {
@@ -30,9 +40,9 @@ export function generatedItemConflict(elements, item, slots = item.slots, positi
       if (equipmentSemantics(get(elements, `${side}ElbowWear`))?.bodyRegion === "wrist") return "Existing elbow-slot wrist accessory occupies this region";
     }
   }
-  if (slots.includes("InnerPants") && uniformItem(elements, "OuterPants") === CUTOFF_PANTS) {
-    const proposed = elements.filter(element => element.slotType !== "InnerPants").concat({ slotType: "InnerPants", itemAssetName: item.itemName });
-    if (cutoffPantsConflict(proposed)) return "Leg base layers cannot be added with cutoff pants";
+  if (slots.some(slot=>['OuterShirt','InnerShirt','InnerPants'].includes(slot)) && uniformItem(elements, 'OuterPants') === CUTOFF_PANTS) {
+    const proposed=elements.filter(element=>!slots.includes(element.slotType)).concat(slots.map(slotType=>({slotType,itemAssetName:item.itemName})));
+    if(cutoffPantsConflict(proposed))return slots.includes('InnerPants')?'Leg base layers cannot be added with cutoff pants':'Outfit conflicts with cutoff pants';
   }
   if (semantic.actualType === "raw-backplate") {
     const flak = get(elements, "FlakJacket");
@@ -43,7 +53,7 @@ export function generatedItemConflict(elements, item, slots = item.slots, positi
   if (semantic.excludedPositions.includes(String(position).toUpperCase())) return "Item is not generated for this position";
   if (semantic.groups.length) for (const element of elements) {
     if (slots.includes(element.slotType) || !active(element.itemAssetName)) continue;
-    const other = equipmentSemantics(element.itemAssetName);
+    const other = equipmentSemantics(element.itemAssetName,options);
     if (other?.groups.some(group => semantic.groups.includes(group))) return "Overlapping neckwear, headwear or shoulder equipment";
     // Unknown donor neckwear is kept; do not assume that it is a free layer.
     if (semantic.groups.includes("neckwear") && ["NeckWear", "Neckpad"].includes(element.slotType) && !other) return "Existing neckwear occupies this region";
@@ -62,6 +72,8 @@ export function generatedItemConflict(elements, item, slots = item.slots, positi
 export function allowedPoolPosition(item, position){
   if(!item)return false;const p=String(position).toUpperCase();
   if(item.allowedPositions&&!item.allowedPositions.includes(p))return false;
+  if(/^GearWrist_gloveTapedLarge_/i.test(item.itemName)&&!['LT','LG','C','RG','RT','OL','LE','RE','LEDG','REDG','LEDGE','REDGE','EDGE','DT','DL','LB','MLB','MIKE','SAM','WILL','LOLB','ROLB','TE','FB'].includes(p))return false;
+  if(item.itemName==='Towel2_South'&&!['WR','CB','FS','SS','S'].includes(p))return false;
   if(['LT','LG','C','RG','RT','OL','DT','K','P'].includes(p)){
     if(/balaclava|turtleneck|string towel/i.test(item.displayName??'')||item.itemName==='Towel2_South')return false;
     if(item.slots?.some(slot=>/^(Left|Right)HandWear$/.test(slot))){
@@ -107,6 +119,6 @@ export function finalGeneratedChanges(loadouts, changes, options) {
   return changes.flatMap(change => {
     const names = [...new Set(change.newItem.split(" + "))].filter(name => loadouts.some(loadout => loadout.loadoutElements.some(element => change.slots.includes(element.slotType) && element.itemAssetName === name)));
     if (!names.length) return [];
-    return [{ ...change, newItem: names.join(" + "), displayName: names.map(name => equipmentItem(name, options)?.displayName ?? name).join(" + ") }];
+    return [{ ...change, newItem: names.join(" + "), displayName: names.length===1&&names[0]===change.newItem ? change.displayName : names.map(name => equipmentItem(name, options)?.displayName ?? equipmentDisplayName(name)).join(" + ") }];
   });
 }

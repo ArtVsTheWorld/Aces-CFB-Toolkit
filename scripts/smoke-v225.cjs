@@ -13,6 +13,7 @@ app.whenReady().then(async()=>{
  await window.loadFile(path.join(uiRoot,'src/renderer/index.html'));const execute=source=>window.webContents.executeJavaScript(source);
  await execute(`window.uiCheck=(ok,message)=>{if(!ok)throw Error(message)};window.uiWait=async predicate=>{for(let i=0;i<1500;i++){if(predicate())return;await new Promise(r=>setTimeout(r,40));}throw Error('Timed out: '+content.textContent.slice(-1000));};void 0;`);
  if(process.argv.includes('--strength-ui'))await require('./lib/roster-strength-ui.cjs')(window,path.join(root,'outputs'));
+ if(process.argv.includes('--evolution-ui'))await require('./lib/roster-evolution-ui.cjs')(window,path.join(root,'outputs'));
  await execute(`(async()=>{
    await uiWait(()=>state.bootstrap);navigate('roster-generator');await uiWait(()=>document.querySelector('#roster-configure-teams'));
    const teams=document.getElementById('roster-teams');for(const o of teams.options)o.selected=['LSU','Navy'].includes(o.value);teams.dispatchEvent(new Event('change',{bubbles:true}));

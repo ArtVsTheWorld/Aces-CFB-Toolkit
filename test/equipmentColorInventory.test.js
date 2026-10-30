@@ -1,3 +1,4 @@
+import{modPoolDefinitions}from'../src/main/tools/equipment/core/modPools.js';
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -84,6 +85,8 @@ test("every added arm and leg style is reachable, baggy sleeves remain paired, a
   for (let seed = 0; seed < 500; seed++) {
     const unlocked = [field([])];
     applyUnlockedRandomizerEquipment(unlocked, { position: "WR", branding: "Nike" }, mulberry32(seed), 1);
+    const vanilla=[field([])];applyUnlockedRandomizerEquipment(vanilla,{position:'WR',branding:'Nike'},mulberry32(seed),1,undefined,undefined,true,{},'vanilla');
+    for(const e of vanilla[0].loadoutElements.filter(e=>/ArmWear/.test(e.slotType)))arms.add(e.itemAssetName);
     const elements = unlocked[0].loadoutElements, left = elements.find(item => item.slotType === "LeftArmWear"), right = elements.find(item => item.slotType === "RightArmWear");
     [left, right].forEach(item => arms.add(item.itemAssetName));
     if ([left, right].some(item => /Baggy_/.test(item.itemAssetName))) assert.equal(left.itemAssetName, right.itemAssetName);
@@ -96,7 +99,7 @@ test("every added arm and leg style is reachable, baggy sleeves remain paired, a
     assert.deepEqual(raw[0].loadoutElements.slice(0, 2), before[0].loadoutElements);
     assert.ok(equipmentItem(cap.itemAssetName).slots.length === 1 && equipmentItem(cap.itemAssetName).slots[0] === "GuardianCap");
   }
-  assert.deepEqual([...arms].sort(), UNLOCKED_POOLS.armSleeves.map(item => item.itemName).sort());
+  assert.deepEqual([...arms].sort(), [...new Set([...UNLOCKED_POOLS.armSleeves.map(item=>item.itemName),...modPoolDefinitions().vanilla.find(c=>c.id==='armSleeves').defaultItems])].sort());
   assert.deepEqual([...legs].sort(), UNLOCKED_POOLS.legSleeves.map(item => item.itemName).sort());
   assert.deepEqual([...caps].sort(), RAW_ACCESSORIES_POOLS.skullcaps.map(item => item.itemName).sort());
 });

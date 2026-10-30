@@ -1,3 +1,5 @@
+import {MOD_FACE_PAINT_ITEMS,VANILLA_FACE_PAINT_OPTIONS} from './facepaint.js';
+const knownFacePaint=new Set([...VANILLA_FACE_PAINT_OPTIONS,...Object.values(MOD_FACE_PAINT_ITEMS).flat()]);
 import {equipmentItem} from '../catalog.js';
 import {enforceGeneratedEquipmentCompatibility,recordGeneratedEquipment} from './generatedCompatibility.js';
 
@@ -16,7 +18,7 @@ export function resolveModPoolRolls(loadouts,candidates,rng,state,position){
     }
     for(const {asset,slots}of groups.values()){
       if(slots.some(slot=>claimed.has(slot)))continue;
-      if(!equipmentItem(asset,state.options))continue;
+      if(!equipmentItem(asset,state.options)&&!(slots.length===1&&slots[0]==='FacePaint'&&knownFacePaint.has(asset)))continue;
       const tentative=loadouts.map((loadout,index)=>{
         const elements=[...loadout.loadoutElements];
         for(const slot of slots){const proposed=candidate.loadouts[index].loadoutElements.find(element=>element.slotType===slot),at=elements.findIndex(element=>element.slotType===slot);if(at<0)elements.push(structuredClone(proposed));else elements[at]=structuredClone(proposed);}

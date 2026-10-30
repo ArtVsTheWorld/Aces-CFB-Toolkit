@@ -1,3 +1,4 @@
+import {getTool} from '../../shared/toolRegistry.js';
 import { runLongSnap } from "./longSnap/runner.js";
 import {prepareEquipmentQuickstart,runEquipmentQuickstart} from './equipmentQuickstart/runner.js';
 import {prepareEquipmentMapper,runEquipmentMapper} from './equipmentMapper/runner.js';
@@ -27,4 +28,4 @@ const handlers = new Map([
   ,["dealbreaker-fixer", { prepare: prepareDealbreaker, run: runDealbreaker }]
 ]);
 export function getToolHandler(toolId) { return handlers.get(toolId) ?? null; }
-export function executableToolIds() { return [...handlers.keys()]; }
+export function executableToolIds() { return [...handlers.keys()].filter(id=>getTool(id)?.status==='available'); }

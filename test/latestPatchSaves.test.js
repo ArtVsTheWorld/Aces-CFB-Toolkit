@@ -85,8 +85,7 @@ test("remaining tool previews run read-only on the refreshed latest-patch saves"
   const reports = new ReportService(path.join(directory, "reports"));
   try {
     const beforePreseason = hash(preseason), beforeWeekZero = hash(weekZero);
-    const longSnap = await runLongSnap({ savePath: preseason, schemaPath, reports, mode: "preview", options: {} });
-    assert.equal(longSnap.mode, "preview");
+    await assert.rejects(runLongSnap({ savePath: preseason, schemaPath, reports, mode: "preview", options: {} }), /Temporarily disabled.*field-goal accuracy/);
 
     const commentaryOptions = { phonetic: false, firstName: true, preserveUnmatched: false, freshmenOnly: false, showAll: false };
     const commentaryPrepared = await prepareCommentary({ savePath: preseason, schemaPath, defaultMapPath: commentaryMap, options: commentaryOptions });

@@ -1,3 +1,4 @@
+import{createNameHistory}from'./names.js';
 import {PLAYER_PICKER_FIELDS} from '../../services/settingsFields.js';
 import {progressRange} from '../../services/toolProgress.js';
 import path from 'node:path';
@@ -38,7 +39,7 @@ const TOOL_ID='roster-generator',TOOL_NAME='Roster Generator';
 export function teamGenerationConfigurations(options,teams){
   const overrides=options.teamConfigurations??{};
   if(!overrides||typeof overrides!=='object'||Array.isArray(overrides)||Object.keys(overrides).some(name=>!teams.includes(name)))throw new Error('Team overrides must belong to selected teams.');
-  const allowed=new Set(['preset','positionStrength','talentShares','talentMix','rosterAge','rosterPotential','offensiveScheme','defensiveScheme','skinTonePreset','reorderDepthChart','rosterMakeup','requirementsSource']);
+  const allowed=new Set(['preset','positionStrength','talentShares','talentMix','rosterAge','rosterPotential','offensiveScheme','defensiveScheme','skinTonePreset','reorderDepthChart','rosterMakeup','requirementsSource','talentDistribution','positionDistributions','appearanceMix','appearanceMixPercent']);
   return Object.fromEntries(teams.map(name=>{const override=overrides[name]??{};if(!override||typeof override!=='object'||Array.isArray(override)||Object.keys(override).some(key=>!allowed.has(key)))throw new Error('Invalid team generation settings.');const merged={...options,...override};return[name,{preset:rosterPreset(merged.preset).id,settings:normalizeGenerationSettings(merged)}];}));
 }
 function teamModelFactory(base,preset,settings){
@@ -110,7 +111,7 @@ export async function runRosterGenerator(context) {
   const fingerprint=saveFingerprint(context.savePath),loaded=await loadGenerationSource(context.savePath,context.schemaPath),available=teamsWithRosters(loaded);
   const teams=selected.map(name=>{const matches=available.filter(team=>team.name===name);if(matches.length!==1)throw new Error(`Team selection is unavailable or ambiguous: ${name}.`);return matches[0];}).sort((a,b)=>a.teamIndex-b.teamIndex);
   await rosterGeneratorSeason(loaded);
-  const equipmentGenerator=makeRosterEquipmentGenerator(loaded),baseModel=loadObservedCatalog(),owners=visualOwners(loaded),rosters=[],used=new Set(),reservedPresentationIds=allPresentationIds(loaded);
+  const equipmentGenerator=makeRosterEquipmentGenerator(loaded),baseModel=loadObservedCatalog(),owners=visualOwners(loaded),rosters=[],used=new Set(),nameHistory=createNameHistory(),reservedPresentationIds=allPresentationIds(loaded);
   const names=loaded.players.records.filter(record=>record&&!record.isEmpty).map(record=>`${sf(record,'FirstName')??''} ${sf(record,'LastName')??''}`);
   const mapFile=context.defaultMapPath??path.resolve(path.dirname(context.schemaPath),'../commentary-data/PlayerCommentaryidMap.txt');
   const matchCommentary=createCommentaryMatcher(loadCommentaryMap(mapFile),{allowPhonetic:false,allowFirstName:true});
@@ -121,7 +122,7 @@ export async function runRosterGenerator(context) {
     configuration.settings.schemeContext=resolveSchemeContext(configuration.settings,await inspectTeamSchemes(loaded,team,context.schemaPath),schemeSchema(context.schemaPath),mulberry32(teamSeed^0x534348));
     const targets=composeRosterTargets(originals,configuration.settings),teamPreset=rosterPreset(configuration.preset),model=teamModelFactory(baseModel,teamPreset,configuration.settings)(targets);
     const geography=await readTeamGeography(loaded,team,baseModel.catalog);
-    const roster=progressRange(25 + teamProgressIndex / teams.length * 55,25 + (teamProgressIndex + 1) / teams.length * 55,()=>generateRosterPreview({team:{name:team.name,teamIndex:team.teamIndex,branding:team.branding,captainCount:team.captainCount,geography},targets,model,seed:teamSeed,preset:teamPreset,unavailableNames:names,matchCommentary,equipmentGenerator,reservedPresentationIds}));
+    const roster=progressRange(25 + teamProgressIndex / teams.length * 55,25 + (teamProgressIndex + 1) / teams.length * 55,()=>generateRosterPreview({team:{name:team.name,teamIndex:team.teamIndex,branding:team.branding,captainCount:team.captainCount,geography},targets,model,seed:teamSeed,preset:teamPreset,unavailableNames:names,matchCommentary,equipmentGenerator,reservedPresentationIds,nameHistory}));
     for(const player of roster.players)reservedPresentationIds.add(player.fields.PresentationId);
     roster.summary.caliber=teamPreset.name;
     roster.summary.composition=compositionAudit(targets,originals,configuration.settings.schemeContext);

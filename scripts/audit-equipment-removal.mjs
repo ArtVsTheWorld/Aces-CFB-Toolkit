@@ -5,6 +5,7 @@ import {EQUIPMENT_ITEMS,RAW_314} from '../src/main/tools/equipment/catalog.js';
 import {UNLOCKED_TATTOO_POOL} from '../src/main/tools/equipment/core/tattoos.js';
 import {REMOVAL_NAMED_ITEMS} from '../src/main/tools/equipment/core/removalInventory.js';
 import {removalCatalog} from '../src/main/tools/equipment/core/removal.js';
+import MapperEditor from '../src/shared/mapperEditor.cjs';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
 export function auditRemovalCatalog(){
@@ -35,7 +36,7 @@ export function auditRemovalCatalog(){
   for(const item of UNLOCKED_TATTOO_POOL)add(item.value,item.label,'tattoos.js');
   const offered=new Map(removalCatalog().map(item=>[item.value,item]));
   const definitions=new Map([...EQUIPMENT_ITEMS,...REMOVAL_NAMED_ITEMS,...RAW_314.jamoItems].map(item=>[item.itemName.toLowerCase(),item]));
-  const blocked=new Set(['HeadWear','FaceMask','LeftShoe','RightShoe','LeftShoeOverride','RightShoeOverride']);
+  const blocked=new Set(MapperEditor.protectedRemovalSlots);
   const nonOptional=new Set(['InnerSocks','OuterShirt','OuterPants','Shoulderpads','HeadBand']);
   const rows=[...names.values()].map(row=>{
     const item=definitions.get(row.id.toLowerCase());

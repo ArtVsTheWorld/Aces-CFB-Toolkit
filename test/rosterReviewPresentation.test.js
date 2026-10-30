@@ -7,7 +7,7 @@ import {displayPosition} from '../src/shared/localization.js';
 const html=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
 function renderer(){
  const context=vm.createContext({state:{genericResultViews:new Map()},previewChanges:result=>result.details.changes,localizedPosition:displayPosition,escapeHtml:html,forceLogoUrl:()=>'',rosterSchemeReview:()=>''});
- vm.runInContext(fs.readFileSync(new URL('../src/renderer/roster-generator.js',import.meta.url),'utf8'),context);return context;
+ vm.runInContext(fs.readFileSync(new URL('../src/renderer/roster-evolution.js',import.meta.url),'utf8'),context);vm.runInContext(fs.readFileSync(new URL('../src/renderer/roster-generator.js',import.meta.url),'utf8'),context);return context;
 }
 function row(original='WR',generated='TE'){
  return {row:1,team:'Test Team',oldPlayer:'Original Person',player:'New Person',position:generated,classYear:'Freshman',overall:70,before:{Position:original,JerseyNum:8},fields:{Position:generated,JerseyNum:12,SchoolYear:'Freshman',PlayerType:'Possession',TraitDevelopment:'Normal',OverallRating:70,PLYR_HOME_TOWN:'Town',PLYR_HOME_STATE:'State'},provenance:{},highlights:[]};

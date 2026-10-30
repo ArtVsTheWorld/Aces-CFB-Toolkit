@@ -16,7 +16,7 @@ const only = (origin, category, id, chance = 100) => ({ ...disabled(origin), [ca
 
 test("mod pools validate whole chances, scope and selections; legacy percentage and empty selections survive", () => {
   const defaults = normalizeModPools(undefined, 27);
-  assert.equal(defaults.raw.backplates.chance, 27); assert.equal(defaults.unlocked.facepaint.chance, 100);
+  assert.equal(defaults.raw.backplates.chance, 27); assert.equal(defaults.unlocked.facepaint.chance, 10);
   assert.deepEqual(normalizeModPools({ raw: { backplates: { chance: 45, items: [] } } }).raw.backplates, { chance: 45, items: [] });
   for (const chance of [-1, 101, 2.5, "50", null]) assert.throws(() => normalizeModPools({ raw: { backplates: { chance } } }), /whole/);
   assert.throws(() => normalizeModPools({ raw: { backplates: { items: null } } }), /this mod/);

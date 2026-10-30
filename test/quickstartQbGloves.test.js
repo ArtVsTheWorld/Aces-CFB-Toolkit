@@ -19,13 +19,13 @@ test('Quickstart QBs never roll additional gloves, while other mod gear, positio
   const blank=()=>[outfit('GearHand_None','GearHand_None')];
   for(let seed=1;seed<=50;seed++){
     const loadouts=blank(),changes=applyModdedRandomizerEquipment(loadouts,{position:'QB',branding:'adidas'},mulberry32(seed),1,createGeneratedEquipmentState(loadouts),{...settings.randomizer,modPools:pools});
-    assert.ok(!changes.unlocked.some(change=>change.category==='Gloves'));
+    assert.ok(!changes.vanilla.some(change=>change.category==='Gloves'));
     for(const item of loadouts[0].loadoutElements.filter(item=>['LeftHandWear','RightHandWear'].includes(item.slotType)))assert.equal(item.itemAssetName,'GearHand_None');
     assert.ok(Object.values(changes).some(items=>items.some(change=>!change.slots.some(slot=>['LeftHandWear','RightHandWear'].includes(slot)))),'Other mod categories remain eligible');
   }
   for(const [position,options] of [['WR',settings.randomizer],['WR',{...settings.randomizer,donorOnlyGlovesPositions:undefined}]]){
     const loadouts=blank(),changes=applyModdedRandomizerEquipment(loadouts,{position,branding:'adidas'},mulberry32(701),1,createGeneratedEquipmentState(loadouts),{...options,modPools:pools});
-    assert.ok(changes.unlocked.some(change=>change.category==='Gloves'),'Nonexcluded mod glove rolls still work');
+    assert.ok(Object.values(changes).flat().some(change=>change.category==='Gloves'),'Nonexcluded mod glove rolls still work');
   }
   const worn=[outfit(asset,'GearHand_None')];applyModdedRandomizerEquipment(worn,{position:'QB',branding:'adidas'},mulberry32(701),1,createGeneratedEquipmentState(worn),{...settings.randomizer,modPools:pools});
   assert.equal(worn[0].loadoutElements[0].itemAssetName,asset,'A donor glove is retained');assert.equal(worn[0].loadoutElements[1].itemAssetName,'GearHand_None');

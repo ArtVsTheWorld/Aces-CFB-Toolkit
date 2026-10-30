@@ -29,6 +29,7 @@ function presetValues(configuration) {
   if(typeof migrateMouthpieceLimitSettings==='function')migrateMouthpieceLimitSettings(values);
   migrateOriginalEaProtectionSettings(values);
   migrateRemovalSettings(values);
+  if(typeof migrateEquipmentPoolSettings==='function')migrateEquipmentPoolSettings(values);
   if(typeof NoDrip!=='undefined')NoDrip.migrateSettings(values);
   if(document.getElementById("equipment-donor-sources-json"))values["equipment-donor-sources-json"]??="{}";
   if (typeof migrateRedshirtFilterSettings === 'function') migrateRedshirtFilterSettings(values);

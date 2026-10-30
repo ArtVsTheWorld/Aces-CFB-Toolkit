@@ -63,7 +63,7 @@ export function retainRandomizerResults(result, skippedRows) {
   // Capacity skips are represented by a count, never individual player notices.
   result.storageSkipped = skipped.length;
   for (const [counter, predicate] of Object.entries({
-    fcsChanged: change => change.isFcs, unlockedPlayersChanged: change => change.unlockedChanges?.length,
+    fcsChanged: change => change.isFcs, vanillaPlayersChanged: change => change.vanillaChanges?.length, unlockedPlayersChanged: change => change.unlockedChanges?.length,
     rawPlayersChanged: change => change.rawChanges?.length, equipmentTruckPlayersChanged: change => change.equipmentTruckChanges?.length,
     noDripPlayers: change => change.noDrip
   })) if (counter in result) result[counter] = result.changes.filter(predicate).length;

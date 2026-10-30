@@ -62,7 +62,7 @@ test('native scheme options replace handmade presets and preserve explicit prese
   const settings=normalizeGenerationSettings({defensiveScheme:'random'});assert.equal(archetypeWeight('CB','CB_MantoMan',settings),1);assert.equal(archetypeWeight('QB','QB_Scrambler',settings),1);
 });
 
-test('appearance distribution resolves specialist overrides without affecting other preset defaults',()=>{
-  for(const position of ['K','P']){const weights=toneWeights('hbcu',position,[]);assert.ok(weights[4]+weights[5]>weights[6]+weights[7]);assert.equal(Object.values(weights).reduce((a,b)=>a+b,0),100);}
-  assert.equal(toneWeights('hbcu','WR',[])[7],98.5);assert.equal(toneWeights('big-sky','QB',[])[1],18);
+test('appearance distribution uses the approved shared specialist balance',()=>{
+  for(const position of ['K','P']){const weights=toneWeights('hbcu',position,[]);assert.deepEqual(weights,toneWeights('hbcu','QB',[]));assert.equal(Object.values(weights).reduce((a,b)=>a+b,0),100);}
+  assert.equal(toneWeights('hbcu','WR',[])[7],60);assert.equal(toneWeights('big-sky','QB',[])[1],20);
 });

@@ -103,7 +103,7 @@ test("optional mod additions cannot put leg sleeves back under cutoff pants", ()
 test("v0.97 labels and existing verified cleats remain readable and brand-scoped; soccer exclusions survive", () => {
   assert.equal(equipmentDisplayName("GearPants_Cutoff"), "Pants Cutoff"); assert.equal(equipmentItem("GearPants_Cutoff").origin, "unlocked");
   assert.equal(equipmentDisplayName("Gear_JerseyStyle_RolledLowest_Untucked"), "Jersey Rolled Lowest Untucked");
-  const pool = modPoolDefinitions().unlocked.find(category => category.id === "cleats");
+  const pool = {items:[...modPoolDefinitions().unlocked.find(category=>category.id==="cleats").items,...modPoolDefinitions().vanilla.find(category=>category.id==="cleats").items]};
   for (const id of ["GearFootwear_shoe_low_NikeVaporEdge_zebra", "GearFootwear_shoe_low_NikeVaporEdgePro3602", "GearFootwear_shoe_low_NikeVaporUntouchablePro_v3"]) assert.ok(pool.items.some(item => item.itemName === id));
   assert.ok(!pool.items.some(item => item.itemName === "GearFootwear_shoe_low_Jordan5_99Club2"));
 });

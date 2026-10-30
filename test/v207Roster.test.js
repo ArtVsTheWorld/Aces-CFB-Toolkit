@@ -21,9 +21,9 @@ test('surname pools follow observed head-tone associations, including suffixes a
  let i=0;const surname=makeSurname(['Alpha','Beta'],()=>[0,.9][i++%2],{hyphen:true,suffix:'III'},{Alpha:2,Beta:2});assert.equal(surname.value,'Alpha-Beta III');
  for(const [bucket,pool]of Object.entries(catalog.names.lastByTone)){assert.ok(Object.keys(pool).length>300,bucket);assert.ok(Object.keys(pool).every(name=>catalog.names.last.includes(name)));}
 });
-test('HB and CB are predominantly tones 5–7 even for Big Sky; other positions keep their mixes',()=>{
- for(const position of ['HB','CB'])for(const preset of ['standard','big-sky']){const weights=toneWeights(preset,position,[]),total=Object.values(weights).reduce((a,b)=>a+b,0);assert.ok((weights[5]+weights[6]+weights[7])/total>=(preset==='big-sky'?.85:.95));}
- assert.ok(toneWeights('hbcu','QB',[])[7]>98);assert.ok(toneWeights('big-sky','LT',[])[1]>20);
+test('HB and CB have modest darker-tone adjustments without excluding tone 8',()=>{
+ for(const position of ['HB','CB'])for(const preset of ['standard','big-sky']){const weights=toneWeights(preset,position,[]),base=toneWeights(preset,'QB',[]);assert.equal(Object.values(weights).reduce((a,b)=>a+b,0),100);assert.equal(weights[6]+weights[7]+weights[8],base[6]+base[7]+base[8]+10);assert.ok(weights[8]>0);assert.equal(weights[5],0);}
+ assert.deepEqual(toneWeights('hbcu','K',[]),toneWeights('hbcu','QB',[]));
 });
 test('team overrides are independent, compose with shared settings and reject unknown keys',()=>{
  const options={preset:'competitive',skinTonePreset:'standard',teamConfigurations:{A:{preset:'startup',rosterAge:'youth',reorderDepthChart:false},B:{preset:'all-time',rosterPotential:'sky',skinTonePreset:'hbcu'}}},resolved=teamGenerationConfigurations(options,['A','B','C']);

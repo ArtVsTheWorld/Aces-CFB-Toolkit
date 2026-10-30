@@ -38,3 +38,20 @@ const ToolkitUI = Object.freeze({
     root.dispatchEvent(new Event('toolkit-hide-help',{bubbles:true}));
   }
 });
+
+// Custom choice rows use a separate label so their help buttons stay separate
+// controls. Give the rest of each row the same activation as its checkbox.
+// Delegation also covers controls cloned into configuration dialogs.
+function activateChoiceRow(event) {
+  if(event.defaultPrevented||event.button!==0)return;
+  const target=event.target?.closest?event.target:event.target?.parentElement;
+  if(!target||target.closest('label,button,a,input,select,textarea,summary,[role="button"],[role="checkbox"],[role="radio"],[role="switch"],[contenteditable]:not([contenteditable="false"])'))return;
+  const selector='.ui-option-row,.toggle-card,.check-row',row=target.closest(selector);
+  if(!row||row.closest('.is-disabled,[aria-disabled="true"],[inert]'))return;
+  const controls=[...row.querySelectorAll('input[type="checkbox"],input[type="radio"]')].filter(control=>control.closest(selector)===row);
+  if(controls.length!==1||controls[0].matches(':disabled'))return;
+  const control=controls[0];
+  control.focus({preventScroll:true});
+  control.click();
+}
+document.addEventListener('click',activateChoiceRow);

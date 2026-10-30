@@ -39,6 +39,8 @@ test("unlocked pools enforce team brand and position-specific elbow eligibility"
 test("the expanded randomizer uses an exact 10% roll and prefers branded team-color gloves", () => {
   const loadouts = [loadout([])];
   const changes = applyUnlockedRandomizerEquipment(loadouts, { position: "WR", branding: "nike" }, () => 0, 0.10);
+  const vanilla=[loadout([])];const stock=applyUnlockedRandomizerEquipment(vanilla,{position:"WR",branding:"nike"},()=>0,.10,undefined,undefined,true,{},"vanilla");changes.push(...stock);
+  for(const e of vanilla[0].loadoutElements)if(!loadouts[0].loadoutElements.some(old=>old.slotType===e.slotType))loadouts[0].loadoutElements.push(e);
   const slots = new Map(loadouts[0].loadoutElements.map(element => [element.slotType, element.itemAssetName]));
   assert.ok(changes.length>0); assert.ok(changes.some(change=>change.category==='Spats')); assert.ok(!changes.some(change=>change.category==='Undershirt'), "Irish Jamo undershirts remain opt-in");
   assert.equal(slots.has("InnerShirt"), false);
@@ -47,7 +49,7 @@ test("the expanded randomizer uses an exact 10% roll and prefers branded team-co
   assert.ok(slots.has("NeckWear"));
   assert.match(slots.get("LeftThighWear"), /^ThighPad_/);
   assert.equal(slots.get("LeftThighWear"), slots.get("RightThighWear"));
-  assert.equal(slots.get("Towel"), "Towel2_South");
+  assert.equal(slots.get("Towel"), "Towel2_South", "Zero RNG wins the new one-percent WR towel roll");
   assert.equal(slots.get("LeftArmWear"), slots.get("RightArmWear"));
   assert.equal(slots.get("LeftShoe"), slots.get("RightShoe"));
   assert.equal(slots.get("LeftHandWear"), slots.get("RightHandWear"));
@@ -103,7 +105,8 @@ test("Unlocked Equipment Pool and No Drip options are separate and disabled by d
   const renderer = fs.readFileSync(new URL("../src/renderer/renderer.js", import.meta.url), "utf8");
   assert.match(renderer, /optionalPass\("equipment-no-drip", "No Drip Profile", "Gives some players a simpler look by removing selected accessories\."/);
   assert.match(renderer, /optionalPass\("equipment-unlocked", "Unlocked Equipment Pool"/);
-  assert.match(renderer, /Adds extra accessories, additional cleats, rubber bands, double\/elbow sleeves, compression-leg layers, branded turtlenecks and mouthpieces, normal balaclavas, thigh pads, a string towel, and 13 custom facepaint styles from CFB27 Unlocked/);
+  assert.match(renderer, /Standard equipment has its own CFB 27 Equipment pool/);
+  assert.match(renderer, /optionalPass\("equipment-vanilla", "CFB 27 Equipment Pool"/);
   assert.match(renderer, /optionalPass\("fix-unlocked-mouthpieces"/); assert.match(renderer, /optionalPass\("fix-unlocked-recolor"/);
   assert.equal(tools.find(tool => tool.id === "freshman-equipment").version, undefined); assert.equal(tools.find(tool => tool.id === "equipment-patcher").version, undefined);
 });

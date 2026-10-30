@@ -5,7 +5,11 @@
     "raw": "af113e09af9083d9fa52e570019c8215736ac0802028b86d719991b5c55f50fc",
     "eljax": "0b4fe5fc01a11889ca2a07489700f1c2209b05bd5dcbb89437bff113dbf5d212"
   },
-  "sourceVersions": { "unlocked": "0.97", "raw": "3.1.0", "eljax": "2.0" },
+  "sourceVersions": {
+    "unlocked": "0.97",
+    "raw": "3.1.0",
+    "eljax": "2.0"
+  },
   "displayNames": {
     "ThighPad_Logo": "Logo Thigh Pad",
     "v_Tattoos_Polynesian_Tongan_Arm_C_v01": "Tongan V",
@@ -163,7 +167,6 @@
     "GearArmSleeve_Elbow_armTape_normal_TeamColor": "Elbow Sleeve Primary",
     "GearArmSleeve_Elbow_armTape_normal_SecondaryColor": "Elbow Sleeve Secondary",
     "GearArmSleeve_Elbow_armTape_normal_Black": "Elbow Sleeve Black",
-    "GearArmSleeve_Bands_armTape_normal_OffWhite": "Arm Bands White",
     "GearArmSleeve_Elbow_armTape_normal_OffWhite": "Elbow Sleeve White",
     "GearWrist_wristBandLogo_TeamColor": "Wrist Band Logo Primary",
     "GearWrist_wristBandLogo_SecondaryColor": "Wrist Band Logo Secondary",
@@ -407,7 +410,9 @@
       "itemName": "waistband_none_v36",
       "displayName": "No Handwarmer",
       "category": "Handwarmer",
-      "slots": ["WaistWear"],
+      "slots": [
+        "WaistWear"
+      ],
       "tags": [],
       "origin": "eljax",
       "displayOnly": true
@@ -416,7 +421,9 @@
       "itemName": "gearmouthpiece_brandlogochincover_none",
       "displayName": "No Brand Logo Chin Cover",
       "category": "Chin Cover",
-      "slots": ["Reserved"],
+      "slots": [
+        "Reserved"
+      ],
       "tags": [],
       "origin": "eljax",
       "displayOnly": true

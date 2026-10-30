@@ -4,7 +4,7 @@ import { mulberry32 } from "../longSnap/core.js";
 export const DEALBREAKER_FIELD = "RecruitingDealbreaker";
 export const PLAYING_STYLE_POSITIONS = Object.freeze(new Set(["HB", "RB", "TE", "WR"]));
 export const ALLOWED_DEALBREAKERS = Object.freeze(["Invalid", "PlayingTime", "ProPotential", "PlayingStyle", "ChampionshipContender", "BrandExposure", "ProximityToHome", "CoachPrestige", "ConferencePrestige"]);
-export const DEFAULT_DISTRIBUTION = Object.freeze({ Invalid: 15, PlayingTime: 18, ProPotential: 7, PlayingStyle: 5, ChampionshipContender: 16, BrandExposure: 10, ProximityToHome: 12, CoachPrestige: 10, ConferencePrestige: 7 });
+export const DEFAULT_DISTRIBUTION = Object.freeze({ Invalid: 0, PlayingTime: 25, ProPotential: 10, PlayingStyle: 5, ChampionshipContender: 10, BrandExposure: 15, ProximityToHome: 15, CoachPrestige: 10, ConferencePrestige: 10 });
 export const CONTEXT_MODIFIERS = Object.freeze({
   overall85: Object.freeze({ ProPotential: 1.5, ChampionshipContender: 1.35, BrandExposure: 1.25, ConferencePrestige: 1.2 }),
   overall90: Object.freeze({ ProPotential: 2, ChampionshipContender: 1.6, BrandExposure: 1.45, ConferencePrestige: 1.4 }),

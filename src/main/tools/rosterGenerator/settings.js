@@ -1,4 +1,6 @@
 import {POSITION_GROUPS,positionGroup} from '../../../shared/positionGroups.js';
+import {normalizeAppearanceMix,mixNamePools} from './appearanceMixes.js';
+import {normalizeDepth} from './depthDistribution.js';
 import TALENT from '../../../shared/rosterTalent.cjs';
 import {schemeChoices,nativeArchetypeWeight} from './schemes.js';
 export {TALENT};
@@ -9,7 +11,7 @@ const LEGACY_SCHEMES={'air-raid':'OFF_AIR_RAID',spread:'OFF_SPREAD',option:'OFF_
 export const TONE_PRESETS=Object.freeze([
   {id:'standard',name:'Standard',description:'A varied mix of lighter and darker skin tones.'},
   {id:'big-sky',name:'Big Sky',description:'Mostly lighter skin tones; darker tones are more common at skill positions.'},
-  {id:'hbcu',name:'HBCU',description:'Almost entirely the darkest skin tones.'}
+  {id:'hbcu',name:'HBCU',description:'Mostly darker skin tones, with some lighter tones for variety.'}
 ]);
 export const ROSTER_AGES=Object.freeze([
   {id:'standard',name:'Standard',description:'A balanced mix of class years and redshirt experience.'},
@@ -37,7 +39,7 @@ export function normalizeGenerationSettings(options={}) {
   if(talentMix!=='custom'&&!TALENT.spendingPresets.some(p=>p.id===talentMix))throw new Error('Choose a supported talent mix.');
   const rosterMakeup=options.rosterMakeup??'preserve';
   if(!['preserve','scheme'].includes(rosterMakeup))throw new Error('Choose a supported roster makeup.');
-  return {positionStrength,talentShares,talentMix,rosterAge:choice('rosterAge',ROSTER_AGES,'standard'),rosterPotential:choice('rosterPotential',ROSTER_POTENTIALS,'standard'),offensiveScheme:choice('offensiveScheme',OFFENSIVE_SCHEMES,'random'),defensiveScheme:choice('defensiveScheme',DEFENSIVE_SCHEMES,'random'),skinTonePreset:choice('skinTonePreset',TONE_PRESETS,'standard'),reorderDepthChart:options.reorderDepthChart!==false,rosterMakeup,requirementsSource:'scheme',schemeContext:options.schemeContext??null};
+  return {...normalizeDepth(options),...normalizeAppearanceMix(options),positionStrength,talentShares,talentMix,rosterAge:choice('rosterAge',ROSTER_AGES,'standard'),rosterPotential:choice('rosterPotential',ROSTER_POTENTIALS,'standard'),offensiveScheme:choice('offensiveScheme',OFFENSIVE_SCHEMES,'random'),defensiveScheme:choice('defensiveScheme',DEFENSIVE_SCHEMES,'random'),skinTonePreset:choice('skinTonePreset',TONE_PRESETS,'standard'),reorderDepthChart:options.reorderDepthChart!==false,rosterMakeup,requirementsSource:'scheme',schemeContext:options.schemeContext??null};
 }
 
 // Shares fund position strength at different costs. The final projection keeps
@@ -54,14 +56,24 @@ export function describeTalentBudget(targets,settings){const counts={};for(const
 export function archetypeWeight(position,archetype,settings) {
   return nativeArchetypeWeight(position,archetype,settings);
 }
+// Approved starting weights. Tone 5 stays disabled until complete appearance
+// packages are verified. Position adjustments keep every other tone eligible.
+export const TONE_WEIGHTS=Object.freeze({
+  standard:Object.freeze({1:8,2:10,3:8,4:9,5:0,6:20,7:32,8:13}),
+  'big-sky':Object.freeze({1:20,2:24,3:18,4:12,5:0,6:12,7:10,8:4}),
+  hbcu:Object.freeze({1:0,2:1,3:1,4:4,5:0,6:14,7:60,8:20})
+});
+const SKILL_TONE_WEIGHTS=Object.freeze({
+  standard:Object.freeze({1:5,2:7,3:6,4:7,5:0,6:23,7:37,8:15}),
+  'big-sky':Object.freeze({1:17,2:21,3:15,4:11,5:0,6:16,7:14,8:6})
+});
 export function toneWeights(preset,position,appearances) {
-  if(preset!=='hbcu'&&['HB','CB'].includes(positionGroup(position)))return preset==='big-sky'?{1:2,2:2,3:4,4:7,5:20,6:30,7:35,8:0}:{1:1,2:1,3:1,4:2,5:25,6:30,7:40,8:0};
-  if(preset==='standard'){const weights={};for(const item of appearances){const tone=item.skinTone??Number(item.fields.GenericHeadAssetName.split('_').at(-2));if(tone>=1&&tone<=8)weights[tone]=(weights[tone]??0)+1;}return weights;}
-  if(preset==='hbcu')return positionGroup(position)==='K/P'?{1:0,2:1,3:4,4:55,5:25,6:10,7:4,8:1}:{1:0,2:0,3:0,4:.1,5:.1,6:1,7:98.5,8:.3};
-  return Object.fromEntries((['QB','HB','WR','TE','CB','FS','SS'].includes(positionGroup(position))?[18,20,20,14,8,12,7,1]:[24,25,22,14,5,6,3,1]).map((weight,i)=>[i+1,weight]));
+  const base=TONE_WEIGHTS[preset]??TONE_WEIGHTS['big-sky'];
+  return {...(['HB','CB'].includes(positionGroup(position))&&SKILL_TONE_WEIGHTS[preset]?SKILL_TONE_WEIGHTS[preset]:base)};
 }
 const nameIndexes=new WeakMap();
-export function observedFirstNames(catalog,appearance) {
+export function observedFirstNames(catalog,appearance,mix="standard") {
+  const custom=mixNamePools(catalog,mix);if(custom)return custom.first;
   if(!nameIndexes.has(catalog)){const index=new Map();for(const item of catalog.appearances){const head=item.fields.GenericHeadAssetName;if(!index.has(head))index.set(head,new Set());if(item.firstToken)index.get(head).add(item.firstToken);}nameIndexes.set(catalog,index);}
   return [...(nameIndexes.get(catalog).get(appearance.fields.GenericHeadAssetName)??[])].sort();
 }

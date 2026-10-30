@@ -83,6 +83,12 @@ export function enforceEquipmentCompatibility(elements, { usingUnlockedMod = fal
     const wrist = elements.find(element => slotOf(element) === `${side}WristWear`)?.itemAssetName;
     clearArmAccessories(elements, side, sleeve || undershirt, corrections, armAccessoryRestrictions(sleeve, wrist, undershirt,{usingRawAccessoriesMod}));
   }
+  for(const side of ['Left','Right']){
+    const wrist=elements.find(e=>slotOf(e)===`${side}WristWear`)?.itemAssetName,elbow=elements.find(e=>slotOf(e)===`${side}ElbowWear`)?.itemAssetName;
+    if(wrist&&!/(?:^|_)None$/i.test(wrist)&&equipmentSemantics(elbow,{usingUnlockedMod,usingRawAccessoriesMod})?.bodyRegion==='wrist'){
+      setSlot(elements,`${side}ElbowWear`,'ElbowGear_None');corrections.push({kind:'wrist-overlap',side,slot:`${side}ElbowWear`,oldItem:elbow,newItem:'ElbowGear_None'});
+    }
+  }
   corrections.push(...enforceMouthpieceCompatibility(elements, { usingUnlockedMod }));
   corrections.push(...enforceCutoffPantsCompatibility(elements,{allowLegLayers:allowCutoffLegLayers}));
   return corrections;

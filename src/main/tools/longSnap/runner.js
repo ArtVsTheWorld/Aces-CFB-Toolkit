@@ -1,3 +1,4 @@
+import {LONG_SNAP_ENABLED,LONG_SNAP_PAUSE_REASON} from '../../../shared/toolRegistry.js';
 import path from 'node:path';import{isDeepStrictEqual}from'node:util';
 import{createBackup}from'../../services/files.js';
 import{openCfb27Save,readTables,PLAYER_TABLE_UID,TEAM_TABLE_UID}from'../../services/save.js';
@@ -19,6 +20,7 @@ function previewRows(loaded,changes,charts){
  return [...rows.values()].sort((a,b)=>a.team.localeCompare(b.team)||a.player.localeCompare(b.player)||a.row-b.row);
 }
 export async function runLongSnap({savePath,mode,options={},schemaPath,reports}){
+ if(!LONG_SNAP_ENABLED)throw Error(LONG_SNAP_PAUSE_REASON);
  if(!['preview','apply'].includes(mode))throw Error('Run mode must be preview or apply.');
  if(mode==='apply'){
   const plan=takePlan(options.planId);

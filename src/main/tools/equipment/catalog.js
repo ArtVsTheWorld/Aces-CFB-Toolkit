@@ -3,6 +3,10 @@ import { fileURLToPath } from "node:url";
 import { UNLOCKED_TATTOO_POOL } from "./core/tattoos.js";
 import { GENERATION_METADATA, describeEquipment, uncataloguedEquipmentSemantics } from "./semantics.js";
 
+// Retired after an in-game report; do not offer or introduce this broken asset.
+export const RETIRED_EQUIPMENT_ITEMS = Object.freeze(new Set(['GearArmSleeve_Bands_armTape_normal_OffWhite']));
+
+const poolOwnership = JSON.parse(fs.readFileSync(new URL("./equipmentPoolOwnership.json", import.meta.url), "utf8"));
 const catalogPath = fileURLToPath(new URL("./equipmentCatalog.json", import.meta.url));
 const catalog = JSON.parse(fs.readFileSync(catalogPath, "utf8"));
 const modInventory = JSON.parse(fs.readFileSync(new URL("./equipmentModInventory.json", import.meta.url), "utf8"));
@@ -18,8 +22,14 @@ const equipmentTruck = JSON.parse(fs.readFileSync(new URL("./equipmentTruckInven
 const offlineInventory = JSON.parse(fs.readFileSync(new URL("./equipmentOfflineInventory.json", import.meta.url), "utf8"));
 const offlineLabels = new Map(Object.entries(offlineInventory.displayNames).map(([id, label]) => [id.toLowerCase(), label]));
 const liveFacemasks = JSON.parse(fs.readFileSync(new URL("./equipmentLiveFacemasks.json", import.meta.url), "utf8"));
+const vanillaMenu = JSON.parse(fs.readFileSync(new URL("./equipmentVanillaMenuInventory.json", import.meta.url), "utf8"));
+const vanillaMenuByName = new Map(vanillaMenu.items.map(item=>[item.itemName,item]));
+const resolvedStockItems = new Map();
+const resolvedModItems = new Map();
 const modItems = Object.entries(modInventory.mods).flatMap(([origin, mod]) => (mod.equipmentItems ?? []).map(item => ({ ...item, origin })));
 const mergedItems = new Map([...catalog.items, ...modItems, ...colorInventory.items, ...sourcedInventory.items, ...liveFacemasks.items, ...raw204Inventory.items, ...mod191Inventory.items, ...unlocked097.items, ...unlockedLive210.items, ...equipmentTruck.items, ...offlineInventory.items, ...RAW_314.items].map(item => [item.itemName, item]));
+// Keep the published catalog order stable; only previously missing IDs append.
+for(const item of vanillaMenu.items)if(!mergedItems.has(item.itemName))mergedItems.set(item.itemName,item);
 export const EQUIPMENT_ITEMS = Object.freeze([...mergedItems.values()].map(item => {
   const resolved = { ...item, displayName: sourcedInventory.displayNames[item.itemName] ?? item.displayName, ...GENERATION_METADATA.itemOverrides[item.itemName] };
   if (unlocked097.cleatDisplayNames[item.itemName]) resolved.displayName = unlocked097.cleatDisplayNames[item.itemName];
@@ -29,13 +39,16 @@ const BY_ITEM_NAME = new Map(EQUIPMENT_ITEMS.map(item => [item.itemName, item]))
 const RAW_JAMO_ITEMS = RAW_314.jamoItems.map(item => { const semantic = {...describeEquipment(item), actualType: 'raw-jamo-sleeve'}; delete semantic.coverage; return Object.freeze({...item, semantic}); });
 const RAW_JAMO_BY_NAME = new Map(RAW_JAMO_ITEMS.map(item => [item.itemName, item]));
 const TATTOO_DISPLAY_NAMES = new Map(UNLOCKED_TATTOO_POOL.map(item => [item.value, item.label]));
-export const equipmentItem = (itemName, options) => (options?.usingRawAccessoriesMod ? RAW_JAMO_BY_NAME.get(String(itemName ?? '')) : null) ?? BY_ITEM_NAME.get(String(itemName ?? ""));
+export const equipmentItem = (itemName, options) => {
+  const name=String(itemName??''),item=(options?.usingRawAccessoriesMod?RAW_JAMO_BY_NAME.get(name):null)??BY_ITEM_NAME.get(name);
+  return item&&options?.usingUnlockedMod!==undefined?equipmentForSelectedMods(item,options):item;
+};
 export const isRawJamoItem = itemName => RAW_JAMO_BY_NAME.has(itemName);
 export const rawStockOriginal = itemName => rawStockOriginals.get(itemName) ?? itemName;
 // Only reject positively catalogued wrong-slot items. Unknown custom mouthpiece
 // assets are not sufficient evidence to remove gear from a modded save.
 export function isInvalidMouthpieceAsset(asset) { const item = equipmentItem(asset); return Boolean(item && !item.slots.includes("MouthWear")); }
-export function mouthpieceDisplayValue(value) { return String(value ?? "").split(/,\s*/).map(asset => isInvalidMouthpieceAsset(asset) ? `Invalid Mouthpiece (${equipmentDisplayName(asset)})` : equipmentDisplayName(asset)).join(", "); }
+export function mouthpieceDisplayValue(value, options) { return String(value ?? "").split(/,\s*/).map(asset => isInvalidMouthpieceAsset(asset) ? `Invalid Mouthpiece (${equipmentDisplayName(asset, options)})` : equipmentDisplayName(asset, options)).join(", "); }
 export const equipmentOrigin = (itemName, options) => equipmentItem(itemName, options)?.origin ?? "catalog";
 export const equipmentSemantics = (itemName, options) => equipmentItem(itemName, options)?.semantic ?? uncataloguedEquipmentSemantics(itemName);
 export const canGenerateItem = item => item?.semantic.poolEligible === true;
@@ -43,6 +56,9 @@ export const canGenerateItem = item => item?.semantic.poolEligible === true;
 export function equipmentDisplayName(itemName, options) {
   const value = String(itemName ?? "");
   if (options?.usingRawAccessoriesMod && RAW_JAMO_BY_NAME.has(value)) return RAW_JAMO_BY_NAME.get(value).displayName;
+  if(options?.usingUnlockedMod===true&&poolOwnership.vanillaItems[value]?.disabledWithUnlocked)return poolOwnership.vanillaItems[value].unlockedDisplayName;
+  if(options?.usingUnlockedMod===false&&poolOwnership.vanillaItems[value])return poolOwnership.vanillaItems[value].displayName;
+  if(options?.usingUnlockedMod===true&&poolOwnership.unlockedItems[value])return poolOwnership.unlockedItems[value].displayName;
   return TATTOO_DISPLAY_NAMES.get(value) || BY_ITEM_NAME.get(value)?.displayName || sourcedInventory.displayNames[value] || unlocked097.observedDisplayNames[value] || FACEPAINT_DISPLAY_NAMES.get(value) || offlineLabels.get(value.toLowerCase()) || value;
 }
 
@@ -56,6 +72,26 @@ const FACEPAINT_DISPLAY_NAMES = new Map([
   ["FaceMarks_NoseTape_DP", "Nose Tape — DP"], ["FaceMarks_RawNoseEyeTape", "Raw Nose and Eye Tape"],
   ...Object.entries({ dontblink: "Don't Blink", imfnopen: "I'm F'n Open", "1hitta": "1 Hitta", "540baby": "540 Baby", builtdiff: "Built Different", fearnone: "Fear None", john316: "John 3:16", killall: "Kill All", luke137: "Luke 1:37", nolove: "No Love", notsorry: "Not Sorry", sickem: "Sick 'Em", talkcrazy: "Talk Crazy", theproblem: "The Problem", watchme: "Watch Me" }).map(([key, label]) => [`FaceMarks_RawNoseTape_${key}`, `Nose and Eye Tape — ${label}`])
 ]);
+
+// Exact verified styles can reuse an asset ID. Consumers with installed-mod
+// information must use the matching label and requirement, not filename origin.
+export function equipmentForSelectedMods(item, options) {
+  if(options?.usingRawAccessoriesMod&&RAW_JAMO_BY_NAME.has(item.itemName))return RAW_JAMO_BY_NAME.get(item.itemName);
+  const stock=poolOwnership.vanillaItems[item.itemName],mod=poolOwnership.unlockedItems[item.itemName];
+  if(options?.usingUnlockedMod&&(stock?.disabledWithUnlocked||mod)){
+    if(!resolvedModItems.has(item.itemName))resolvedModItems.set(item.itemName,Object.freeze({...item,displayName:stock?.disabledWithUnlocked?stock.unlockedDisplayName:mod.displayName,origin:'unlocked'}));
+    return resolvedModItems.get(item.itemName);
+  }
+  if(stock){
+    if(!resolvedStockItems.has(item.itemName)){
+      const menu=vanillaMenuByName.get(item.itemName),resolved={...item,...menu,displayName:stock.displayName,origin:'vanilla'};
+      resolvedStockItems.set(item.itemName,Object.freeze({...resolved,semantic:Object.freeze({...describeEquipment(resolved),...menu?.stockSemantic})}));
+    }
+    return resolvedStockItems.get(item.itemName);
+  }
+  if(mod)return {...item,displayName:mod.displayName,origin:'unlocked'};
+  return item;
+}
 
 export function equipmentTags(itemName) {
   return [...(BY_ITEM_NAME.get(String(itemName ?? ""))?.tags ?? [])];

@@ -89,12 +89,13 @@ test("combined Unlocked/Raw generation checks one shared loadout and never stack
   let balaclavas = 0;
   for (const position of ["QB", "WR", "TE", "RG", "RE", "SS"]) for (let seed = 0; seed < 350; seed++) {
     const loadouts = gear(), state = createGeneratedEquipmentState(loadouts), rng = mulberry32(seed);
+    const vanilla = applyUnlockedRandomizerEquipment(loadouts, {position,branding:"Nike"},rng,0.65,state,undefined,true,{},"vanilla");
     const a = applyUnlockedRandomizerEquipment(loadouts, { position, branding: "Nike" }, rng, 0.65, state);
     const b = applyRawRandomizerEquipment(loadouts, rng, 0.65, state, position);
     assert.deepEqual(enforceGeneratedEquipmentCompatibility(loadouts, state, position), []);
     for (const group of ["neckwear", "head-underlayer", "shoulder-stabilizer"]) assert.ok(loadouts[0].loadoutElements.filter(item => equipmentSemantics(item.itemAssetName)?.groups.includes(group)).length <= 1, `${position}/${seed}/${group}`);
     const mask = get(loadouts, "FaceWear"); if (mask) { balaclavas++; assert.notEqual(position, "QB"); }
-    for (const change of [...finalGeneratedChanges(loadouts, a), ...finalGeneratedChanges(loadouts, b)]) for (const name of change.newItem.split(" + ")) assert.ok(loadouts[0].loadoutElements.some(item => change.slots.includes(item.slotType) && item.itemAssetName === name));
+    for (const change of [...finalGeneratedChanges(loadouts, vanilla), ...finalGeneratedChanges(loadouts, a), ...finalGeneratedChanges(loadouts, b)]) for (const name of change.newItem.split(" + ")) assert.ok(loadouts[0].loadoutElements.some(item => change.slots.includes(item.slotType) && item.itemAssetName === name));
   }
   assert.ok(balaclavas > 0, "mutual exclusion must not make balaclavas unreachable");
 });

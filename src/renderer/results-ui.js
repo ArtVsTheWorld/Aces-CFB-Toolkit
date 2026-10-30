@@ -55,6 +55,7 @@ function equipmentResultOverview(result){
 }
 function runPrimaryMetrics(result){
   const preview=result.mode==='preview',details=result.details??{};
+  if(result.resultKind==='equipment-mapper'&&details.impact){const impact=details.impact;return [{label:'Players matching rules',value:impact.matching},{label:preview?'Players to update':'Players updated',value:impact.changing},{label:'Players left unchanged',value:impact.unchanged}];}
   if(EQUIPMENT_RESULT_KINDS.includes(result.resultKind)){
     const overview=equipmentResultOverview(result);
     return [{label:preview?'Players to update':'Players updated',value:overview.players},...(overview.teams===null?[]:[{label:'Teams affected',value:overview.teams}]),...(overview.changes===null?[]:[{label:'Equipment changes',value:overview.changes}])];
@@ -80,22 +81,33 @@ function runPrimaryMetrics(result){
   });
 }
 function runMetricsMarkup(result){return runPrimaryMetrics(result).map(item=>`<div><strong>${escapeHtml(typeof item.value==='number'?item.value.toLocaleString():item.value)}</strong><span>${escapeHtml(item.label)}</span></div>`).join('');}
+function mapperCompatibilitySummary(result){
+  const reasons=new Map();
+  for(const [index,warning] of (result.details?.compatibilityWarnings??[]).entries()){
+    const reason=String(typeof warning==='string'?warning:warning.reason??'Equipment items may overlap').trim().replace(/[.\s]+$/,'');
+    if(!reasons.has(reason))reasons.set(reason,new Set());
+    reasons.get(reason).add(typeof warning==='string'?index:warning.row??index);
+  }
+  return [...reasons].sort((a,b)=>b[1].size-a[1].size).map(([reason,rows])=>`${reason}. (${rows.size.toLocaleString()} player${rows.size===1?'':'s'})`);
+}
 function runIssues(result){
   const d=result.details??{},blocked=d.blocked??d.blocking??[];
   const describe=item=>typeof item==='string'?item:[item.team,item.player,item.reason].filter(Boolean).join(' · ');
   const notes=[],warnings=[];
   for(const note of [...(d.warnings??[]),...(d.donorSourceWarnings??[])]){
     const message=String(note);
-    if((result.resultKind==='equipment-mapper'&&message.startsWith('Mappings run in queue order.'))||(result.resultKind==='equipment-quickstart'&&/^\d+ players could not be randomized\./.test(message)))notes.push(message);
+    if((result.resultKind==='equipment-mapper'&&(message.startsWith('Mappings run in queue order.')||message.startsWith('Mappings match the original equipment.')))||(result.resultKind==='equipment-quickstart'&&/^\d+ players could not be randomized\./.test(message)))notes.push(message);
     else warnings.push(message);
   }
   if(d.trackingSaved===false&&!warnings.some(note=>/memory|tracking/i.test(note)))warnings.push('Equipment was saved, but player memory could not be saved. Resolve the memory issue before running equipment tools again.');
-  return {blocked:blocked.map(describe),compatibility:(d.compatibilityWarnings??[]).map(describe),warnings:[...new Set(warnings)],notes};
+  return {blocked:blocked.map(describe),compatibility:result.resultKind==='equipment-mapper'?mapperCompatibilitySummary(result):(d.compatibilityWarnings??[]).map(describe),warnings:[...new Set(warnings)],notes};
 }
 function runStatus(result){
   const issues=runIssues(result),preview=result.mode==='preview',readOnly=state.page==='saved-review',blocked=preview&&(result.details?.canApply===false||issues.blocked.length>0);
   if(readOnly&&preview)return {title:'Saved Preview',message:'This is a read-only record of an earlier preview.',tone:'neutral'};
   if(blocked&&issues.blocked.length)return {title:result.resultKind==='equipment-mapper'?'Equipment Conflicts — Apply Blocked':'Apply Blocked',message:'Resolve the conflicts below before applying this preview.',tone:'error'};
+  if(preview&&result.resultKind==='equipment-mapper'&&result.details?.conflictReview?.pending)return {title:'Review Equipment Conflicts',message:'Review the proposed fixes or choose which players to skip or apply anyway.',tone:'error'};
+  if(preview&&result.resultKind==='equipment-mapper'&&result.details?.conflictReview&&!result.details.conflictReview.pending&&result.details.totalPreviewRows===0&&result.details.conflictReview.summary?.skipped===result.details.conflictReview.groups.reduce((n,g)=>n+g.players.length,0))return {title:'Changes Skipped',message:'You chose to leave these players unchanged.',tone:'neutral'};
   if(blocked)return {title:'No Changes Ready to Apply',message:'Review the run details or adjust your settings and build a new preview.',tone:'neutral'};
   if(preview&&issues.compatibility.length)return {title:'Equipment Compatibility Warning',message:'Review the known incompatibilities below. You can choose to apply anyway after confirmation.',tone:'error'};
   if(!preview&&result.details?.trackingSaved===false)return {title:'Equipment Saved — Memory Needs Attention',message:'Your equipment changes were saved. Resolve the player-memory issue below before another run.',tone:'warning'};

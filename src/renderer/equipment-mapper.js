@@ -29,7 +29,7 @@ async function equipmentMapperPage(tool,chosenMods=null){
     const update=()=>{
       document.getElementById('mapper-queue').innerHTML=read().map((rule,index)=>{
         const summary=MapperEditor.describe(rule,prepared.items);
-        return `<article class="mapper-rule-row"><span class="mapper-rule-number">${index+1}</span><div><strong>${escapeHtml(summary.operation)}</strong><p>${escapeHtml(mapperScopeSummary(rule))}${summary.condition?' · '+escapeHtml(summary.condition):''}</p><small>${summary.frequency}% per team · ${rule.fillToFrequency?'Fill to Frequency':'Chance roll'}${rule.pairSides?' · Both sides':''}${rule.preserveColor?' · Keep current colors':''}</small></div><div class="mapper-rule-actions"><button type="button" class="button secondary" data-mapper-edit="${index}">Edit</button><button type="button" class="button secondary" data-mapper-duplicate="${index}">Duplicate</button><button type="button" class="button secondary" data-mapper-remove="${index}" aria-label="Remove rule ${index+1}">Remove</button></div></article>`;
+        return `<article class="mapper-rule-row"><span class="mapper-rule-number">${index+1}</span><div><strong>${escapeHtml(summary.sentence)}</strong><p>${escapeHtml(mapperScopeSummary(rule))}</p><small>${summary.frequency}% per team · ${rule.fillToFrequency?'Fill to Frequency':'Chance roll'}${rule.pairSides?' · Both sides':''}${rule.preserveColor?' · Keep current colors':''}</small></div><div class="mapper-rule-actions"><button type="button" class="button secondary" data-mapper-edit="${index}">Edit</button><button type="button" class="button secondary" data-mapper-duplicate="${index}">Duplicate</button><button type="button" class="button secondary" data-mapper-remove="${index}" aria-label="Remove rule ${index+1}">Remove</button></div></article>`;
       }).join('')||'<div class="mapper-empty">Add a rule to choose the equipment and players you want to change.</div>';
       document.getElementById('mapper-preview').disabled=!read().length;document.getElementById('mapper-apply').disabled=true;state.genericPreviews.delete(tool.id);
     };
@@ -43,7 +43,7 @@ async function equipmentMapperPage(tool,chosenMods=null){
     let confirmingCompatibility=false;
     const run=async mode=>{
       const preview=state.genericPreviews.get(tool.id);
-      if(mode==='apply'&&(!preview?.planId||preview.details?.canApply===false))return;
+      if(mode==='apply'&&(!preview?.planId||preview.details?.canApply===false||preview.details?.conflictReview?.pending))return;
       let confirmCompatibility=false;
       if(mode==='apply'&&preview.details.requiresCompatibilityConfirmation){
         if(confirmingCompatibility)return;confirmingCompatibility=true;
@@ -56,7 +56,7 @@ async function equipmentMapperPage(tool,chosenMods=null){
       document.getElementById('mapper-preview').disabled=true;document.getElementById('mapper-apply').disabled=true;output.innerHTML=toolLoading('Checking equipment changes…');
       try{const result=await window.cfbToolkit.runTool({toolId:tool.id,savePath:save,mode,options:mode==='preview'?{fingerprint:prepared.fingerprint,mods:JSON.parse(document.getElementById('mapper-mods').value),rules:read()}:{planId:preview.planId,confirmCompatibility}});if(!currentToolRun(output,save,page,token))return;
         if(mode==='preview'){state.genericPreviews.set(tool.id,result);output.innerHTML='';showStandardPreviewStage(true);}else state.genericPreviews.delete(tool.id);
-        renderResult(document.getElementById('run-output'),result);document.getElementById('mapper-apply').disabled=mode!=='preview'||!result.details.canApply;await refreshHistory().catch(()=>{});
+        renderResult(document.getElementById('run-output'),result);document.getElementById('mapper-apply').disabled=mode!=='preview'||!result.details.canApply;if(mode==='preview'&&result.details.conflictReview?.pending)review(result);await refreshHistory().catch(()=>{});
       }catch(error){if(currentToolRun(output,save,page,token)){
         const readable=readableError(error);
         if(/cached result|already been applied|save changed.*preview|source row.*changed|donor file changed/i.test(readable.message))state.genericPreviews.delete(tool.id);
@@ -65,24 +65,42 @@ async function equipmentMapperPage(tool,chosenMods=null){
         document.getElementById('mapper-apply').disabled=!state.genericPreviews.get(tool.id)?.planId||state.genericPreviews.get(tool.id)?.details?.canApply===false;
       }}finally{if(state.page===page&&document.getElementById('mapper-preview'))document.getElementById('mapper-preview').disabled=!read().length;}
     };
+    const review=preview=>openMapperConflictReview(preview,async decisions=>{
+      if(state.page!==tool.id||state.activeSave?.path!==save||state.genericPreviews.get(tool.id)!==preview)throw Error('This preview changed. Close this window and run Preview again.');
+      const result=await window.cfbToolkit.runTool({toolId:tool.id,savePath:save,mode:'preview',options:{reviewPlanId:preview.planId,reviewDecisions:decisions}});
+      if(state.page!==tool.id||state.activeSave?.path!==save||state.genericPreviews.get(tool.id)!==preview)throw Error('This preview changed. Close this window and run Preview again.');
+      state.genericPreviews.set(tool.id,result);renderResult(document.getElementById('run-output'),result);document.getElementById('mapper-apply').disabled=!result.details.canApply;await refreshHistory().catch(()=>{});
+    });
+    document.getElementById('run-output').addEventListener('click',event=>{if(!event.target.closest('[data-mapper-review-conflicts]'))return;const preview=state.genericPreviews.get(tool.id);if(preview?.details?.conflictReview)review(preview);});
     document.getElementById('mapper-preview').onclick=()=>run('preview');document.getElementById('mapper-apply').onclick=()=>run('apply');
   }catch(error){if(state.page===tool.id&&state.activeSave?.path===save)showError(readableError(error));}
 }
 function confirmMapperCompatibility(preview){
   const count=preview.details.compatibilityWarnings?.length??0;
-  const answer=appConfirm('Apply Equipment with Known Incompatibilities?',`${count.toLocaleString()} player${count===1?' has':'s have'} equipment combinations that may clip, overlap or appear incorrectly in-game. Apply the reviewed equipment anyway?`,'Apply Anyway','A backup will be created. The equipment shown in this preview will be applied.');
+  const reasons=mapperCompatibilitySummary(preview),brief=reasons.slice(0,3).join(' ')+(reasons.length>3?` Plus ${reasons.length-3} other conflict${reasons.length===4?'':'s'} listed in the preview.`:'');
+  const answer=appConfirm('Apply Equipment with Known Incompatibilities?',`${count.toLocaleString()} player${count===1?' has':'s have'} equipment combinations that may clip, overlap or appear incorrectly in-game. ${brief} Apply the reviewed equipment anyway?`,'Apply Anyway','A backup will be created. The equipment shown in this preview will be applied.');
   document.querySelector('dialog.confirmation-editor[open]')?.classList.add('mapper-compatibility-confirmation');
   return answer;
 }
 function mapperVariantLabel(item,prepared,index){
-  if(item.catalog)return mapperSlotLabel(item.slot)+' · '+({unlocked:'Unlocked',raw:'RAW Accessories',eljax:'GameDay Gear',vanilla:'Base Game'})[item.origin];
+  if(item.catalog)return mapperSlotLabel(item.slot)+' · '+({unlocked:'Unlocked',raw:'RAW Accessories',eljax:'GameDay Gear',vanilla:'CFB 27 Equipment'})[item.origin];
   const {element,context={}}=JSON.parse(item.configuration),parts=[],name=asset=>prepared.items.find(entry=>entry.asset===asset)?.name??asset;
   for(const [slot,value]of Object.entries(context))parts.push(mapperSlotLabel(slot)+': '+(value?({HandwarmerStyle_Front:'Front',HandwarmerStyle_Back:'Back',HandwarmerStyle_None:'None'})[value.itemAssetName]??name(value.itemAssetName):'None'));
   for(const [key,value]of Object.entries(element))if(!['slotType','itemAssetName'].includes(key))parts.push(key==='blends'?value.map((blend,index)=>'Blend '+(index+1)+': '+Object.entries(blend).map(([name,value])=>name.replace(/([a-z])([A-Z])/g,'$1 $2')+' '+value).join(', ')).join('; '):key.replace(/([a-z])([A-Z])/g,'$1 $2')+': '+JSON.stringify(value));
   return (parts.join(' · ')||'Default saved settings')+' · Item ID: '+element.itemAssetName;
 }
 const mapperPairedSlot=slot=>({LeftHandWear:'RightHandWear',RightHandWear:'LeftHandWear',LeftShoe:'RightShoe',RightShoe:'LeftShoe',LeftArmWear:'RightArmWear',RightArmWear:'LeftArmWear'})[slot];
+function mapperConflictBadge(row){
+  const reason=row.compatibilityReason;
+  return reason?`<span class="roster-position-change mapper-conflict-badge" data-mapper-conflict role="img" tabindex="0" title="${escapeHtml(reason)}" aria-label="Equipment conflict: ${escapeHtml(reason)}">*</span>`:'';
+}
+function mapperPreviewExplanation(result){
+  const summaries=result.details.ruleSummaries??[],reasons=result.details.impact?.unchangedReasons??[];
+  const rules=summaries.length===1?`<p class="mapper-preview-rule">${escapeHtml(summaries[0])}</p>`:summaries.length?`<details><summary>${summaries.length} equipment rules</summary><ul>${summaries.map(text=>`<li>${escapeHtml(text)}</li>`).join('')}</ul></details>`:'';
+  const review=result.mode==='preview'&&result.details.conflictReview&&state.page!=='saved-review'?`<section class="mapper-review-entry"><div><strong>${result.details.conflictReview.pending?'Review Equipment Conflicts':'Conflict Choices Reviewed'}</strong><p>${result.details.conflictReview.pending?'Choose Skip, Apply Anyway, or review a proposed outfit fix.':`${result.details.conflictReview.summary.fixed.toLocaleString()} fixed · ${result.details.conflictReview.summary.skipped.toLocaleString()} skipped · ${result.details.conflictReview.summary.anyway.toLocaleString()} apply anyway`}</p></div><button type="button" class="button secondary" data-mapper-review-conflicts>${result.details.conflictReview.pending?'Review Conflicts':'Edit Choices'}</button></section>`:'';
+  return review+rules+(reasons.length?`<details class="mapper-unchanged"><summary>Why players are left unchanged</summary><ul>${reasons.map(item=>`<li>${escapeHtml(item.reason)}: ${item.players.toLocaleString()} player${item.players===1?'':'s'}</li>`).join('')}</ul></details>`:'');
+}
 function mapperResults(result){
   const conflicts=new Set();for(const player of result.details.blocked??[])for(const match of player.reason.matchAll(/Mappings?\s+(\d+)(?:\s+and\s+(\d+))?/gi))for(const number of [match[1],match[2]])if(number&&Number(number)<=100)conflicts.add(Number(number));
   const links=conflicts.size?'<div class="mapper-conflict-actions" aria-label="Edit conflicting rules">'+[...conflicts].sort((a,b)=>a-b).map(number=>'<button type="button" class="button secondary" data-mapper-conflict-rule="'+(number-1)+'">Edit Rule '+number+'</button>').join('')+'</div>':'';
-  return `${links}${result.details.allocations?.some(item=>item.percentage<100)?`<details><summary>Frequencies by Team</summary><table class="mapper-cap-table"><thead><tr><th>Rule</th><th>Team</th><th>Frequency</th><th>Matching Players</th><th>Selected</th></tr></thead><tbody>${result.details.allocations.filter(item=>item.percentage<100).map(item=>`<tr><td>${item.rule}</td><td>${escapeHtml(item.team)}</td><td>${item.percentage}%</td><td>${item.matchedPlayers}</td><td>${item.selectedPlayers}</td></tr>`).join('')}</tbody></table></details>`:''}${equipmentResults(result)}`;}
+  return `${mapperPreviewExplanation(result)}${links}${result.details.allocations?.some(item=>item.percentage<100)?`<details><summary>Frequencies by Team</summary><table class="mapper-cap-table"><thead><tr><th>Rule</th><th>Team</th><th>Frequency</th><th>Matching Players</th><th>Selected</th></tr></thead><tbody>${result.details.allocations.filter(item=>item.percentage<100).map(item=>`<tr><td>${item.rule}</td><td>${escapeHtml(item.team)}</td><td>${item.percentage}%</td><td>${item.matchedPlayers}</td><td>${item.selectedPlayers}</td></tr>`).join('')}</tbody></table></details>`:''}${equipmentResults(result)}`;}

@@ -793,3 +793,5 @@ body.experimental-ui {
 }
 /* The shell stays dark in both workspace themes. */
 [data-theme="light"] .experimental-ui .nav-link.active .nav-label { color: #fff; }
+
+.tool-maintenance-card{overflow:hidden;border:1px solid var(--border);border-radius:8px;background:var(--surface);max-width:960px;margin:24px auto}.maintenance-tape{height:22px;background:repeating-linear-gradient(-45deg,#edb72e 0,#edb72e 18px,#181818 18px,#181818 36px)}.maintenance-content{text-align:center;padding:clamp(28px,6vw,64px) 24px}.maintenance-symbol{display:block;font-size:46px;color:#bd8715;margin-bottom:12px}.maintenance-content .eyebrow{color:#a87406}.maintenance-content h2{font-size:clamp(26px,4vw,40px);margin:12px 0 18px}.maintenance-content p{max-width:650px;margin:14px auto;line-height:1.6}[data-theme=dark] .maintenance-content .eyebrow,[data-theme=dark] .maintenance-symbol{color:#edb72e}

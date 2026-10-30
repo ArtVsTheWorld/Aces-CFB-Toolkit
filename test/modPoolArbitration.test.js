@@ -6,7 +6,7 @@ import {createGeneratedEquipmentState,enforceGeneratedEquipmentCompatibility} fr
 const defs=modPoolDefinitions(),target={position:'WR',branding:'Nike'},outfit=()=>[{loadoutType:'PlayerOnField',keep:42,loadoutElements:[]}];
 const disabled=origin=>Object.fromEntries(defs[origin].map(category=>[category.id,{chance:0,items:[]}]));
 const pick=(origin,category)=>defs[origin].find(c=>c.id===category).items[0].itemName;
-function options(categories){return {usingUnlockedMod:true,usingRawAccessoriesMod:true,usingEquipmentTruckMod:true,modPools:normalizeModPools(Object.fromEntries(Object.keys(defs).map(origin=>[origin,{...disabled(origin),...Object.fromEntries((categories[origin]??[]).map(category=>[category,{chance:100,items:[pick(origin,category)]}]))}])))};}
+function options(categories){return {usingVanillaPool:Boolean(categories.vanilla?.length),usingUnlockedMod:true,usingRawAccessoriesMod:true,usingEquipmentTruckMod:true,modPools:normalizeModPools(Object.fromEntries(Object.keys(defs).map(origin=>[origin,{...disabled(origin),...Object.fromEntries((categories[origin]??[]).map(category=>[category,{chance:100,items:[pick(origin,category)]}]))}])))};}
 const gear=(outfits,slot)=>outfits[0].loadoutElements.find(e=>e.slotType===slot)?.itemAssetName;
 test('all three independently rolled sleeve pools get a fair opportunity without last-provider overwrites',()=>{
  const config=options({unlocked:['armSleeves'],raw:['armSleeves'],eljax:['armSleeves']}),wins={unlocked:0,raw:0,eljax:0};
@@ -25,7 +25,7 @@ test('noncompeting successful pool rolls survive together and zero/empty categor
  const empty=outfit();applyModdedRandomizerEquipment(empty,target,mulberry32(12),1,undefined,options({}));assert.deepEqual(empty,outfit());
 });
 test('one provider preserves its existing seeded equipment and RNG behavior',()=>{
- const config=options({unlocked:['armSleeves','socks','neckwear']});config.usingRawAccessoriesMod=false;config.usingEquipmentTruckMod=false;
+ const config=options({unlocked:['armSleeves','neckwear']});config.usingRawAccessoriesMod=false;config.usingEquipmentTruckMod=false;
  const a=outfit(),b=outfit(),ra=mulberry32(1234),rb=mulberry32(1234),sa=createGeneratedEquipmentState(a),sb=createGeneratedEquipmentState(b);
  const actual=applyModdedRandomizerEquipment(a,target,ra,.1,sa,config),expected=applyUnlockedRandomizerEquipment(b,target,rb,.1,sb,config.modPools.unlocked);
  assert.deepEqual(a,b);assert.deepEqual(actual.unlocked,expected);assert.equal(ra(),rb());

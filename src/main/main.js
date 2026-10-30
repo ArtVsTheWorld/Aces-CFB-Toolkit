@@ -217,6 +217,7 @@ function registerIpc() {
   ipcMain.handle(IPC.prepareEquipmentDonors, async (event, request) => toolOperation(() => toolWorker.request('donors', { savePath: request?.savePath, schemaPath: schemaPath() }, progressFor(event,request))));
   ipcMain.handle(IPC.prepareTool, async (event, request) => toolOperation(async () => {
     const tool = getTool(request?.toolId); const handler = getToolHandler(request?.toolId);
+    if(tool?.status==='maintenance')throw new Error(tool.description);
     if (!tool || tool.status !== "available" || !handler?.prepare) return {};
     const savePath = validateSavePath(request.savePath || sessionActiveSave);
     const schema = await assertToolSaveCompatibility(tool.id, savePath);
@@ -227,6 +228,7 @@ function registerIpc() {
   ipcMain.handle(IPC.runTool, async (event, request) => toolOperation(async () => {
     const tool = getTool(request?.toolId);
     const handler = getToolHandler(request?.toolId);
+    if(tool?.status==='maintenance')throw new Error(tool.description);
     if (!tool || tool.status !== "available" || !handler?.run) throw new Error("This tool has not been migrated yet.");
     if (!RUN_MODES.includes(request.mode)) throw new Error("Invalid run mode.");
     const savePath = validateSavePath(request.savePath || sessionActiveSave);

@@ -1,0 +1,1279 @@
+{
+  "verification": "User explicitly identified these jersey, undershirt, neck-roll, sleeve, wrist, sock-height, guardian-cap and pacifier families in the unmodded menu. Exact IDs/labels/slots matched against stock ItemInfo. User clarified leg layers are one entry each; colored and variant-2 Unlocked leg layers are distinct.",
+  "defaultPolicy": "Fresh CFB 27 Equipment defaults include quarter/half sleeves, long/short arm tape, and the selected wrist-tape/band families. Other newly confirmed choices stay opt-in. Existing explicit item selections and category chances are preserved.",
+  "items": [
+    {
+      "itemName": "Gear_JerseyStyle_SleeveStandard",
+      "displayName": "Loose Sleeves",
+      "category": "Jersey Style",
+      "slots": [
+        "OuterShirt"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "Gear_JerseyStyle_Rolled",
+      "displayName": "Rolled Jersey",
+      "category": "Jersey Style",
+      "slots": [
+        "OuterShirt"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "Gear_JerseyStyle_RolledLow",
+      "displayName": "Rolled Jersey Low",
+      "category": "Jersey Style",
+      "slots": [
+        "OuterShirt"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "Gear_JerseyStyle_SleeveTight",
+      "displayName": "Tight Sleeves",
+      "category": "Jersey Style",
+      "slots": [
+        "OuterShirt"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "Gear_JerseyStyle_SleeveLong",
+      "displayName": "Long Sleeves",
+      "category": "Jersey Style",
+      "slots": [
+        "OuterShirt"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "Gear_Undershirt_CompressionTCrewSleeveless",
+      "displayName": "Primary Sleeveless Compression Undershirt",
+      "category": "Undershirt",
+      "slots": [
+        "InnerShirt"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "Gear_Undershirt_CompressionTCrewSleeveless_Black",
+      "displayName": "Black Sleeveless Compression Undershirt",
+      "category": "Undershirt",
+      "slots": [
+        "InnerShirt"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "Gear_Undershirt_CompressionTCrewSleeveless_Secondary",
+      "displayName": "Secondary Sleeveless Compression Undershirt",
+      "category": "Undershirt",
+      "slots": [
+        "InnerShirt"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "Gear_Undershirt_CompressionTCrewSleeveless_White",
+      "displayName": "White Sleeveless Compression Undershirt",
+      "category": "Undershirt",
+      "slots": [
+        "InnerShirt"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "Undershirt_Untucked",
+      "displayName": "Relaxed T Shirt",
+      "category": "Undershirt",
+      "slots": [
+        "InnerShirt"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "Gear_Undershirt_HoodieSleeveless",
+      "displayName": "Sleeveless Hoodie",
+      "category": "Undershirt",
+      "slots": [
+        "InnerShirt"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "G_CompressionT_Crew_ShortSleeve_Basic_PRI",
+      "displayName": "Primary Compression Tee",
+      "category": "Undershirt",
+      "slots": [
+        "InnerShirt"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "G_CompressionT_Crew_ShortSleeve_Basic_SEC",
+      "displayName": "Secondary Compression Tee",
+      "category": "Undershirt",
+      "slots": [
+        "InnerShirt"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "G_CompressionT_Crew_ShortSleeve_Basic_BLA",
+      "displayName": "Black Compression Tee",
+      "category": "Undershirt",
+      "slots": [
+        "InnerShirt"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "G_CompressionT_Crew_ShortSleeve_Basic_WHI",
+      "displayName": "White Compression Tee",
+      "category": "Undershirt",
+      "slots": [
+        "InnerShirt"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearNeckpad_CowboyCollarNeckRoll",
+      "displayName": "Cowboy Collar Neck Roll",
+      "category": "Neck Pad",
+      "slots": [
+        "Neckpad"
+      ],
+      "tags": [],
+      "origin": "vanilla",
+      "stockSemantic": {
+        "actualType": "neck-roll",
+        "bodyRegion": "neck",
+        "groups": [
+          "neckwear"
+        ],
+        "poolEligible": true
+      }
+    },
+    {
+      "itemName": "GearNeckpad_ButterflyNeckRoll",
+      "displayName": "Butterfly Neck Roll",
+      "category": "Neck Pad",
+      "slots": [
+        "Neckpad"
+      ],
+      "tags": [],
+      "origin": "vanilla",
+      "stockSemantic": {
+        "actualType": "neck-roll",
+        "bodyRegion": "neck",
+        "groups": [
+          "neckwear"
+        ],
+        "poolEligible": true
+      }
+    },
+    {
+      "itemName": "GearNeckpad_VintageNeckRoll",
+      "displayName": "Vintage Neck Roll",
+      "category": "Neck Pad",
+      "slots": [
+        "Neckpad"
+      ],
+      "tags": [],
+      "origin": "vanilla",
+      "stockSemantic": {
+        "actualType": "neck-roll",
+        "bodyRegion": "neck",
+        "groups": [
+          "neckwear"
+        ],
+        "poolEligible": true
+      }
+    },
+    {
+      "itemName": "GearNeckpad_VintageSingleNeckRoll",
+      "displayName": "Vintage Single Neck Roll",
+      "category": "Neck Pad",
+      "slots": [
+        "Neckpad"
+      ],
+      "tags": [],
+      "origin": "vanilla",
+      "stockSemantic": {
+        "actualType": "neck-roll",
+        "bodyRegion": "neck",
+        "groups": [
+          "neckwear"
+        ],
+        "poolEligible": true
+      }
+    },
+    {
+      "itemName": "GearArmSleeve_Undershirt_sleeveLongUnderarmor_normal_Black",
+      "displayName": "Undershirt Black",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Quarter_armTape_normal_Black",
+      "displayName": "Arm Tape Short Black",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_McDavidPaddedCompressionSleeve_White",
+      "displayName": "White Honeycomb Padded Sleeve",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_NikePaddedElbowCompressionSleeve_White",
+      "displayName": "White Padded Sleeve",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Quarter_armTape_normal_OffWhite",
+      "displayName": "Arm Tape Short Off White",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_McDavidPaddedCompressionSleeve_TeamColor",
+      "displayName": "Team Color Honeycomb Padded Sleeve",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_NikeProDriFitSleeve_SecondaryColor",
+      "displayName": "Secondary Color Compression Sleeve",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_McDavidPaddedCompressionSleeve_Black",
+      "displayName": "Black Honeycomb Padded Sleeve",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_CompressionRolledUpShirt_SecondaryColor",
+      "displayName": "Secondary Color Rolled Sleeve",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_NikeHyperstrongPaddedSleeve_Black",
+      "displayName": "Black Multi Padded Sleeve",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Shooter_sleeveLongUnderarmor_normal_SecondaryColor",
+      "displayName": "Arm Sleeve Shooter Secondary Color",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Shooter_sleeveLongUnderarmor_normal_Black",
+      "displayName": "Arm Sleeve Shooter Black",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_CompressionRolledUpShirt_TeamColor",
+      "displayName": "Team Color Rolled Sleeve",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Full_sleeveLongUnderarmor_normal_Black",
+      "displayName": "Arm Sleeve Full Black",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_NikePaddedElbowCompressionSleeve_TeamColor",
+      "displayName": "Team Color Padded Sleeve",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Full_sleeveLongUnderarmor_normal_SecondaryColor",
+      "displayName": "Arm Sleeve Full Secondary Color",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_NikeHyperstrongPaddedSleeve_White",
+      "displayName": "White Multi Padded Sleeve",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Quarter_sleeveLongUnderarmor_normal_TeamColor",
+      "displayName": "Arm Sleeve Quarter Team Color",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Quarter_armTape_normal_TeamColor",
+      "displayName": "Arm Tape Short Team Color",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Quarter_sleeveLongUnderarmor_normal_White",
+      "displayName": "Arm Sleeve Quarter White",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_NikeProDriFitSleeve_TeamColor",
+      "displayName": "Team Color Compression Sleeve",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Half_sleeveLongUnderarmor_normal_Black",
+      "displayName": "Arm Sleeve Half Black",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_NikeProDriFitSleeve_White",
+      "displayName": "White Compression Sleeve",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Undershirt_armTape_normal_TeamColor",
+      "displayName": "Arm Tape Long Team Color",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Half_sleeveLongUnderarmor_normal_SecondaryColor",
+      "displayName": "Arm Sleeve Half Secondary Color",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Quarter_sleeveLongUnderarmor_normal_Black",
+      "displayName": "Arm Sleeve Quarter Black",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Undershirt_sleeveLongUnderarmor_normal_Secondary",
+      "displayName": "Undershirt Secondary Color",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Shooter_sleeveLongUnderarmor_normal_TeamColor",
+      "displayName": "Arm Sleeve Shooter Team Color",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_NikePaddedElbowCompressionSleeve_Black",
+      "displayName": "Black Padded Sleeve",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_McDavidPaddedCompressionSleeve_SecondaryColor",
+      "displayName": "Secondary Color Honeycomb Padded Sleeve",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Quarter_sleeveLongUnderarmor_normal_SecondaryColor",
+      "displayName": "Arm Sleeve Quarter Secondary Color",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Undershirt_armTape_normal_OffWhite",
+      "displayName": "Arm Tape Long Off White",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Undershirt_armTape_normal_SecondaryColor",
+      "displayName": "Arm Tape Long Secondary Color",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Half_sleeveLongUnderarmor_normal_White",
+      "displayName": "Arm Sleeve Half White",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Quarter_armTape_normal_SecondaryColor",
+      "displayName": "Arm Tape Short Secondary Color",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Undershirt_sleeveLongUnderarmor_normal_White",
+      "displayName": "Undershirt White",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Full_sleeveLongUnderarmor_normal_White",
+      "displayName": "Arm Sleeve Full White",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_NikeHyperstrongPaddedSleeve_SecondaryColor",
+      "displayName": "Secondary Color Multi Padded Sleeve",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Half_sleeveLongUnderarmor_normal_TeamColor",
+      "displayName": "Arm Sleeve Half Team Color",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Full_sleeveLongUnderarmor_normal_TeamColor",
+      "displayName": "Arm Sleeve Full Team Color",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Undershirt_armTape_normal_Black",
+      "displayName": "Arm Tape Long Black",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_NikeHyperstrongPaddedSleeve_TeamColor",
+      "displayName": "Team Color Multi Padded Sleeve",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_CompressionRolledUpShirt_White",
+      "displayName": "White Rolled Sleeve",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_NikePaddedElbowCompressionSleeve_SecondaryColor",
+      "displayName": "Secondary Color Padded Sleeve",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_NikeProDriFitSleeve_Black",
+      "displayName": "Black Compression Sleeve",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Undershirt_sleeveLongUnderarmor_normal_TeamColor",
+      "displayName": "Undershirt Team Color",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_Shooter_sleeveLongUnderarmor_normal_White",
+      "displayName": "Arm Sleeve Shooter White",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearArmSleeve_CompressionRolledUpShirt_Black",
+      "displayName": "Black Rolled Sleeve",
+      "category": "Arm Wear",
+      "slots": [
+        "LeftArmWear",
+        "RightArmWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_wristBandDouble_White",
+      "displayName": "Wrist Band Double White",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_wristbrace_CompressShort_Black",
+      "displayName": "Wrist Brace Support Black",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_wristTapedMax_SecondaryColor",
+      "displayName": "Wrist Taped Max Secondary Color",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_wristTapedNormal_White",
+      "displayName": "Wrist Taped Normal White",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_wristTapedNormal_SecondaryColor",
+      "displayName": "Wrist Taped Normal Secondary Color",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_wristTapedLite_Black",
+      "displayName": "Wrist Taped Lite Black",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_wristBandDouble_TeamColor",
+      "displayName": "Wrist Band Double Team Color",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_wristBandNormal_White",
+      "displayName": "Wrist Band Normal White",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_armgear_playbookWristbandOpen_teamColor",
+      "displayName": "Opened Coach Wristband Team Color",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_wristBandDouble_Black",
+      "displayName": "Wrist Band Double Black",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_armgear_playbookWristbandOpen_secondaryColor",
+      "displayName": "Opened Coach Wristband Secondary Color",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_wristBandCoach_White",
+      "displayName": "Wrist Band Coach White",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_gloveTapedNormal_Black",
+      "displayName": "Glove Taped Normal Black",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_gloveWristBrace_Black",
+      "displayName": "Wrist Brace Black",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_wristTapedLite_White",
+      "displayName": "Wrist Taped Lite White",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_wristTapedMax_Black",
+      "displayName": "Wrist Taped Max Black",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_wristBandDouble_SecondaryColor",
+      "displayName": "Wrist Band Double Secondary Color",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_wristBandCoach_TeamColor",
+      "displayName": "Wrist Band Coach Team Color",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_wristBandNormal_TeamColor",
+      "displayName": "Wrist Band Normal Team Color",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_armgear_playbookWristbandOpen_white",
+      "displayName": "Opened Coach Wristband White",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_gloveTapedNormal_White",
+      "displayName": "Glove Taped Normal White",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_gloveTapedLarge_Black",
+      "displayName": "Glove Taped Large Black",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_wristTapedMax_TeamColor",
+      "displayName": "Wrist Taped Max Team Color",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_wristTapedMax_White",
+      "displayName": "Wrist Taped Max White",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_gloveTapedLarge_White",
+      "displayName": "Glove Taped Large White",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_wristTapedNormal_TeamColor",
+      "displayName": "Wrist Taped Normal Team Color",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_armgear_playbookWristbandOpen_black",
+      "displayName": "Opened Coach Wristband Black",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_wristTapedLite_TeamColor",
+      "displayName": "Wrist Taped Lite Team Color",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_wristTapedNormal_Black",
+      "displayName": "Wrist Taped Normal Black",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_wristBandNormal_SecondaryColor",
+      "displayName": "Wrist Band Normal Secondary Color",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_wristTapedLite_SecondaryColor",
+      "displayName": "Wrist Taped Lite Secondary Color",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_wristBandCoach_Black",
+      "displayName": "Wrist Band Coach Black",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearWrist_wristBandNormal_Black",
+      "displayName": "Wrist Band Normal Black",
+      "category": "Wrist Wear",
+      "slots": [
+        "LeftWristWear",
+        "RightWristWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearLegsBase_LeftSleeve",
+      "displayName": "Leg Sleeve Left",
+      "category": "Leg Sleeves",
+      "slots": [
+        "InnerPants"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearLegsBase_RightSleeve",
+      "displayName": "Leg Sleeve Right",
+      "category": "Leg Sleeves",
+      "slots": [
+        "InnerPants"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearLegBase_Socks_Under_Both",
+      "displayName": "Compression Pants",
+      "category": "Leg Sleeves",
+      "slots": [
+        "InnerPants"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "Gear_Socks_Under",
+      "displayName": "Tucked Socks",
+      "category": "Socks",
+      "slots": [
+        "InnerSocks"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "Gear_Socks_Low",
+      "displayName": "Low Socks",
+      "category": "Socks",
+      "slots": [
+        "InnerSocks"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "Gear_Socks_Mid",
+      "displayName": "Mid Socks",
+      "category": "Socks",
+      "slots": [
+        "InnerSocks"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "Gear_Socks_High",
+      "displayName": "High Socks",
+      "category": "Socks",
+      "slots": [
+        "InnerSocks"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GuardianCap_GuardianXT2",
+      "displayName": "Guardian Cap XT 2.0",
+      "category": "Guardian Cap",
+      "slots": [
+        "GuardianCap"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDual_Black",
+      "displayName": "Mouthpiece Pacifier Black",
+      "category": "Mouthpiece",
+      "slots": [
+        "MouthWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDual_White",
+      "displayName": "Mouthpiece Pacifier White",
+      "category": "Mouthpiece",
+      "slots": [
+        "MouthWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDual_TeamColor",
+      "displayName": "Mouthpiece Pacifier Team Color",
+      "category": "Mouthpiece",
+      "slots": [
+        "MouthWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDual_SecondaryColor",
+      "displayName": "Mouthpiece Pacifier Secondary Color",
+      "category": "Mouthpiece",
+      "slots": [
+        "MouthWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_Black",
+      "displayName": "Hanging Mouthpiece Pacifier Black",
+      "category": "Mouthpiece",
+      "slots": [
+        "MouthWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_White",
+      "displayName": "Hanging Mouthpiece Pacifier White",
+      "category": "Mouthpiece",
+      "slots": [
+        "MouthWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_TeamColor",
+      "displayName": "Hanging Mouthpiece Pacifier Team Color",
+      "category": "Mouthpiece",
+      "slots": [
+        "MouthWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "GearMouthpiece_PacifierDualHanging_SecondaryColor",
+      "displayName": "Hanging Mouthpiece Pacifier Secondary Color",
+      "category": "Mouthpiece",
+      "slots": [
+        "MouthWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    }
+  ]
+}

@@ -3,10 +3,10 @@ import { equipmentDisplayName, mouthpieceDisplayValue } from "./catalog.js";
 export const MAX_EQUIPMENT_PREVIEW_ROWS = 1000;
 
 const SLOT_LABELS = Object.freeze({ HeadWear: "Helmet", FaceMask: "Facemask", FaceWear: "Face Covering", FacePaint: "Facepaint", MouthWear: "Mouthpiece", NeckWear: "Turtleneck", Neckpad: "Neckwear", InnerShirt: "Undershirt", OuterShirt: "Jersey", OuterPants: "Pants", InnerPants: "Leg Base Layer", InnerSocks: "Socks", LeftArmWear: "Left Arm Sleeve", RightArmWear: "Right Arm Sleeve", LeftElbowWear: "Left Elbow Gear", RightElbowWear: "Right Elbow Gear", LeftHandWear: "Left Glove / Hand Gear", RightHandWear: "Right Glove / Hand Gear", LeftShoe: "Left Cleat", RightShoe: "Right Cleat", LeftThighWear: "Left Thigh Pad", RightThighWear: "Right Thigh Pad" });
-const gearLabel = (asset, slot) => { const label = slot === "MouthWear" ? mouthpieceDisplayValue(asset) : equipmentDisplayName(asset); return label === asset && /(?:^|_)None$/i.test(asset) ? "None" : label; };
+const gearLabel = (asset, slot, options) => { const label = slot === "MouthWear" ? mouthpieceDisplayValue(asset, options) : equipmentDisplayName(asset, options); return label === asset && /(?:^|_)None$/i.test(asset) ? "None" : label; };
 
 // Presentation only. Exact saved IDs and complete blobs stay in the CSV audit.
-export function equipmentPreviewChanges(beforeRaw, afterRaw) {
+export function equipmentPreviewChanges(beforeRaw, afterRaw, options) {
   const describe = raw => {
     const entries = new Map(), counts = new Map();
     for (const loadout of JSON.parse(raw)?.loadouts ?? []) {
@@ -30,7 +30,7 @@ export function equipmentPreviewChanges(beforeRaw, afterRaw) {
       if ((!oldItem && /(?:^|_)None$/i.test(newItem?.asset)) || (!newItem && /(?:^|_)None$/i.test(oldItem?.asset))) continue;
       const slot = newItem?.slot ?? oldItem.slot;
       const type = SLOT_LABELS[slot] ?? slot.replace(/([a-z])([A-Z])/g, "$1 $2");
-      const change = { type, currentValue: oldItem ? gearLabel(oldItem.asset, slot) : "Not Equipped", proposedValue: newItem ? gearLabel(newItem.asset, slot) : "Not Equipped" };
+      const change = { type, currentValue: oldItem ? gearLabel(oldItem.asset, slot, options) : "Not Equipped", proposedValue: newItem ? gearLabel(newItem.asset, slot, options) : "Not Equipped" };
       // Collapse identical changes across duplicate on-field loadouts.
       changes.set(JSON.stringify(change), change);
     }

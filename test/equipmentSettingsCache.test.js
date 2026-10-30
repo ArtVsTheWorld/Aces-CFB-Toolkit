@@ -33,3 +33,13 @@ test('settings cache bounds retained data and least-recently-used entries',async
   await read(1);await read(2);await read(1);await read(3);assert.equal((await read(1)).sequence,1);await read(2);assert.equal(calls,4);
   const large=async()=>({large:'x'.repeat(600),sequence:++calls});await cache.read(payload,large);await cache.read(payload,large);assert.equal(calls,6);assert.ok(cache.bytes<=500);
 });
+
+test('overlapping settings reads keep exact byte accounting and remain cacheable',async t=>{
+ const {payload,cache}=fixture(t,{maxBytes:8});const release=[];const read=()=>cache.read(payload,()=>new Promise(resolve=>release.push(resolve)));
+ const pending=[read(),read(),read()];for(const resolve of release)resolve(['x']);await Promise.all(pending);
+ assert.equal(cache.bytes,Buffer.byteLength(JSON.stringify(['x'])));assert.equal(cache.entries.size,1);assert.deepEqual(await cache.read(payload,()=>{throw Error('Expected cache hit');}),['x']);
+});
+
+test('clearing settings while a read is running cannot repopulate a discarded cache',async t=>{
+ const {payload,cache}=fixture(t);let finish;const pending=cache.read(payload,()=>new Promise(resolve=>finish=resolve));cache.clear();finish({old:true});await pending;assert.equal(cache.entries.size,0);assert.equal(cache.bytes,0);assert.deepEqual(await cache.read(payload,async()=>({fresh:true})),{fresh:true});
+});

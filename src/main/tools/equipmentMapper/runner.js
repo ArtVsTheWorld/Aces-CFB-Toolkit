@@ -1,3 +1,6 @@
+import MapperEditor from '../../../shared/mapperEditor.cjs';
+import path from 'node:path';
+import {createMapperReviewSource,applyMapperReviewChoices,normalizeMapperReviewChoices} from './conflictReview.js';
 import {PLAYER_PICKER_FIELDS} from '../../services/settingsFields.js';
 import {mapperCatalog,normalizeMapperMods} from './catalog.js';
 import {toolProgress} from '../../services/toolProgress.js';
@@ -43,6 +46,7 @@ export async function prepareEquipmentMapper({savePath,schemaPath,options={}}){
 export async function runEquipmentMapper(context){
   if(context.mode==='apply'){
     const plan=takePlan(context.options?.planId);
+    if(plan.result.details.conflictReview?.pending)throw new Error('Review the equipment conflicts before Apply. Your save has not been written.');
     if(!plan.result.details.canApply)throw new Error('Resolve the incompatible mappings before Apply. No save was written.');
     if(plan.result.details.requiresCompatibilityConfirmation&&context.options?.confirmCompatibility!==true)throw new Error('Confirm the known equipment incompatibilities before Apply. Your save has not been written.');
     const applied=await applyEquipmentPlan({...context,toolId:TOOL_ID});
@@ -50,8 +54,14 @@ export async function runEquipmentMapper(context){
   }
   if(context.mode!=='preview')throw new Error('Run mode must be preview or apply.');
   const fingerprint=saveFingerprint(context.savePath);
-  if(context.options?.fingerprint!==fingerprint)throw new Error('The equipment library is out of date. Reload Equipment Mapper before Preview.');
-  const mods=normalizeMapperMods(context.options?.mods),loaded=await loadEquipmentTables(context.savePath,context.schemaPath,true),players=mapperPlayers(loaded),library=mapperCatalog(mods),preview=buildMapperPreview(players,library,context.options?.rules);
+  const parent=context.options?.reviewPlanId?takePlan(context.options.reviewPlanId):null;
+  if(parent&&(parent.toolId!==TOOL_ID||path.resolve(parent.savePath)!==path.resolve(context.savePath)||!parent.mapperReviewSource))throw Error('This conflict review does not belong to this Mapper preview and Active Save.');
+  if(parent&&parent.saveFingerprint!==fingerprint)throw Error('The save changed after Preview. Run Preview again before reviewing conflicts.');
+  if(!parent&&context.options?.fingerprint!==fingerprint)throw new Error('The equipment library is out of date. Reload Equipment Mapper before Preview.');
+  let reviewSource=parent?.mapperReviewSource??null;
+  const mods=normalizeMapperMods(reviewSource?.mods??context.options?.mods),rules=reviewSource?.rules??context.options?.rules,loaded=await loadEquipmentTables(context.savePath,context.schemaPath,true),players=parent?null:mapperPlayers(loaded),library=mapperCatalog(mods);
+  const reviewed=parent?applyMapperReviewChoices(reviewSource,context.options.reviewDecisions):null;
+  const preview=reviewed?.preview??buildMapperPreview(players,library,rules);
   const draft=createVisualDraft(loaded.visuals);loaded.visuals=draft.table;
   const proposed=preview.changes.map(player=>({table:'visuals',row:player.visualRow,field:'RawData',oldValue:player.rawData,newValue:player.newRawData}));
   // Exercise the same encoding/overflow guards as the other equipment tools
@@ -63,14 +73,22 @@ export async function runEquipmentMapper(context){
   const retainedRows=new Set(preview.changes.map(player=>player.row));
   const compatibilityWarnings=preview.compatibilityWarnings.filter(player=>retainedRows.has(player.row));
   for(const player of preview.changes)player.newRawData=sf(loaded.visuals.records[player.visualRow],'RawData');
-  const rows=preview.changes.map(({rawData,newRawData,branding,...player})=>{
-    const slots=new Map();for(const edit of player.edits){const key=`${edit.loadout}|${edit.slot}`;slots.set(key,{...edit,before:slots.has(key)?slots.get(key).before:edit.before});}
-    const changes=[...slots.values()].map(edit=>({type:({HeadWear:'Helmet',FaceMask:'Facemask',InnerShirt:'Undershirt',OuterShirt:'Jersey',InnerSocks:'Socks',WaistWear:'Waist Gear'})[edit.slot]??edit.slot.replace(/([a-z])([A-Z])/g,'$1 $2'),currentValue:edit.before?mapperItemName(edit.before.itemAssetName):'Not Equipped',proposedValue:edit.after?mapperItemName(edit.after.itemAssetName)+(edit.before?.itemAssetName===edit.after.itemAssetName?' (configuration updated)':''):'Not Equipped'}));
-    return {...player,position:displayPosition(player.position),changes};
-  });
   const warningReasons=new Map(compatibilityWarnings.map(player=>[player.row,player.reason]));
-  const report={prefix:'equipment-mapper-report',headings:['Row','Team','Player','Position','Status','Reason','RulesJSON','EditsJSON','BeforeRawData','AfterRawData','SaveFingerprint','CapAllocationsJSON'],rows:[...preview.changes.map(player=>[player.row,player.team,player.player,displayPosition(player.position),warningReasons.has(player.row)?'Proposed (compatibility warning)':'Proposed',warningReasons.get(player.row)??'',JSON.stringify(context.options.rules),JSON.stringify(player.edits),player.rawData,player.newRawData,fingerprint,JSON.stringify(preview.allocations)]),...preview.blocked.map(player=>[player.row,player.team,player.player,'','Blocked',player.reason,JSON.stringify(context.options.rules),'','','',fingerprint,JSON.stringify(preview.allocations)])]};
-  const result={resultKind:TOOL_ID,mode:'preview',status:'preview',savePath:context.savePath,backupPath:null,reportPath:context.reports.create({...report,toolId:TOOL_ID,toolName:TOOL_NAME}),historySummary:[{label:'Players changed',value:rows.length},{label:'Mapping conflicts',value:preview.blocked.length},{label:'Compatibility warnings',value:compatibilityWarnings.length}],summary:[{label:'Players to change',value:rows.length},{label:'Queued mappings',value:context.options.rules.length},{label:'Conflicts to resolve',value:preview.blocked.length},{label:'Players with compatibility warnings',value:compatibilityWarnings.length}],details:{storageSkipped:skipped,skipped,canApply:rows.length>0&&preview.blocked.length===0,blocked:preview.blocked,compatibilityWarnings,requiresCompatibilityConfirmation:compatibilityWarnings.length>0,statistics:preview.statistics,allocations:preview.allocations,totalPreviewRows:rows.length,totalCorrectionActions:rows.reduce((sum,row)=>sum+row.edits.length,0),changes:rows.slice(0,1000),warnings:[...(skipped?[`${skipped.toLocaleString()} players skipped.`]:[]),'Mappings match the original equipment. Conflicting assignments to the same item slot must be resolved before Apply. Related helmet/facemask and item override changes are included explicitly. Other equipment and player data stay unchanged.']}};
+  const impact={...preview.impact,changing:preview.changes.length,unchanged:preview.impact.matching-preview.changes.length,unchangedReasons:[...preview.impact.unchangedReasons,...(skipped?[{reason:'Save equipment storage is full',players:skipped}]:[])]};
+  preview.impact=impact;preview.compatibilityWarnings=compatibilityWarnings;
+  if(!parent&&compatibilityWarnings.length){reviewSource=createMapperReviewSource(preview,library,(done,total)=>toolProgress(75+15*done/total,'Finding safe outfit fixes…'));Object.assign(reviewSource,{mods,rules:structuredClone(rules),storageSkipped:skipped});}
+  const reviewSummary=reviewed?{...reviewed.summary,fixed:preview.changes.filter(p=>p.conflictDecision==='fix').length,anyway:compatibilityWarnings.length,storageSkipped:skipped}:null;
+  const conflictReview=reviewSource?{pending:!parent,groups:reviewSource.groups,decisions:reviewed?.decisions??normalizeMapperReviewChoices(reviewSource),summary:reviewSummary}:null;
+  const changedByRule=new Map();for(const p of preview.changes)for(const edit of p.edits)if(Number.isInteger(edit.rule))changedByRule.set(edit.rule,(changedByRule.get(edit.rule)??0)+1);
+  preview.statistics=preview.statistics.map(s=>({...s,changed:changedByRule.get(s.rule)??0}));
+  const rows=preview.changes.map(({rawData,newRawData,branding,requestedSlots,...player})=>{
+    const slots=new Map();for(const edit of player.edits){const key=`${edit.loadout}|${edit.slot}`;slots.set(key,{...edit,before:slots.has(key)?slots.get(key).before:edit.before});}
+    const changes=[...slots.values()].map(edit=>({type:(({HeadWear:'Helmet',FaceMask:'Facemask',InnerShirt:'Undershirt',OuterShirt:'Jersey',InnerSocks:'Socks',WaistWear:'Waist Gear'})[edit.slot]??edit.slot.replace(/([a-z])([A-Z])/g,'$1 $2'))+(edit.compatibilityFix?' (fit adjustment)':''),currentValue:edit.before?mapperItemName(edit.before.itemAssetName,{usingUnlockedMod:mods.unlocked,usingRawAccessoriesMod:mods.raw}):'Not Equipped',proposedValue:edit.after?mapperItemName(edit.after.itemAssetName,{usingUnlockedMod:mods.unlocked,usingRawAccessoriesMod:mods.raw})+(edit.before?.itemAssetName===edit.after.itemAssetName?' (configuration updated)':''):'Not Equipped'}));
+    return {...player,position:displayPosition(player.position),changes,compatibilityReason:warningReasons.get(player.row)??''};
+  });
+  const skippedByReview=reviewed?reviewSource.preview.changes.filter(p=>reviewed.actions.get(p.row)==='skip'):[];
+  const report={prefix:'equipment-mapper-report',headings:['Row','Team','Player','Position','Status','Reason','RulesJSON','EditsJSON','BeforeRawData','AfterRawData','SaveFingerprint','CapAllocationsJSON','ConflictChoice'],rows:[...preview.changes.map(player=>[player.row,player.team,player.player,displayPosition(player.position),warningReasons.has(player.row)?'Proposed (compatibility warning)':'Proposed',warningReasons.get(player.row)??'',JSON.stringify(rules),JSON.stringify(player.edits),player.rawData,player.newRawData,fingerprint,JSON.stringify(preview.allocations),player.conflictDecision??'']),...preview.blocked.map(player=>[player.row,player.team,player.player,'','Blocked',player.reason,JSON.stringify(rules),'','','',fingerprint,JSON.stringify(preview.allocations),'']),...skippedByReview.map(player=>[player.row,player.team,player.player,displayPosition(player.position),'Skipped during conflict review','Player kept unchanged',JSON.stringify(rules),'[]',player.rawData,player.rawData,fingerprint,JSON.stringify(preview.allocations),'skip'])]};
+  const result={resultKind:TOOL_ID,mode:'preview',status:'preview',savePath:context.savePath,backupPath:null,reportPath:context.reports.create({...report,toolId:TOOL_ID,toolName:TOOL_NAME}),historySummary:[{label:'Players changed',value:rows.length},{label:'Mapping conflicts',value:preview.blocked.length},{label:'Compatibility warnings',value:compatibilityWarnings.length}],summary:[{label:'Players to change',value:rows.length},{label:'Queued mappings',value:rules.length},{label:'Conflicts to resolve',value:preview.blocked.length},{label:'Players with compatibility warnings',value:compatibilityWarnings.length}],details:{conflictReview,impact,ruleSummaries:rules.map(rule=>MapperEditor.describe(rule,library.items).sentence),storageSkipped:(parent?reviewSource.storageSkipped:0)+skipped,skipped:(parent?reviewSource.storageSkipped:0)+skipped,canApply:rows.length>0&&preview.blocked.length===0&&!conflictReview?.pending,blocked:preview.blocked,compatibilityWarnings,requiresCompatibilityConfirmation:compatibilityWarnings.length>0,statistics:preview.statistics,allocations:preview.allocations,totalPreviewRows:rows.length,totalCorrectionActions:rows.reduce((sum,row)=>sum+row.edits.length,0),changes:rows.slice(0,1000),warnings:[...(skipped?[`${skipped.toLocaleString()} players skipped.`]:[]),'Mappings match the original equipment. Conflicting assignments to the same item slot must be resolved before Apply. Related helmet/facemask and item override changes are included explicitly. Other equipment and player data stay unchanged.']}};
   if(saveFingerprint(context.savePath)!==fingerprint)throw new Error('The Active Save changed during Preview. Run Preview again.');
-  return {...result,planId:cacheEquipmentPlan({toolId:TOOL_ID,toolName:TOOL_NAME,savePath:context.savePath,saveFingerprint:fingerprint,needsVisuals:true,assignments,previewRows:rows,report,result})};
+  return {...result,planId:cacheEquipmentPlan({toolId:TOOL_ID,toolName:TOOL_NAME,savePath:context.savePath,saveFingerprint:fingerprint,needsVisuals:true,assignments,previewRows:rows,report,result,mapperReviewSource:reviewSource})};
 }

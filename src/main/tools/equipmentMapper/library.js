@@ -20,7 +20,7 @@ const isGearLayer=loadout=>loadout?.loadoutType==='PlayerOnField'||loadout?.load
 export const mapperCategoryLabel=value=>({Reserved:'Chin Cover',HeadBand:'Waist Playcall Band'})[value]??String(value??'Unresolved Gear').replace(/^(Left|Right)(?=[A-Z])/,'').replace(/([a-z])([A-Z])/g,'$1 $2').replace(/\bShoe Override\b/,'Shoe Override');
 export const mapperBrandLabel=value=>({nike:'Nike',adidas:'Adidas',underarmour:'Under Armour',underarmor:'Under Armour',ua:'Under Armour',jordan:'Jordan',battle:'Battle',nxtrnd:'NXTRND'})[String(value).toLowerCase()]??String(value).replace(/[_-]+/g,' ').replace(/\b[a-z]/g,letter=>letter.toUpperCase());
 const isGearElement=(loadout,element)=>loadout.loadoutCategory!=='Base'||equipmentItem(element.itemAssetName)||/^(?:Gear|Tattoo|FaceMarks|ArmSleeve|Undershirt|G_)|tattoo/i.test(element.itemAssetName);
-export const mapperItemName=asset=>({Gear_Socks_Low:'Low Socks',Gear_Socks_Mid:'Mid Socks',Gear_Socks_High:'High Socks'})[asset]??equipmentDisplayName(asset);
+export const mapperItemName=(asset,options)=>({Gear_Socks_Low:'Low Socks',Gear_Socks_Mid:'Mid Socks',Gear_Socks_High:'High Socks'})[asset]??equipmentDisplayName(asset,options);
 export const mapperTattooItem=item=>Boolean(item?.catalog&&/^(Left|Right)(Arm|Leg)Tattoo$/.test(item.slot));
 export function mapperRuleLoadouts(raw,item,create=false){
  if(!mapperTattooItem(item))return (raw.loadouts??[]).filter(loadout=>loadout?.loadoutType==='PlayerOnField'&&Array.isArray(loadout.loadoutElements));

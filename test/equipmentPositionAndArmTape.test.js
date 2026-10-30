@@ -32,7 +32,7 @@ test("all game positions and localization aliases receive only sensible slogan f
   }
 });
 
-test("facepaint restrictions use the recipient position through full, mixed, cross-position, and selected-donor paths", () => {
+test("donor facepaint is preserved through full, mixed, cross-position, and selected-donor paths", () => {
   const { options: pool } = buildFacePaintPool([], flags);
   for (const position of VALID_POSITIONS) for (const mode of ["full", "mixed", "cross", "selected"]) {
     const cross = getCrossDonorPositions(position)[0] ?? position;
@@ -43,7 +43,7 @@ test("facepaint restrictions use the recipient position through full, mixed, cro
       const result = patchFreshmanEquipment(players, visuals, 10, { ...flags, seed, top: 2, unlockedItemChance: 0, mixedChance: mode === "mixed" ? 1 : 0, crossMixedChance: 0, forceCrossPosition: mode === "cross", ...(mode === "selected" ? { donorRows: [1, 2] } : {}), apply: false });
       assert.equal(result.changes.length, 1, `${position}/${mode}`);
       const asset = result.changes[0].facePaint[0].asset;
-      assert.ok(asset === "FaceMarks_None" || allowed.has(asset), `${position}/${mode}/${asset}`);
+      assert.equal(asset, receiving, `${position}/${mode}/${asset}`);
       assert.deepEqual(visuals, before, "Preview and protected donor gear remain untouched");
     }
   }
@@ -130,8 +130,8 @@ test("every RAW turtleneck, necklace, skullcap, and backplate is reachable in it
   const seen = new Set();
   for (let seed = 0; seed < 100; seed++) {
     const a = structuredClone(original), b = structuredClone(original);
-    const changes = applyRawRandomizerEquipment(a, mulberry32(seed), 1);
-    assert.deepEqual(applyRawRandomizerEquipment(b, mulberry32(seed), 1), changes); assert.deepEqual(a, b);
+    const changes = applyRawRandomizerEquipment(a, mulberry32(seed), 1, undefined, "", {facepaint:{chance:0,items:[]}});
+    assert.deepEqual(applyRawRandomizerEquipment(b, mulberry32(seed), 1, undefined, "", {facepaint:{chance:0,items:[]}}), changes); assert.deepEqual(a, b);
     assert.equal(changes.length, 3, "neckwear, skullcaps and jacket-free backplates are separate categories"); changes.forEach(change => seen.add(change.newItem));
     const items = changes.map(change => equipmentItem(change.newItem));
     const changedSlots = new Set(items.flatMap(item => item.slots));
@@ -149,7 +149,8 @@ test("every RAW turtleneck, necklace, skullcap, and backplate is reachable in it
 test("Unlocked fitted turtlenecks use NeckWear, while legacy neckwear still uses Neckpad", () => {
   const seen = new Set();
   for (let seed = 0; seed < 250; seed++) {
-    const loadouts = [field([])];
+    const loadouts = [field([])],vanilla=[field([])];
+    const stock=applyUnlockedRandomizerEquipment(vanilla,{position:"WR",branding:"Nike"},mulberry32(seed),1,undefined,undefined,true,{},"vanilla").find(item=>item.category==="Neckwear");if(stock)seen.add(stock.newItem);
     const change = applyUnlockedRandomizerEquipment(loadouts, { position: "WR", branding: "Nike" }, mulberry32(seed), 1).find(item => item.category === "Neckwear");
     assert.ok(change); seen.add(change.newItem);
     const selected = equipmentItem(change.newItem);

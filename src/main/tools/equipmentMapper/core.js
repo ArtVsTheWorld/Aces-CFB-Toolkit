@@ -1,49 +1,67 @@
 import {isDeepStrictEqual} from 'node:util';
+import MapperEditor from '../../../shared/mapperEditor.cjs';
 import {equipmentItem,equipmentDisplayName,equipmentSemantics,normalBrand} from '../equipment/catalog.js';
 import {enforceEquipmentCompatibility} from '../equipment/core/compatibility.js';
+import {cutoffPantsConflict} from '../equipment/core/uniformCompatibility.js';
 import {BRAND_SLOTS,isBrandCompatibleItem} from '../equipment/core/brandCompatibility.js';
 import {generatedItemConflict} from '../equipment/core/generatedCompatibility.js';
 import {facemaskFitsHelmet,helmetModel} from '../equipment/core/helmets.js';
 import {mapperLibrary,mapperDigest as digest,resolveMapperSlot,mapperElements,mapperContext,mapperRuleLoadouts,mapperTattooItem} from './library.js';
 export {mapperLibrary} from './library.js';
-import {expandMapperRules,mapperMatches,mapperRuleCaps,mapperWearingMatches} from './rules.js';
+import {expandMapperRules,mapperMatches,mapperRuleCaps,mapperWearingMatches,mapperCategoryAssignments} from './rules.js';
 const clone=value=>structuredClone(value);
 const active=asset=>asset&&!/(?:^|_)none$/i.test(asset)&&asset!=='FaceGear_BalaclavaNone';
 const itemAt=(elements,slot)=>elements.find(item=>item?.slotType===slot);
 const scopeIndexes=new WeakMap();
 const inScope=(player,rule)=>{if(!scopeIndexes.has(rule))scopeIndexes.set(rule,{teams:new Set(rule.teams??[]),positions:new Set(rule.positions??[]),rows:new Set((rule.playerRows??[]).map(Number))});const s=scopeIndexes.get(rule);return(!s.teams.size||s.teams.has(player.team))&&(!s.positions.size||s.positions.has(player.position))&&(!s.rows.size||s.rows.has(player.row));};
 
+function correctionReason(issue){
+  if(issue.reason)return issue.reason;
+  return ({
+    'jersey-undershirt':'Relaxed tees cannot be worn with this jersey style',
+    'relaxed-tee-neckwear':'Relaxed tees cannot be worn with turtlenecks, ski masks or balaclavas',
+    'arm':`${issue.side} sleeve or undershirt overlaps wrist/elbow gear`,
+    'wrist-overlap':`${issue.side} wrist accessories overlap`,
+    'mask-mouthpiece':'Masks and balaclavas require a hanging mouthpiece or no mouthpiece'
+  })[issue.kind]??'These equipment items overlap';
+}
+const specificGeneratedReason=(reason,elements)=>['Outfit conflicts with cutoff pants','Leg base layers cannot be added with cutoff pants'].includes(reason)?cutoffPantsConflict(elements)??reason:reason;
+
 function compatible(elements,changedSlots,player,originalElements,options={}){
   const get=slot=>itemAt(elements,slot)?.itemAssetName;
   for(const slot of changedSlots){
+    if(!slot.endsWith('Override')&&!MapperEditor.removalAllowed(slot)&&!active(get(slot)))return {blocking:true,reason:MapperEditor.removalRestriction};
     const element=itemAt(elements,slot);if(!element)continue;
-    const item=equipmentItem(element.itemAssetName);
-    if(item&&!item.slots.includes(slot.replace(/Override$/,'')))return {blocking:true,reason:`${equipmentDisplayName(element.itemAssetName)} does not fit ${slot}.`};
+    const item=equipmentItem(element.itemAssetName,options);
+    if(item&&!item.slots.includes(slot.replace(/Override$/,'')))return {blocking:true,reason:`${equipmentDisplayName(element.itemAssetName,options)} does not fit ${slot}.`};
   }
   for(const slot of changedSlots){
     const element=itemAt(elements,slot);if(!element)continue;
-    const item=equipmentItem(element.itemAssetName);
+    if(!active(element.itemAssetName))continue;
+    const item=equipmentItem(element.itemAssetName,options);
     if(BRAND_SLOTS.has(slot)&&!isBrandCompatibleItem(slot,element.itemAssetName,player.branding))return `The selected ${slot.includes('Shoe')?'cleats':'gloves'} are not verified for this team's ${normalBrand(player.branding)||'unknown'} brand.`;
-    if(item){const conflict=generatedItemConflict(elements,item,[slot],player.position,options);if(conflict&&!conflict.startsWith('Item is not eligible'))return conflict;}
+    if(item){const conflict=generatedItemConflict(elements,item,[slot],player.position,options);if(conflict&&!conflict.startsWith('Item is not eligible'))return specificGeneratedReason(conflict,elements);}
   }
-  if(changedSlots.some(slot=>['HeadWear','FaceMask','Visor','HelmetAccessory','MouthWear'].includes(slot))){
+  if(changedSlots.some(slot=>['HeadWear','FaceMask'].includes(slot)||['Visor','HelmetAccessory','GuardianCap','MouthWear'].includes(slot)&&active(get(slot)))){
     const helmet=get('HeadWear'),mask=get('FaceMask'),model=helmetModel(helmet);
     if(!model||!facemaskFitsHelmet(mask,helmet))return 'The helmet and facemask do not have a verified compatible pairing.';
-    if(active(get('HelmetAccessory'))&&!model.guardianCap)return 'This helmet does not support the equipped helmet accessory.';
+    if((active(get('HelmetAccessory'))||/^GuardianCap_GuardianXT/.test(get('GuardianCap')??''))&&!model.guardianCap)return 'This helmet does not support the equipped helmet accessory.';
     if(active(get('MouthWear'))&&/PacifierDualHanging/i.test(get('MouthWear'))&&!model.hangingMouthpiece)return 'This helmet does not support the hanging mouthpiece.';
   }
   // Named balaclavas are always checked. Do not reinterpret vanilla vintage
   // neck rolls as old mod replacements when the save cannot prove mod usage.
   const repaired=clone(elements),corrections=enforceEquipmentCompatibility(repaired,options),existing=enforceEquipmentCompatibility(clone(originalElements),options);
-  if(corrections.some(issue=>!existing.some(old=>isDeepStrictEqual(old,issue))))return 'This mapping conflicts with sleeves, wrist/elbow gear, neckwear, mouthpiece, or pants. Adjust the scope or queue compatible items in the same batch.';
+  const newIssues=corrections.filter(issue=>!existing.some(old=>isDeepStrictEqual(old,issue)));
+  if(newIssues.length)return [...new Set(newIssues.map(correctionReason))].join('. ');
   // Check both directions: adding a flak jacket can conflict with an unchanged
   // RAW backplate, just as copying the backplate can conflict with a jacket.
   for(const element of elements){
-    const item=equipmentItem(element.itemAssetName);if(!item||!element.slotType)continue;
+    if(!active(element.itemAssetName))continue;
+    const item=equipmentItem(element.itemAssetName,options);if(!item||!element.slotType)continue;
     const reason=generatedItemConflict(elements,item,[element.slotType],player.position,options);
     if(!reason||reason.startsWith('Item is not eligible'))continue;
     const previous=itemAt(originalElements,element.slotType),oldReason=previous?.itemAssetName===element.itemAssetName?generatedItemConflict(originalElements,item,[element.slotType],player.position,options):null;
-    if(reason!==oldReason)return reason;
+    if(reason!==oldReason)return specificGeneratedReason(reason,elements);
   }
   return null;
 }
@@ -63,7 +81,7 @@ export function normalizeMapperRules(value){
   });
 }
 export function buildMapperPreview(players,library,inputRules){
-  const resolution=library.resolution??{},originalRules=normalizeMapperRules(inputRules),items=new Map(library.items.map(item=>[item.id,item])),rules=expandMapperRules(originalRules,items),changes=[],blocked=[],compatibilityWarnings=[],statistics=originalRules.map((_,index)=>({rule:index+1,matched:0,changed:0}));
+  const resolution=library.resolution??{},originalRules=normalizeMapperRules(inputRules),items=new Map(MapperEditor.withCategories(library.items).map(item=>[item.id,item])),rules=expandMapperRules(originalRules,items),changes=[],blocked=[],compatibilityWarnings=[],statistics=originalRules.map((_,index)=>({rule:index+1,matched:0,changed:0}));
   for(const rule of rules){
     if(rule.wearingItemId&&(!items.has(rule.wearingItemId)||items.get(rule.wearingItemId).copyable===false))throw new Error('The Wearing Item filter is unavailable in the selected equipment catalog. Check your mods and reselect the item.');
     if(!items.has(rule.replacementId)||rule.action==='replace'&&!items.has(rule.sourceId))throw new Error('An item in this mapping is unavailable in the selected equipment catalog. Check your mods and reselect items from older saved rules.');
@@ -72,7 +90,8 @@ export function buildMapperPreview(players,library,inputRules){
     for(const [key,field]of [['teams','team'],['positions','position'],['playerRows','row']])if(rule[key]?.some(value=>!players.some(player=>String(player[field])===String(value))))throw new Error('A selected team, position, or player is no longer available. Review the mapping targets.');
     if(rule.playerRows?.length&&(!Array.isArray(rule.playerIdentities)||rule.playerRows.some(row=>!rule.playerIdentities.some(identity=>Number(identity.row)===Number(row)&&players.some(player=>player.row===Number(row)&&player.player===identity.player&&player.team===identity.team)))))throw new Error('Selected player identities changed. Reselect players before using this mapping in another save.');
   }
-  const {selections,allocations}=mapperRuleCaps(players,rules,items,resolution,inScope,sameColorFamily);
+  const {selections,matches,allocations}=mapperRuleCaps(players,rules,items,resolution,inScope,sameColorFamily);
+  const categoryAssignments=mapperCategoryAssignments(players,rules,items,selections,resolution,sameColorFamily);
   const selected=(player,rule)=>inScope(player,rule)&&selections.get(rule.reportRule).has(player.row);
   for(const player of players){
     if(!rules.some(rule=>selected(player,rule)))continue;
@@ -81,7 +100,9 @@ export function buildMapperPreview(players,library,inputRules){
     const originalRaw=clone(raw),audits=[],touched=new Set(),failure=[],outfitWarnings=[],claims=new Map(),playerCounts=originalRules.map(()=>({matched:0,changed:0}));
     for(const [ruleIndex,rule]of rules.entries()){
       if(!selected(player,rule))continue;
-      const source=items.get(rule.sourceId),replacement=items.get(rule.replacementId);
+      if(categoryAssignments.has(rule)&&!categoryAssignments.get(rule).has(player.row))continue;
+      const source=items.get(rule.sourceId),selection=items.get(rule.replacementId),replacement=selection.categorySelection?categoryAssignments.get(rule)?.get(player.row):selection;
+      if(!replacement){failure.push(`Mapping ${rule.reportRule}: this category has no supported item for the player's team brand and current colors. Choose another category or turn off Keep Current Colors.`);continue;}
       const applicable=mapperRuleLoadouts(raw,replacement,true);
       if(mapperTattooItem(replacement)&&applicable.length>1){failure.push('Multiple tattoo layers cannot be safely mapped.');continue;}
       for(const loadout of applicable){
@@ -100,7 +121,8 @@ export function buildMapperPreview(players,library,inputRules){
           if(elements.filter(element=>resolveMapperSlot(element,resolution)===slot).length>1){failure.push(`Duplicate ${slot} entries cannot be safely mapped.`);continue;}
           let chosen=replacement;const before=elements.find(element=>resolveMapperSlot(element,resolution)===matchedSlot),originalBefore=resolved.find(element=>element.slotType===matchedSlot),currentColors=equipmentSemantics(originalBefore?.itemAssetName)?.colors??[];
           if(rule.preserveColor&&currentColors.length){
-            chosen=library.items.find(item=>item.copyable!==false&&item.slot===replacement.slot&&item.asset===replacement.asset&&isDeepStrictEqual(item.colors,currentColors))??library.items.find(item=>item.copyable!==false&&item.slot===replacement.slot&&equipmentItem(item.asset)&&equipmentItem(replacement.asset)&&sameColorFamily(item.asset,replacement.asset)&&isDeepStrictEqual(item.colors,currentColors));
+            const candidates=selection.categorySelection?selection.memberIds.map(id=>items.get(id)):library.items;
+            chosen=candidates.find(item=>item.copyable!==false&&item.slot===replacement.slot&&item.asset===replacement.asset&&isDeepStrictEqual(item.colors,currentColors))??candidates.find(item=>item.copyable!==false&&item.slot===replacement.slot&&equipmentItem(item.asset)&&equipmentItem(replacement.asset)&&sameColorFamily(item.asset,replacement.asset)&&isDeepStrictEqual(item.colors,currentColors));
             if(!chosen){failure.push(`Mapping ${ruleIndex+1}: no matching color variant of the replacement is available in the selected catalog.`);continue;}
           }
           const proposals=[[slot,{...(chosen.catalog?clone(before??{}):{}),...clone(chosen.element),slotType:slot}]];
@@ -124,16 +146,23 @@ export function buildMapperPreview(players,library,inputRules){
     if(player.shared)failure.push('This player shares CharacterVisuals with another player. No shared row will be changed.');
     for(const [index,loadout]of (raw.loadouts??[]).entries()){
       const slots=[...touched].filter(key=>key.startsWith(`${index}|`)).map(key=>key.split('|')[1]);
-      if(slots.length){const issue=compatible(mapperElements(loadout.loadoutElements,resolution),slots,player,mapperElements(originalRaw.loadouts[index]?.loadoutElements??[],resolution),{usingRawAccessoriesMod:library.mods?.raw===true});if(issue){if(issue.blocking)failure.push(issue.reason);else outfitWarnings.push(issue);}}
+      if(slots.length){const issue=compatible(mapperElements(loadout.loadoutElements,resolution),slots,player,mapperElements(originalRaw.loadouts[index]?.loadoutElements??[],resolution),{usingRawAccessoriesMod:library.mods?.raw===true,usingUnlockedMod:library.mods?.unlocked===true});if(issue){if(issue.blocking)failure.push(issue.reason);else outfitWarnings.push(issue);}}
     }
     if(failure.length){blocked.push({row:player.row,player:player.player,team:player.team,reason:[...new Set(failure)].join(' ')});continue;}
     for(const [index,counts]of playerCounts.entries())statistics[index].changed+=counts.changed;
     if(!isDeepStrictEqual(raw,originalRaw)){
-      changes.push({...player,newRawData:JSON.stringify(raw),edits:audits});
+      changes.push({...player,newRawData:JSON.stringify(raw),edits:audits,requestedSlots:[...claims].map(([key,claim])=>({loadout:Number(key.split('|')[0]),slot:key.split('|')[1],element:clone(claim.proposal)}))});
       if(outfitWarnings.length)compatibilityWarnings.push({row:player.row,player:player.player,team:player.team,reason:[...new Set(outfitWarnings)].join(' ')});
     }
   }
-  return {changes,blocked,compatibilityWarnings,statistics,allocations};
+  const matchingRows=new Set([...matches.values()].flatMap(rows=>[...rows])),selectedRows=new Set([...selections].flatMap(([number,rows])=>[...rows].filter(row=>matches.get(number).has(row)))),changedRows=new Set(changes.map(p=>p.row)),blockedRows=new Set(blocked.map(p=>p.row));
+  const reasonCounts=new Map();
+  for(const row of matchingRows)if(!changedRows.has(row)){
+    const reason=blockedRows.has(row)?'Blocked by a rule conflict or unsafe player data':!selectedRows.has(row)?'Not selected by the frequency setting':'Already has the requested equipment';
+    reasonCounts.set(reason,(reasonCounts.get(reason)??0)+1);
+  }
+  const impact={matching:matchingRows.size,changing:changes.length,unchanged:matchingRows.size-changes.length,unchangedReasons:[...reasonCounts].map(([reason,players])=>({reason,players}))};
+  return {changes,blocked,compatibilityWarnings,statistics,allocations,impact};
 }
 
 // The catalog's explicit mappings include repurposed mod colors. Never infer a
@@ -141,3 +170,4 @@ export function buildMapperPreview(players,library,inputRules){
 import {recolorEquipmentItem} from '../equipment/catalog.js';
 function sameColorFamily(asset,other){return ['white','black','primary','secondary'].some(theme=>recolorEquipmentItem(asset,theme)===other||recolorEquipmentItem(other,theme)===asset);}
 export {sameColorFamily};
+export {compatible as mapperCompatibilityIssue};

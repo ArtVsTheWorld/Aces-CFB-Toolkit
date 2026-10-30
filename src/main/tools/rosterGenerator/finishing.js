@@ -1,3 +1,4 @@
+import {LONG_SNAP_ENABLED} from '../../../shared/toolRegistry.js';
 import {patchLongSnapRatings,mulberry32} from '../longSnap/core.js';
 import {matchingPitch} from '../dealbreaker/pitches.js';
 import {assignRosterCaptains} from './playerState.js';
@@ -29,12 +30,13 @@ export function standardRosterNumbers(players,team,seed) {
 
 export function finishGeneratedRoster(players,team,seed) {
   const records=players.map(player=>({...player.fields,Position:player.position,TeamIndex:team.teamIndex??0}));
-  const longSnap=patchLongSnapRatings(records,{apply:true,random:mulberry32((seed^0x1952)>>>0)});
+  if(!LONG_SNAP_ENABLED)for(const record of records)record.LongSnapRating=0;
+  const longSnap=LONG_SNAP_ENABLED?patchLongSnapRatings(records,{apply:true,random:mulberry32((seed^0x1952)>>>0)}):[];
   const dealbreakers=patchDealbreakers(records,{teamNames:new Map([[team.teamIndex??0,team.name]]),restrictPlayingStylePositions:true,fixInvalidPlayingStyle:true,seed:(seed^0xdecaf)>>>0,apply:true});
   records.forEach((record,i)=>{players[i].fields.LongSnapRating=record.LongSnapRating;players[i].fields.RecruitingDealbreaker=record.RecruitingDealbreaker;players[i].fields.IdealRecruitingPitch=matchingPitch(record.RecruitingDealbreaker,record.IdealRecruitingPitch,(seed^0xdecaf)>>>0,players[i].row);});
   const captains=assignRosterCaptains(players,team);
   // Numbers are the last mutation, after the final ratings and identities.
   const numbers=standardRosterNumbers(players,team.name,(seed^0x4a455253)>>>0);
   for(const player of players)player.fields.JerseyNum=numbers.assigned.get(player.row);
-  return {captains,longSnap:longSnap.map(({row,oldRating,newRating,reason})=>({row:players[row].row,oldRating,newRating,reason})),dealbreakers:dealbreakers.outcomes.map(({row,oldValue,newValue,oldPitch,newPitch,reasons})=>({row:players[row].row,oldValue,newValue,oldPitch,newPitch,reasons})),dealbreakerPopulation:dealbreakers.population,jersey:{stats:numbers.stats,reasons:numbers.reasons,teamTraditions:false,retiredProtection:false}};
+  return {captains,longSnapPaused:!LONG_SNAP_ENABLED,longSnap:longSnap.map(({row,oldRating,newRating,reason})=>({row:players[row].row,oldRating,newRating,reason})),dealbreakers:dealbreakers.outcomes.map(({row,oldValue,newValue,oldPitch,newPitch,reasons})=>({row:players[row].row,oldValue,newValue,oldPitch,newPitch,reasons})),dealbreakerPopulation:dealbreakers.population,jersey:{stats:numbers.stats,reasons:numbers.reasons,teamTraditions:false,retiredProtection:false}};
 }

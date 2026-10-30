@@ -92,7 +92,7 @@ test("new optional categories are reachable, deterministic, brand-safe and remov
     const changes = applyUnlockedRandomizerEquipment(loadouts, { position: "WR", branding: "Nike" }, mulberry32(seed), 0.7);
     assert.deepEqual(applyUnlockedRandomizerEquipment(replay, { position: "WR", branding: "Nike" }, mulberry32(seed), 0.7), changes);
     assert.deepEqual(loadouts, replay);
-    for (const entry of loadouts[0].loadoutElements) {
+    for (const entry of loadouts[0].loadoutElements.filter(e=>e.slotType!=="FacePaint")) {
       seen.add(entry.itemAssetName);
       assert.ok(equipmentItem(entry.itemAssetName)?.slots.includes(entry.slotType), `${entry.slotType}/${entry.itemAssetName}`);
     }
@@ -100,7 +100,9 @@ test("new optional categories are reachable, deterministic, brand-safe and remov
     assert.ok(!loadouts[0].loadoutElements.some(item => item.slotType === "Towel" && item.itemAssetName === "Towel2_South"));
     assert.ok(!loadouts[0].loadoutElements.some(item => /BalaclavaOverNose/.test(item.itemAssetName)));
   }
-  for (const entry of source.items.filter(item => item.origin === "unlocked" && !item.displayOnly)) assert.ok(seen.has(entry.itemName), entry.itemName);
+  for(let seed=0;seed<800;seed++){const vanilla=[field([])];applyUnlockedRandomizerEquipment(vanilla,{position:"WR",branding:"Nike"},mulberry32(seed),.7,undefined,undefined,true,{},"vanilla");for(const e of vanilla[0].loadoutElements)seen.add(e.itemAssetName);}
+  for(let seed=0;seed<100;seed++){const masks=[field([])];applyUnlockedRandomizerEquipment(masks,{position:"WR",branding:"Nike"},mulberry32(seed),0,undefined,{balaclavas:{chance:100},neckwear:{chance:0}},true,{},"vanilla");for(const e of masks[0].loadoutElements)seen.add(e.itemAssetName);}
+  for (const entry of source.items.filter(item => item.origin === "unlocked" && !item.displayOnly && item.itemName!=="Towel2_South")) assert.ok(seen.has(entry.itemName), entry.itemName);
   for (const asset of Object.keys(source.displayNames).filter(name => name.startsWith("NeckWear_"))) assert.ok(seen.has(asset));
   const unchanged = [field([item("HeadWear", "Original")])], before = structuredClone(unchanged);
   assert.deepEqual(applyUnlockedRandomizerEquipment(unchanged, { position: "WR" }, () => 0, 0), []);

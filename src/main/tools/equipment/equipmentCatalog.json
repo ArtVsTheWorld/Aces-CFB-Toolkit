@@ -2,17 +2,6 @@
   "source": "UnlockedCollegeFBCharacterPrefab_PlayerEquipmentOnly.xlsx",
   "items": [
     {
-      "itemName": "GearArmSleeve_Bands_armTape_normal_OffWhite",
-      "displayName": "Arm Bands White",
-      "category": "Arm Wear",
-      "slots": [
-        "LeftArmWear",
-        "RightArmWear"
-      ],
-      "tags": [],
-      "authenticity": "LoadoutAuthenticity_All"
-    },
-    {
       "itemName": "GearArmSleeve_Full_sleeveLongUnderarmor_normal_Black",
       "displayName": "Arm Sleeve Full Black",
       "category": "Arm Wear",

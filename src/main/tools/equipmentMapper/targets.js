@@ -1,4 +1,5 @@
 import path from 'node:path';
+import MapperEditor from '../../../shared/mapperEditor.cjs';
 import {randomUUID} from 'node:crypto';
 import {saveFingerprint} from '../jersey/planStore.js';
 import {normalizeMapperRules,sameColorFamily} from './core.js';
@@ -17,7 +18,7 @@ export function queryMapperTargets({savePath,sessionId,fingerprint,rule,query=''
   const source=session;
   if(!source||source.id!==sessionId||source.savePath!==path.resolve(savePath)||source.fingerprint!==fingerprint||saveFingerprint(savePath)!==fingerprint)throw Error('The equipment list changed. Reload Equipment Mapper before choosing players.');
   if(typeof query!=='string'||query.length>300||!Number.isInteger(page)||page<0||!Array.isArray(selectedRows)||selectedRows.length>30000||selectedRows.some(row=>!Number.isSafeInteger(row)||row<0)||typeof selectedOnly!=='boolean')throw Error('Invalid player search.');
-  const normalized=normalizeMapperRules([{...rule,scope:'all',playerRows:[],playerIdentities:[]}])[0],items=new Map(source.library.items.map(item=>[item.id,item]));
+  const normalized=normalizeMapperRules([{...rule,scope:'all',playerRows:[],playerIdentities:[]}])[0],items=new Map(MapperEditor.withCategories(source.library.items).map(item=>[item.id,item]));
   for(const id of [normalized.replacementId,normalized.action==='replace'?normalized.sourceId:null,normalized.wearingItemId].filter(Boolean))if(!items.has(id)||items.get(id).copyable===false)throw Error('Select available catalog items before choosing players.');
   const parts=expandMapperRules([normalized],items),key=JSON.stringify(parts.map(part=>[part.action,part.sourceId,part.replacementId,part.matchMode,part.wearingItemId,part.wearingMatchMode]));
   if(!source.matches.has(key)){

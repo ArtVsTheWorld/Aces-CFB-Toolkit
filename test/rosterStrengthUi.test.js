@@ -16,7 +16,7 @@ test('shared and individual roster configuration place schemes and makeup before
 });
 
 test('position strength presents all groups in a compact, accessible table without redundant meters',()=>{
-  const context=vm.createContext({RosterTalent:TALENT,modelHelpButton:(label,text)=>`<button data-model-help="${text}" aria-label="${label}">?</button>`});vm.runInContext(page,context);
+  const context=vm.createContext({RosterTalent:TALENT,modelHelpButton:(label,text)=>`<button data-model-help="${text}" aria-label="${label}">?</button>`});vm.runInContext(fs.readFileSync(new URL('../src/renderer/roster-evolution.js',import.meta.url),'utf8'),context);vm.runInContext(page,context);
   const markup=vm.runInContext('rosterStrengthMarkup()',context);
   assert.equal((markup.match(/<tbody>/g)||[]).length,3);
   assert.equal((markup.match(/data-roster-talent="/g)||[]).length,13);

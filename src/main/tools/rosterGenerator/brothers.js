@@ -13,7 +13,7 @@ export function planBrothers(players,model,seed,unavailable=[]){
     // Keep the school's planned state/pipeline distribution intact: relatives
     // can share a town without moving a player to another recruiting region.
     if(origin.home.state!==b.fields.PLYR_HOME_STATE||origin.home.pipeline!==b.fields.HomePipeline)continue;
-    const appearance=model.catalog.appearances.find(item=>item.id===b.provenance.appearance),pool=observedSurnamePool(model.catalog,appearance);
+    const appearance=model.catalog.appearances.find(item=>item.id===b.provenance.appearance),pool=observedSurnamePool(model.catalog,appearance,b.provenance.appearanceMix);
     if(origin.surname.suffix||!origin.home.town||!origin.surname.parts.every(name=>pool.names.includes(name)))continue;
     const newName=`${b.fields.FirstName} ${origin.lastName}`.toLowerCase();
     if(blocked.has(newName)||rows.some(p=>p.row!==b.row&&`${p.fields.FirstName} ${p.fields.LastName}`.toLowerCase()===newName))continue;

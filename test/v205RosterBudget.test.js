@@ -18,8 +18,8 @@ test('important players cost more per rating gain while every mix keeps the arit
   const input=Object.entries(counts).flatMap(([position,n])=>Array.from({length:n},()=>({position}))),settings=normalizeGenerationSettings({talentShares:base});assert.ok(Math.abs(positionTalentTargets(input,{targetAverage:70},settings).QB-70)<1e-8);
   for(const talentShares of [{QB:99},{QB:100.1},{QB:100,Unknown:0},{QB:'100'}])assert.throws(()=>normalizeGenerationSettings({talentShares}),/whole percentages/);
 });
-test('HBCU is overwhelmingly tone 7 and development preference descriptions stay nontechnical',()=>{
-  const weights=toneWeights('hbcu','QB',[]);assert.ok(weights[7]/Object.values(weights).reduce((a,b)=>a+b,0)>.98);
+test('HBCU has the approved tone 7 share and development preference descriptions stay nontechnical',()=>{
+  const weights=toneWeights('hbcu','QB',[]);assert.equal(weights[7]/Object.values(weights).reduce((a,b)=>a+b,0),.60);
   for(const option of TONE_PRESETS)assert.ok(!/observed|sample|[1-8][–-][1-8]|pool|pairing/i.test(option.description));
   const page=fs.readFileSync(new URL('../src/renderer/roster-generator.js',import.meta.url),'utf8'),nil=fs.readFileSync(new URL('../src/renderer/operations.js',import.meta.url),'utf8');assert.ok(!page.includes('A fresh roster for your team.'));assert.ok(!page.includes('First names come from a small pool'));assert.ok(!nil.includes('Only the NIL flag changes. This flag controls'));assert.ok(page.includes('RosterTalent.editShare'));
 });
