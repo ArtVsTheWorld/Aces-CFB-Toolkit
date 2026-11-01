@@ -35,7 +35,7 @@ export function modPoolDefinitions() {
       category("socks", "Sock Styles", UNLOCKED_POOLS.socks),
       category("spats", "Spats — Both Feet", UNLOCKED_SPATS, {defaultChance:5})
     ],
-    raw: [category("neckwear", "Turtlenecks & Necklaces", RAW_ACCESSORIES_POOLS.neckwear), category("skullcaps", "Skullcaps", RAW_ACCESSORIES_POOLS.skullcaps), category("backplates", "Backplates — No Flak Jacket", RAW_ACCESSORIES_POOLS.backplates ?? []), category('armSleeves', 'RAW Jamo Sleeves', RAW_ACCESSORIES_POOLS.armSleeves, {defaultChance: 0, defaultItems: []}), category('gloves','Pink Gloves',RAW_ACCESSORIES_POOLS.gloves,{defaultChance:10}), category('towels','Black Towels',RAW_ACCESSORIES_POOLS.towels,{defaultChance:1})],
+    raw: [category("neckwear", "Turtlenecks & Necklaces", RAW_ACCESSORIES_POOLS.neckwear), category("skullcaps", "Skullcaps", RAW_ACCESSORIES_POOLS.skullcaps), category("backplates", "Backplates — No Flak Jacket", RAW_ACCESSORIES_POOLS.backplates ?? []), category('armSleeves', 'RAW Jamo Sleeves', RAW_ACCESSORIES_POOLS.armSleeves, {defaultChance: 0, defaultItems: []}), category('gloves','Pink Gloves',RAW_ACCESSORIES_POOLS.gloves,{defaultChance:0,defaultItems:[]}), category('towels','Black Towels',RAW_ACCESSORIES_POOLS.towels,{defaultChance:0,defaultItems:[]})],
     eljax: [category("armSleeves", "Team & Brand Arm Sleeves", EQUIPMENT_TRUCK_POOLS.armSleeves), category("visors", "Team & Brand Visors", EQUIPMENT_TRUCK_POOLS.visors),
       category("chinCovers", "Brand Logo Chin Covers", EQUIPMENT_TRUCK_POOLS.chinCovers),
       category("waistPlaycalls", "Waist Playcall Bands — QBs Only", EQUIPMENT_TRUCK_POOLS.waistPlaycalls),

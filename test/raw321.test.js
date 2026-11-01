@@ -20,10 +20,16 @@ test('RAW 3.2.1 catalog has three exact fixed-pink branded gloves and all eight 
   for(const item of RAW_321.items){const known=equipmentItem(item.itemName);assert.equal(known.origin,'raw');assert.equal(equipmentDisplayName(item.itemName),item.displayName);assert.deepEqual(known.slots,item.category==='Gloves'?['LeftHandWear','RightHandWear']:['Towel']);assert.ok((item.category==='Gloves'?RAW_ACCESSORIES_POOLS.gloves:RAW_ACCESSORIES_POOLS.towels).some(i=>i.itemName===item.itemName));}
   assert.equal(equipmentItem('FaceMarks_RawNoEarrings'),undefined,'An empty model utility is not added as random facepaint');
 });
-test('Quickstart and Randomizer share 10% RAW gloves and 1% black towels; explicit old choices, zero chances and empty lists survive',()=>{
-  for(const settings of [normalizeModPools(),quickstartSettings({raw:true}).randomizer.modPools]){assert.deepEqual(settings.raw.gloves,{chance:10,items:gloves.map(i=>i.itemName)});assert.deepEqual(settings.raw.towels,{chance:1,items:towels.map(i=>i.itemName)});assert.deepEqual(settings.raw.armSleeves,{chance:0,items:[]});}
+test('Quickstart and Randomizer leave RAW pink gloves and black towels off by default; saved choices remain intact',()=>{
+  for(const settings of [normalizeModPools(),quickstartSettings({raw:true}).randomizer.modPools]){assert.deepEqual(settings.raw.gloves,{chance:0,items:[]});assert.deepEqual(settings.raw.towels,{chance:0,items:[]});assert.deepEqual(settings.raw.armSleeves,{chance:0,items:[]});}
   const previous={_version:2,raw:{neckwear:{chance:23,items:defs.raw.find(c=>c.id==='neckwear').defaultItems.slice(0,1)},armSleeves:{chance:0,items:[]}}};const normalized=normalizeModPools(previous);assert.deepEqual(normalized.raw.neckwear,previous.raw.neckwear);assert.deepEqual(normalized.raw.armSleeves,previous.raw.armSleeves);
   const disabled=normalizeModPools({...normalized,raw:{...normalized.raw,gloves:{chance:0,items:[]},towels:{chance:0,items:[]}}});assert.deepEqual(normalizeModPools(disabled),disabled);assert.deepEqual(disabled.raw.gloves,{chance:0,items:[]});
+  const optedIn={_version:2,raw:{gloves:{chance:10,items:gloves.map(i=>i.itemName)},towels:{chance:1,items:towels.map(i=>i.itemName)}}};const retained=normalizeModPools(optedIn);assert.deepEqual(retained.raw.gloves,optedIn.raw.gloves);assert.deepEqual(retained.raw.towels,optedIn.raw.towels);
+});
+
+test('enabling RAW alone never rolls pink gloves or black towels with the new defaults',()=>{
+  const settings=quickstartSettings({raw:true}).randomizer,newItems=new Set([...gloves,...towels].map(i=>i.itemName));
+  for(let seed=0;seed<100;seed++){const loadouts=outfit(),state=createGeneratedEquipmentState(loadouts);const changes=applyModdedRandomizerEquipment(loadouts,{position:'WR',branding:'nike'},mulberry32(seed),1,state,settings);assert.ok(Object.values(changes).flat().every(c=>!newItems.has(c.newItem)));assert.ok(loadouts[0].loadoutElements.every(e=>!newItems.has(e.itemAssetName)));}
 });
 test('RAW pink gloves generate as a matching pair, clear old donor palette overrides, and respect team brand and pool position protection',()=>{
   for(const item of gloves){

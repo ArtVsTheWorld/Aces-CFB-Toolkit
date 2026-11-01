@@ -11,7 +11,7 @@ Equipment Tools
 
 Equipment Randomizer and Equipment Quickstart
 
-- Added RAW Accessories v3.2.1 support, including pink gloves and eight black towel positions
+- Added RAW Accessories v3.2.1 support, including pink gloves and eight black towel positions. Pink gloves and black towels are disabled by default
 - Added the eight base-game directional towels to the CFB 27 Equipment pool, with a default 1% chance
 - Added Unlocked's Balaclava (Under Lip) options, disabled by default
 - Quickstart is less likely to combine Compression Tees with arm sleeves, reducing the double-sleeve look while keeping some variety

@@ -7,11 +7,16 @@ import {makeRosterEquipmentGenerator} from '../src/main/tools/rosterGenerator/eq
 import {equipmentItem,equipmentColorVariant,RAW_321,RAW_314} from '../src/main/tools/equipment/catalog.js';
 import {enforceEquipmentCompatibility} from '../src/main/tools/equipment/core/compatibility.js';
 import {normalizeModPools} from '../src/main/tools/equipment/core/modPools.js';
+import {recolorPlayerAccessories} from '../src/main/tools/equipment/core/recolor.js';
 const e=(slotType,itemAssetName)=>({slotType,itemAssetName,keep:'metadata'}),ref=(table,row)=>(table*0x20000+row).toString(2).padStart(32,'0');
 const sleeve='GearArmSleeve_Quarter_sleeveLongUnderarmor_normal_White',shirt='Gear_Undershirt_CompressionTCrewSleeveless_White';
 const outfit=()=>({loadoutType:'PlayerOnField',loadoutElements:[e('HeadWear','GearHelmet_Speed_Flex'),e('FaceMask','GearFaceMask_Speedflex2BarQB'),e('LeftShoe','GearFootwear_shoe_low_NikeVaporEdge'),e('RightShoe','GearFootwear_shoe_low_NikeVaporEdge'),e('OuterShirt','Gear_JerseyStyle_SleeveStandard'),e('InnerShirt',shirt),e('LeftArmWear',sleeve),e('RightArmWear',sleeve.replace('White','Black')),e('LeftSpat','GearSpats_spatThin_SecondaryColor'),e('RightSpat','GearSpats_spatThin_Black')]});
 const loadouts=()=>[outfit(),{...outfit(),loadoutCategory:'Away'},{loadoutType:'Base',loadoutElements:[e('LeftArmTattoo','KeepPersonalData')]}];
 const asset=(l,slot)=>l.loadoutElements.find(e=>e.slotType===slot)?.itemAssetName;
+test('automatic matching preserves the vanilla Relaxed T Shirt; the explicit Patcher recolor still upgrades it by design',()=>{
+ for(const unlocked of [false,true]){const l=[outfit()];l[0].loadoutElements.find(e=>e.slotType==='InnerShirt').itemAssetName='Undershirt_Untucked';const before=structuredClone(l[0].loadoutElements.find(e=>e.slotType==='InnerShirt'));const result=createAccessoryColorCoordinator({usingUnlockedMod:unlocked})(l);assert.ok(result.color);assert.deepEqual(l[0].loadoutElements.find(e=>e.slotType==='InnerShirt'),before);assert.ok(result.changes.every(c=>c.slot!=='InnerShirt'));}
+ const l=[{loadoutType:'PlayerOnField',loadoutElements:[e('InnerShirt','Undershirt_Untucked')]}];recolorPlayerAccessories(l,'black','black');assert.equal(asset(l[0],'InnerShirt'),'G_CompressionT_Crew_ShortSleeve_99Club_B_WHI');
+});
 test('no-mod coordination shares one dominant accessory color across sides and all on-field loadouts, without changing styles or personal data',()=>{
  const l=loadouts(),before=structuredClone(l),coordinate=createAccessoryColorCoordinator({usingUnlockedMod:false}),result=coordinate(l);assert.equal(result.color,'white');assert.ok(result.changes.length>=6);
  for(const [i,now]of l.entries()){if(now.loadoutType==='Base'){assert.deepEqual(now,before[i]);continue;}for(const slot of ['InnerShirt','LeftArmWear','RightArmWear','LeftSpat','RightSpat'])assert.equal(asset(now,slot),equipmentColorVariant(asset(before[i],slot),'white',{usingUnlockedMod:false}));for(const slot of ['HeadWear','FaceMask','LeftShoe','RightShoe','OuterShirt'])assert.equal(asset(now,slot),asset(before[i],slot));assert.ok(now.loadoutElements.every(e=>e.keep==='metadata'));assert.deepEqual(enforceEquipmentCompatibility(structuredClone(now.loadoutElements)),[]);}
