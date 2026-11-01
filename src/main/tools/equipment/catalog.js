@@ -14,6 +14,7 @@ const colorInventory = JSON.parse(fs.readFileSync(new URL("./equipmentColorInven
 const sourcedInventory = JSON.parse(fs.readFileSync(new URL("./equipmentSourcedInventory.json", import.meta.url), "utf8"));
 const raw204Inventory = JSON.parse(fs.readFileSync(new URL("./equipmentRaw204Inventory.json", import.meta.url), "utf8"));
 export const RAW_314 = JSON.parse(fs.readFileSync(new URL('./equipmentRaw314Inventory.json', import.meta.url), 'utf8'));
+export const RAW_321 = JSON.parse(fs.readFileSync(new URL('./equipmentRaw321Inventory.json', import.meta.url), 'utf8'));
 const rawStockOriginals = new Map(Object.entries(RAW_314.displacedStock).map(([original, alias]) => [alias, original]));
 const mod191Inventory = JSON.parse(fs.readFileSync(new URL("./equipmentMod191Inventory.json", import.meta.url), "utf8"));
 const unlocked097 = JSON.parse(fs.readFileSync(new URL("./equipmentUnlocked097Inventory.json", import.meta.url), "utf8"));
@@ -27,7 +28,7 @@ const vanillaMenuByName = new Map(vanillaMenu.items.map(item=>[item.itemName,ite
 const resolvedStockItems = new Map();
 const resolvedModItems = new Map();
 const modItems = Object.entries(modInventory.mods).flatMap(([origin, mod]) => (mod.equipmentItems ?? []).map(item => ({ ...item, origin })));
-const mergedItems = new Map([...catalog.items, ...modItems, ...colorInventory.items, ...sourcedInventory.items, ...liveFacemasks.items, ...raw204Inventory.items, ...mod191Inventory.items, ...unlocked097.items, ...unlockedLive210.items, ...equipmentTruck.items, ...offlineInventory.items, ...RAW_314.items].map(item => [item.itemName, item]));
+const mergedItems = new Map([...catalog.items, ...modItems, ...colorInventory.items, ...sourcedInventory.items, ...liveFacemasks.items, ...raw204Inventory.items, ...mod191Inventory.items, ...unlocked097.items, ...unlockedLive210.items, ...equipmentTruck.items, ...offlineInventory.items, ...RAW_314.items, ...RAW_321.items].map(item => [item.itemName, item]));
 // Keep the published catalog order stable; only previously missing IDs append.
 for(const item of vanillaMenu.items)if(!mergedItems.has(item.itemName))mergedItems.set(item.itemName,item);
 export const EQUIPMENT_ITEMS = Object.freeze([...mergedItems.values()].map(item => {
@@ -183,6 +184,7 @@ EXPLICIT_COLOR_LOOKUP.set("GearArmSleeve_NikeProDriFitSleeve2a_Black",
 // These legacy IDs have different slots in Unlocked (FaceWear vs Neckpad).
 // They are not interchangeable black/white variants.
 registerExplicitFamily({ black: "FaceGear_BalaclavaOverNose", white: "FaceGear_BalaclavaOverNose_White", primary: "FaceGear_BalaclavaOverNose_Primary", secondary: "FaceGear_BalaclavaOverNose_Secondary" });
+registerExplicitFamily({ black: "FaceGear_BalaclavaUnderLip", white: "FaceGear_BalaclavaUnderLip_White", primary: "FaceGear_BalaclavaUnderLip_Primary", secondary: "FaceGear_BalaclavaUnderLip_Secondary" });
 for (const family of sourcedInventory.partialColorFamilies) registerExplicitFamily(family);
 // The menu calls this "Black", but CRASHTEST confirms blue/pink artwork.
 // Only this legacy input is redirected; it must never be a safe-color target.
@@ -316,16 +318,18 @@ export const UNLOCKED_POOLS = Object.freeze({
   standardPacifiers: equipmentItemsFor("Mouthpiece", item => /^GearMouthpiece_PacifierDual_(?!Hanging)/i.test(item.itemName) && isToolMouthpieceColor(item.itemName)),
   mouthguards: equipmentItemsFor("Mouthpiece", item => /^GearMouthpiece_Mouthguard/i.test(item.itemName) && isToolMouthpieceColor(item.itemName)),
   // Deliberate allowlist: old neckpad IDs are repurposed by mods. Unknown styles
-  // (including possible under-lip masks) must not leak into generated neckwear.
+  // must not leak into generated neckwear. Balaclavas use their FaceWear pool.
   neckwear: EQUIPMENT_ITEMS.filter(item =>
     (item.category === "Neckwear" && item.origin === "unlocked" && (!colorInventory.unclassifiedNeckwear.includes(item.itemName) || Object.hasOwn(sourcedInventory.displayNames, item.itemName)))
     && canGenerateItem(item)),
-  balaclavas: equipmentItemsFor("Face Wear", item => item.origin === "unlocked" && !item.displayOnly && /^FaceGear_BalaclavaOverNose/.test(item.itemName)),
+  balaclavas: equipmentItemsFor("Face Wear", item => item.origin === "unlocked" && !item.displayOnly && /^FaceGear_Balaclava(?:OverNose|UnderLip)(?:_|$)/.test(item.itemName)),
   thighPads: equipmentItemsFor("Thigh Pads", item => item.origin === "unlocked" && !item.displayOnly),
   towels: equipmentItemsFor("Towel", item => item.origin === "unlocked" && !item.displayOnly)
 });
 
 export const RAW_ACCESSORIES_POOLS = Object.freeze({
+  gloves: equipmentItemsFor('Gloves',item=>item.origin==='raw'&&canGenerateItem(item)),
+  towels: equipmentItemsFor('Towel',item=>item.origin==='raw'&&canGenerateItem(item)),
   armSleeves: RAW_JAMO_ITEMS,
   backplates: equipmentItemsFor("Back Plate", item => item.origin === "raw" && canGenerateItem(item)),
   neckwear: EQUIPMENT_ITEMS.filter(item => item.origin === "raw" && ["Neckwear", "Neck Pad"].includes(item.category)),

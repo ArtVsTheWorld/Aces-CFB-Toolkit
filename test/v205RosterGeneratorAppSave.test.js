@@ -23,7 +23,7 @@ function setup(t){
 }
 test('multi-team app Preview/Apply/reload preserves protected fields, exact previews, backups, reports and deterministic order',{timeout:90000,skip:!fs.existsSync(fixture)},async t=>{
   const {context,savePath}=setup(t),original=saveFingerprint(savePath),sourceHash=saveFingerprint(fixture),options={teams:['LSU','Navy'],preset:'building-blocks',rosterAge:'seniors',seed:205};
-  const prepared=await prepareRosterGenerator(context);assert.equal(prepared.presets.length,7);assert.ok(prepared.teams.some(team=>team.name==='Navy'));
+  const prepared=await prepareRosterGenerator(context);assert.equal(prepared.presets.length,8);assert.ok(prepared.presets.some(p=>p.id==='match-existing'));assert.ok(prepared.teams.some(team=>team.name==='Navy'));
   const before=await loadEquipmentTables(savePath,schemaPath,true,false),a=await runRosterGenerator({...context,mode:'preview',options}),b=await runRosterGenerator({...context,mode:'preview',options:{...options,teams:[...options.teams].reverse()}});
   assert.equal(saveFingerprint(savePath),original);assert.notEqual(a.details.seed,b.details.seed);assert.notDeepEqual(a.details.changes,b.details.changes);assert.equal(a.details.canApply,true);assert.equal(a.details.totalPreviewRows,170);
   const rows=searchPlanRows(a.planId,'').changes,protectedPlayers=snapshotProtectedPlayers(before.players,new Set(rows.map(row=>row.row)));

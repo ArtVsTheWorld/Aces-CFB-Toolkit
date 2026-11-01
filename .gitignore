@@ -21,6 +21,8 @@ logs/
 review-snapshots/
 saves/
 Ace's CFB Toolkit Backups/
-DYNASTY-*
-ROADTOGLORY-*
-ROSTER-*
+# Native saves at the project root; do not hide roster-* source modules.
+/DYNASTY-*
+/ROADTOGLORY-*
+/RTG-*
+/ROSTER-*

@@ -104,7 +104,7 @@ test("all moved controls remain canonical and UI modules load before the rendere
   const index = fs.readFileSync(new URL("../src/renderer/index.html", import.meta.url), "utf8");
   assert.ok(index.indexOf('src="configuration.js"') < index.indexOf('src="helmets.js"'));
   assert.ok(index.indexOf('src="helmets.js"') < index.indexOf('src="renderer.js"'));
-  for (const title of ["Player Filters", "Donor Settings", "Mouthpiece Settings", "Colors & Tape", "Tattoo Settings", "Starting Dealbreaker Mix", "Player Scope"]) assert.ok(source.includes(title));
+  for (const title of ["Player Filters", "Donor Settings", "Mouthpiece Settings", "Accessory, Tape & Cleat Colors", "Tattoo Settings", "Starting Dealbreaker Mix", "Player Scope"]) assert.ok(source.includes(title));
   assert.match(source, /element\.before\(entry, source\); source\.append\(element\)/);
 });
 test("artwork management explicitly preserves immediate personal-setting persistence", () => {

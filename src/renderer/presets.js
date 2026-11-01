@@ -14,14 +14,14 @@ function migrateRemovalSettings(values){
 function presetConfiguration() {
   captureToolSettings();
   const values = { ...(state.toolSettings.get(state.page) ?? {}) }, teamSelections = {};
-  for (const id of Object.keys(values)) if (/^preset-|search|filter|^tape-team-color-|^accessory-team-color-/.test(id)) delete values[id];
+  for (const id of Object.keys(values)) if (/^preset-|search|filter|^tape-team-color-|^accessory-team-color-|^cleat-team-color-/.test(id)) delete values[id];
   for (const select of content.querySelectorAll("select[id]")) {
-    if (select.closest(".config-presets") || !saveSpecificSetting(select.id)) continue;
+    if (select.closest(".config-presets") || select.hasAttribute("data-cleat-team") || !saveSpecificSetting(select.id)) continue;
     if (select.id === "equipment-donor-players" && document.getElementById("equipment-donor")?.value.trim()) continue; // A source fingerprint makes donor rows stable, without storing thousands of labels.
     teamSelections[select.id] = [...select.selectedOptions].map(option => option.textContent.trim());
     delete values[select.id];
   }
-  return { version: 1, values, teamSelections, tapeColors: teamTapeOptions(), accessoryColors: teamAccessoryOptions(), jerseyMode: state.page === "jersey-renumber" ? state.jerseyMode : undefined };
+  return { version: 1, values, teamSelections, cleatColors: teamCleatColorOptions(), tapeColors: teamTapeOptions(), accessoryColors: teamAccessoryOptions(), jerseyMode: state.page === "jersey-renumber" ? state.jerseyMode : undefined };
 }
 
 function presetValues(configuration) {
@@ -59,6 +59,8 @@ function presetValues(configuration) {
     const selected = wanted.map(label => options.find(option => option.textContent.trim().toLowerCase() === label).value);
     values[id] = select.multiple ? selected : selected[0] ?? "";
   }
+  if(document.getElementById('cleat-color-mode'))values['cleat-color-mode']??='leave';
+  for(const input of content.querySelectorAll('[data-cleat-team]'))values[input.id]=configuration.cleatColors?.[input.dataset.cleatTeam]??[...input.options].find(option=>option.defaultSelected)?.value??'unchanged';
   // Team names, not row indexes, make tape settings portable between saves.
   for (const input of content.querySelectorAll("[data-tape-team][data-tape-color]")) {
     const mix = configuration.tapeColors?.[input.dataset.tapeTeam];

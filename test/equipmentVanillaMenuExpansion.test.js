@@ -10,8 +10,8 @@ const empty=()=>({_version:2,...Object.fromEntries(Object.entries(defs).map(([o,
 const run=(id,category,extra={},loadouts=outfit())=>{const pools=empty();pools.vanilla[category]={chance:100,items:[id]};const state=createGeneratedEquipmentState(loadouts),changes=applyModdedRandomizerEquipment(loadouts,{position:extra.position??'WR',branding:'nike'},mulberry32(101),1,state,{usingVanillaPool:true,usingUnlockedMod:false,usingRawAccessoriesMod:false,modPools:pools,...extra});return {loadouts,state,changes};};
 
 test('the exact user-confirmed menu families and three uncolored leg layers are available without mods',()=>{
- const counts={jerseyStyles:5,undershirts:10,neckPads:4,armSleeves:48,wristGear:33,legSleeves:3,socks:4,guardianCaps:1,mouthpieces:8};
- assert.equal(menu.items.length,116);
+ const counts={jerseyStyles:5,undershirts:10,neckPads:4,armSleeves:48,wristGear:33,legSleeves:3,socks:4,guardianCaps:1,mouthpieces:8,towels:8};
+ assert.equal(menu.items.length,124);
  for(const [category,count]of Object.entries(counts))assert.equal(menu.items.filter(i=>POOL_OWNERSHIP.vanillaItems[i.itemName].poolCategory===category).length,count,category);
  const base=mapperCatalog({confirmed:true}),mod=mapperCatalog({confirmed:true,unlocked:true});
  for(const item of menu.items){const found=base.items.filter(i=>i.asset===item.itemName);assert.equal(found.length,item.slots.length,item.itemName);assert.ok(found.every(i=>i.name===item.displayName&&i.origin==='vanilla'));}
@@ -29,9 +29,9 @@ test('every newly confirmed choice can actually be generated and survives final 
 });
 
 test('new choices do not silently change defaults or saved item selections in Randomizer or Quickstart',()=>{
- const defaultCounts={armSleeves:20,wristGear:18,elbowGear:14,cleats:90,gloves:63,mouthpieces:0,neckwear:8,spats:4,facepaint:10};
+ const defaultCounts={armSleeves:20,wristGear:18,elbowGear:14,cleats:90,gloves:63,mouthpieces:0,neckwear:8,spats:4,facepaint:10,towels:8};
  for(const pools of [normalizeModPools(),quickstartSettings({unlocked:true}).randomizer.modPools]){
-  for(const c of defs.vanilla){assert.equal(pools.vanilla[c.id].items.length,defaultCounts[c.id]??0,c.id);if(!(c.id in defaultCounts))assert.equal(pools.vanilla[c.id].chance,0,c.id);}
+  for(const c of defs.vanilla){assert.equal(pools.vanilla[c.id].items.length,defaultCounts[c.id]??0,c.id);if(c.id==='towels')assert.equal(pools.vanilla[c.id].chance,1,c.id);if(!(c.id in defaultCounts))assert.equal(pools.vanilla[c.id].chance,0,c.id);}
   assert.ok(!pools.vanilla.wristGear.items.includes('GearWrist_wristbrace_CompressShort_Black'));
  }
  const old={_version:2,vanilla:{armSleeves:{chance:17,items:['GearArmSleeve_Baggy_Black']}},unlocked:{neckwear:{chance:0,items:[]}}};const before=structuredClone(old),normalized=normalizeModPools(old);assert.deepEqual(old,before);assert.deepEqual(normalized.vanilla.armSleeves,old.vanilla.armSleeves);assert.deepEqual(normalized.vanilla.wristGear,{chance:10,items:defs.vanilla.find(c=>c.id==='wristGear').defaultItems});assert.deepEqual(normalizeModPools(normalized),normalized);

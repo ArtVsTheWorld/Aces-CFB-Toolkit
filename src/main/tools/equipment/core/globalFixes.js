@@ -1,3 +1,4 @@
+import {normalizeCleatColorMode,normalizeTeamCleatColors,teamCleatColor,applyCleatColorOverride} from './cleatColors.js';
 import {removeSelectedEquipment,normalizeRemovalItems,captureRemovalItems} from './removal.js';
 import {toolProgressCount} from '../../../services/toolProgress.js';
 import {isOriginalEaPlayer,originalEaProtectionEnabled} from '../../../services/originalEaPlayers.js';
@@ -319,7 +320,9 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
   const { helmetFix = false, rolledJerseyFix = false, sockFix = false, sleeveCompatibilityFix = false, nikeThighPads = false, visorFix = false, unlockedRecolorFix = false, unlockedColorTheme = "team", unlockedMouthpieceFix = false, allowRandomMouthpieceColors = false, unlockedTattooFix = false, unlockedTattooCap = 40, undershirtColor = "weighted", pantsFix = false, protectOriginalEaPlayers = originalEaProtectionEnabled(options), seed = 1, teamNames = new Map(), fcsTeamIndexes = new Set(), excludedTeamIndexes = new Set(), activePlayerRows, eligiblePlayer = () => true } = options;
   const removalItems=options.removeEquipment?normalizeRemovalItems(options.removeEquipmentItems??[]):[];
   if(options.removeEquipment&&!removalItems.length)throw Error('Select at least one item for Remove Specific Item(s).');
-  const removeEquipmentChanges=[];
+  const removeEquipmentChanges=[],cleatColorChanges=[];
+  const cleatColorMode=unlockedRecolorFix?normalizeCleatColorMode(options.cleatColorMode):'leave';
+  const cleatColors=normalizeTeamCleatColors(cleatColorMode==='override'?options.teamCleatColors:undefined);
   const visorFrequencies = normalizeVisorFrequencies(options.visorFrequencies), facemaskPools = normalizeFacemaskPools(options.facemaskPools);
   const rng = mulberry32((seed ^ 0xA5A5A5A5) >>> 0);
   const helmetDistribution = normalizeHelmetDistribution(helmetFix ? options.helmetDistribution : undefined);
@@ -750,11 +753,22 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
         changed = true;
       }
     }
+    // Recolor first, then replace both spats. Explicit removal remains the final say.
+    let cleatChanges=[];
+    if(unlockedRecolorFix && cleatColorMode==='override' && allPlayerReferences.get(visualsRow)===players.length
+      && recolorTeams.every(name=>typeof name==='string') && new Set(recolorTeams).size===1
+      && (!(activePlayerRows instanceof Set)||players.every(player=>activePlayerRows.has(player.row)))) {
+      cleatChanges=applyCleatColorOverride(loadouts,teamCleatColor(recolorTeams[0],cleatColors));
+      if(cleatChanges.length)changed=true;
+    }
     if(options.removeEquipment){
       const removals=removeSelectedEquipment(parsed,removalItems,{originalItems:originalRemovalItems});
       for(const player of players)for(const removal of removals)removeEquipmentChanges.push(playerLogInfo(player,teamNames,fcsTeamIndexes,removal));
       if(removals.length)changed=true;
     }
+    // Only report overrides still present after explicitly requested removal.
+    for(const correction of cleatChanges)if(loadouts[correction.loadout].loadoutElements.some(e=>slotOf(e)===correction.slot&&e.itemAssetName===correction.newItem))
+      for(const player of players)cleatColorChanges.push(playerLogInfo(player,teamNames,fcsTeamIndexes,correction));
     // Validate the final outfit: later sleeve/uniform/color changes can alter
     // fit, and removing an undershirt can invalidate previously fitted pants.
     // Removal wins; repair pants instead of putting a removed shirt back.
@@ -814,7 +828,7 @@ export function applyGlobalEquipmentFixes(playerRecords, visualsRecords, visuals
   };
   const fbsSafeguards = summarize("fbs"), fcsSafeguards = summarize("fcs");
   const populationSafeguards = { scope: "team", teams: teamSafeguards, ...fbsSafeguards, fbs: fbsSafeguards, fcs: fcsSafeguards };
-  return { removeEquipmentChanges, lowerJerseyChanges, cutoffPantsChanges, uniformPopulation: uniformPlan.stats, clearedTattooPlayers, clearedTattooChanges, helmetPopulation: helmetFix ? helmetPopulationAudit(helmetEntries, helmetAfter, options) : null, unlockedSockPlayersChanged, unlockedSockChanges, bearsPadsChanges, handwarmerChanges, helmetAccessoryChanges, helmetBalance: helmetBalance?.diagnostics ?? null, oakleyVisorPlayersChanged, oakleyVisorChanges, pantsPlayersChanged, helmetPlayersChanged, rolledJerseyPlayersChanged, sockPlayersChanged, sleeveCompatibilityPlayersChanged, nikeThighPadPlayersChanged, visorPlayersChanged, unlockedRecolorPlayersChanged, unlockedMouthpiecePlayersChanged, existingMouthpieceColorsChanged, existingMouthpieceColorChanges, unlockedTattooPlayersChanged, unlockedTattooPlayersRepaired, visualsChanged, helmetChanges, pantsChanges, rolledJerseyChanges, sockChanges, sleeveCompatibilityChanges, nikeThighPadChanges, visorChanges, unlockedRecolorChanges, unlockedMouthpieceChanges, unlockedTattooChanges, unlockedTattooPopulation:removeEquipmentChanges.length?null:unlockedTattooPopulation, populationSafeguards:removeEquipmentChanges.length?null:populationSafeguards };
+  return { cleatColorChanges, cleatColorPlayersChanged:new Set(cleatColorChanges.map(change=>change.row)).size, removeEquipmentChanges, lowerJerseyChanges, cutoffPantsChanges, uniformPopulation: uniformPlan.stats, clearedTattooPlayers, clearedTattooChanges, helmetPopulation: helmetFix ? helmetPopulationAudit(helmetEntries, helmetAfter, options) : null, unlockedSockPlayersChanged, unlockedSockChanges, bearsPadsChanges, handwarmerChanges, helmetAccessoryChanges, helmetBalance: helmetBalance?.diagnostics ?? null, oakleyVisorPlayersChanged, oakleyVisorChanges, pantsPlayersChanged, helmetPlayersChanged, rolledJerseyPlayersChanged, sockPlayersChanged, sleeveCompatibilityPlayersChanged, nikeThighPadPlayersChanged, visorPlayersChanged, unlockedRecolorPlayersChanged, unlockedMouthpiecePlayersChanged, existingMouthpieceColorsChanged, existingMouthpieceColorChanges, unlockedTattooPlayersChanged, unlockedTattooPlayersRepaired, visualsChanged, helmetChanges, pantsChanges, rolledJerseyChanges, sockChanges, sleeveCompatibilityChanges, nikeThighPadChanges, visorChanges, unlockedRecolorChanges, unlockedMouthpieceChanges, unlockedTattooChanges, unlockedTattooPopulation:removeEquipmentChanges.length?null:unlockedTattooPopulation, populationSafeguards:removeEquipmentChanges.length?null:populationSafeguards };
 }
 
 function playerLogInfo(player, teamNames, fcsTeamIndexes, extra = {}) {

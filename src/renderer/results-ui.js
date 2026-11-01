@@ -92,7 +92,14 @@ function mapperCompatibilitySummary(result){
 }
 function runIssues(result){
   const d=result.details??{},blocked=d.blocked??d.blocking??[];
-  const describe=item=>typeof item==='string'?item:[item.team,item.player,item.reason].filter(Boolean).join(' · ');
+  const rosterRows=result.resultKind==='roster-generator'?new Map((d.changes??[]).map(player=>[player.row,player])):null;
+  const describe=item=>{
+    if(typeof item==='string')return item;
+    if(!rosterRows||item.row===undefined)return [item.team,item.player,item.reason].filter(Boolean).join(' · ');
+    const row=rosterRows.get(item.row),before=row?.before??{},name=item.player||row?.oldPlayer||[before.FirstName,before.LastName].filter(Boolean).join(' ')||`Player row ${item.row}`,jersey=item.jersey??before.JerseyNum,position=item.position??row?.originalPosition??before.Position;
+    const player=(jersey!==undefined&&jersey!==null&&jersey!==''?`#${jersey} `:'')+name+(position!==undefined&&position!==null&&position!==''?` (${typeof localizedPosition==='function'?localizedPosition(position):position})`:'');
+    return [item.team??row?.team,player,item.reason].filter(Boolean).join(' · ');
+  };
   const notes=[],warnings=[];
   for(const note of [...(d.warnings??[]),...(d.donorSourceWarnings??[])]){
     const message=String(note);

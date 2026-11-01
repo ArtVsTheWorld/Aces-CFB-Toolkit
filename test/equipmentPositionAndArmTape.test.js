@@ -130,8 +130,8 @@ test("every RAW turtleneck, necklace, skullcap, and backplate is reachable in it
   const seen = new Set();
   for (let seed = 0; seed < 100; seed++) {
     const a = structuredClone(original), b = structuredClone(original);
-    const changes = applyRawRandomizerEquipment(a, mulberry32(seed), 1, undefined, "", {facepaint:{chance:0,items:[]}});
-    assert.deepEqual(applyRawRandomizerEquipment(b, mulberry32(seed), 1, undefined, "", {facepaint:{chance:0,items:[]}}), changes); assert.deepEqual(a, b);
+    const changes = applyRawRandomizerEquipment(a, mulberry32(seed), 1, undefined, "", {facepaint:{chance:0,items:[]},towels:{chance:0,items:[]}});
+    assert.deepEqual(applyRawRandomizerEquipment(b, mulberry32(seed), 1, undefined, "", {facepaint:{chance:0,items:[]},towels:{chance:0,items:[]}}), changes); assert.deepEqual(a, b);
     assert.equal(changes.length, 3, "neckwear, skullcaps and jacket-free backplates are separate categories"); changes.forEach(change => seen.add(change.newItem));
     const items = changes.map(change => equipmentItem(change.newItem));
     const changedSlots = new Set(items.flatMap(item => item.slots));
@@ -183,7 +183,7 @@ test("repurposed balaclavas keep the hanging-only mouthpiece safeguard without t
 test("both pool controls share the extra-gear chance and explain neckwear plus the arm-tape scope", () => {
   const renderer = fs.readFileSync(new URL("../src/renderer/renderer.js", import.meta.url), "utf8");
   assert.match(renderer, /equipment-raw-accessories"\)\?\.addEventListener\("change", updateExtraGearChance/);
-  assert.match(renderer, /RAW Accessories v3.1.4/);
+  assert.match(renderer, /RAW Accessories v3.2.1/);
   assert.match(renderer, /Match Player Accessory Color/);
 });
 

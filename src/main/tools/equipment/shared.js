@@ -7,6 +7,7 @@ import { completePlan, saveFingerprint, storePlan, takePlan } from "../jersey/pl
 import { parseRef, sf } from "./openSave.js";
 import { installVisualsWriteSafety, saveEquipmentCandidate, snapshotVisualsForVerification } from "./visualsSafety.js";
 import { isVisualOverflowStorage } from "./visualStorage.js";
+import {buildEquipmentUserProtection,assertEquipmentUserProtection,EQUIPMENT_USER_TABLE_UID,EQUIPMENT_FRANCHISE_TABLE_UID} from './userProtection.js';
 
 export const VISUALS_TABLE_UID = 1429178382;
 export const ROSTER_TABLE_UID = 461505069;
@@ -35,13 +36,14 @@ export const EQUIPMENT_SETTINGS_FIELDS=Object.freeze({
 export const loadEquipmentSettingsTables=(savePath,schemaPath,visuals=true)=>loadEquipmentTables(savePath,schemaPath,visuals,true,EQUIPMENT_SETTINGS_FIELDS);
 export async function loadEquipmentTables(savePath, schemaPath, visuals = true, enforceSeason = true, fields = {}) {
   const opened=await openCfb27Save(savePath,schemaPath);
-  const tables=await readTables(opened.franchise,{players:PLAYER_TABLE_UID,teams:TEAM_TABLE_UID,rosters:ROSTER_TABLE_UID,...(enforceSeason?{seasonInfo:SEASON_INFO_TABLE_UID}:{}),...(visuals?{visuals:VISUALS_TABLE_UID}:{})},fields);
+  const tables=await readTables(opened.franchise,{players:PLAYER_TABLE_UID,teams:TEAM_TABLE_UID,rosters:ROSTER_TABLE_UID,franchiseUsers:EQUIPMENT_USER_TABLE_UID,franchiseInfo:EQUIPMENT_FRANCHISE_TABLE_UID,...(enforceSeason?{seasonInfo:SEASON_INFO_TABLE_UID}:{}),...(visuals?{visuals:VISUALS_TABLE_UID}:{})},{...fields,franchiseUsers:['UserEntity'],franchiseInfo:['LeagueOwner']});
+  const userProtection=buildEquipmentUserProtection(tables);
   const season=enforceSeason?validateEquipmentSeason(tables.seasonInfo.records.find(record=>record&&!record.isEmpty)):null;
   if(tables.visuals){
     const owners=new Set(tables.players.records.filter(record=>!record.isEmpty).map(record=>parseRef(sf(record,'CharacterVisuals'))).filter(ref=>ref?.tableId===tables.visuals.header.tableId).map(ref=>ref.row));
     installVisualsWriteSafety(tables.visuals,owners);
   }
-  return {...opened,...tables,season};
+  return {...opened,...tables,season,userProtection};
 }
 export function validateTable(table, fields, label) { const sample = table.records.find(record => record && !record.isEmpty); if (!sample || fields.some(field => sf(sample, field) === undefined)) throw new Error(`${label} table does not contain the expected fields.`); }
 export function buildTeamNames(records) { const names = new Map(); records.forEach((record, row) => { if (!record || record.isEmpty) return; const name = String(sf(record, "DisplayName") || sf(record, "LongName") || sf(record, "ShortName") || `Team ${row}`); const index = Number(sf(record, "TeamIndex")); if (Number.isInteger(index)) names.set(index, name); if (!names.has(row)) names.set(row, name); }); return names; }
@@ -121,6 +123,7 @@ export async function applyEquipmentPlan({ toolId, savePath, options, schemaPath
   if (saveFingerprint(plan.savePath) !== plan.saveFingerprint) throw new Error("The save changed after Preview. Run Preview again before Apply.");
   if (plan.donorSource && saveFingerprint(plan.donorSource.path) !== plan.donorSource.fingerprint) throw new Error('The donor file changed after Preview. Reload donors and run Preview again before Apply.');
   const loaded = await loadEquipmentTables(savePath, schemaPath, plan.needsVisuals);
+  assertEquipmentUserProtection(loaded,plan.assignments);
   for (const change of plan.assignments) {
     const table = change.table === "players" ? loaded.players : loaded.visuals, record = table.records[change.row];
     if (!record || record.isEmpty || String(record[change.field]) !== String(change.oldValue)) throw new Error(`Source row ${change.row} changed after Preview. Run Preview again.`);

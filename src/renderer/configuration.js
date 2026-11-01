@@ -213,6 +213,8 @@ function openConfigurationEditor(source, defaults, specification, refresh) {
   configurationRead(draft, 'browse-donor')?.addEventListener('click', async () => { const value = await window.cfbToolkit.chooseSave("equipment-donor"); if (value && dialog.isConnected) await loadDonor(value); });
   configurationRead(draft, 'equipment-load-donor')?.addEventListener('click', () => loadDonor(configurationRead(draft, 'equipment-donor').value.trim()));
   configurationRead(draft, 'equipment-active-donor')?.addEventListener('click', () => loadDonor(''));
+  const cleatSearch=configurationRead(draft,'cleat-team-search');
+  cleatSearch?.addEventListener('input',()=>filterTeamCleatRows(draft,cleatSearch.value));
   const tapeSearch = configurationRead(draft, "tape-team-search");
   tapeSearch?.addEventListener("input", () => {
     const query = tapeSearch.value.trim().toLowerCase(); draft.querySelectorAll("[data-tape-team-row]").forEach(row => row.hidden = !row.dataset.tapeTeamRow.includes(query));
@@ -247,6 +249,7 @@ function openConfigurationEditor(source, defaults, specification, refresh) {
 }
 
 function syncConfigurationDraft(root) {
+  syncTeamCleatColors(root);
   if (configurationRead(root, 'db-total')) syncDealbreakerEligibility(root);
   if (typeof syncRosterGeneratorDraft === "function") syncRosterGeneratorDraft(root);
   syncAdvancedDraft(root); syncDonorMouthpieceDraft(root);
@@ -321,7 +324,7 @@ function bindConfigurationWindows() {
     feature('#remove-equipment-field', {title:'Items to Remove',description:'Search the catalog and choose items to remove. Your player and team filters apply. Removal runs after your other selected changes.',dependencies:['fix-remove-equipment'],enabled:()=>get('#fix-remove-equipment')?.checked,summary:root=>configurationSelectionSummary(configurationRead(root,'equipment-remove-items'),'None selected')});
     feature("#equipment-no-drip-chances", { title: "No Drip Chances", description: "One chance per player to remove selected accessories. Set each position independently.", dependencies: ["equipment-no-drip"], enabled: () => get("#equipment-no-drip").checked, summary: root => noDripPositionSummary(root) });
     feature("#unlocked-mouthpiece-color-field", { title: "Mouthpiece Settings", description: "Set how common mouthpieces should be and which styles to add. Use one setting for everyone or customize positions. Existing mouthpieces count. Choose Custom Style Mix if you want QBs, kickers or punters included.", dependencies: ["fix-unlocked-mouthpieces"], enabled: () => get("#fix-unlocked-mouthpieces").checked, summary: root => `${configurationLabel(root, "unlocked-mouthpiece-colors")} · ${configurationRead(root, "mouthpiece-branded-frequency").value}% branded · ${mouthpieceLimitSummary(root)} · ${configurationRead(root, "randomize-existing-mouthpieces").checked ? "Reroll existing" : "Keep existing"}` });
-    feature("#unlocked-color-field", { title: "Colors & Tape", description: "Choose accessory colors from a shared mix, fixed color, or team-by-team percentages. Tape can use that same result or its own team mix. Existing items are recolored, not added.", dependencies: ["fix-unlocked-recolor"], enabled: () => get("#fix-unlocked-recolor").checked, summary: root => `${configurationLabel(root, "unlocked-color-theme")} · ${configurationLabel(root, "tape-color-mode")}` });
+    feature("#unlocked-color-field", { title: "Accessory, Tape & Cleat Colors", description: "Choose accessory colors and tape colors. With Unlocked, you can also set cleat colors by team; these overrides replace spats.", dependencies: ["fix-unlocked-recolor"], enabled: () => get("#fix-unlocked-recolor").checked, summary: root => `${configurationLabel(root, "unlocked-color-theme")} · ${configurationLabel(root, "tape-color-mode")}` });
     feature("#unlocked-tattoo-field", { title: "Tattoo Settings", description: "Choose a per-team frequency and the designs that may be added. Existing tattoos are kept. Japanese and Polynesian styles start unchecked.", dependencies: ["fix-unlocked-tattoos"], enabled: () => get("#fix-unlocked-tattoos").checked, summary: root => `${configurationRead(root, "unlocked-tattoo-cap").value}% per-team frequency · ${configurationRead(root, "unlocked-tattoo-pool").selectedOptions.length} designs selected` });
     if (get('[data-patcher-flow]')) feature('#bears-pads-style-field', { title: 'Sleeve Fit Settings', description: 'Choose how affected sleeves are replaced. Shooter sleeves keep the existing color where available.', dependencies: ['fix-bears-pads'], enabled: () => get('#fix-bears-pads').checked, summary: root => configurationLabel(root, 'bears-pads-style') });
   }

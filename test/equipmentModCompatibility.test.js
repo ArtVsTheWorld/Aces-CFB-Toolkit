@@ -215,6 +215,6 @@ test("GUI mod toggles, warnings, help, and option serialization stay explicit an
   assert.ok(!renderer.includes('"Expanded Equipment Pool"')); assert.ok(renderer.includes('"Equipment Options"'));
   assert.match(renderer, /optionalPass\("equipment-raw-accessories", "RAW Accessories Equipment Pool"/);
   assert.match(renderer, /usingRawAccessoriesMod: freshman && document.querySelector\("#equipment-raw-accessories"\).checked/);
-  assert.match(renderer, /Requires RAW Accessories v3\.1\.4\+ by Delonte RAW/); assert.match(renderer, /Custom facepaint does not need to be worn by a donor/);
+  assert.match(renderer, /Requires RAW Accessories v3\.2\.1\+ by Delonte RAW/); assert.match(renderer, /Custom facepaint does not need to be worn by a donor/);
   assert.ok(!renderer.includes("eligible donors must already wear it"));
 });

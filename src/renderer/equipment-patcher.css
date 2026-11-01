@@ -17,3 +17,10 @@
 [data-option-picker$="equipment-remove-items"] .team-picker-toolbar > .button { align-self:end; }
 body .notice[data-cutoff-leg-warning] { color:var(--danger); border-left-color:var(--danger); background:color-mix(in srgb,var(--danger) 12%,var(--panel)); }
 @media(max-width:700px) { [data-option-picker$="equipment-remove-items"] .team-picker-toolbar { grid-template-columns:minmax(0,1fr) minmax(0,1fr); } }
+body .notice[data-cleat-color-warning] { color:var(--danger); border-left-color:var(--danger); background:color-mix(in srgb,var(--danger) 12%,var(--panel)); margin:16px 0; }
+.cleat-team-row { display:grid; grid-template-columns:minmax(0,1fr) minmax(240px,1fr); align-items:center; gap:16px; padding:12px 0; border-bottom:1px solid var(--line); }
+.cleat-team-row .tape-team-name { grid-column:auto; }
+.cleat-team-row img { width:28px; height:28px; object-fit:contain; flex-shrink:0; }
+.cleat-team-row select { width:100%; min-width:0; }
+.cleat-team-list { margin-top:12px; max-height:38vh; overflow:auto; padding-right:8px; }
+@media (max-width:680px) { .cleat-team-row { grid-template-columns:minmax(0,1fr); gap:8px; } }

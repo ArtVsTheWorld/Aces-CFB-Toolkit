@@ -1,0 +1,173 @@
+{
+  "verification": "RAW Accessories v3.2.1 by Delonte RAW. Read-only installed Frosty CollegeFB27 SDK decode, November 1 2026: all 129 item definitions and character registry compressed payload SHA-1 verified. New names, display labels, numeric IDs and exact slots agree in definitions and ItemInfo. Fixed pink glove palettes and black towel materials are not invented recolor families. No mod payloads are bundled.",
+  "version": "3.2.1",
+  "sha256": "893c3fc985b13905961c97e1650947f8f003c7e838b25f8997a77d309fa16f18",
+  "items": [
+    {
+      "itemName": "Towel_RAW_Black_SouthEast_V217",
+      "displayName": "Black Towel - South East",
+      "category": "Towel",
+      "slots": [
+        "Towel"
+      ],
+      "tags": [],
+      "origin": "raw",
+      "themeColors": [
+        "black"
+      ],
+      "numericId": "27179928"
+    },
+    {
+      "itemName": "Towel_RAW_Black_NorthWest_V217",
+      "displayName": "Black Towel - North West",
+      "category": "Towel",
+      "slots": [
+        "Towel"
+      ],
+      "tags": [],
+      "origin": "raw",
+      "themeColors": [
+        "black"
+      ],
+      "numericId": "27179925"
+    },
+    {
+      "itemName": "Towel_RAW_Black_East_V217",
+      "displayName": "Black Towel - East",
+      "category": "Towel",
+      "slots": [
+        "Towel"
+      ],
+      "tags": [],
+      "origin": "raw",
+      "themeColors": [
+        "black"
+      ],
+      "numericId": "27179929"
+    },
+    {
+      "itemName": "Towel_RAW_Black_West_V217",
+      "displayName": "Black Towel - West",
+      "category": "Towel",
+      "slots": [
+        "Towel"
+      ],
+      "tags": [],
+      "origin": "raw",
+      "themeColors": [
+        "black"
+      ],
+      "numericId": "27179924"
+    },
+    {
+      "itemName": "Towel_RAW_Black_South_V217",
+      "displayName": "Black Towel - South",
+      "category": "Towel",
+      "slots": [
+        "Towel"
+      ],
+      "tags": [],
+      "origin": "raw",
+      "themeColors": [
+        "black"
+      ],
+      "numericId": "27179923"
+    },
+    {
+      "itemName": "GearHand_glove_RAW_UnderArmourF9_Pink_V217",
+      "displayName": "Pink Under Armour F9",
+      "category": "Gloves",
+      "slots": [
+        "LeftHandWear",
+        "RightHandWear"
+      ],
+      "tags": [
+        "GearHand_UnderArmour",
+        "UnderArmour"
+      ],
+      "origin": "raw",
+      "themeColors": [
+        "pink"
+      ],
+      "numericId": "27179922"
+    },
+    {
+      "itemName": "GearHand_glove_RAW_JordanFlyLock2_Pink_V217",
+      "displayName": "Pink Jordan Fly Lock 2.0",
+      "category": "Gloves",
+      "slots": [
+        "LeftHandWear",
+        "RightHandWear"
+      ],
+      "tags": [
+        "GearHand_Jordan",
+        "JordanBrand"
+      ],
+      "origin": "raw",
+      "themeColors": [
+        "pink"
+      ],
+      "numericId": "27179921"
+    },
+    {
+      "itemName": "GearHand_glove_RAW_NikeVaporJet8_Pink_V217",
+      "displayName": "Pink Nike Vapor Jet 8",
+      "category": "Gloves",
+      "slots": [
+        "LeftHandWear",
+        "RightHandWear"
+      ],
+      "tags": [
+        "GearHand_Nike",
+        "Nike"
+      ],
+      "origin": "raw",
+      "themeColors": [
+        "pink"
+      ],
+      "numericId": "27179920"
+    },
+    {
+      "itemName": "Towel_RAW_Black_North_V217",
+      "displayName": "Black Towel - North",
+      "category": "Towel",
+      "slots": [
+        "Towel"
+      ],
+      "tags": [],
+      "origin": "raw",
+      "themeColors": [
+        "black"
+      ],
+      "numericId": "27179927"
+    },
+    {
+      "itemName": "Towel_RAW_Black_SouthWest_V217",
+      "displayName": "Black Towel - South West",
+      "category": "Towel",
+      "slots": [
+        "Towel"
+      ],
+      "tags": [],
+      "origin": "raw",
+      "themeColors": [
+        "black"
+      ],
+      "numericId": "27179930"
+    },
+    {
+      "itemName": "Towel_RAW_Black_NorthEast_V217",
+      "displayName": "Black Towel - North East",
+      "category": "Towel",
+      "slots": [
+        "Towel"
+      ],
+      "tags": [],
+      "origin": "raw",
+      "themeColors": [
+        "black"
+      ],
+      "numericId": "27179926"
+    }
+  ]
+}

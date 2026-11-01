@@ -1,5 +1,5 @@
 {
-  "verification": "Display labels recovered from structurally checked live ItemInfo records on 2026-10-02; evidence: outputs/equipment-displaynames-sourced-2026-10-02.json. Slots follow the established Player equipment families. The supplied Unlocked manifest identifies the branded mouthpieces, rubber bands, thigh pads and towel. The user identifies non-Raw turtlenecks and normal balaclavas as Unlocked. Under-lip/removal entries are display-only. No missing color variants are synthesized.",
+  "verification": "Display labels recovered from structurally checked live ItemInfo records on 2026-10-02; evidence: outputs/equipment-displaynames-sourced-2026-10-02.json. Slots follow the established Player equipment families. The supplied Unlocked manifest identifies the branded mouthpieces, rubber bands, thigh pads and towel. The user identifies non-Raw turtlenecks and normal balaclavas as Unlocked. Under-lip balaclavas were confirmed as Unlocked by the user on 2026-10-30; the removal entry stays display-only. No missing color variants are synthesized.",
   "displayNames": {
     "G_CompressionT_Crew_LongSleeve_99Club_B_GOL": "Relaxed Tee Primary",
     "G_CompressionT_Crew_LongSleeve_99Club_B_WHI": "Relaxed Tee Secondary",
@@ -37,10 +37,10 @@
     { "itemName": "FaceGear_BalaclavaOverNose_White", "displayName": "White Balaclava", "category": "Face Wear", "slots": ["FaceWear"], "tags": [], "origin": "unlocked" },
     { "itemName": "FaceGear_BalaclavaOverNose_Primary", "displayName": "Team Color Balaclava", "category": "Face Wear", "slots": ["FaceWear"], "tags": [], "origin": "unlocked" },
     { "itemName": "FaceGear_BalaclavaOverNose_Secondary", "displayName": "Secondary Color Balaclava", "category": "Face Wear", "slots": ["FaceWear"], "tags": [], "origin": "unlocked" },
-    { "itemName": "FaceGear_BalaclavaUnderLip", "displayName": "Black Balaclava (Under Lip)", "category": "Face Wear", "slots": ["FaceWear"], "tags": [], "origin": "unverified", "displayOnly": true },
-    { "itemName": "FaceGear_BalaclavaUnderLip_White", "displayName": "White Balaclava (Under Lip)", "category": "Face Wear", "slots": ["FaceWear"], "tags": [], "origin": "unverified", "displayOnly": true },
-    { "itemName": "FaceGear_BalaclavaUnderLip_Primary", "displayName": "Team Color Balaclava (Under Lip)", "category": "Face Wear", "slots": ["FaceWear"], "tags": [], "origin": "unverified", "displayOnly": true },
-    { "itemName": "FaceGear_BalaclavaUnderLip_Secondary", "displayName": "Secondary Color Balaclava (Under Lip)", "category": "Face Wear", "slots": ["FaceWear"], "tags": [], "origin": "unverified", "displayOnly": true },
+    { "itemName": "FaceGear_BalaclavaUnderLip", "displayName": "Black Balaclava (Under Lip)", "category": "Face Wear", "slots": ["FaceWear"], "tags": [], "origin": "unlocked" },
+    { "itemName": "FaceGear_BalaclavaUnderLip_White", "displayName": "White Balaclava (Under Lip)", "category": "Face Wear", "slots": ["FaceWear"], "tags": [], "origin": "unlocked" },
+    { "itemName": "FaceGear_BalaclavaUnderLip_Primary", "displayName": "Team Color Balaclava (Under Lip)", "category": "Face Wear", "slots": ["FaceWear"], "tags": [], "origin": "unlocked" },
+    { "itemName": "FaceGear_BalaclavaUnderLip_Secondary", "displayName": "Secondary Color Balaclava (Under Lip)", "category": "Face Wear", "slots": ["FaceWear"], "tags": [], "origin": "unlocked" },
     { "itemName": "FaceGear_BalaclavaNone", "displayName": "Remove Balaclava", "category": "Face Wear", "slots": ["FaceWear"], "tags": [], "origin": "unlocked", "displayOnly": true },
     { "itemName": "LegTattoo_TEST", "displayName": "No Tattoo", "category": "Tattoos", "slots": ["LeftLegTattoo", "RightLegTattoo"], "tags": [], "origin": "catalog", "displayOnly": true, "labelSource": { "file": "UnlockedCollegeFBCharacterPrefab.xlsx", "sheet": "ItemInfo", "row": 708 } }
   ],

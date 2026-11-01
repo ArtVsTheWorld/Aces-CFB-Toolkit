@@ -15,7 +15,7 @@ test("focused-pass navigation, copy, and removed controls are wired", () => {
   assert.equal(tools.find(tool => tool.id === "commentary-id").version, undefined);
   assert.match(index, /Help \/ Instructions/); assert.match(renderer, /function helpPage/); assert.match(renderer, /open source/);
   assert.doesNotMatch(renderer, /id="(?:equipment-seed|force-seed|db-seed|map-path)"/);
-  assert.match(renderer, /collapseEquipmentScope/); assert.match(renderer, /window\.cfbToolkit\.chooseSave\(\)/);
+  assert.match(renderer, /collapseEquipmentScope/); assert.match(renderer, /window\.cfbToolkit\.chooseSave\(state\.page\)/);
   assert.match(renderer, /forceScheduleTable/); assert.match(renderer, /force-affected/); assert.match(renderer, /Teams to skip/);
 });
 

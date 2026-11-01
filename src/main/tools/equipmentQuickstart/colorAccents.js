@@ -1,5 +1,5 @@
 import { equipmentColorVariant, equipmentItem, isRawJamoItem } from '../equipment/catalog.js';
-import { ACCESSORY_RECOLOR_CONTEXT } from '../equipment/core/recolor.js';
+import { ACCESSORY_RECOLOR_CONTEXT,teamAccessoryAccentColors } from '../equipment/core/recolor.js';
 import { mulberry32 } from '../equipment/core/patcher.js';
 import { parseRef, sf } from '../equipment/openSave.js';
 import { isOriginalEaPlayer } from '../../services/originalEaPlayers.js';
@@ -27,7 +27,7 @@ export function recolorQuickstartAccent(loadouts, random, fitOptions={}) {
     }
     if(!pieces.length||unknown)continue;
     const choices=[];
-    for(const color of ['primary','secondary']){
+    for(const color of fitOptions.accentColors??['primary','secondary']){
       const replacements=pieces.map(element=>({element,asset:equipmentColorVariant(element.itemAssetName,color,ACCESSORY_RECOLOR_CONTEXT)}));
       if(!replacements.every(change=>change.asset)||!replacements.some(change=>change.asset!==change.element.itemAssetName))continue;
       // Some mod colors reuse different vanilla families. A color-only accent
@@ -62,7 +62,7 @@ export function applyQuickstartColorAccents({unlocked,raw=false,changes,players,
     if(random()>=.05)continue;
     const visual=visuals[ref.row];if(!visual||visual.isEmpty)continue;
     let parsed;try{parsed=JSON.parse(sf(visual,'RawData'));}catch{continue;}
-    const accent=recolorQuickstartAccent(parsed?.loadouts??[],random,{usingUnlockedMod:true,usingRawAccessoriesMod:raw});
+    const accent=recolorQuickstartAccent(parsed?.loadouts??[],random,{usingUnlockedMod:true,usingRawAccessoriesMod:raw,accentColors:teamAccessoryAccentColors(change.target.team)});
     if(accent){visual.RawData=JSON.stringify(parsed);accents.push({row:change.target.row,visualsRow:ref.row,...accent});}
   }
   return accents;

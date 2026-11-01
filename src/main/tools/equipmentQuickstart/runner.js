@@ -1,4 +1,6 @@
 import {finalGeneratedChanges} from '../equipment/core/generatedCompatibility.js';
+import {finishAccessoryColors} from './accessoryColors.js';
+import {assertEquipmentUserProtection,equipmentUserProtectionAudit} from '../equipment/userProtection.js';
 import {progressRange} from '../../services/toolProgress.js';
 import {randomBytes} from 'node:crypto';
 import path from 'node:path';
@@ -15,6 +17,7 @@ import {displayPosition} from '../../../shared/localization.js';
 import {equipmentDisplayValue} from '../equipment/catalog.js';
 import {applyQuickstartSpecialistCutoff} from './specialistCutoff.js';
 import {applyQuickstartColorAccents} from './colorAccents.js';
+import {applyQuickstartSleeveStyling} from './sleeveStyling.js';
 import {applyQuickstartQbGloves,capQuickstartQbGloves} from './qbGloves.js';
 import {createVisualDraft,finalizeVisualDraft,sortVisualAssignments,retainRandomizerResults,retainPatcherResults} from '../equipment/visualDraft.js';
 import {loadEquipmentSettingsTables} from '../equipment/shared.js';
@@ -33,14 +36,28 @@ export function quickstartSettings(input){
 }
 async function scope(loaded,memory,savePath,protectOriginalEaPlayers=true,settingsOnly=false){
   const roster=buildRosterPlayerRows(loaded.players,loaded.teams,loaded.rosters),snapshot=memory.snapshot(await equipmentDynastyId(loaded.franchise),{savePath,players:loaded.players}),keys=new Map(),pending=new Set();let protectedPlayers=0,remembered=0,donorPlayersProtected=0;
-  const teamNames=buildTeamNames(loaded.teams.records),teamApparel=buildTeamApparel(loaded.teams.records),playerApparel=buildRosterPlayerApparel(loaded.players,loaded.teams,loaded.rosters),fcs=buildFcsTeamIndexes(loaded.teams.records),preparedDonors=collectEquipmentDonors(loaded.players.records,loaded.visuals.records,loaded.visuals.header.tableId,{rosterRows:roster,fcsTeamIndexes:fcs,teamNames,teamApparel,playerApparel,...(settingsOnly?{topPerPosition:30}:{})}),groups=new Map();
+  const blockedRows=loaded.userProtection.blockedPlayerRows;
+  const teamNames=buildTeamNames(loaded.teams.records),teamApparel=buildTeamApparel(loaded.teams.records),playerApparel=buildRosterPlayerApparel(loaded.players,loaded.teams,loaded.rosters),fcs=buildFcsTeamIndexes(loaded.teams.records),preparedDonors=collectEquipmentDonors(loaded.players.records,loaded.visuals.records,loaded.visuals.header.tableId,{excludedPlayerRows:blockedRows,rosterRows:roster,fcsTeamIndexes:fcs,teamNames,teamApparel,playerApparel,...(settingsOnly?{topPerPosition:30}:{})}),groups=new Map();
   for(const donor of preparedDonors){const group=groups.get(donor.position)??[];group.push(donor);groups.set(donor.position,group);}const donorRows=new Set([...groups.values()].flatMap(group=>group.sort((a,b)=>b.overall-a.overall||a.row-b.row).slice(0,30).map(donor=>donor.row)));
-  for(const row of roster){const record=loaded.players.records[row];if(!record||record.isEmpty)continue;if(protectOriginalEaPlayers&&isOriginalEaPlayer(record)){protectedPlayers++;continue;}if(donorRows.has(row)){donorPlayersProtected++;continue;}const key=quickstartPlayerKey(record,row);keys.set(row,key);if(snapshot.keys.has(key))remembered++;else pending.add(row);}
+  for(const row of roster){const record=loaded.players.records[row];if(!record||record.isEmpty||blockedRows.has(row))continue;if(protectOriginalEaPlayers&&isOriginalEaPlayer(record)){protectedPlayers++;continue;}if(donorRows.has(row)){donorPlayersProtected++;continue;}const key=quickstartPlayerKey(record,row);keys.set(row,key);if(snapshot.keys.has(key))remembered++;else pending.add(row);}
   return {roster,snapshot,keys,pending,protectedPlayers,remembered,donorPlayersProtected,donorRows,teamNames,teamApparel,playerApparel,fcs,preparedDonors};
+}
+// One finishing policy for Quickstart and newly generated rosters. Callers own
+// their eligibility/memory; this function only updates the supplied visual drafts.
+export function finishQuickstartEquipment({players,visuals,visualsTableId,settings,changes,seed,rosterRows,processedRows=new Set(changes.map(change=>change.target.row)),teamNames,recolorTeamNames=teamNames,fcsTeamIndexes=new Set(),donorRows=new Set(),dynastyId,runCorrections=action=>action()}){
+  const recordRows=new Map(players.map((record,row)=>[record,row]));
+  const fixes=runCorrections(()=>applyGlobalEquipmentFixes(players,visuals,visualsTableId,{...settings.patcher,quickstartTapeDefaults:true,teamNames,recolorTeamNames,fcsTeamIndexes,activePlayerRows:rosterRows,eligiblePlayer:record=>processedRows.has(recordRows.get(record))&&!['K','P'].includes(String(sf(record,'Position')).toUpperCase())}));
+  applyQuickstartSpecialistCutoff({players,visuals,visualsTableId,settings,rosterRows,processedRows,teamNames,fcsTeamIndexes},fixes);
+  applyQuickstartColorAccents({unlocked:settings.mods.unlocked,raw:settings.mods.raw,changes,players,visuals,visualsTableId,seed,protectOriginalEaPlayers:settings.mods.protectOriginalEaPlayers});
+  applyQuickstartSleeveStyling({changes,players,visuals,visualsTableId,dynastyId,donorRows,protectOriginalEaPlayers:settings.mods.protectOriginalEaPlayers,unlocked:settings.mods.unlocked,raw:settings.mods.raw});
+  applyQuickstartQbGloves({changes,players,visuals,visualsTableId,protectOriginalEaPlayers:settings.mods.protectOriginalEaPlayers});
+  const qbGlovePopulation=capQuickstartQbGloves({changes,players,visuals,visualsTableId,seed,activePlayerRows:rosterRows,protectOriginalEaPlayers:settings.mods.protectOriginalEaPlayers});
+  finishAccessoryColors({players,visuals,visualsTableId,settings,changes,donorRows,processedRows});
+  return {fixes,qbGlovePopulation};
 }
 export async function prepareEquipmentQuickstart(context){
   const loaded=await loadEquipmentSettingsTables(context.savePath,context.schemaPath),s=await scope(loaded,memoryFor(context),context.savePath,quickstartOptions(context.options).protectOriginalEaPlayers,true);
-  return {newPlayers:s.pending.size,remembered:s.remembered,rememberedTotal:s.snapshot.keys.size,protectedPlayers:s.protectedPlayers,donorPlayersProtected:s.donorPlayersProtected,memoryScope:'dynasty'};
+  return {...(loaded.userProtection.playerRows.size?{rtgProtection:equipmentUserProtectionAudit(loaded)}:{}),newPlayers:s.pending.size,remembered:s.remembered,rememberedTotal:s.snapshot.keys.size,protectedPlayers:s.protectedPlayers,donorPlayersProtected:s.donorPlayersProtected,memoryScope:'dynasty'};
 }
 async function preview(context){
   const memory=memoryFor(context),fingerprint=saveFingerprint(context.savePath),loaded=await loadEquipmentTables(context.savePath,context.schemaPath),settings=quickstartSettings(context.options),s=await scope(loaded,memory,context.savePath,settings.mods.protectOriginalEaPlayers),seed=randomBytes(4).readUInt32LE();
@@ -49,13 +66,9 @@ async function preview(context){
   const {teamNames,teamApparel,playerApparel,fcs,preparedDonors}=s,before=snapshotVisualRawData(loaded.visuals.records);
   // Donor outfits stay frozen and selected donors never become recipients.
   const recordRows=new Map(loaded.players.records.map((record,row)=>[record,row]));
-  const randomized=progressRange(25, 55, () => patchFreshmanEquipment(loaded.players.records,loaded.visuals.records,loaded.visuals.header.tableId,{...settings.randomizer,seed,teamNames,teamApparel,playerApparel,donorPlayerRecords:loaded.players.records,preparedDonors,recipientRosterRows:null,eligiblePlayer:record=>s.pending.has(recordRows.get(record)),fcsTeamIndexes:fcs,top:settings.randomizer.top,mixedChance:.30,crossMixedChance:.10,unlockedItemChance:.10,apply:true}));
+  const randomized=progressRange(25, 55, () => patchFreshmanEquipment(loaded.players.records,loaded.visuals.records,loaded.visuals.header.tableId,{...settings.randomizer,deferAccessoryColors:true,seed,teamNames,teamApparel,playerApparel,donorPlayerRecords:loaded.players.records,preparedDonors,recipientRosterRows:null,eligiblePlayer:record=>s.pending.has(recordRows.get(record)),fcsTeamIndexes:fcs,top:settings.randomizer.top,mixedChance:.30,crossMixedChance:.10,unlockedItemChance:.10,apply:true}));
   const processed=new Set(randomized.changes.map(change=>change.target.row));
-  const fixes=progressRange(55, 82, () => applyGlobalEquipmentFixes(loaded.players.records,loaded.visuals.records,loaded.visuals.header.tableId,{...settings.patcher,quickstartTapeDefaults:true,teamNames,recolorTeamNames:buildRosterTeamNames(loaded.players,loaded.teams,loaded.rosters),fcsTeamIndexes:fcs,activePlayerRows:s.roster,eligiblePlayer:record=>processed.has(recordRows.get(record))&&!['K','P'].includes(String(sf(record,'Position')).toUpperCase())}));
-  applyQuickstartSpecialistCutoff({players:loaded.players.records,visuals:loaded.visuals.records,visualsTableId:loaded.visuals.header.tableId,settings,rosterRows:s.roster,processedRows:processed,teamNames,fcsTeamIndexes:fcs},fixes);
-  applyQuickstartColorAccents({unlocked:settings.mods.unlocked,raw:settings.mods.raw,changes:randomized.changes,players:loaded.players.records,visuals:loaded.visuals.records,visualsTableId:loaded.visuals.header.tableId,seed,protectOriginalEaPlayers:settings.mods.protectOriginalEaPlayers});
-  applyQuickstartQbGloves({changes:randomized.changes,players:loaded.players.records,visuals:loaded.visuals.records,visualsTableId:loaded.visuals.header.tableId,protectOriginalEaPlayers:settings.mods.protectOriginalEaPlayers});
-  let qbGlovePopulation=capQuickstartQbGloves({changes:randomized.changes,players:loaded.players.records,visuals:loaded.visuals.records,visualsTableId:loaded.visuals.header.tableId,seed,activePlayerRows:s.roster,protectOriginalEaPlayers:settings.mods.protectOriginalEaPlayers});
+  let {fixes,qbGlovePopulation}=finishQuickstartEquipment({players:loaded.players.records,visuals:loaded.visuals.records,visualsTableId:loaded.visuals.header.tableId,settings,changes:randomized.changes,seed,rosterRows:s.roster,processedRows:processed,teamNames,recolorTeamNames:buildRosterTeamNames(loaded.players,loaded.teams,loaded.rosters),fcsTeamIndexes:fcs,donorRows:s.donorRows,dynastyId:s.snapshot.dynastyId,runCorrections:action=>progressRange(55,82,action)});
   const storage=progressRange(82,94,()=>finalizeVisualDraft(draft));
   retainRandomizerResults(randomized,storage.skippedRows);
   if(storage.skippedRows.size){
@@ -81,6 +94,7 @@ async function preview(context){
   }
   rows.sort((a,b)=>a.team.localeCompare(b.team)||a.player.localeCompare(b.player)||a.row-b.row);
   sortVisualAssignments(assignments,storage.assignments);
+  assertEquipmentUserProtection(loaded,assignments);
   const keys=[...processed].map(row=>s.keys.get(row));
   if(keys.some(key=>!key))throw Error('Quickstart player tracking did not match the generated preview. No save was written.');
   if(saveFingerprint(context.savePath)!==fingerprint)throw Error('The save changed while building Quickstart. Generate a new preview.');
@@ -88,6 +102,7 @@ async function preview(context){
   const warnings=skippedCount?[`${skippedCount.toLocaleString()} players skipped.`]:[];
   const previewRows=rows.map(({oldRaw,newRaw,...row})=>row);
   const details={seed,mods:settings.mods,top:settings.randomizer.top,totalPreviewRows:rows.length,changes:limitEquipmentPreview(previewRows),newPlayers:s.pending.size,remembered:s.remembered,protectedPlayers:s.protectedPlayers,donorPlayersProtected:s.donorPlayersProtected,skipped:skippedCount,storageSkipped:randomized.storageSkipped,warnings,protection:originalEaProtectionAudit([...s.roster].map(row=>loaded.players.records[row]),settings.mods.protectOriginalEaPlayers),qbGlovePopulation,populationSafeguards:fixes.populationSafeguards,unlockedTattooPopulation:fixes.unlockedTattooPopulation,canApply:processed.size>0};
+  if(loaded.userProtection.playerRows.size){details.rtgProtection=equipmentUserProtectionAudit(loaded);warnings.push("Your RTG player is protected and will not be changed.");}
   const {noDripProfile,noDripPercentages,allowDonorOnlyNoDrip,...reportedRandomizerSettings}=settings.randomizer;
   const report={prefix:'equipment-quickstart-report',headings:['Team','Player','Position','ClassYear','RedshirtStatus','Overall','PlayerRow','CharacterVisualsRow','ChangedSlotsAndMetadata','BeforeRawData','AfterRawData','DonorAuditJSON','Seed','QuickstartOptionsJSON','RandomizerOptionsJSON','PatcherOptionsJSON','PopulationCapsAuditJSON','TrackingAuditJSON','SkippedPlayers'],rows:rows.map((row,i)=>[row.team,row.player,row.position,row.classYear,row.redshirtStatus,row.overall,row.row,row.visualRow,summarizeVisualChanges(row.oldRaw,row.newRaw),row.oldRaw,row.newRaw,JSON.stringify(donorAudits.get(row.row)),seed,i===0?JSON.stringify(settings.mods):'',i===0?JSON.stringify(reportedRandomizerSettings):'',i===0?JSON.stringify(settings.patcher):'',i===0?JSON.stringify({equipment:fixes.populationSafeguards,tattoos:fixes.unlockedTattooPopulation,qbGloves:qbGlovePopulation}):'',i===0?JSON.stringify({scope:'dynasty',leagueId:s.snapshot.dynastyId,playerIdentityVersion:2,alreadyRemembered:s.remembered,newPlayers:s.pending.size,playersToRemember:keys.length}):'',i===0?skippedCount:''])};
   const result={status:'preview',mode:'preview',resultKind:QUICKSTART_ID,savePath:loaded.savePath,backupPath:null,reportPath:context.reports.create({...report,toolId:QUICKSTART_ID,toolName:QUICKSTART_NAME}),summary:[{label:'Players ready',value:rows.length},{label:'Already equipped',value:s.remembered},{label:'Original EA players protected',value:s.protectedPlayers},{label:'Players skipped',value:skippedCount}],historySummary:[{label:'Players equipped',value:rows.length}],details};

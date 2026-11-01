@@ -33,7 +33,7 @@ test("legacy invisible neckpad masks and NFL undersocks are excluded from genera
   const pools = Object.values(UNLOCKED_POOLS).flat();
   assert.ok(pools.every(item => !/GearNeckpad_Vintage|GearLegBase_Socks_Under_NFL_/.test(item.itemName)));
   for (const name of ["GearNeckpad_VintageSingleNeckRoll", "GearNeckpad_VintageNeckRoll", "GearLegBase_Socks_Under_NFL_White"]) assert.equal(equipmentSemantics(name).poolEligible, false);
-  assert.equal(UNLOCKED_POOLS.balaclavas.length, 4);
+  assert.equal(UNLOCKED_POOLS.balaclavas.length, 8);
   for (const item of UNLOCKED_POOLS.balaclavas) assert.deepEqual(item.slots, ["FaceWear"]);
 });
 

@@ -16,10 +16,21 @@ export const ROSTER_PRESETS = Object.freeze([
   {id:'blue-blood',name:'Blue Blood',targetAverage:79,spread:7,description:'Strong starters and quality depth throughout the roster.'},
   {id:'all-time',name:'All-Time Team',targetAverage:83,spread:7,description:'Exceptional current talent across the roster.'}
 ].map(item=>Object.freeze({...item,minimumAverage:item.targetAverage-1,maximumAverage:item.targetAverage+1})));
+// Keep numeric calibers separate: this choice is resolved independently for
+// each source roster at Preview and rechecked against that roster at Apply.
+export const MATCH_EXISTING_PRESET=Object.freeze({id:'match-existing',name:'Match Existing',targetMode:'existing',spread:8,description:'Create a new roster at this team’s current average player OVR. Each selected team keeps its own target.'});
+export const ROSTER_CALIBER_OPTIONS=Object.freeze([...ROSTER_PRESETS,MATCH_EXISTING_PRESET]);
 export function rosterPreset(id='building-blocks') {
-  const preset=ROSTER_PRESETS.find(item=>item.id===id);
+  const preset=ROSTER_CALIBER_OPTIONS.find(item=>item.id===id);
   if(!preset)throw new Error('Choose a supported roster caliber preset.');
   return preset;
+}
+
+export function resolveRosterPreset(preset,targets){
+  if(preset.targetMode!=='existing')return preset;
+  if(!Array.isArray(targets)||!targets.length||targets.some(target=>!Number.isInteger(target.original?.OverallRating)||target.original.OverallRating<1||target.original.OverallRating>99))throw new Error('Match Existing needs a valid current overall rating for every rostered player. No save was written.');
+  const targetAverage=targets.reduce((sum,target)=>sum+target.original.OverallRating,0)/targets.length;
+  return {...preset,targetAverage,minimumAverage:targetAverage-1,maximumAverage:targetAverage+1};
 }
 
 // Caliber changes football skills, not the observed player's athleticism.
@@ -48,6 +59,7 @@ export function calibrateProfile(source,desired,formulas,{minimumRatings=null,ma
 }
 
 export function modelForPreset(model,preset,settings=null,talentTargets={}) {
+  if(!Number.isFinite(preset.targetAverage))throw new Error('Read the team’s current roster before generating with Match Existing.');
   settings=normalizeGenerationSettings(settings??{});
   const sampling=rosterSamplingPolicy(model,settings),potentialByPosition=new Map();
   for(const profile of model.profiles.filter(isGeneratedProfile)){if(!potentialByPosition.has(profile.position))potentialByPosition.set(profile.position,[]);potentialByPosition.get(profile.position).push(profile);}

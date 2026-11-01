@@ -18,7 +18,9 @@ for (const [names, values] of [
 ]) for (const name of names) TAPE_DEFAULTS.set(key(name), Object.fromEntries(Object.keys(DEFAULT_TAPE_COLOR_WEIGHTS).map((color, index) => [color, values[index]])));
 export function defaultTeamTapeWeights(name) { return { ...(TAPE_DEFAULTS.get(key(name)) ?? DEFAULT_TAPE_COLOR_WEIGHTS) }; }
 const WHITE_ACCESSORY_TEAMS = new Set(["Alabama", "Alabama Crimson Tide", "Bama", "Georgia", "Georgia Bulldogs", "UGA", "Nebraska", "Nebraska Cornhuskers", "Penn State", "Penn St", "Penn State Nittany Lions", "USC", "Southern California", "USC Trojans"].map(key));
-export function defaultTeamAccessoryWeights(name) { return WHITE_ACCESSORY_TEAMS.has(key(name)) ? { ...DEFAULT_TAPE_COLOR_WEIGHTS } : defaultTeamTapeWeights(name); }
+const NORTH_CAROLINA_TEAMS=new Set(['North Carolina','North Carolina Tar Heels','UNC','UNC Tar Heels','N. Carolina'].map(key));
+export function defaultTeamAccessoryWeights(name) { return NORTH_CAROLINA_TEAMS.has(key(name)) ? {white:90,black:0,primary:10,secondary:0} : WHITE_ACCESSORY_TEAMS.has(key(name)) ? { ...DEFAULT_TAPE_COLOR_WEIGHTS } : defaultTeamTapeWeights(name); }
+export function teamAccessoryAccentColors(name){return NORTH_CAROLINA_TEAMS.has(key(name))?['primary']:['primary','secondary'];}
 export function defaultTeamTapeSlotColors(name) { return WHITE_ACCESSORY_TEAMS.has(key(name)) ? { LeftWristWear:"white", RightWristWear:"white", LeftSpat:"black", RightSpat:"black" } : {}; }
 // Legacy callers may still request a single color; use the most likely default.
 export function defaultTeamTapeColor(name) { return Object.entries(defaultTeamTapeWeights(name)).sort((a, b) => b[1] - a[1])[0][0]; }

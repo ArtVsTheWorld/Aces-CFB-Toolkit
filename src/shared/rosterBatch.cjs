@@ -5,11 +5,11 @@
   function weighted(weights,valid,rng){const entries=Object.entries(weights).filter(([id,weight])=>valid.includes(id)&&Number.isInteger(weight)&&weight>0),sum=entries.reduce((n,[,w])=>n+w,0);if(!sum)throw Error('Give at least one caliber a positive frequency.');let draw=rng()*sum;for(const [id,weight]of entries){draw-=weight;if(draw<0)return id;}return entries.at(-1)[0];}
   function build({teams,shared,existing={},presets,schemes,mode='identity',locks={},pools={},caliberWeights=defaultCaliberWeights,preserveExisting=true,countsFor=team=>team.positionCounts,rng=Math.random}){
     if(!['identity','variety','shuffle'].includes(mode))throw Error('Choose a batch generation approach.');
-    const ids=presets.map(p=>p.id),allowed=side=>schemes.filter(s=>s.side===side).map(s=>s.enum),result={};
+    const fixedPresets=presets.filter(p=>Number.isFinite(p.targetAverage)),ids=presets.map(p=>p.id),fixedIds=fixedPresets.map(p=>p.id),allowed=side=>schemes.filter(s=>s.side===side).map(s=>s.enum),result={};
     for(const team of [...teams].sort((a,b)=>a.teamIndex-b.teamIndex)){
       if(preserveExisting&&existing[team.name]){result[team.name]=structuredClone(existing[team.name]);continue;}
       const values=structuredClone(shared);
-      if(!locks.caliber){values['roster-caliber']=mode==='identity'&&Number.isFinite(team.averageOverall)?[...presets].sort((a,b)=>Math.abs(a.targetAverage-team.averageOverall)-Math.abs(b.targetAverage-team.averageOverall)||a.targetAverage-b.targetAverage)[0].id:mode==='variety'?weighted(caliberWeights,ids,rng):pick(ids,rng);}
+      if(!locks.caliber){values['roster-caliber']=mode==='identity'&&Number.isFinite(team.averageOverall)?[...fixedPresets].sort((a,b)=>Math.abs(a.targetAverage-team.averageOverall)-Math.abs(b.targetAverage-team.averageOverall)||a.targetAverage-b.targetAverage)[0].id:mode==='variety'?weighted(caliberWeights,ids,rng):pick(fixedIds,rng);}
       for(const [dimension,defaults]of [['age',['standard','youth','veteran','seniors']],['potential',['standard','dead-end','low','high','sky']]])if(!locks[dimension]){const choices=mode==='identity'?['standard']:pools[dimension]?.length?pools[dimension].filter(id=>defaults.includes(id)):defaults;if(!choices.length)throw Error('Select at least one '+dimension+' option.');values[dimensions[dimension]]=pick(choices,rng);}
       for(const side of ['offense','defense'])if(!locks[side]){const detected=team.schemes?.available&&team.schemes[side];values[dimensions[side]]=mode==='identity'&&detected?'auto':pick(allowed(side),rng);}
       if(!locks.spending){const choices=mode==='identity'?['balanced']:pools.spending?.length?pools.spending:Talent.spendingPresets.map(p=>p.id);values['roster-talent-mix']=pick(choices,rng);}

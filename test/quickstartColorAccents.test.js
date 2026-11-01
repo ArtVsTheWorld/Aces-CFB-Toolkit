@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
-import {defaultTeamAccessoryWeights,defaultTeamTapeWeights,teamAccessoryWeights,ACCESSORY_RECOLOR_CONTEXT} from '../src/main/tools/equipment/core/recolor.js';
+import {defaultTeamAccessoryWeights,defaultTeamTapeWeights,teamAccessoryWeights,teamAccessoryAccentColors,ACCESSORY_RECOLOR_CONTEXT} from '../src/main/tools/equipment/core/recolor.js';
 import {applyGlobalEquipmentFixes} from '../src/main/tools/equipment/core/globalFixes.js';
 import {quickstartSettings} from '../src/main/tools/equipmentQuickstart/runner.js';
 import {normalizeEquipmentOptions} from '../src/main/tools/equipment/runner.js';
@@ -17,6 +17,23 @@ const player=row=>({isEmpty:false,FirstName:'Example',LastName:String(row),TeamI
 const visual=()=>({isEmpty:false,RawData:JSON.stringify({keep:true,loadouts:outfit()})});
 const pick=(loadouts,slot)=>loadouts[0].loadoutElements.find(item=>item.slotType===slot)?.itemAssetName;
 const sequence=(...numbers)=>()=>numbers.shift()??0;
+
+test('North Carolina defaults are 90% white and 10% primary in Patcher and Quickstart, without changing saved choices or tape defaults',()=>{
+  const mix={white:90,black:0,primary:10,secondary:0};
+  for(const settings of [normalizeEquipmentOptions({unlockedRecolorFix:true},false),quickstartSettings({unlocked:true}).patcher])for(const team of ['North Carolina','North Carolina Tar Heels','UNC','UNC Tar Heels','N. Carolina'])assert.deepEqual(teamAccessoryWeights(team,settings.teamAccessoryColors),mix);
+  assert.deepEqual(defaultTeamTapeWeights('North Carolina'),whiteMix);
+  assert.deepEqual(teamAccessoryWeights('North Carolina',{'north carolina':blackMix}),blackMix);
+  assert.deepEqual(defaultTeamAccessoryWeights('NC State'),whiteMix);
+});
+
+test('Quickstart color accents cannot introduce secondary to North Carolina but keep other schools existing choices',()=>{
+  assert.deepEqual(teamAccessoryAccentColors('North Carolina'),['primary']);assert.deepEqual(teamAccessoryAccentColors('Florida'),['primary','secondary']);
+  for(let seed=0;seed<30;seed++){
+    const p=[player(0)],v=[visual()],changes=[{target:{row:0,team:'North Carolina'},visualsRow:0}];
+    const result=applyQuickstartColorAccents({unlocked:true,changes,players:p,visuals:v,visualsTableId:10,seed,protectOriginalEaPlayers:false,random:sequence(0,.99,.99)});
+    assert.equal(result.length,1);assert.equal(result[0].color,'primary');
+  }
+});
 
 test('selected schools use the accessory defaults in both tools without replacing tape distributions or explicit accessory choices',()=>{
   for(const settings of [normalizeEquipmentOptions({unlockedRecolorFix:true},false),quickstartSettings({unlocked:true}).patcher])for(const team of schools){

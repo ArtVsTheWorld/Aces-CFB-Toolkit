@@ -18,7 +18,7 @@ import {storePlan,takePlan,completePlan,saveFingerprint} from '../jersey/planSto
 import {loadObservedCatalog} from './catalog.js';
 import {WRITE_FIELDS} from './contract.js';
 import {generateRosterPreview,validateRosterPreview} from './core.js';
-import {ROSTER_PRESETS,rosterPreset,modelForPreset} from './presets.js';
+import {ROSTER_CALIBER_OPTIONS,rosterPreset,resolveRosterPreset,modelForPreset} from './presets.js';
 import {rosterGeneratorCsv} from './report.js';
 import {loadCommentaryMap} from '../commentary/map.js';
 import {createCommentaryMatcher} from '../commentary/matcher.js';
@@ -86,7 +86,7 @@ export async function prepareRosterGenerator({savePath,schemaPath}) {
     for(let i=0;i<Number(roster.arraySize);i++){const player=parseRef(sf(roster,`Player${i}`));if(player?.tableId===loaded.players.header.tableId){const value=Number(sf(loaded.players.records[player.row],'OverallRating'));if(Number.isFinite(value))ratings.push(value);}}
     teams.push({name:team.name,teamIndex:team.teamIndex,positionCounts:rosterPositionCounts(loaded,team),rosterSize:ratings.length,averageOverall:ratings.length?ratings.reduce((a,b)=>a+b,0)/ratings.length:null,schemes:await inspectTeamSchemes(loaded,team,schemaPath)});
   }
-  return {season,fileKind:loaded.kind??'dynasty',warnings:loaded.kind==='roster'?ROSTER_WARNINGS:[],agePresets:ROSTER_AGES,potentialPresets:ROSTER_POTENTIALS,positionGroups:POSITION_GROUPS,nativeSchemes:NATIVE_SCHEMES,offensiveSchemes:OFFENSIVE_SCHEMES.filter(item=>loaded.kind!=='roster'||item.id!=='auto'),defensiveSchemes:DEFENSIVE_SCHEMES.filter(item=>loaded.kind!=='roster'||item.id!=='auto'),tonePresets:TONE_PRESETS,teams,presets:ROSTER_PRESETS,catalogVersion:loadObservedCatalog().catalog.version};
+  return {season,fileKind:loaded.kind??'dynasty',warnings:loaded.kind==='roster'?ROSTER_WARNINGS:[],agePresets:ROSTER_AGES,potentialPresets:ROSTER_POTENTIALS,positionGroups:POSITION_GROUPS,nativeSchemes:NATIVE_SCHEMES,offensiveSchemes:OFFENSIVE_SCHEMES.filter(item=>loaded.kind!=='roster'||item.id!=='auto'),defensiveSchemes:DEFENSIVE_SCHEMES.filter(item=>loaded.kind!=='roster'||item.id!=='auto'),tonePresets:TONE_PRESETS,teams,presets:ROSTER_CALIBER_OPTIONS,catalogVersion:loadObservedCatalog().catalog.version};
 }
 function previewRow(player,preview) {
   const fields=player.fields;
@@ -120,11 +120,12 @@ export async function runRosterGenerator(context) {
     const teamSeed=(seed^Math.imul(team.teamIndex+1,2654435761))>>>0;
     const configuration=configurations[team.name];
     configuration.settings.schemeContext=resolveSchemeContext(configuration.settings,await inspectTeamSchemes(loaded,team,context.schemaPath),schemeSchema(context.schemaPath),mulberry32(teamSeed^0x534348));
-    const targets=composeRosterTargets(originals,configuration.settings),teamPreset=rosterPreset(configuration.preset),model=teamModelFactory(baseModel,teamPreset,configuration.settings)(targets);
+    const targets=composeRosterTargets(originals,configuration.settings),teamPreset=resolveRosterPreset(rosterPreset(configuration.preset),originals),model=teamModelFactory(baseModel,teamPreset,configuration.settings)(targets);
     const geography=await readTeamGeography(loaded,team,baseModel.catalog);
     const roster=progressRange(25 + teamProgressIndex / teams.length * 55,25 + (teamProgressIndex + 1) / teams.length * 55,()=>generateRosterPreview({team:{name:team.name,teamIndex:team.teamIndex,branding:team.branding,captainCount:team.captainCount,geography},targets,model,seed:teamSeed,preset:teamPreset,unavailableNames:names,matchCommentary,equipmentGenerator,reservedPresentationIds,nameHistory}));
     for(const player of roster.players)reservedPresentationIds.add(player.fields.PresentationId);
     roster.summary.caliber=teamPreset.name;
+    if(teamPreset.targetMode==='existing'){roster.summary.targetAverage=teamPreset.targetAverage;roster.summary.caliber+=` · ${teamPreset.targetAverage.toFixed(1)} average OVR`;}
     roster.summary.composition=compositionAudit(targets,originals,configuration.settings.schemeContext);
     roster.summary.recruitingNeeds=recruitingNeeds(roster.players,configuration.settings.schemeContext);
     roster.summary.schemeFit=schemeFitAudit(roster.players,configuration.settings.schemeContext,model);
@@ -164,10 +165,10 @@ async function applyRosterGenerator(context) {
   for(const roster of plan.rosters) {
     const team=available.find(team=>team.teamIndex===roster.team.teamIndex&&team.name===roster.team.name);if(!team)throw new Error('A selected team changed after Preview.');
     if(!isDeepStrictEqual(roster.team.geography,await readTeamGeography(loaded,team,baseModel.catalog)))throw new Error('School location or pipeline evidence changed after Preview. Run Preview again.');
-    const configuration=plan.configurations[team.name],teamPreset=rosterPreset(configuration.preset);
+    const configuration=plan.configurations[team.name],originals=extractTargets(loaded,team,owners),teamPreset=resolveRosterPreset(rosterPreset(configuration.preset),originals);
     const currentContext=resolveSchemeContext(configuration.settings,await inspectTeamSchemes(loaded,team,context.schemaPath),schemeSchema(context.schemaPath),mulberry32(roster.seed^0x534348));
     if(!isDeepStrictEqual(currentContext,configuration.settings.schemeContext))throw new Error('Native scheme or roster requirements changed after Preview.');
-    const targets=composeRosterTargets(extractTargets(loaded,team,owners),configuration.settings),model=teamModelFactory(baseModel,teamPreset,configuration.settings)(targets);if(!isDeepStrictEqual(roster.preset,teamPreset)||!isDeepStrictEqual(roster.summary.settings,configuration.settings))throw new Error('Team settings changed after Preview.');validateRosterPreview(roster,targets,model,equipmentGenerator,reservedPresentationIds);
+    const targets=composeRosterTargets(originals,configuration.settings),model=teamModelFactory(baseModel,teamPreset,configuration.settings)(targets);if(!isDeepStrictEqual(roster.preset,teamPreset)||!isDeepStrictEqual(roster.summary.settings,configuration.settings))throw new Error('Team settings changed after Preview.');validateRosterPreview(roster,targets,model,equipmentGenerator,reservedPresentationIds);
     for(const player of roster.players)reservedPresentationIds.add(player.fields.PresentationId);
     for(const player of roster.players) {
       for(const [field,newValue]of Object.entries(player.fields))assignments.push({table:'players',row:player.row,field,oldValue:player.before[field],newValue});

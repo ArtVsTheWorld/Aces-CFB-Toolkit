@@ -10,7 +10,8 @@
     "unlocked097-prefab-comparison": "Supplied Unlocked0.97 SHA256 0d2c7ba8f1a8237e6ffd2cf67cbfda92e1e079c5ac7277fee5990404c085d2b2, full770EBX inventory incl modified character prefab. Added entries, gating/slot changes and replacement labels compared against base prefab. Presence/unchanged flags alone are NOT vanilla evidence.",
     "existing-mod-catalog": "Existing exact-name/slot equipped-save, user/menu and decoded mod catalog evidence retained.",
     "unmodded-menu-turtlenecks-2026-10-29": "User explicitly confirmed Scrunched and Tight Turtlenecks are vanilla. Applies to their four standard color variants; branded Battle/NXTRND variants remain Unlocked.",
-    "unmodded-menu-full-families-2026-10-29": "User explicitly identified these jersey, undershirt, neck-roll, sleeve, wrist, sock-height, guardian-cap and pacifier families in the unmodded menu. Exact IDs/labels/slots matched against stock ItemInfo. User clarified leg layers are one entry each; colored and variant-2 Unlocked leg layers are distinct."
+    "unmodded-menu-full-families-2026-10-29": "User explicitly identified these jersey, undershirt, neck-roll, sleeve, wrist, sock-height, guardian-cap and pacifier families in the unmodded menu. Exact IDs/labels/slots matched against stock ItemInfo. User clarified leg layers are one entry each; colored and variant-2 Unlocked leg layers are distinct.",
+    "user-underlip-and-towels-20261030": "User explicitly confirms Unlocked under-lip balaclavas and all eight unmodded directional towels; names/IDs already recorded in the catalog."
   },
   "vanillaItems": {
     "ElbowGear_armBraceSmall": {
@@ -2848,6 +2849,78 @@
       ],
       "poolCategory": "undershirts",
       "newPoolEntry": true
+    },
+    "Towel_North": {
+      "displayName": "Towel - North",
+      "poolCategory": "towels",
+      "newPoolEntry": true,
+      "evidence": [
+        "user-underlip-and-towels-20261030",
+        "existing-mod-catalog"
+      ]
+    },
+    "Towel_NorthEast": {
+      "displayName": "Towel - North East",
+      "poolCategory": "towels",
+      "newPoolEntry": true,
+      "evidence": [
+        "user-underlip-and-towels-20261030",
+        "existing-mod-catalog"
+      ]
+    },
+    "Towel_East": {
+      "displayName": "Towel - East",
+      "poolCategory": "towels",
+      "newPoolEntry": true,
+      "evidence": [
+        "user-underlip-and-towels-20261030",
+        "existing-mod-catalog"
+      ]
+    },
+    "Towel_SouthEast": {
+      "displayName": "Towel - South East",
+      "poolCategory": "towels",
+      "newPoolEntry": true,
+      "evidence": [
+        "user-underlip-and-towels-20261030",
+        "existing-mod-catalog"
+      ]
+    },
+    "Towel_South": {
+      "displayName": "Towel - South",
+      "poolCategory": "towels",
+      "newPoolEntry": true,
+      "evidence": [
+        "user-underlip-and-towels-20261030",
+        "existing-mod-catalog"
+      ]
+    },
+    "Towel_SouthWest": {
+      "displayName": "Towel - South West",
+      "poolCategory": "towels",
+      "newPoolEntry": true,
+      "evidence": [
+        "user-underlip-and-towels-20261030",
+        "existing-mod-catalog"
+      ]
+    },
+    "Towel_West": {
+      "displayName": "Towel - West",
+      "poolCategory": "towels",
+      "newPoolEntry": true,
+      "evidence": [
+        "user-underlip-and-towels-20261030",
+        "existing-mod-catalog"
+      ]
+    },
+    "Towel_NorthWest": {
+      "displayName": "Towel - North West",
+      "poolCategory": "towels",
+      "newPoolEntry": true,
+      "evidence": [
+        "user-underlip-and-towels-20261030",
+        "existing-mod-catalog"
+      ]
     }
   },
   "unlockedItems": {
@@ -3954,6 +4027,38 @@
         "unlocked097-prefab-comparison",
         "existing-mod-catalog"
       ]
+    },
+    "FaceGear_BalaclavaUnderLip": {
+      "displayName": "Black Balaclava (Under Lip)",
+      "kind": "user-confirmed-unlocked",
+      "evidence": [
+        "existing-mod-catalog",
+        "user-underlip-and-towels-20261030"
+      ]
+    },
+    "FaceGear_BalaclavaUnderLip_White": {
+      "displayName": "White Balaclava (Under Lip)",
+      "kind": "user-confirmed-unlocked",
+      "evidence": [
+        "existing-mod-catalog",
+        "user-underlip-and-towels-20261030"
+      ]
+    },
+    "FaceGear_BalaclavaUnderLip_Primary": {
+      "displayName": "Team Color Balaclava (Under Lip)",
+      "kind": "user-confirmed-unlocked",
+      "evidence": [
+        "existing-mod-catalog",
+        "user-underlip-and-towels-20261030"
+      ]
+    },
+    "FaceGear_BalaclavaUnderLip_Secondary": {
+      "displayName": "Secondary Color Balaclava (Under Lip)",
+      "kind": "user-confirmed-unlocked",
+      "evidence": [
+        "existing-mod-catalog",
+        "user-underlip-and-towels-20261030"
+      ]
     }
   },
   "replacements": {
@@ -4332,6 +4437,7 @@
     "legSleeves": "Leg Base Layers",
     "socks": "Sock Heights",
     "guardianCaps": "Guardian Caps",
-    "mouthpieces": "Mouthpieces"
+    "mouthpieces": "Mouthpieces",
+    "towels": "Towels"
   }
 }

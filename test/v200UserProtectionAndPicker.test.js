@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
+import {chooseGameSave} from '../src/main/services/savePicker.js';
 
 const read = path => fs.readFileSync(new URL('../' + path, import.meta.url), 'utf8');
 const renderer = read('src/renderer/renderer.js');
@@ -41,13 +42,13 @@ test('canceling confirmation stops before tool IPC or any loading state', async 
   vm.runInContext(renderer.match(/^async function runForceWin.*$/m)[0], ctx);
   await ctx.runForceWin('automatic-force-win', 'preview');
 });
-test('donor and Active Save share the wildcard CFB save dialog; generic TXT picker stays separate', async () => {
+test('donor and Active Save share the extensionless CFB save dialog and validation; generic TXT picker stays separate', async () => {
   let handler;
   const dialogs = [];
-  const ctx = vm.createContext({ IPC: { chooseSave: 'save' }, ipcMain: { handle: (_channel, callback) => { handler = callback; } }, dialog: { showOpenDialog: async options => { dialogs.push(options); return { canceled: false, filePaths: ['file'] }; } } });
+  const ctx = vm.createContext({chooseGameSave, IPC: { chooseSave: 'save' }, ipcMain: { handle: (_channel, callback) => { handler = callback; } }, dialog: { showOpenDialog: async options => { dialogs.push(options); return { canceled: false, filePaths: ['DYNASTY-TEST'] }; } } });
   vm.runInContext(read('src/main/main.js').split('\n').find(line => line.includes('ipcMain.handle(IPC.chooseSave,')), ctx);
-  assert.equal(await handler(null), 'file');
-  assert.equal(await handler(null, 'equipment-donor'), 'file');
+  assert.equal(await handler(null), 'DYNASTY-TEST');
+  assert.equal(await handler(null, 'equipment-donor'), 'DYNASTY-TEST');
   assert.equal(JSON.stringify(dialogs[0].filters), JSON.stringify(dialogs[1].filters));
   assert.equal(dialogs[1].filters[0].name, 'CFB 27 Saves');
   assert.equal(dialogs[1].filters[0].extensions.join(), '*');

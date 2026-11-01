@@ -1,6 +1,6 @@
 {
-  "verification": "User explicitly identified these jersey, undershirt, neck-roll, sleeve, wrist, sock-height, guardian-cap and pacifier families in the unmodded menu. Exact IDs/labels/slots matched against stock ItemInfo. User clarified leg layers are one entry each; colored and variant-2 Unlocked leg layers are distinct.",
-  "defaultPolicy": "Fresh CFB 27 Equipment defaults include quarter/half sleeves, long/short arm tape, and the selected wrist-tape/band families. Other newly confirmed choices stay opt-in. Existing explicit item selections and category chances are preserved.",
+  "verification": "User explicitly identified these jersey, undershirt, neck-roll, sleeve, wrist, sock-height, guardian-cap and pacifier families in the unmodded menu. Exact IDs/labels/slots matched against stock ItemInfo. User clarified leg layers are one entry each; colored and variant-2 Unlocked leg layers are distinct. User also confirmed all eight directional base-game towels on 2026-10-30.",
+  "defaultPolicy": "Fresh CFB 27 Equipment defaults include quarter/half sleeves, long/short arm tape, and the selected wrist-tape/band families. All eight directional towels default to a 1% category chance. Other newly confirmed choices stay opt-in. Existing explicit item selections and category chances are preserved.",
   "items": [
     {
       "itemName": "Gear_JerseyStyle_SleeveStandard",
@@ -1271,6 +1271,86 @@
       "category": "Mouthpiece",
       "slots": [
         "MouthWear"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "Towel_North",
+      "displayName": "Towel - North",
+      "category": "Towel",
+      "slots": [
+        "Towel"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "Towel_NorthEast",
+      "displayName": "Towel - North East",
+      "category": "Towel",
+      "slots": [
+        "Towel"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "Towel_East",
+      "displayName": "Towel - East",
+      "category": "Towel",
+      "slots": [
+        "Towel"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "Towel_SouthEast",
+      "displayName": "Towel - South East",
+      "category": "Towel",
+      "slots": [
+        "Towel"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "Towel_South",
+      "displayName": "Towel - South",
+      "category": "Towel",
+      "slots": [
+        "Towel"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "Towel_SouthWest",
+      "displayName": "Towel - South West",
+      "category": "Towel",
+      "slots": [
+        "Towel"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "Towel_West",
+      "displayName": "Towel - West",
+      "category": "Towel",
+      "slots": [
+        "Towel"
+      ],
+      "tags": [],
+      "origin": "vanilla"
+    },
+    {
+      "itemName": "Towel_NorthWest",
+      "displayName": "Towel - North West",
+      "category": "Towel",
+      "slots": [
+        "Towel"
       ],
       "tags": [],
       "origin": "vanilla"

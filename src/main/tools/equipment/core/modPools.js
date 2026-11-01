@@ -29,13 +29,13 @@ export function modPoolDefinitions() {
       category("mouthpieces", "Mouthpieces", [...UNLOCKED_POOLS.unlockedMouthpieces, ...UNLOCKED_POOLS.colorfulHangingMouthpieces], { defaultItems: UNLOCKED_POOLS.unlockedMouthpieces.map(item => item.itemName) }),
       category("neckwear", "Turtlenecks & Neckwear", UNLOCKED_POOLS.neckwear),
       category("legSleeves", "Leg Base Layers", UNLOCKED_POOLS.legSleeves),
-      category("balaclavas", "Normal Balaclavas", UNLOCKED_POOLS.balaclavas, { defaultChance: 5 }),
+      category("balaclavas", "Balaclavas", UNLOCKED_POOLS.balaclavas, { defaultChance: 5, defaultItems: UNLOCKED_POOLS.balaclavas.filter(item=>/^FaceGear_BalaclavaOverNose(?:_|$)/.test(item.itemName)).map(item=>item.itemName) }),
       category("thighPads", "Thigh Pads", UNLOCKED_POOLS.thighPads),
       category("towels", "Towels", UNLOCKED_POOLS.towels, {defaultChance:1}),
       category("socks", "Sock Styles", UNLOCKED_POOLS.socks),
       category("spats", "Spats — Both Feet", UNLOCKED_SPATS, {defaultChance:5})
     ],
-    raw: [category("neckwear", "Turtlenecks & Necklaces", RAW_ACCESSORIES_POOLS.neckwear), category("skullcaps", "Skullcaps", RAW_ACCESSORIES_POOLS.skullcaps), category("backplates", "Backplates — No Flak Jacket", RAW_ACCESSORIES_POOLS.backplates ?? []), category('armSleeves', 'RAW Jamo Sleeves', RAW_ACCESSORIES_POOLS.armSleeves, {defaultChance: 0, defaultItems: []})],
+    raw: [category("neckwear", "Turtlenecks & Necklaces", RAW_ACCESSORIES_POOLS.neckwear), category("skullcaps", "Skullcaps", RAW_ACCESSORIES_POOLS.skullcaps), category("backplates", "Backplates — No Flak Jacket", RAW_ACCESSORIES_POOLS.backplates ?? []), category('armSleeves', 'RAW Jamo Sleeves', RAW_ACCESSORIES_POOLS.armSleeves, {defaultChance: 0, defaultItems: []}), category('gloves','Pink Gloves',RAW_ACCESSORIES_POOLS.gloves,{defaultChance:10}), category('towels','Black Towels',RAW_ACCESSORIES_POOLS.towels,{defaultChance:1})],
     eljax: [category("armSleeves", "Team & Brand Arm Sleeves", EQUIPMENT_TRUCK_POOLS.armSleeves), category("visors", "Team & Brand Visors", EQUIPMENT_TRUCK_POOLS.visors),
       category("chinCovers", "Brand Logo Chin Covers", EQUIPMENT_TRUCK_POOLS.chinCovers),
       category("waistPlaycalls", "Waist Playcall Bands — QBs Only", EQUIPMENT_TRUCK_POOLS.waistPlaycalls),
@@ -58,7 +58,7 @@ export function modPoolDefinitions() {
     const additions=Object.entries(STOCK).filter(([,entry])=>entry.poolCategory===id).map(([name,entry])=>({...equipmentItem(name,{usingUnlockedMod:false}),disabledWithUnlocked:Boolean(entry.disabledWithUnlocked),replacedByRaw:RAW_314.jamoItems.some(item=>item.itemName===name)})).filter(canGenerateItem);
     const existing=vanilla.find(c=>c.id===id);
     if(existing){existing.items=unique([...existing.items,...additions]);existing.label=label;}
-    else if(additions.length)vanilla.push(category(id,label,additions,{defaultChance:0,defaultItems:[]}));
+    else if(additions.length)vanilla.push(category(id,label,additions,id==='towels'?{defaultChance:1,defaultItems:additions.map(item=>item.itemName)}:{defaultChance:0,defaultItems:[]}));
   }
   const sleeves=vanilla.find(c=>c.id==='armSleeves'),wrists=vanilla.find(c=>c.id==='wristGear');
   sleeves.defaultItems=[...new Set([...sleeves.defaultItems,...sleeves.items.filter(i=>/^Arm Sleeve (Quarter|Half) |^Arm Tape (Long|Short) /.test(i.displayName)).map(i=>i.itemName)])];

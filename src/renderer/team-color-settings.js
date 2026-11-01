@@ -1,5 +1,20 @@
 // One row renderer and the existing whole-number balancing controls serve both
 // distributions. Accessory and tape values remain independent configurations.
+function cleatColorControlsMarkup(prepared) {
+  const choices=prepared.cleatColorOverrides??[];
+  return `<div id="cleat-color-settings"><label for="cleat-color-mode"><strong>Cleat Color Behavior</strong></label><select id="cleat-color-mode"><option value="leave">Leave Cleats Untouched</option><option value="override">Apply Cleat Color Overrides</option></select><p class="muted">Requires CFB27 Unlocked. Choose one color for both feet. Cleat styles stay the same.</p><div id="cleat-color-overrides" hidden><div class="notice" data-cleat-color-warning role="note">Applying a cleat color override replaces existing spats on both feet. Teams set to No Change receive no cleat override.</div><label for="cleat-team-search">Find a Team</label><input class="input" type="search" id="cleat-team-search" placeholder="Find a team"><div class="cleat-team-list">${prepared.teams.map((team,index)=>{
+    const name=team.name.toLowerCase(),selected=prepared.cleatColorDefaults?.[name]??'unchanged';
+    return `<div class="cleat-team-row" data-cleat-team-row="${escapeHtml(name)}"><div class="tape-team-name"><img data-team-logo src="${forceLogoUrl(team.name)}" alt=""><strong>${escapeHtml(team.name)}</strong></div><select id="cleat-team-color-${index}" data-cleat-team="${escapeHtml(name)}" aria-label="Cleat color for ${escapeHtml(team.name)}">${[{value:'unchanged',label:'No Change'},...choices].map(item=>`<option value="${escapeHtml(item.value)}" ${item.value===selected?'selected':''}>${escapeHtml(item.label)}</option>`).join('')}</select></div>`;
+  }).join('')}</div><p class="muted" id="cleat-team-empty" hidden>No teams match your search.</p></div></div>`;
+}
+function teamCleatColorOptions(){return Object.fromEntries([...content.querySelectorAll('[data-cleat-team]')].map(input=>[input.dataset.cleatTeam,input.value]));}
+function syncTeamCleatColors(root){const mode=configurationRead(root,'cleat-color-mode'),rows=configurationRead(root,'cleat-color-overrides');if(mode&&rows)rows.hidden=mode.value!=='override';}
+function filterTeamCleatRows(root,value){const query=value.trim().toLowerCase(),rows=[...root.querySelectorAll('[data-cleat-team-row]')];rows.forEach(row=>row.hidden=!row.dataset.cleatTeamRow.includes(query));const empty=configurationRead(root,'cleat-team-empty');if(empty)empty.hidden=rows.some(row=>!row.hidden);}
+function teamCleatColorReviewRows(){
+  if(document.getElementById('cleat-color-mode')?.value!=='override')return [['Cleat Colors','Leave Cleats Untouched']];
+  const groups=new Map();for(const select of content.querySelectorAll('[data-cleat-team]')){const label=select.selectedOptions[0]?.textContent??'No Change';if(!groups.has(label))groups.set(label,[]);groups.get(label).push(select.closest('[data-cleat-team-row]').querySelector('strong').textContent);}
+  return [...groups].map(([label,teams])=>['Cleat Colors — '+label,teams.join(', ')]);
+}
 function teamColorDistributionMarkup(prepared, kind) {
   const tape = kind === "tape", prefix = tape ? "tape-team" : "accessory-team", title = tape ? "Tape Color" : "Accessory Color";
   const colors = [["white", "White"], ["black", "Black"], ["primary", "Team Primary"], ["secondary", "Team Secondary"]];

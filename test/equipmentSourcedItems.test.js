@@ -75,12 +75,12 @@ test("rubber bands retain elbow position restrictions and new pads/towel use the
   assert.equal(recolorEquipmentItem("ElbowGear_RubberBands1", "white"), "ElbowGear_RubberBands1", "no invented band colors");
 });
 
-test("normal masks recolor to all four colors in FaceWear; under-lip, removal and no-tattoo entries are never generated", () => {
+test("normal masks recolor to all four colors in FaceWear; under-lip is opt-in and removal/no-tattoo entries are never generated", () => {
   const names = { white: "FaceGear_BalaclavaOverNose_White", black: "FaceGear_BalaclavaOverNose", primary: "FaceGear_BalaclavaOverNose_Primary", secondary: "FaceGear_BalaclavaOverNose_Secondary" };
   for (const asset of Object.values(names)) for (const [theme, target] of Object.entries(names)) assert.equal(recolorEquipmentItem(asset, theme), target);
-  assert.equal(UNLOCKED_POOLS.balaclavas.length, 4);
+  assert.equal(UNLOCKED_POOLS.balaclavas.length, 8);
   const pools = [...Object.values(UNLOCKED_POOLS), ...Object.values(RAW_ACCESSORIES_POOLS)].flat();
-  assert.ok(pools.every(item => !item.displayOnly && !/Under Lip|Remove Balaclava|No Tattoo/.test(item.displayName)));
+  assert.ok(pools.every(item => !item.displayOnly && !/Remove Balaclava|No Tattoo/.test(item.displayName)));
   for (const entry of source.items.filter(item => item.displayOnly)) assert.equal(recolorEquipmentItem(entry.itemName, "primary"), entry.itemName);
   assert.equal(isMaskOrBalaclava("FaceGear_BalaclavaNone", true), false);
 });
@@ -102,7 +102,7 @@ test("new optional categories are reachable, deterministic, brand-safe and remov
   }
   for(let seed=0;seed<800;seed++){const vanilla=[field([])];applyUnlockedRandomizerEquipment(vanilla,{position:"WR",branding:"Nike"},mulberry32(seed),.7,undefined,undefined,true,{},"vanilla");for(const e of vanilla[0].loadoutElements)seen.add(e.itemAssetName);}
   for(let seed=0;seed<100;seed++){const masks=[field([])];applyUnlockedRandomizerEquipment(masks,{position:"WR",branding:"Nike"},mulberry32(seed),0,undefined,{balaclavas:{chance:100},neckwear:{chance:0}},true,{},"vanilla");for(const e of masks[0].loadoutElements)seen.add(e.itemAssetName);}
-  for (const entry of source.items.filter(item => item.origin === "unlocked" && !item.displayOnly && item.itemName!=="Towel2_South")) assert.ok(seen.has(entry.itemName), entry.itemName);
+  for (const entry of source.items.filter(item => item.origin === "unlocked" && !item.displayOnly && item.itemName!=="Towel2_South" && !item.itemName.startsWith("FaceGear_BalaclavaUnderLip"))) assert.ok(seen.has(entry.itemName), entry.itemName);
   for (const asset of Object.keys(source.displayNames).filter(name => name.startsWith("NeckWear_"))) assert.ok(seen.has(asset));
   const unchanged = [field([item("HeadWear", "Original")])], before = structuredClone(unchanged);
   assert.deepEqual(applyUnlockedRandomizerEquipment(unchanged, { position: "WR" }, () => 0, 0), []);

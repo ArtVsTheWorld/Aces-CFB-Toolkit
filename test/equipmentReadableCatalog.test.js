@@ -29,7 +29,7 @@ test("manual review flags distinguish blockers, optional freshness and intention
   const entries = buildEntries(catalog), groups = buildReviewGroups(entries);
   assert.deepEqual(Object.fromEntries(groups.map(group => [group.kind, group.entries.length])), { slot: 5, caps: 4, combo: 30, refresh: 78, artwork: 26, unresolved: 3 });
   for (const entry of entries.filter(entry => /^FaceGear_BalaclavaUnderLip/.test(entry.itemName) || entry.itemName === "FaceGear_BalaclavaNone")) {
-    assert.equal(entry.toolkit, "Intentionally excluded");
+    assert.equal(entry.toolkit, entry.itemName === "FaceGear_BalaclavaNone" ? "Intentionally excluded" : "Equipment pool option — deselected by default");
     assert.equal(entry.reviewKinds.length, 0);
   }
   assert.equal(entries.find(entry => entry.itemName === "G_CompressionT_Crew_LongSleeve_NikeHQ_B_NAV").location, "Not verified");

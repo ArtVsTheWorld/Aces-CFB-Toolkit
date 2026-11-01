@@ -4,7 +4,7 @@ import fs from "node:fs";
 import { enforceEquipmentCompatibility } from "../src/main/tools/equipment/core/compatibility.js";
 import { canGenerateEquipment } from "../src/main/tools/equipment/core/generatedCompatibility.js";
 import { applyGlobalEquipmentFixes, rollApprovedHelmet, rollFacemask, rollUnlockedMouthpiece, isBrandedMouthpiece } from "../src/main/tools/equipment/core/globalFixes.js";
-import { equipmentItem, equipmentSemantics } from "../src/main/tools/equipment/catalog.js";
+import { equipmentItem, equipmentSemantics, equipmentColorVariant } from "../src/main/tools/equipment/catalog.js";
 import { buildHelmetBalancePlan, helmetFamily } from "../src/main/tools/equipment/core/helmetBalance.js";
 import { normalizeEquipmentOptions } from "../src/main/tools/equipment/runner.js";
 import { patchFreshmanEquipment, mulberry32 } from "../src/main/tools/equipment/core/patcher.js";
@@ -28,7 +28,9 @@ for (const sleeve of [undershirt, rolled]) for (const wrist of ["GearWrist_wrist
   const visuals = [visual(elements)]; applyGlobalEquipmentFixes([player(0)], visuals, 10, { sleeveCompatibilityFix: true }); assert.deepEqual(parsed(visuals[0]), direct);
   const recipients = [player(0), { ...player(1), SchoolYear: "Senior", OverallRating: 90 }], raw = [visual([]), visual(elements)];
   const result = patchFreshmanEquipment(recipients, raw, 10, { top: 1, seed: 50, apply: true, mixedChance: 0, crossMixedChance: 0 });
-  assert.equal(result.changes.length, 1); assert.equal(get(parsed(raw[0]), "LeftWristWear"), expectedWrist); assert.equal(get(parsed(raw[0]), "LeftElbowWear"), sleeve===rolled?"ElbowGear_None":"ElbowGear_elbowSweatband_White");
+  assert.equal(result.changes.length, 1);
+  const color=result.changes[0].accessoryColors?.color,matched=asset=>equipmentColorVariant(asset,color,{usingUnlockedMod:false})??asset;
+  assert.equal(get(parsed(raw[0]), "LeftWristWear"),matched(expectedWrist));assert.equal(get(parsed(raw[0]), "LeftElbowWear"),matched(sleeve===rolled?"ElbowGear_None":"ElbowGear_elbowSweatband_White"));
 });
 test("generation uses the agreed shoulder-to-elbow allowance and rolled-sleeve restrictions", () => {
   for (const sleeve of [undershirt, rolled]) {
@@ -138,6 +140,6 @@ test("Team Boost specific attributes reject empty/unknown fields and retain rati
   assert.equal(result.ratingChanges.length, 1); assert.equal(result.ratingChanges[0].newRating, 99); assert.deepEqual(records, initial);
 });
 test("release versions match the requested increments", () => {
-  assert.equal(JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url))).version, "25.5.0");
+  assert.equal(JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url))).version, "25.6.0");
   assert.equal(tools.find(tool => tool.id === "freshman-equipment").version, undefined); assert.equal(tools.find(tool => tool.id === "equipment-patcher").version, undefined); assert.equal(tools.find(tool => tool.id === "team-boost").version, undefined);
 });

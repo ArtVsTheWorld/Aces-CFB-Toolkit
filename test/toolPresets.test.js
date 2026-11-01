@@ -41,7 +41,7 @@ test("preset storage rejects invalid names, oversized input, missing records, an
 test("preset team selections and tape mixes load by name, never by stale save row indexes", () => {
   const input = { id: "tape-team-color-99-black", dataset: { tapeTeam: "georgia", tapeColor: "black" } };
   const select = { multiple: true, options: [{ value: "new-save-row-40", textContent: "Georgia" }] };
-  const context = vm.createContext({ document: { getElementById: () => select }, content: { querySelectorAll: () => [input] } });
+  const context = vm.createContext({ document: { getElementById: id => id==='cleat-color-mode'?null:select }, content: { querySelectorAll: selector => selector==='[data-cleat-team]'?[]:[input] } });
   vm.runInContext(fs.readFileSync(new URL("../src/renderer/presets.js", import.meta.url), "utf8"), context);
   const values = context.presetValues(configuration);
   assert.deepEqual(Array.from(values["equipment-included"]), ["new-save-row-40"]); assert.equal(values[input.id], "100");

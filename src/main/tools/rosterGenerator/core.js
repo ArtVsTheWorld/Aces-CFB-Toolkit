@@ -101,19 +101,50 @@ export function buildAppearancePreview(originalRaw,appearance,branding) {
   // Unlocked's verified CujoMatty designs use a different asset prefix from
   // vanilla tattoos. They occupy the same Base tattoo slots and can be reset
   // for a newly generated player; unknown layers and metadata still block.
-  const knownTattoo=item=>tattooSlots.has(item.slotType)&&typeof item.itemAssetName==='string'&&(/^(ArmTattoo|LegTattoo)_/.test(item.itemAssetName)||/^(Left|Right)ArmTattoo$/.test(item.slotType)&&KNOWN_UNLOCKED_ARM_TATTOOS.has(item.itemAssetName))&&Object.keys(item).every(key=>['itemAssetName','slotType'].includes(key));
+  const knownTattooAsset=(slot,asset)=>typeof asset==='string'&&(/^(ArmTattoo|LegTattoo)_/.test(asset)||/^(Left|Right)ArmTattoo$/.test(slot)&&KNOWN_UNLOCKED_ARM_TATTOOS.has(asset));
+  // Native edited appearances can repeat the asset in an instance tag. A clear-
+  // tattoos pass may leave that old known tag beside None; both are reset here.
+  const knownTattoo=item=>item&&typeof item==='object'&&!Array.isArray(item)&&tattooSlots.has(item.slotType)&&knownTattooAsset(item.slotType,item.itemAssetName)&&Object.keys(item).every(key=>['itemAssetName','slotType','itemInstanceTag'].includes(key))&&(!Object.hasOwn(item,'itemInstanceTag')||item.itemInstanceTag===item.itemAssetName||item.itemAssetName===tattooSlots.get(item.slotType)&&knownTattooAsset(item.slotType,item.itemInstanceTag));
   const knownBase=loadout=>loadout.loadoutCategory==='Base'&&Object.keys(loadout).every(key=>['loadoutCategory','loadoutElements'].includes(key))&&(!loadout.loadoutElements||Array.isArray(loadout.loadoutElements)&&loadout.loadoutElements.every(knownTattoo));
-  const unknownLayers=parsed.loadouts.filter(loadout=>loadout.loadoutType!=='PlayerOnField'&&!knownBase(loadout)).map(loadout=>loadout.loadoutType??loadout.loadoutCategory??'[missing type]');
+  // These observed Head layers are either empty or a generic face override with
+  // empty transform/blend placeholders. The new player already receives a
+  // complete generic face through APPEARANCE_FIELDS; retaining an old override
+  // would show the previous player's head. Custom/nonempty data stays blocked.
+  const emptyPlaceholders=value=>Array.isArray(value)&&value.every(item=>item&&typeof item==='object'&&!Array.isArray(item)&&Object.keys(item).length===0);
+  const knownHead=loadout=>loadout.loadoutCategory==='Head'&&loadout.loadoutType==='Head'&&Object.keys(loadout).every(key=>['loadoutCategory','loadoutType','loadoutElements'].includes(key))&&(loadout.loadoutElements===undefined||Array.isArray(loadout.loadoutElements)&&loadout.loadoutElements.length<=1&&loadout.loadoutElements.every(item=>item&&typeof item==='object'&&!Array.isArray(item)&&item.slotType==='PlusHead'&&/^Generic_\d{4}_P_T\d{4}_[A-Z]_[1-8]_[1-4]_item$/.test(item.itemAssetName)&&Object.keys(item).every(key=>['slotType','itemAssetName','itemInstanceTag','blends','transforms'].includes(key))&&(!Object.hasOwn(item,'itemInstanceTag')||item.itemInstanceTag===item.itemAssetName)&&['blends','transforms'].every(key=>!Object.hasOwn(item,key)||emptyPlaceholders(item[key]))));
+  const unknownLayerDetails=parsed.loadouts.flatMap((loadout,index)=>loadout.loadoutType==='PlayerOnField'||knownBase(loadout)||knownHead(loadout)?[]:[{
+    index,type:loadout.loadoutType??null,category:loadout.loadoutCategory??null,
+    extraFields:Object.keys(loadout).filter(key=>!['loadoutCategory','loadoutElements'].includes(key)),
+    items:Array.isArray(loadout.loadoutElements)?loadout.loadoutElements.filter(item=>!knownTattoo(item)).map(item=>item&&typeof item==='object'&&!Array.isArray(item)?{slot:item.slotType??null,asset:item.itemAssetName??null,extraFields:Object.keys(item).filter(key=>!['itemAssetName','slotType'].includes(key))}:{malformed:true,type:item===null?'null':typeof item}):[],
+    ...(loadout.loadoutElements!==undefined&&!Array.isArray(loadout.loadoutElements)?{invalidElements:true}:{})
+  }]);
+  const unknownLayers=unknownLayerDetails.map(layer=>layer.type??layer.category??'[missing type]');
   const source=structuredClone(appearance.loadouts),brandCorrections=guardBrandEquipment(source,{branding},[]).filter(change=>change.oldItem!==change.newItem),compatibility=[];
   for(const loadout of source)compatibility.push(...enforceEquipmentCompatibility(loadout.loadoutElements));
   for(const loadout of source)for(const element of loadout.loadoutElements){if(BRAND_SLOTS.has(element.slotType)&&!/(?:^|_)None$/.test(element.itemAssetName)&&!isBrandCompatibleItem(element.slotType,element.itemAssetName,branding))throw new Error(`Unverified brand-sensitive generated item ${element.itemAssetName}.`);}
   // The generated cohort omits these overrides. Retaining the original skin or
   // build here would conflict with the newly selected generic appearance.
   const removedOverrides=['skinTone','bodyType','jerseyName'].filter(key=>Object.hasOwn(parsed,key));for(const key of removedOverrides)delete parsed[key];
+  if(parsed.loadouts.some(knownHead))removedOverrides.push('Head loadout');
   const loadouts=[];let inserted=false;
-  for(const loadout of parsed.loadouts){if(loadout.loadoutType==='PlayerOnField'){if(!inserted){loadouts.push(...source);inserted=true;}}else loadouts.push(knownBase(loadout)&&loadout.loadoutElements?{...loadout,loadoutElements:loadout.loadoutElements.map(item=>({...item,itemAssetName:tattooSlots.get(item.slotType)}))}:loadout);}
+  for(const loadout of parsed.loadouts){if(loadout.loadoutType==='PlayerOnField'){if(!inserted){loadouts.push(...source);inserted=true;}}else if(!knownHead(loadout))loadouts.push(knownBase(loadout)&&loadout.loadoutElements?{...loadout,loadoutElements:loadout.loadoutElements.map(item=>({...item,itemAssetName:tattooSlots.get(item.slotType),...(Object.hasOwn(item,'itemInstanceTag')?{itemInstanceTag:tattooSlots.get(item.slotType)}:{})}))}:loadout);}
   if(!inserted)throw new Error('Target has no PlayerOnField loadout.');parsed.loadouts=loadouts;
-  return {raw:JSON.stringify(parsed),removedOverrides,unknownLayers,brandCorrections,compatibility};
+  return {raw:JSON.stringify(parsed),removedOverrides,unknownLayers,unknownLayerDetails,brandCorrections,compatibility};
+}
+
+export function rosterPlayerIssue(target,reason,details={}){
+  const original=target.original??{},name=[original.FirstName,original.LastName].filter(Boolean).join(' ').trim();
+  return {...details,row:target.row,visualRow:target.visualRow,player:name||`Player row ${target.row}`,position:original.Position??target.position,...(original.JerseyNum!==undefined?{jersey:original.JerseyNum}:{}),reason};
+}
+
+// Regeneration replaces the entire person. Build only approved appearance data
+// rather than retaining unfamiliar overrides from the previous player's JSON.
+// Shared rows/references and storage are guarded separately by the normal plan.
+export function buildFreshAppearancePreview(originalRaw,appearance,branding){
+  const original=typeof originalRaw==='string'?JSON.parse(originalRaw):structuredClone(originalRaw);
+  if(!original||typeof original!=='object'||Array.isArray(original))throw new Error('The original appearance cannot be read as a player appearance. No save was written.');
+  const fresh=buildAppearancePreview({loadouts:[{loadoutType:'PlayerOnField',loadoutElements:[]}]},appearance,branding);
+  return {...fresh,removedOverrides:Object.keys(original).filter(key=>key!=='loadouts'),reset:{mode:'complete',discardedLayers:Array.isArray(original.loadouts)?original.loadouts.map(layer=>({type:layer?.loadoutType??null,category:layer?.loadoutCategory??null})):[],discardedRootFields:Object.keys(original).filter(key=>key!=='loadouts')}};
 }
 
 export function generateRosterPreview({team,targets,model,seed=1,preset=BUILDING_BLOCKS,unavailableNames=[],matchCommentary=()=>({id:0,method:'none'}),equipmentGenerator=null,reservedPresentationIds=[],nameHistory=null}) {
@@ -137,15 +168,15 @@ export function generateRosterPreview({team,targets,model,seed=1,preset=BUILDING
     fields.ProspectStarRating=generatedRecruitStars(fields,seed,target.row);
     validateProposedFields(fields);
     if(Object.values(fields).some(value=>value===undefined))throw new Error('Generated profile is missing a required field.');
-    const visual=buildAppearancePreview(target.rawData,appearance,team.branding),fallbacks=[...item.fallbacks];
+    const visual=buildFreshAppearancePreview(target.rawData,appearance,team.branding),fallbacks=[...item.fallbacks];
     if(!item.selection&&item.pool.length<20)fallbacks.push(`Only ${item.pool.length} player profiles fit this position and class.`);
     if(item.selection?.fallbackLevel>=2)fallbacks.push('Used a broader set of observed players to match this position’s ratings.');
     if(item.selection&&Math.abs(profile.overall-item.selection.nativeOverall)>12)fallbacks.push('This position needed a larger skill adjustment to reach its target.');
     if(!sameTypeStyles.length)fallbacks.push('Used playing styles from another player at the same position.');
     if(!sameBrand)fallbacks.push('Brand-specific equipment was adjusted to match the team.');
-    if(target.visualOwners?.some(row=>row!==target.row))blocking.push({row:target.row,reason:'This player shares appearance data with another player. Apply is blocked to protect both.'});
-    if(visual.unknownLayers.length)blocking.push({row:target.row,reason:'This player has additional appearance layers that cannot yet be safely replaced.',layers:visual.unknownLayers});
-    return {row:target.row,position:target.position,visualRow:target.visualRow,before:Object.fromEntries(WRITE_FIELDS.map(field=>[field,target.original[field]])),beforeRawData:target.rawData,fields,rawData:visual.raw,provenance:{appearanceMix,football:profile.id,home:homePlan.byRow.get(target.row)??null,potential:potential.id,athleticProfile:item.athleticProfile,athleticSelection:item.selection??null,outlierSize,athleticName:ATHLETICISM_PROFILES.find(profile=>profile.id===item.athleticProfile)?.name??'Balanced',surname,appearance:appearance.id,style:style.id,sourceStoredOverall:profile.storedOverall,calculatedOverall:profile.overall,calibration:profile.calibration??null,commentary:matched.method,nameMethod:appearanceMix==='standard'?'observed same-head first-name pool':'approved '+appearanceMix+' name pool',skinTone:tone,firstNamePool:observedFirstNames(model.catalog,appearance,appearanceMix),requestedPositionAverage:model.talentTargets?.[positionGroup(target.position)]??preset.targetAverage},fallbacks,appearanceAudit:{removedOverrides:visual.removedOverrides,brandCorrections:visual.brandCorrections,compatibility:visual.compatibility}};
+    if(target.visualOwners?.some(row=>row!==target.row))blocking.push(rosterPlayerIssue(target,'This player shares appearance data with another player. Apply is blocked to protect both.'));
+    if(visual.unknownLayers.length)blocking.push(rosterPlayerIssue(target,'This player has additional appearance layers that cannot yet be safely replaced.',{layers:visual.unknownLayers,layerDetails:visual.unknownLayerDetails}));
+    return {row:target.row,position:target.position,visualRow:target.visualRow,before:Object.fromEntries(WRITE_FIELDS.map(field=>[field,target.original[field]])),beforeRawData:target.rawData,fields,rawData:visual.raw,provenance:{appearanceMix,football:profile.id,home:homePlan.byRow.get(target.row)??null,potential:potential.id,athleticProfile:item.athleticProfile,athleticSelection:item.selection??null,outlierSize,athleticName:ATHLETICISM_PROFILES.find(profile=>profile.id===item.athleticProfile)?.name??'Balanced',surname,appearance:appearance.id,style:style.id,sourceStoredOverall:profile.storedOverall,calculatedOverall:profile.overall,calibration:profile.calibration??null,commentary:matched.method,nameMethod:appearanceMix==='standard'?'observed same-head first-name pool':'approved '+appearanceMix+' name pool',skinTone:tone,firstNamePool:observedFirstNames(model.catalog,appearance,appearanceMix),requestedPositionAverage:model.talentTargets?.[positionGroup(target.position)]??preset.targetAverage},fallbacks,appearanceAudit:{reset:visual.reset,removedOverrides:visual.removedOverrides,brandCorrections:visual.brandCorrections,compatibility:visual.compatibility,...(visual.unknownLayers.length?{unsupportedLayers:visual.unknownLayerDetails}:{})}};
   });
   const generatedFirstNames=new Set(players.map(player=>player.fields.FirstName.toLowerCase()));
   const familyNameExclusions=unavailableNames.filter(name=>generatedFirstNames.has(name.trim().split(' ')[0].toLowerCase()));
@@ -215,7 +246,7 @@ export function validateRosterPreview(preview,targets,model,equipmentGenerator=n
     }else if(player.provenance.brother!==undefined||player.provenance.familyOriginal)throw new Error('Unplanned generated brother pairing.');
   }
   const finished=new Map(expected.map(player=>[player.row,player.fields]));
-  const equipment=equipmentGenerator?.(preview.players.map(player=>{const target=byRow.get(player.row),appearance=model.catalog.appearances.find(item=>item.id===player.provenance.appearance);if(!target||!appearance)throw new Error('Missing appearance evidence.');return {...player,fields:{...player.fields},rawData:buildAppearancePreview(target.rawData,appearance,preview.team.branding).raw};}),preview.seed,preview.team);
+  const equipment=equipmentGenerator?.(preview.players.map(player=>{const target=byRow.get(player.row),appearance=model.catalog.appearances.find(item=>item.id===player.provenance.appearance);if(!target||!appearance)throw new Error('Missing appearance evidence.');return {...player,fields:{...player.fields},rawData:buildFreshAppearancePreview(target.rawData,appearance,preview.team.branding).raw};}),preview.seed,preview.team);
   for(const player of preview.players){
     for(const field of NIL_FIELDS)if(player.fields[field]!==nilBudget.byRow.get(player.row))throw new Error(`Generated NIL compensation (${field}) differs from the validated team budget.`);
     if(JSON.stringify(player.provenance.home??null)!==JSON.stringify(homePlan.byRow.get(player.row)??null))throw new Error('Generated hometown differs from the seeded school geography plan.');
@@ -246,7 +277,7 @@ export function validateRosterPreview(preview,targets,model,equipmentGenerator=n
     if(!model.catalog.names.first.includes(player.fields.FirstName)||!validSurname(player.fields.LastName,player.provenance.surname,surnamePool.names)||Buffer.byteLength(player.fields.FirstName,'utf8')>17||Buffer.byteLength(player.fields.LastName,'utf8')>21)throw new Error('Generated name is not supported by its approved name pool/schema.');
     if([...Object.keys(observedPlayerState(source)),'LongSnapRating','RecruitingDealbreaker','JerseyNum'].some(field=>player.fields[field]!==finished.get(player.row)[field]))throw new Error('Generated finishing passes do not match the validated Standard jersey/long-snap/dealbreaker plan.');
     const name=normalizedName(`${player.fields.FirstName} ${player.fields.LastName}`);if(names.has(name))throw new Error('Duplicate generated name.');names.add(name);
-    const expectedVisual=buildAppearancePreview(target.rawData,appearance,preview.team.branding);
+    const expectedVisual=buildFreshAppearancePreview(target.rawData,appearance,preview.team.branding);
     if(player.rawData!==(equipment?.byRow.get(player.row)?.rawData??expectedVisual.raw))throw new Error('Generated visual data differs from its observed/compatibility-checked proposal.');
     const parsed=JSON.parse(player.rawData);if(Object.hasOwn(parsed,'skinTone')||Object.hasOwn(parsed,'bodyType')||!parsed.loadouts?.some(loadout=>loadout.loadoutType==='PlayerOnField'))throw new Error('Conflicting appearance override in the preview.');
     byRow.delete(player.row);

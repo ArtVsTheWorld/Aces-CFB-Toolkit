@@ -152,7 +152,8 @@ function organizePatcherSettings(dialog, root){
     addConfigurationPages(dialog,host,[page('Frequency',[cap]),page('Placement',[read('tattoo-placement')]),page('Tattoo Designs',[pool])]);
   }else if(read('unlocked-color-theme')){
     const host=read('unlocked-color-field'),mode=read('tape-color-mode'),label=mode.previousElementSibling,nodes=[...host.children],index=nodes.indexOf(label);
-    if(index>=0)addConfigurationPages(dialog,host,[page('Accessory Colors',nodes.slice(0,index)),page('Tape Colors',nodes.slice(index))]);
+    const cleats=read('cleat-color-settings');
+    if(index>=0)addConfigurationPages(dialog,host,[page('Accessory Colors',nodes.slice(0,index)),page('Tape Colors',nodes.slice(index).filter(node=>node!==cleats)),...(cleats?[page('Cleat Colors',[cleats])]:[])]);
   }else if(read('undershirt-color')){
     const custom=root.querySelector('[data-undershirt-custom]'),builds=[...custom.children];
     addConfigurationPages(dialog,custom,[page('Other Builds',[builds[0]]),page('Muscular / Standard',[builds[1]])]);

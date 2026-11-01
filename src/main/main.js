@@ -22,6 +22,7 @@ import dynastyIdentity from "../shared/dynastyIdentity.cjs";
 const {validDynastyId}=dynastyIdentity;
 import { saveTeamArtwork, teamArtworkKey } from "./services/teamArtwork.js";
 import { validateSavePath } from "./services/files.js";
+import {chooseGameSave,validatePickedSaveName} from './services/savePicker.js';
 import { executableToolIds, getToolHandler } from "./tools/handlers.js";
 import { saveCustomMatchupModel } from "./services/customMatchupModel.js";
 
@@ -102,6 +103,7 @@ async function recoverIdentity(savePath){
 }
 
 const assertToolSaveCompatibility = async (toolId, savePath) => {
+  validatePickedSaveName(savePath,toolId);
   const schema = await toolWorker.request('inspect', {savePath,schemaDirectory:schemaDirectory()});
   if (!schema.supported) throw new Error(schema.error);
   if(schema.kind==='roster'&&!['roster-generator','home'].includes(toolId))throw new Error('This is a Play Now roster file. Select Roster Generator, or choose a Dynasty save for this tool.');
@@ -150,10 +152,10 @@ function registerIpc() {
   ipcMain.handle(IPC.savePreset, (_event, request) => { if (!getTool(request?.toolId)) throw new Error("Unknown tool."); return presets.save(request); });
   ipcMain.handle(IPC.deletePreset, (_event, request) => { if (!getTool(request?.toolId)) throw new Error("Unknown tool."); return presets.delete(request); });
   ipcMain.handle(IPC.bootstrap, async () => ({ app: { name: "Ace's CFB Toolkit", version: displayAppVersion(app.getVersion()), schemas: SUPPORTED_SCHEMAS.map(schema => schema.version) }, registry: registrySnapshot(), settings: settings.get(), activeSave: await saveInfo(sessionActiveSave), paths: { reports: paths.reports, logs: paths.logs } }));
-  ipcMain.handle(IPC.chooseSave, async (_event, purpose) => { const result = await dialog.showOpenDialog({ title: purpose === "equipment-donor" ? "Select a CFB 27 donor save or roster" : "Select a CFB 27 Save or Roster", properties: ["openFile"], filters: [{ name: "CFB 27 Saves", extensions: ["*" ] }] }); return result.canceled ? null : result.filePaths[0]; });
+  ipcMain.handle(IPC.chooseSave, (_event,purpose)=>chooseGameSave(dialog,purpose));
   ipcMain.handle(IPC.chooseFile, async () => { const result = await dialog.showOpenDialog({ title: "Select a file", properties: ["openFile"], filters: [{ name: "All files", extensions: ["*"] }, { name: "Text files", extensions: ["txt"] }] }); return result.canceled ? null : result.filePaths[0]; });
   ipcMain.handle(IPC.setActiveSave, async (event,request)=>{
-    const activeSave=validateSavePath(typeof request==='string'?request:request?.savePath),generation=++activeSaveGeneration;
+    const activeSave=validateSavePath(validatePickedSaveName(typeof request==='string'?request:request?.savePath,request?.toolId)),generation=++activeSaveGeneration;
     selectingSaves++;
     try{
     const info=await saveInfo(activeSave,progressFor(event,request));
@@ -214,7 +216,7 @@ function registerIpc() {
   ipcMain.handle(IPC.importLegacyTeamArtwork,async(_event,request)=>{
     const scope=await artworkContext(request);checkArtworkContext(scope);dynastyProfiles.importLegacy(scope.context.dynastyId);return true;
   });
-  ipcMain.handle(IPC.prepareEquipmentDonors, async (event, request) => toolOperation(() => toolWorker.request('donors', { savePath: request?.savePath, schemaPath: schemaPath() }, progressFor(event,request))));
+  ipcMain.handle(IPC.prepareEquipmentDonors, async (event, request) => toolOperation(() => toolWorker.request('donors', { savePath: validatePickedSaveName(request?.savePath,'equipment-donor'), schemaPath: schemaPath() }, progressFor(event,request))));
   ipcMain.handle(IPC.prepareTool, async (event, request) => toolOperation(async () => {
     const tool = getTool(request?.toolId); const handler = getToolHandler(request?.toolId);
     if(tool?.status==='maintenance')throw new Error(tool.description);

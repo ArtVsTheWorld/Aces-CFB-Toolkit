@@ -18,13 +18,11 @@ Eligible means the entry may be used by relevant enabled features; brand, positi
 
 Review labels are not all blockers. Optional checks and deliberately excluded items are kept separate.
 
-### New Unlocked clothing: verify before adding (7)
+### New Unlocked clothing: verify before adding (5)
 
 **Needed before support.** Seven labels were verified, but not the writable slots: rolled-low tucked undershirt, sleeveless hoodie, tight untucked sleeves, and four long-sleeve undershirt colors. These may be backing clothing assets rather than standalone save selections. Leave them out until menu/equipped-save checks establish safe assignments.
 
-- Jersey Rolled Low Tucked Undershirt — Not verified. Internal ID: `Gear_Low_TuckedUndershirt`.
 - Sleeveless Hoodie All Jerseys — Not verified. Internal ID: `G_Hoodie_Sleeveless_Ravens_ML_PUR`.
-- Tight Sleeves Untucked — Not verified. Internal ID: `Gear_JerseyStyle_SleeveTight_Untucked`.
 - Undershirt LongSleeve Black — Not verified. Internal ID: `G_CompressionT_Crew_LongSleeve_NikeHQ_B_NAV`.
 - Undershirt LongSleeve Secondary Color — Not verified. Internal ID: `G_CompressionT_Crew_LongSleeve_NikeHQ_B_BEI`.
 - Undershirt LongSleeve Team Color — Not verified. Internal ID: `G_CompressionT_Crew_LongSleeve_NikeHQ_B_GRE`.
@@ -192,13 +190,13 @@ Review labels are not all blockers. Optional checks and deliberately excluded it
 
 **Optional catalog cleanup.** Long Sleeves, Loose Sleeves and Tight Sleeves were already seen without mods. Their presence does not establish mod provenance or direct assignability. No new mod pool entry is added from these observations.
 
-- Long Sleeves — Not verified. Internal ID: `Gear_JerseyStyle_SleeveLong`.
-- Loose Sleeves — Not verified. Internal ID: `Gear_JerseyStyle_SleeveStandard`.
-- Tight Sleeves — Not verified. Internal ID: `Gear_JerseyStyle_SleeveTight`.
+- Long Sleeves — OuterShirt. Internal ID: `Gear_JerseyStyle_SleeveLong`.
+- Loose Sleeves — OuterShirt. Internal ID: `Gear_JerseyStyle_SleeveStandard`.
+- Tight Sleeves — OuterShirt. Internal ID: `Gear_JerseyStyle_SleeveTight`.
 
 ### No action needed for deliberately excluded entries
 
-The four under-lip balaclavas and Remove Balaclava remain excluded by request. They are not missing support that needs fixing. NFL-style undersocks remain excluded from generic generation; being listed does not enable them.
+The four under-lip balaclavas are supported Unlocked pool options, deselected by default. Remove Balaclava remains excluded from generation. NFL-style undersocks remain excluded from generic generation; being listed does not enable them.
 
 ### Vanilla/locked boundary
 
@@ -383,7 +381,7 @@ Names below use checked menu labels where available, or earlier verified/curated
 | NXTRND Hanging Mouthpiece Pacifier Yellow<br>`GearMouthpiece_PacifierDualHanging_Yellow3` | Mouthpiece | ID + display name checked this scan | Eligible for generic equipment pools | No specific gap |
 | NXTRND Mouthpiece Pacifier Neon<br>`GearMouthpiece_PacifierDualHanging_Neon3` | Mouthpiece | ID + display name checked this scan | Eligible for generic equipment pools | No specific gap |
 
-### Neck Pad
+### Neckwear
 
 | Item | Location | Verification | Toolkit use | Review |
 | --- | --- | --- | --- | --- |
@@ -447,13 +445,18 @@ Names below use checked menu labels where available, or earlier verified/curated
 
 | Item | Location | Verification | Toolkit use | Review |
 | --- | --- | --- | --- | --- |
-| Jersey Rolled Low Tucked Undershirt<br>`Gear_Low_TuckedUndershirt` | Not verified | ID + display name checked this scan | Not enabled — verify save slot first | Verify save slot |
 | Sleeveless Hoodie All Jerseys<br>`G_Hoodie_Sleeveless_Ravens_ML_PUR` | Not verified | ID + display name checked this scan | Not enabled — verify save slot first | Verify save slot |
-| Tight Sleeves Untucked<br>`Gear_JerseyStyle_SleeveTight_Untucked` | Not verified | ID + display name checked this scan | Not enabled — verify save slot first | Verify save slot |
 | Undershirt LongSleeve Black<br>`G_CompressionT_Crew_LongSleeve_NikeHQ_B_NAV` | Not verified | ID + display name checked this scan | Not enabled — verify save slot first | Verify save slot |
 | Undershirt LongSleeve Secondary Color<br>`G_CompressionT_Crew_LongSleeve_NikeHQ_B_BEI` | Not verified | ID + display name checked this scan | Not enabled — verify save slot first | Verify save slot |
 | Undershirt LongSleeve Team Color<br>`G_CompressionT_Crew_LongSleeve_NikeHQ_B_GRE` | Not verified | ID + display name checked this scan | Not enabled — verify save slot first | Verify save slot |
 | Undershirt LongSleeve White<br>`G_CompressionT_Crew_LongSleeve_NikeHQ_B_GLD` | Not verified | ID + display name checked this scan | Not enabled — verify save slot first | Verify save slot |
+
+### Jersey Style
+
+| Item | Location | Verification | Toolkit use | Review |
+| --- | --- | --- | --- | --- |
+| Jersey Rolled Low Tucked Undershirt<br>`Gear_Low_TuckedUndershirt` | OuterShirt | ID + display name checked this scan | Excluded from generic equipment pools | No specific gap |
+| Tight Sleeves Untucked<br>`Gear_JerseyStyle_SleeveTight_Untucked` | OuterShirt | ID + display name checked this scan | Excluded from generic equipment pools | No specific gap |
 
 ### Leg Sleeves
 
@@ -667,15 +670,15 @@ Names below use checked menu labels where available, or earlier verified/curated
 
 | Item | Location | Verification | Toolkit use | Review |
 | --- | --- | --- | --- | --- |
-| Black Balaclava (Under Lip)<br>`FaceGear_BalaclavaUnderLip` | Face covering | ID + display name checked this scan | Intentionally excluded | No specific gap |
-| Secondary Color Balaclava (Under Lip)<br>`FaceGear_BalaclavaUnderLip_Secondary` | Face covering | ID + display name checked this scan | Intentionally excluded | No specific gap |
-| Team Color Balaclava (Under Lip)<br>`FaceGear_BalaclavaUnderLip_Primary` | Face covering | ID + display name checked this scan | Intentionally excluded | No specific gap |
-| White Balaclava (Under Lip)<br>`FaceGear_BalaclavaUnderLip_White` | Face covering | ID + display name checked this scan | Intentionally excluded | No specific gap |
+| Black Balaclava (Under Lip)<br>`FaceGear_BalaclavaUnderLip` | Face covering | ID + display name checked this scan | Equipment pool option — deselected by default | No specific gap |
+| Secondary Color Balaclava (Under Lip)<br>`FaceGear_BalaclavaUnderLip_Secondary` | Face covering | ID + display name checked this scan | Equipment pool option — deselected by default | No specific gap |
+| Team Color Balaclava (Under Lip)<br>`FaceGear_BalaclavaUnderLip_Primary` | Face covering | ID + display name checked this scan | Equipment pool option — deselected by default | No specific gap |
+| White Balaclava (Under Lip)<br>`FaceGear_BalaclavaUnderLip_White` | Face covering | ID + display name checked this scan | Equipment pool option — deselected by default | No specific gap |
 
-### Jersey / clothing observations
+### Jersey Style
 
 | Item | Location | Verification | Toolkit use | Review |
 | --- | --- | --- | --- | --- |
-| Long Sleeves<br>`Gear_JerseyStyle_SleeveLong` | Not verified | ID + display name checked this scan | Observation only | Resolve source / slot |
-| Loose Sleeves<br>`Gear_JerseyStyle_SleeveStandard` | Not verified | ID + display name checked this scan | Observation only | Resolve source / slot |
-| Tight Sleeves<br>`Gear_JerseyStyle_SleeveTight` | Not verified | ID + display name checked this scan | Observation only | Resolve source / slot |
+| Long Sleeves<br>`Gear_JerseyStyle_SleeveLong` | OuterShirt | ID + display name checked this scan | Observation only | Resolve source / slot |
+| Loose Sleeves<br>`Gear_JerseyStyle_SleeveStandard` | OuterShirt | ID + display name checked this scan | Observation only | Resolve source / slot |
+| Tight Sleeves<br>`Gear_JerseyStyle_SleeveTight` | OuterShirt | ID + display name checked this scan | Observation only | Resolve source / slot |
