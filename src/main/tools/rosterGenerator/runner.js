@@ -1,6 +1,7 @@
+import {mapReportRows} from '../../services/reportAudit.js';
 import{createNameHistory}from'./names.js';
 import {PLAYER_PICKER_FIELDS} from '../../services/settingsFields.js';
-import {progressRange} from '../../services/toolProgress.js';
+import {progressRange,toolProgress} from '../../services/toolProgress.js';
 import path from 'node:path';
 import {planRosterDepthCharts,applyRosterDepthCharts,verifyRosterDepthCharts} from './depthCharts.js';
 import {makeRosterEquipmentGenerator} from './equipment.js';
@@ -17,6 +18,8 @@ import {createBackup} from '../../services/files.js';
 import {storePlan,takePlan,completePlan,saveFingerprint} from '../jersey/planStore.js';
 import {loadObservedCatalog} from './catalog.js';
 import {WRITE_FIELDS} from './contract.js';
+import {ROSTER_GENERATION_PLAYER_FIELDS,readGenerationPlayerStrings,releaseGenerationSource} from './sourceFields.js';
+import {planRosterStatisticsReset,applyRosterStatisticsReset,verifyRosterStatisticsReset} from './statistics.js';
 import {generateRosterPreview,validateRosterPreview} from './core.js';
 import {ROSTER_CALIBER_OPTIONS,rosterPreset,resolveRosterPreset,modelForPreset} from './presets.js';
 import {rosterGeneratorCsv} from './report.js';
@@ -33,7 +36,12 @@ import {composeRosterTargets,compositionAudit} from './composition.js';
 import {mulberry32} from '../longSnap/core.js';
 
 import {rosterFile,loadRosterGenerationSource,saveRosterGeneration,buildRosterGenerationCandidate,ROSTER_WARNINGS,ROSTER_FORMAT_NOTES} from './rosterSource.js';
-const loadGenerationSource=async(savePath,schemaPath,visuals=true,fields={})=>rosterFile(savePath)?loadRosterGenerationSource(savePath,schemaPath):loadEquipmentTables(savePath,schemaPath,visuals,false,fields);
+const loadGenerationSource=async(savePath,schemaPath,visuals=true,fields={})=>{
+  if(rosterFile(savePath))return loadRosterGenerationSource(savePath,schemaPath);
+  const loaded=await loadEquipmentTables(savePath,schemaPath,visuals,false,{players:ROSTER_GENERATION_PLAYER_FIELDS,...fields});
+  if(visuals)await readGenerationPlayerStrings(loaded.players);
+  return loaded;
+};
 const allPresentationIds=loaded=>new Set(loaded.players.records.filter(record=>record&&!record.isEmpty).map(record=>sf(record,'PresentationId')));
 const TOOL_ID='roster-generator',TOOL_NAME='Roster Generator';
 export function teamGenerationConfigurations(options,teams){
@@ -97,9 +105,15 @@ function previewRow(player,preview) {
   const brother=preview.players.find(other=>other.row===player.provenance.brother);
   return {...player,highlights,brother:brother?`${brother.fields.FirstName} ${brother.fields.LastName}`:null,measurements:{before:playerMeasurements(player.before),after:playerMeasurements(fields)},team:preview.team.name,player:`${fields.FirstName} ${fields.LastName}`,oldPlayer:`${player.before.FirstName} ${player.before.LastName}`,originalPosition:displayPosition(player.before.Position),positionChanged:displayPosition(player.before.Position)!==displayPosition(player.position),position:displayPosition(player.position),classYear:fields.SchoolYear,overall:fields.OverallRating,equipment};
 }
-function reportFor(rosters) {
-  const parts=rosters.map(roster=>rosterGeneratorCsv(roster));
-  return {prefix:'roster-generator-report',headings:[...parts[0].headings,'CalibrationJSON','OldNILCost','NewNILCost','BrotherRow','OriginalPosition','GeneratedPosition','PositionChanged','NativeSchemeAuditJSON','RosterCompositionAuditJSON','RecruitingNeedsAuditJSON','SchemeFitAuditJSON','AthleticSelectionJSON'],rows:parts.flatMap((part,i)=>part.rows.map((row,j)=>[...row,JSON.stringify(rosters[i].players[j].provenance.calibration),rosters[i].players[j].before.CurrentNILCompensation,rosters[i].players[j].fields.CurrentNILCompensation,rosters[i].players[j].provenance.brother??'',rosters[i].players[j].before.Position,rosters[i].players[j].position,displayPosition(rosters[i].players[j].before.Position)!==displayPosition(rosters[i].players[j].position),j===0?JSON.stringify(rosters[i].summary.settings.schemeContext):'',j===0?JSON.stringify(rosters[i].summary.composition):'',j===0?JSON.stringify(rosters[i].summary.recruitingNeeds):'',j===0?JSON.stringify(rosters[i].summary.schemeFit):'',JSON.stringify(rosters[i].players[j].provenance.athleticSelection??null)]))};
+export function rosterGenerationReport(rosters,statisticsReset=null) {
+  const headings=[...rosterGeneratorCsv({...rosters[0],players:[]}).headings,'CalibrationJSON','OldNILCost','NewNILCost','BrotherRow','OriginalPosition','GeneratedPosition','PositionChanged','NativeSchemeAuditJSON','RosterCompositionAuditJSON','RecruitingNeedsAuditJSON','SchemeFitAuditJSON','AthleticSelectionJSON'];
+  if(statisticsReset)headings.push('StatisticsResetJSON');
+  return {prefix:'roster-generator-report',headings,rows:{*[Symbol.iterator](){
+    for(const roster of rosters){let index=0;for(const row of rosterGeneratorCsv(roster,{streamRows:true}).rows){
+      const player=roster.players[index++],first=index===1;
+      yield [...row,JSON.stringify(player.provenance.calibration),player.before.CurrentNILCompensation,player.fields.CurrentNILCompensation,player.provenance.brother??'',player.before.Position,player.position,displayPosition(player.before.Position)!==displayPosition(player.position),first?JSON.stringify(roster.summary.settings.schemeContext):'',first?JSON.stringify(roster.summary.composition):'',first?JSON.stringify(roster.summary.recruitingNeeds):'',first?JSON.stringify(roster.summary.schemeFit):'',JSON.stringify(player.provenance.athleticSelection??null),...(statisticsReset?[first&&roster===rosters[0]?JSON.stringify(statisticsReset):'']:[])];
+    }}
+  }}};
 }
 
 export async function runRosterGenerator(context) {
@@ -140,16 +154,18 @@ export async function runRosterGenerator(context) {
     await new Promise(resolve=>setImmediate(resolve));
   }
   if(saveFingerprint(context.savePath)!==fingerprint)throw new Error('The Active Save changed during Preview. Run Preview again.');
+  const statisticsReset=loaded.kind==='roster'?null:await planRosterStatisticsReset(loaded,rosters.flatMap(roster=>roster.players.map(player=>player.row)));
+  if(statisticsReset)for(const roster of rosters){roster.summary.statisticsReset={mode:'season-and-career',players:roster.players.length};roster.generationNotes.push('Replaced players start with zero season and career statistics. Historical team records and awards are kept.');}
   const depthCharts=await planRosterDepthCharts(loaded,rosters);
   for(const roster of rosters){const chart=depthCharts.find(chart=>chart.team===roster.team.name);roster.summary.depthChart=chart;(chart.status==='reordered'?roster.generationNotes:roster.warnings).push(`${roster.team.name}: ${chart.status==='reordered'?'':'Depth chart unchanged. '}${chart.reason}`);}
   const rosterCandidate=loaded.kind==='roster'&&!rosters.some(roster=>roster.blocking.length)?buildRosterGenerationCandidate(loaded,rosters):null;
-  const rows=rosters.flatMap(roster=>roster.players.map(player=>previewRow(player,roster))),blocking=rosters.flatMap(roster=>roster.blocking.map(item=>({...item,team:roster.team.name}))),report=reportFor(rosters);
-  if(rosterCandidate){report.headings.push('FileKind','PersistedFieldsJSON','RosterBeforeJSON','RosterAfterJSON','RosterVisualBeforeJSON','RosterVisualAfterJSON');const generated=rosters.flatMap(roster=>roster.players);report.rows.forEach((row,index)=>{const player=generated[index],wire=rosterCandidate.changes.find(change=>change.playerId===player.rosterPlayerId);row.push('roster',JSON.stringify(player.persistedFields),JSON.stringify(wire.before),JSON.stringify(wire.after),JSON.stringify(wire.beforeVisual),JSON.stringify(wire.afterVisual));});}
+  const rows=rosters.flatMap(roster=>roster.players.map(player=>previewRow(player,roster))),blocking=rosters.flatMap(roster=>roster.blocking.map(item=>({...item,team:roster.team.name}))),report=rosterGenerationReport(rosters,statisticsReset);
+  if(rosterCandidate){report.headings.push('FileKind','PersistedFieldsJSON','RosterBeforeJSON','RosterAfterJSON','RosterVisualBeforeJSON','RosterVisualAfterJSON');const generated=rosters.flatMap(roster=>roster.players);report.rows=mapReportRows(report.rows,(row,index)=>{const player=generated[index],wire=rosterCandidate.changes.find(change=>change.playerId===player.rosterPlayerId);return [...row,'roster',JSON.stringify(player.persistedFields),JSON.stringify(wire.before),JSON.stringify(wire.after),JSON.stringify(wire.beforeVisual),JSON.stringify(wire.afterVisual)];});}
   const originalEaReplacements=rosters.reduce((sum,roster)=>sum+roster.summary.originalEaReplacements,0);
   const warnings=[...new Set(rosters.flatMap(roster=>roster.warnings.map(note=>note.startsWith(roster.team.name+':')?note:`${roster.team.name}: ${note}`)))];
   if(originalEaReplacements)warnings.unshift(`${originalEaReplacements} original EA roster players will be replaced in total.`);
-  const result={resultKind:TOOL_ID,mode:'preview',status:'preview',savePath:loaded.savePath,backupPath:null,reportPath:context.reports.create({...report,toolId:TOOL_ID,toolName:TOOL_NAME}),summary:[{label:'Teams to regenerate',value:rosters.length},{label:'Players to replace',value:rows.length},{label:'Original EA roster players',value:originalEaReplacements},{label:'Apply blockers',value:blocking.length}],historySummary:[{label:'Players regenerated',value:rows.length}],details:{fileKind:loaded.kind??'dynasty',canApply:!blocking.length,preset,seed,blocking,warnings,teams:rosters.map(roster=>({team:roster.team.name,...roster.summary})),totalPreviewRows:rows.length,changes:rows.slice(0,1000)}};
-  const planId=storePlan({toolId:TOOL_ID,toolName:TOOL_NAME,savePath:loaded.savePath,saveFingerprint:fingerprint,previewRows:rows,report,result,rosters,presetId:preset.id,settings,configurations,depthCharts});
+  const result={resultKind:TOOL_ID,mode:'preview',status:'preview',savePath:loaded.savePath,backupPath:null,reportPath:context.reports.create({...report,toolId:TOOL_ID,toolName:TOOL_NAME}),summary:[{label:'Teams to regenerate',value:rosters.length},{label:'Players to replace',value:rows.length},{label:'Original EA roster players',value:originalEaReplacements},{label:'Apply blockers',value:blocking.length}],historySummary:[{label:'Players regenerated',value:rows.length}],details:{fileKind:loaded.kind??'dynasty',statisticsReset:statisticsReset?.summary??null,canApply:!blocking.length,preset,seed,blocking,warnings,teams:rosters.map(roster=>({team:roster.team.name,...roster.summary})),totalPreviewRows:rows.length,changes:rows.slice(0,1000)}};
+  const planId=storePlan({toolId:TOOL_ID,toolName:TOOL_NAME,savePath:loaded.savePath,saveFingerprint:fingerprint,previewRows:rows,report,result,rosters,presetId:preset.id,settings,configurations,depthCharts,statisticsReset});
   return {...result,planId};
 }
 
@@ -161,35 +177,54 @@ async function applyRosterGenerator(context) {
   if(saveFingerprint(context.savePath)!==plan.saveFingerprint)throw new Error('The save changed after Preview. Run Preview again.');
   const loaded=await loadGenerationSource(context.savePath,context.schemaPath),baseModel=loadObservedCatalog(),preset=rosterPreset(plan.presetId),owners=visualOwners(loaded),available=teamsWithRosters(loaded),assignments=[],reservedPresentationIds=allPresentationIds(loaded);
   await rosterGeneratorSeason(loaded);
-  const equipmentGenerator=makeRosterEquipmentGenerator(loaded);
-  for(const roster of plan.rosters) {
+  let equipmentGenerator=makeRosterEquipmentGenerator(loaded);
+  for(const [teamProgressIndex,roster] of plan.rosters.entries()) {
     const team=available.find(team=>team.teamIndex===roster.team.teamIndex&&team.name===roster.team.name);if(!team)throw new Error('A selected team changed after Preview.');
     if(!isDeepStrictEqual(roster.team.geography,await readTeamGeography(loaded,team,baseModel.catalog)))throw new Error('School location or pipeline evidence changed after Preview. Run Preview again.');
     const configuration=plan.configurations[team.name],originals=extractTargets(loaded,team,owners),teamPreset=resolveRosterPreset(rosterPreset(configuration.preset),originals);
     const currentContext=resolveSchemeContext(configuration.settings,await inspectTeamSchemes(loaded,team,context.schemaPath),schemeSchema(context.schemaPath),mulberry32(roster.seed^0x534348));
     if(!isDeepStrictEqual(currentContext,configuration.settings.schemeContext))throw new Error('Native scheme or roster requirements changed after Preview.');
-    const targets=composeRosterTargets(originals,configuration.settings),model=teamModelFactory(baseModel,teamPreset,configuration.settings)(targets);if(!isDeepStrictEqual(roster.preset,teamPreset)||!isDeepStrictEqual(roster.summary.settings,configuration.settings))throw new Error('Team settings changed after Preview.');validateRosterPreview(roster,targets,model,equipmentGenerator,reservedPresentationIds);
+    const targets=composeRosterTargets(originals,configuration.settings),model=teamModelFactory(baseModel,teamPreset,configuration.settings)(targets);if(!isDeepStrictEqual(roster.preset,teamPreset)||!isDeepStrictEqual(roster.summary.settings,configuration.settings))throw new Error('Team settings changed after Preview.');
+    progressRange(25+teamProgressIndex/plan.rosters.length*35,25+(teamProgressIndex+1)/plan.rosters.length*35,()=>validateRosterPreview(roster,targets,model,equipmentGenerator,reservedPresentationIds));
     for(const player of roster.players)reservedPresentationIds.add(player.fields.PresentationId);
     for(const player of roster.players) {
-      for(const [field,newValue]of Object.entries(player.fields))assignments.push({table:'players',row:player.row,field,oldValue:player.before[field],newValue});
       assignments.push({table:'visuals',row:player.visualRow,field:'RawData',oldValue:player.beforeRawData,newValue:player.rawData});
     }
+    await new Promise(resolve=>setImmediate(resolve));
   }
   const depthCharts=await planRosterDepthCharts(loaded,plan.rosters);if(!isDeepStrictEqual(depthCharts,plan.depthCharts))throw new Error('Depth-chart proposal changed after Preview. No save was written.');
+  equipmentGenerator=null;
+  const statisticsReset=loaded.kind==='roster'?null:await planRosterStatisticsReset(loaded,plan.rosters.flatMap(roster=>roster.players.map(player=>player.row)));
+  if(!isDeepStrictEqual(statisticsReset,plan.statisticsReset??null))throw new Error('Player statistics changed after Preview. No save was written.');
   if(loaded.kind==='roster'){const reportPath=context.reports.create({...plan.report,toolId:TOOL_ID,toolName:TOOL_NAME}),saved=await saveRosterGeneration(loaded,plan,context);completePlan(context.options.planId);return {...plan.result,mode:'apply',status:'completed',...saved,reportPath,planId:context.options.planId};}
   const before=snapshotVisualsForVerification(loaded.visuals,snapshotVisualRawData(loaded.visuals.records));
   const protectedPlayers=snapshotProtectedPlayers(loaded.players,new Set(plan.rosters.flatMap(roster=>roster.players.map(player=>player.row))));
   const reportPath=context.reports.create({...plan.report,toolId:TOOL_ID,toolName:TOOL_NAME});
   const backupPath=createBackup(loaded.savePath);
-  for(const change of assignments)(change.table==='players'?loaded.players:loaded.visuals).records[change.row][change.field]=change.newValue;
+  // The reviewed rosters already own every proposed field value. Do not build
+  // millions of duplicate assignment objects or set unchanged native fields.
+  for(const [index,roster]of plan.rosters.entries()){
+    toolProgress(60+index/plan.rosters.length*7,'Updating '+roster.team.name+' players…');
+    for(const player of roster.players){
+      for(const [field,value]of Object.entries(player.fields))if(!isDeepStrictEqual(value,player.before[field]))loaded.players.records[player.row][field]=value;
+      loaded.visuals.records[player.visualRow].RawData=player.rawData;
+    }
+    await new Promise(resolve=>setImmediate(resolve));
+  }
   verifyProtectedPlayers(protectedPlayers,loaded.players);
   const depthGuards=applyRosterDepthCharts(loaded,depthCharts);
+  const statisticsGuards=statisticsReset?applyRosterStatisticsReset(loaded,statisticsReset):new Map();
+  // Materialize queued native strings before the candidate safety code hashes
+  // all non-visual tables, just as it does for ordinary player assignments.
+  loaded.players.updateBuffer?.();
   await saveEquipmentCandidate(loaded,context.schemaPath,before,assignments,plan.saveFingerprint,async opened=>{
-    const {players}=await readTables(opened.franchise,{players:PLAYER_TABLE_UID});
+    verifyRosterStatisticsReset(opened,statisticsGuards);
+    const {players}=await readTables(opened.franchise,{players:PLAYER_TABLE_UID},{players:ROSTER_GENERATION_PLAYER_FIELDS});
+    await readGenerationPlayerStrings(players);
     for(const table of opened.franchise.tables.filter(t=>depthGuards.has(t.header.tableId)))await table.readRecords();verifyRosterDepthCharts(opened,depthGuards);
     verifyProtectedPlayers(protectedPlayers,players);
-    for(const change of assignments.filter(change=>change.table==='players'))if(!isDeepStrictEqual(sf(players.records[change.row],change.field),change.newValue))throw new Error(`Generated player row ${change.row}, ${change.field} did not survive save/reload. The original save was kept unchanged.`);
-  });
+    for(const roster of plan.rosters)for(const player of roster.players)for(const [field,value]of Object.entries(player.fields))if(!isDeepStrictEqual(sf(players.records[player.row],field),value))throw new Error(`Generated player row ${player.row}, ${field} did not survive save/reload. The original save was kept unchanged.`);
+  },{releaseSource:()=>releaseGenerationSource(loaded)});
   completePlan(context.options.planId);
   return {...plan.result,mode:'apply',status:'completed',backupPath,reportPath,planId:context.options.planId};
 }

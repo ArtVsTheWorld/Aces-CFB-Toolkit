@@ -35,7 +35,9 @@ export async function schemeRecord(loaded,value,expected){
   }else ref=parseRef(value);
   const table=loaded.franchise?.tables.find(table=>table.header.tableId===ref?.tableId);
   if(!table||expected&&table.name!==expected)return null;
-  if(!reads.has(table))reads.set(table,table.readRecords());await reads.get(table);
+  // Commit checks only need Position. Loading the whole Player table here
+  // silently expanded the lightweight settings read into every player field.
+  if(!reads.has(table))reads.set(table,table.readRecords(expected==='Player'?['Position']:undefined));await reads.get(table);
   const record=table.records[ref.row];return record&&!record.isEmpty?{table,record}:null;
 }
 async function arrayReferences(loaded,value,expected){

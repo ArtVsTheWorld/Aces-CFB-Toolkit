@@ -100,10 +100,11 @@ export function snapshotVisualsForVerification(table, snapshot) {
 
 // Save/reopen a temporary candidate before replacing the user's file. Backups
 // are still made by Apply before mutations; a failed validation never publishes.
-export async function saveEquipmentCandidate(loaded, schemaPath, before, assignments, expectedSaveHash, verifyCandidate) {
+export async function saveEquipmentCandidate(loaded, schemaPath, before, assignments, expectedSaveHash, verifyCandidate, {releaseSource}={}) {
+  const savePath=loaded.savePath,visualsUniqueId=loaded.visuals.header.uniqueId;
   toolProgress(68, 'Checking equipment storage…');
-  const temporary = path.join(path.dirname(loaded.savePath), `.ace-equipment-${randomUUID()}.tmp`);
-  const originalHash = hash(fs.readFileSync(loaded.savePath));
+  const temporary = path.join(path.dirname(savePath), `.ace-equipment-${randomUUID()}.tmp`);
+  const originalHash = hash(fs.readFileSync(savePath));
   if (expectedSaveHash && originalHash !== expectedSaveHash) throw new Error("The Active Save changed during Apply. The original save was not overwritten.");
   // String setters queue Player table-2 edits; data is not the proposed byte
   // buffer until those edits are materialized. Only explicitly edited tables
@@ -112,20 +113,24 @@ export async function saveEquipmentCandidate(loaded, schemaPath, before, assignm
   const otherTables = new Map(loaded.franchise.tables.filter(table => table.header.tableId !== loaded.visuals.header.tableId).map(table => [table.header.tableId, hash(table.data)]));
   try {
     validateVisualStorageLayout(loaded.visuals, before.storageLayout);
-    const containerLength = loaded.franchise.strategy?.file?.postPackFile ? validateSaveContainer(fs.readFileSync(loaded.savePath)).fileLength : null;
+    const containerLength = loaded.franchise.strategy?.file?.postPackFile ? validateSaveContainer(fs.readFileSync(savePath)).fileLength : null;
     toolProgress(72, 'Writing the candidate save…');
     await writeFixedSaveCandidate(loaded.franchise, temporary);
     if (containerLength !== null) validateSaveContainer(fs.readFileSync(temporary), containerLength);
+    // Cross-table generators can discard their write-side object graph now.
+    // Verification uses immutable snapshots/hashes and a fresh candidate read;
+    // retaining two fully expanded dynasties at once is unnecessary.
+    releaseSource?.();
     toolProgress(80, 'Reopening the candidate save…');
     const opened = await openCfb27Save(temporary, schemaPath);
-    const { visuals } = await readTables(opened.franchise, { visuals: loaded.visuals.header.uniqueId });
+    const { visuals } = await readTables(opened.franchise, { visuals: visualsUniqueId });
     progressRange(84, 93, () => verifyVisualSnapshot(before, visuals, assignments));
     for (const table of opened.franchise.tables) if (otherTables.has(table.header.tableId) && hash(table.data) !== otherTables.get(table.header.tableId)) throw new Error(`Unexpected change to ${table.name}. The original save was kept unchanged.`);
     // Cross-table tools may require additional semantic checks. These run on
     // the candidate, before the source file can be atomically replaced.
     if (verifyCandidate) await verifyCandidate(opened);
-    if (hash(fs.readFileSync(loaded.savePath)) !== originalHash) throw new Error("The Active Save changed during Apply. The verified candidate was not published.");
+    if (hash(fs.readFileSync(savePath)) !== originalHash) throw new Error("The Active Save changed during Apply. The verified candidate was not published.");
     toolProgress(96, 'Publishing the verified save…');
-    fs.renameSync(temporary, loaded.savePath);
+    fs.renameSync(temporary, savePath);
   } finally { if (fs.existsSync(temporary)) fs.unlinkSync(temporary); }
 }

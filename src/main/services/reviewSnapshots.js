@@ -17,8 +17,18 @@ export class ReviewSnapshots {
     const overview=reviewRows.length===Number(result.details?.totalPreviewRows??reviewRows.length)?equipmentRunOverview(result.resultKind,reviewRows):null;
     const snapshot = { result: { ...result, planId: null, details: { ...result.details, ...(overview?{equipmentOverview:overview}:{}), changes: reviewRows.slice(0, previewPages.supports(result.resultKind)?100:1000), totalPreviewRows: reviewRows.length } }, rows: reviewRows };
     const destination = this.file(id), temporary = `${destination}.tmp`;
-    fs.writeFileSync(temporary, zlib.gzipSync(JSON.stringify(snapshot)));
-    fs.renameSync(temporary, destination);
+    // Concatenated gzip members are standard gzip and gunzipSync reads them as
+    // one document. Write bounded members instead of one dynasty-sized string
+    // and buffer, keeping every review row and the existing on-disk JSON shape.
+    const descriptor=fs.openSync(temporary,'wx');
+    let chunk='';
+    const flush=()=>{if(chunk){fs.writeFileSync(descriptor,zlib.gzipSync(chunk));chunk='';}};
+    const append=value=>{if(chunk.length+value.length>1024*1024)flush();chunk+=value;if(chunk.length>=1024*1024)flush();};
+    try{
+      append('{"result":'+JSON.stringify(snapshot.result)+',"rows":[');
+      for(const [index,row]of reviewRows.entries())append((index?',':'')+(JSON.stringify(row)??'null'));
+      append(']}');flush();fs.closeSync(descriptor);fs.renameSync(temporary,destination);
+    }catch(error){try{fs.closeSync(descriptor);}catch{}try{fs.unlinkSync(temporary);}catch{}throw error;}
     return true;
   }
   get(id) { try { return JSON.parse(zlib.gunzipSync(fs.readFileSync(this.file(id))).toString("utf8")); } catch (error) { if (error.code === "ENOENT") return null; throw error; } }

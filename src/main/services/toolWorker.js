@@ -47,7 +47,9 @@ async function execute(action, payload) {
     if (payload.mode === 'preview' && result.planId) setPlanAudit(result.planId, audit);
     toolProgress(94, 'Saving review details…');
     let reviewAvailable = false, reviewError = null;
-    try { reviewAvailable = reviews.save(audit.runId, result, result.planId ? snapshotPlanRows(result.planId) : null); }
+    // save is synchronous and read-only, and this worker serializes requests.
+    // Avoid cloning the entire dynasty just to immediately serialize it again.
+    try { reviewAvailable = reviews.save(audit.runId, result, result.planId ? snapshotPlanRows(result.planId,{clone:false}) : null); }
     catch (error) { reviewError = error.message; }
     return {result, reviewAvailable, reviewError};
   }

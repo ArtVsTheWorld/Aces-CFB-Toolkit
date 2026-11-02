@@ -13,10 +13,16 @@ export function parseCsv(content) {
   if (cell || row.length) { row.push(cell); rows.push(row); }
   return rows;
 }
+// Lazy reports must stay repeatable: Preview and Apply write the same reviewed
+// rows without keeping every JSON-formatted CSV cell in memory between runs.
+export function mapReportRows(rows, mapper) {
+  if (Array.isArray(rows)) return rows.map(mapper);
+  return { *[Symbol.iterator]() { let index = 0; for (const row of rows) yield mapper(row, index++); } };
+}
 export function auditReport(report, audit) {
   if (!audit) return report;
   // Keep old saved run plans readable, but new reports identify the app release.
   const headings = ["AuditRunID", audit.appVersion ? "AuditAppVersion" : "AuditToolVersion", "AuditRunMode", "AuditSavePath", "AuditInputOptionsJSON"];
   const values = [audit.runId, audit.appVersion ?? audit.toolVersion, audit.mode, audit.savePath, JSON.stringify(audit.options ?? {})];
-  return { ...report, headings: [...report.headings, ...headings], rows: report.rows.map((row, index) => [...row, ...values.slice(0, 4), index === 0 ? values[4] : ""]) };
+  return { ...report, headings: [...report.headings, ...headings], rows: mapReportRows(report.rows, (row, index) => [...row, ...values.slice(0, 4), index === 0 ? values[4] : ""]) };
 }

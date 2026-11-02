@@ -23,7 +23,7 @@ export function pagePlanResult(result){
   const page=searchPlanRows(result.planId,'',previewPages.PAGE_SIZE);
   return {...result,details:{...result.details,...page}};
 }
-export function snapshotPlanRows(id) { const plan = getPlan(id); return structuredClone(Array.isArray(plan.previewRows) ? plan.previewRows : plan.result?.details?.changes ?? []); }
+export function snapshotPlanRows(id, {clone=true}={}) { const plan = getPlan(id), rows=Array.isArray(plan.previewRows) ? plan.previewRows : plan.result?.details?.changes ?? []; return clone?structuredClone(rows):rows; }
 export function completePlan(id) { const plan = getPlan(id); plan.completedAt = Date.now(); }
 export function setPlanAudit(id, audit) { getPlan(id).audit = structuredClone(audit); }
 export function planAudit(id) { return getPlan(id).audit ? structuredClone(getPlan(id).audit) : null; }
