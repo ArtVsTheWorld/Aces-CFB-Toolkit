@@ -29,12 +29,11 @@ test('presentation allocation avoids all existing IDs, wraps safely and does not
   const wrap=rosterPresentations([{row:1}],PRESENTATION_RANGE.last-PRESENTATION_RANGE.first,new Set([1048575]));assert.equal(wrap.get(1),500000);
   const asset=presentationAssetName("D'Andre",'An-Extremely-Long-Last-Name',1048575);assert.ok(Buffer.byteLength(asset)<=41);assert.match(asset,/_1048575$/);assert.ok(!/[ '\-]/.test(asset));
 });
-test('captains honor team count, balance offense/defense and reset old flags and patches',()=>{
+test('captains use exactly four, balance offense/defense and reset old flags and patches',()=>{
   const players=['QB','HB','WR','TE','LE','DT','CB','SS','K'].map((position,row)=>({row,position,fields:{SchoolYear:row===2?'Senior':'Sophomore',Personality:'TeamPlayer',OverallRating:70+row,PLYR_ISCAPTAIN:true,CaptainsPatch:'FiveYearGold'}}));
   const result=assignRosterCaptains(players,{captainCount:4});assert.equal(result.selected.length,4);assert.equal(players.filter(p=>p.fields.PLYR_ISCAPTAIN).length,4);assert.ok(players[2].fields.PLYR_ISCAPTAIN);
   assert.ok(players.every(p=>p.fields.CaptainsPatch===(p.fields.PLYR_ISCAPTAIN?'OneYear':'None')));
-  assignRosterCaptains(players,{captainCount:0});assert.ok(players.every(p=>!p.fields.PLYR_ISCAPTAIN));
-  assignRosterCaptains(players,{captainCount:100});assert.ok(players.every(p=>p.fields.PLYR_ISCAPTAIN));
+  for(const captainCount of [0,6,8,100]){assignRosterCaptains(players,{captainCount});assert.equal(players.filter(p=>p.fields.PLYR_ISCAPTAIN).length,4);}
 });
 test('ideal pitches are compatible, deterministic, preserve valid choices and reject stale rare pairs',()=>{
   for(const [db,weights]of Object.entries(PITCH_WEIGHTS))for(let seed=0;seed<100;seed++){const pitch=matchingPitch(db,'Invalid',seed,4);assert.ok(pitchMatches(db,pitch));assert.equal(matchingPitch(db,pitch,seed+1,5),pitch);assert.ok(weights[pitch]);}

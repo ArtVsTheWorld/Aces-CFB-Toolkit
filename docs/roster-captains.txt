@@ -1,0 +1,34 @@
+ROSTER GENERATOR CAPTAINS
+
+Generated teams receive four captains (or every player if a research roster has
+fewer than four players). The previous team-specific target is not inherited.
+In dynasty saves, selected teams' DesiredTeamCaptains is also set to four so the
+stored target agrees with the generated flags. Other teams and team data remain
+unchanged. Every generated player's old captain flag and patch are replaced;
+captains get OneYear and everyone else gets None.
+
+Selection normally uses two offensive and two defensive starters. Among starting
+players, score combines overall, class-year experience, leadership personality,
+and a small amount of time with the team. Older low-rated players cannot jump a
+better player simply by being seniors. Different position groups are preferred
+over two captains from the same room when comparable options exist. Specialists
+and backups are fallback choices only when there are too few normal starters.
+The result is deterministic and does not add another random roll or setting.
+
+Starting roles use the generated roster's depth-chart ranking and scheme-aware
+counts (including multiple starting WRs, CBs and defensive linemen). After chart
+planning, selection is reconciled with the actual proposed chart. If automatic
+reordering is disabled or manual locks preserve the chart, its existing starters
+are used instead. Missing/unsupported position lists fall back to natural-position
+starters. Play Now roster charts are not decoded/reordered by this tool, so those
+files use natural-position starter rankings and retain the existing instruction
+to review depth charts in game.
+
+Preview fields, change records, captain audit and CSV reports share the final
+selection. Apply validates the same starter evidence and selection, writes the
+reviewed flags, and verifies them after reopening the candidate. Team count writes
+have a separate bit-level guard: only selected DesiredTeamCaptains bits may change.
+Existing backups, full-save verification and stale-preview protection still apply.
+
+This changes future roster generations. It does not run a separate cleanup on
+previously generated teams or modify unselected teams.

@@ -11,6 +11,7 @@ export const IPC = Object.freeze({
   setActiveSave: "context:set-active-save",
   clearActiveSave: "context:clear-active-save",
   updateReadingSize: "settings:update-reading-size",
+  updateRatingsDisplay: "settings:update-ratings-display",
   presetTransfer: "settings:preset-transfer",
   setToolDefault: "settings:set-tool-default",
   updateTheme: "settings:update-theme",

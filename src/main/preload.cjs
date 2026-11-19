@@ -45,6 +45,7 @@ contextBridge.exposeInMainWorld("cfbToolkit", Object.freeze({
   },
   clearActiveSave: () => ipcRenderer.invoke(channels.clearActiveSave),
   updateReadingSize: value => ipcRenderer.invoke("settings:update-reading-size", value),
+  updateRatingsDisplay: value => ipcRenderer.invoke("settings:update-ratings-display", value),
   presetTransfer: request => ipcRenderer.invoke("settings:preset-transfer", request),
   setToolDefault: request => ipcRenderer.invoke("settings:set-tool-default", request),
   updateTheme: theme => ipcRenderer.invoke(channels.updateTheme, theme),

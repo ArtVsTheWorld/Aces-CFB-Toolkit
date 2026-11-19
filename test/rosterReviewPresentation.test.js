@@ -7,6 +7,8 @@ import {displayPosition} from '../src/shared/localization.js';
 const html=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
 function renderer(){
  const context=vm.createContext({state:{genericResultViews:new Map()},previewChanges:result=>result.details.changes,localizedPosition:displayPosition,escapeHtml:html,forceLogoUrl:()=>'',rosterSchemeReview:()=>''});
+ vm.runInContext(fs.readFileSync(new URL('../src/shared/ratingsDisplay.cjs',import.meta.url),'utf8'),context);
+ vm.runInContext(fs.readFileSync(new URL('../src/renderer/ratings-display.js',import.meta.url),'utf8'),context);
  vm.runInContext(fs.readFileSync(new URL('../src/renderer/roster-evolution.js',import.meta.url),'utf8'),context);vm.runInContext(fs.readFileSync(new URL('../src/renderer/roster-generator.js',import.meta.url),'utf8'),context);return context;
 }
 function row(original='WR',generated='TE'){

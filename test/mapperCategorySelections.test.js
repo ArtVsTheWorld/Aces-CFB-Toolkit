@@ -23,7 +23,7 @@ const assertBalanced=(changes,slot,eligible)=>{const counts=new Map(eligible.map
 test('every nonempty catalog category has exact-slot All selections; IDs and existing items remain stable',()=>{
  assert.equal(editor.withCategories(items),items);assert.ok(items.length>library.items.length);
  assert.deepEqual(items.slice(0,library.items.length),library.items);
- for(const item of library.items.filter(i=>!editor.empty(i))){const category=all(editor.categoryOf(item),item.slot);assert.ok(category.memberIds.includes(item.id));}
+ for(const item of library.items.filter(i=>!i.legacy&&!editor.empty(i))){const category=all(editor.categoryOf(item),item.slot);assert.ok(category.memberIds.includes(item.id));}
  for(const category of items.filter(i=>i.categorySelection)){assert.ok(category.memberIds.length);assert.ok(category.memberIds.every(id=>{const i=items.find(i=>i.id===id);return i.slot===category.slot&&!editor.empty(i);}));assert.ok(!category.name.includes('undefined'));}
  assert.ok(turtle.memberIds.every(id=>/turtleneck/i.test(items.find(i=>i.id===id).name)));assert.ok(!items.some(i=>i.categorySelection&&i.category==='Empty Slots'));
  const base=mapperCatalog({confirmed:true}),baseItems=editor.withCategories(base.items);assert.ok(baseItems.filter(i=>i.categorySelection).every(c=>c.memberIds.every(id=>base.items.some(i=>i.id===id&&i.origin==='vanilla'))));

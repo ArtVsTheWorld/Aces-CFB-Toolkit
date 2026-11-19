@@ -12,7 +12,7 @@ import {ToolWorkerClient} from './services/toolWorkerClient.js';
 import { validateReportLocation } from "./services/reportLocations.js";
 import { appPaths, commentaryMapPath, schemaDirectory, schemaPath } from "./services/paths.js";
 import { SUPPORTED_SCHEMAS } from "./services/save.js";
-import { SettingsStore, normalizeAccentColor } from "./services/settings.js";
+import { SettingsStore, normalizeAccentColor, validateRatingsDisplay } from "./services/settings.js";
 import { validatePresetConfiguration, ToolPresets } from "./services/toolPresets.js";
 import { AppLogger } from "./services/logger.js";
 import { ReportService } from "./services/reports.js";
@@ -166,6 +166,7 @@ function registerIpc() {
   });
   ipcMain.handle(IPC.clearActiveSave, () => { sessionActiveSave = null;activeSaveGeneration++; settings.update({ activeSave: null }); return null; });
   ipcMain.handle(IPC.updateReadingSize, (_event, value) => { if (!["standard", "large", "extra"].includes(value)) throw new Error("Choose Standard, Large, or Extra Large text."); return settings.update({ textSize: value }); });
+  ipcMain.handle(IPC.updateRatingsDisplay, (_event, value) => settings.update({ratingsDisplay: validateRatingsDisplay(value)}));
   ipcMain.handle(IPC.updateTheme, (_event, theme) => { if (!["light", "dark"].includes(theme)) throw new Error("Theme must be light or dark."); return settings.update({ theme }); });
   ipcMain.handle(IPC.updateAccent, (_event, color) => settings.update({ accentColor: normalizeAccentColor(color) }));
   ipcMain.handle(IPC.updateBaseColor, (_event,color)=>settings.update({baseColor:normalizeAccentColor(color)}));

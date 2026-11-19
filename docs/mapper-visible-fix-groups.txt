@@ -1,0 +1,11 @@
+Mapper Review Fix: consolidate identical visible adjustments
+
+Proposed fix examples now group by the visible equipment slot, previous item and replacement item. The outfit's internal position does not create a separate example. Repeated adjustments are shown once even when a player needs that adjustment on several outfits. Display order is consistent.
+
+Counts refer to players. Different item/color changes, additional wrist or elbow adjustments, different conflict causes and unavailable fixes remain distinct. Review Fix, Skip and Apply Anyway retain their existing defaults, group choices and per-player exceptions.
+
+Each player's original full fix is kept separately. Exact loadout indices, all edits and proposed appearance data are unchanged. The visible grouping is not used to apply a fix. Saved rules and settings are unchanged.
+
+Read-only comparison using the current a test dynasty: 79 affected players, five previous examples consolidated to three. The White Relaxed Tee adjustment is one example for 68 players. All original fix data, exact outfit edits, player counts and review-choice outcomes match the previous implementation. No save was applied or modified.
+
+Regression coverage includes internal outfit indices 0, 1 and 2; one player needing the same fix on multiple outfits; order-independent visible adjustments; genuinely different extra gear changes; unavailable fixes; different causes; group choices and player exceptions. Current normal-runtime UI and source tests pass. Included in the refreshed v26.0 portable testing build.

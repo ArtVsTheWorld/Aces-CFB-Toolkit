@@ -1,8 +1,8 @@
 # Ace's CFB Toolkit
 
-A Windows desktop toolkit for College Football 27 Dynasty and Road To Glory save utilities. This repository contains the maintained Electron application source, build resources, and regression tests alongside the official release downloads. Current source: **v25.7**. Source updates and installer releases are published separately.
+A Windows desktop toolkit for College Football 27 Dynasty and Road To Glory save utilities. This repository contains the maintained Electron application source, build resources, and regression tests alongside the official release downloads. Current source: **v26.0**. Source updates and installer releases are published separately.
 
-See [v25.7 release notes](docs/RELEASE_NOTES_V25_7.md) for changes since v25.6, including lower memory use for large runs, Roster Generator crash fixes, clearer Apply progress, and fresh season/career stats for regenerated players. Long Snap Fixer is temporarily paused.
+See [v26.0 release notes](docs/RELEASE_NOTES_V26_0.md) for changes since v25.7, including optional BTF-style rating displays, smarter four-captain selection, year-round equipment tools, and clearer Mapper sources and conflict fixes. Long Snap Fixer is temporarily paused.
 
 ## Download the app
 

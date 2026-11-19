@@ -8,13 +8,12 @@ export const LONG_SLEEVE_UNDERSHIRTS=new Set([
  'G_CompressionT_Crew_LongSleeve_NikeHQ_B_GLD','G_CompressionT_Crew_LongSleeve_NikeHQ_B_GRE',
  'G_CompressionT_Crew_LongSleeve_NikeHQ_B_BEI','G_CompressionT_Crew_LongSleeve_NikeHQ_B_NAV'
 ]);
-// These four stock color IDs are present in native player outfits; JER is the
-// separately named White Compression Tee. Irish Jamo and Relaxed Tees are not
+// These four stock color IDs are present in native player outfits. Retired
+// BasicJ_JER, Irish Jamo and Relaxed Tees are not
 // inferred from the misleading shared ShortSleeve/LongSleeve file prefixes.
 export const COMPRESSION_TEES=new Set([
  'G_CompressionT_Crew_ShortSleeve_Basic_WHI','G_CompressionT_Crew_ShortSleeve_Basic_BLA',
- 'G_CompressionT_Crew_ShortSleeve_Basic_PRI','G_CompressionT_Crew_ShortSleeve_Basic_SEC',
- 'G_CompressionT_Crew_ShortSleeve_BasicJ_JER'
+ 'G_CompressionT_Crew_ShortSleeve_Basic_PRI','G_CompressionT_Crew_ShortSleeve_Basic_SEC'
 ]);
 export const activeArmItem=asset=>typeof asset==='string'&&asset.length>0&&!/(?:^|_)None$/i.test(asset);
 const rawJamo=new Set(RAW_314.jamoItems.map(item=>item.itemName));

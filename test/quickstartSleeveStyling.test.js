@@ -11,7 +11,7 @@ const tee='G_CompressionT_Crew_ShortSleeve_Basic_WHI',sleeve='GearArmSleeve_Half
 const loadouts=(shirt=tee,arm=sleeve)=>[{loadoutType:'PlayerOnField',loadoutElements:[el('InnerShirt',shirt),el('LeftArmWear',arm),el('RightArmWear',arm),el('OuterShirt','Gear_JerseyStyle_SleeveStandard')]},{loadoutType:'Base',loadoutElements:[el('InnerShirt',shirt)]}];
 
 test('Quickstart replaces only the tee with its exact sleeveless color, preserving sleeves, other gear and metadata',()=>{
-  for(const [source,target]of [['Basic_WHI','_White'],['Basic_BLA','_Black'],['Basic_PRI',''],['Basic_SEC','_Secondary'],['BasicJ_JER','_White']]){
+  for(const [source,target]of [['Basic_WHI','_White'],['Basic_BLA','_Black'],['Basic_PRI',''],['Basic_SEC','_Secondary']]){
     const outfits=loadouts('G_CompressionT_Crew_ShortSleeve_'+source);outfits.push(structuredClone(outfits[0]));const before=structuredClone(outfits);
     const edits=simplifyQuickstartSleeves(outfits,{usingUnlockedMod:false});assert.equal(edits.length,2);
     for(const i of [0,2]){assert.equal(outfits[i].loadoutElements[0].itemAssetName,'Gear_Undershirt_CompressionTCrewSleeveless'+target);assert.equal(outfits[i].loadoutElements[0].keep,'metadata');assert.deepEqual(outfits[i].loadoutElements.slice(1),before[i].loadoutElements.slice(1));assert.deepEqual(enforceEquipmentCompatibility(structuredClone(outfits[i].loadoutElements)),[]);}

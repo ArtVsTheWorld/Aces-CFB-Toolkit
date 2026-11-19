@@ -11,7 +11,6 @@ const sleeveless=new Map([
   ['G_CompressionT_Crew_ShortSleeve_Basic_BLA','Gear_Undershirt_CompressionTCrewSleeveless_Black'],
   ['G_CompressionT_Crew_ShortSleeve_Basic_PRI','Gear_Undershirt_CompressionTCrewSleeveless'],
   ['G_CompressionT_Crew_ShortSleeve_Basic_SEC','Gear_Undershirt_CompressionTCrewSleeveless_Secondary'],
-  ['G_CompressionT_Crew_ShortSleeve_BasicJ_JER','Gear_Undershirt_CompressionTCrewSleeveless_White']
 ]);
 
 // One stable preference per player, independent of run seed, outfit and filename.

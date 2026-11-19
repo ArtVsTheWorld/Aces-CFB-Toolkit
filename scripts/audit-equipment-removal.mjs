@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {EQUIPMENT_ITEMS,RAW_314} from '../src/main/tools/equipment/catalog.js';
+import {EQUIPMENT_ITEMS,RAW_314,RETIRED_EQUIPMENT_ITEMS} from '../src/main/tools/equipment/catalog.js';
 import {UNLOCKED_TATTOO_POOL} from '../src/main/tools/equipment/core/tattoos.js';
 import {REMOVAL_NAMED_ITEMS} from '../src/main/tools/equipment/core/removalInventory.js';
 import {removalCatalog} from '../src/main/tools/equipment/core/removal.js';
@@ -41,7 +41,8 @@ export function auditRemovalCatalog(){
   const rows=[...names.values()].map(row=>{
     const item=definitions.get(row.id.toLowerCase());
     let reason;
-    if(offered.has(row.id))reason='Offered';
+    if(RETIRED_EQUIPMENT_ITEMS.has(row.id))reason='Retired broken/unverified item';
+    else if(offered.has(row.id))reason='Offered';
     else if(/(?:^|_)None$/i.test(row.id)||['FaceGear_BalaclavaNone','waistband_none_v36','LegTattoo_TEST','GuardianCap_RawLongDreadlocksNone'].includes(row.id))reason='Empty/default choice';
     else if(item?.slots?.some(slot=>blocked.has(slot))||/^gearhelmet_/i.test(row.id))reason='Protected required equipment';
     else if(item?.slots?.some(slot=>nonOptional.has(slot))||/^(?:Gear_JerseyStyle_|GearPants_|Socks_)/i.test(row.id))reason='Category has no supported None option';

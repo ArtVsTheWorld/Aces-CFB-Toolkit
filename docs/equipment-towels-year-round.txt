@@ -1,0 +1,13 @@
+Equipment tools: year-round use and cutoff pants/towels
+
+Quickstart, Randomizer, Patcher and Mapper are available during every week and season stage, including the offseason. Their existing supported save types, save validation and RTG player protection still apply. Preseason remains a suggested time to run Quickstart/Randomizer. Roster Generator keeps its separate supported season window.
+
+Cutoff pants take priority over towels. Adding cutoff pants removes the towel from that on-field outfit, including CFB 27 towels, Unlocked String Towels and RAW towels. Wearing a towel no longer prevents selection for the cutoff pass. Running the cutoff pass also removes towels from selected, editable players already wearing cutoff pants. Other cutoff fit requirements and player protection settings still apply.
+
+Compatibility cleanup keeps otherwise-valid cutoff pants and clears the towel. New towel pool rolls cannot add a towel to cutoff pants. Ordinary pants continue to allow towels. The same shared equipment rules apply to Quickstart and Roster Generator equipment generation.
+
+Mapper reports the specific towel/cutoff conflict. Its default Review Fix removes the towel when adding cutoff pants; it does not change the pants merely to preserve a requested towel. Mapper's existing deliberate Skip/Apply Anyway choices remain available.
+
+Verification: 1,258 source tests pass; 45 focused tests pass in the normal Electron runtime. All four tools passed actual offseason save Prepare, Preview, Apply, backup and reopen checks. Patcher and Mapper removed all three towel families while keeping cutoff pants. Randomizer/Quickstart outputs contained no towel/cutoff conflicts. Preview did not write files, backups matched exactly, and the original fixture stayed unchanged. Normal Electron also passed native Patcher Preview/Apply/reopen. Game acceptance after advancing weeks has not been tested in-game.
+
+Source only; no version change, installer build or publication.

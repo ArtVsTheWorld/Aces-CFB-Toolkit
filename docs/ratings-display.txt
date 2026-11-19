@@ -1,0 +1,45 @@
+RATINGS DISPLAY
+
+Settings > Ratings Display > Show Ratings As is an app-wide preference. Numbers
+is the compatible default for new and existing settings. No save selection is
+required to change it. It is separate from tool configurations and presets.
+
+Source policy reviewed November 16, 2026:
+https://github.com/ArtVsTheWorld/BeyondTheField/blob/main/Source/EnhancementOptions.h
+https://github.com/ArtVsTheWorld/BeyondTheField/blob/main/Source/RecruitingGradePolicy.h
+
+Numbers: exact existing displays, preserving their requested decimal precision.
+Letters: A >=90, B >=80, C >=70, D >=60, F <60.
+Letters +/−: F below60. Each passing decade uses minus at0–2, plain at3–6,
+plus at7–9. A+ is97–100.
+S Tier: the Letters scale, with S at95+.
+Words: Elite >=90, Great >=80, Good >=70, Fair >=60, Poor <60.
+Hidden: en dash (–) for all ratings, including unknown values.
+Other protected modes use ? for an unavailable rating. Toolkit averages retain
+their containing band, rather than rounding a fractional average up a grade.
+Partially known ranges use the floored low and ceiled high endpoints, as BTF does.
+
+This only changes visible presentation. Source values, editing plans, preset
+configuration, numeric inputs, scope tests, donor selection/sorting, report CSVs,
+review snapshots and game saves keep exact numeric values. No ratings are written
+by changing this setting. Existing saved reviews use the CURRENT display setting.
+Switching modes does not clear reviewed plans or regenerate players.
+
+Covered surfaces include equipment and jersey previews, player selector labels,
+Roster Generator cards/tables/all-rating details, position/depth averages and
+tooltips, Configure Teams, Team Boost old/new values and room averages, team
+OVR/OFF/DEF badges, relevant summaries, and the corresponding saved reviews.
+Exact per-player Team Boost deltas become direction arrows in protected modes.
+Raw roster-talent/unit rating differences in Force Win details are withheld in
+protected modes. Betting projections, statistics, ages, shirt numbers, IDs,
+money, heights/weights and non-rating counters retain their original meaning.
+
+Deliberate scope: this does not import BTF dynasty preferences or scouting state,
+change the game's display, add grade colors, or conceal development traits and
+abilities. No guessed scouting uncertainty is invented from a known save rating.
+Reports can reveal exact values, as the user explicitly requested; Settings
+explains that. This is spoiler-friendly presentation, not a security boundary.
+
+Implementation: shared pure ratingsDisplay.cjs policy, renderer formatting at
+identified display sites, validated settings IPC and persisted preference. No
+formatting is performed in rating generation, save writing or report generation.

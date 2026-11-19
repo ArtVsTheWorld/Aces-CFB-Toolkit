@@ -195,7 +195,7 @@ export function generateRosterPreview({team,targets,model,seed=1,preset=BUILDING
   for(const player of players)for(const field of NIL_FIELDS)player.fields[field]=nilBudget.byRow.get(player.row);
   const equipment=equipmentGenerator?.(players,seed,team);
   if(equipment)for(const player of players){const generated=equipment.byRow.get(player.row);if(!generated)throw new Error('Generated equipment is missing a player.');player.rawData=generated.rawData;player.appearanceAudit.randomizer=generated.audit;}
-  const finishing=finishGeneratedRoster(players,team,seed),backstories=assignBackstories(players,model,seed);
+  const finishing=finishGeneratedRoster(players,team,seed,model.settings),backstories=assignBackstories(players,model,seed);
   for(const player of players)player.backstory=backstories.get(player.row);
   for(const player of players){validateProposedFields(player.fields);player.changes=Object.entries(player.fields).filter(([field,value])=>JSON.stringify(value)!==JSON.stringify(player.before[field])).map(([field,newValue])=>({field,oldValue:player.before[field],newValue}));}
   const oldAverage=mean(players.map(player=>player.before.OverallRating)),newAverage=mean(players.map(player=>player.fields.OverallRating)),targetAchieved=newAverage>=preset.minimumAverage&&newAverage<=preset.maximumAverage;
@@ -232,7 +232,8 @@ export function validateRosterPreview(preview,targets,model,equipmentGenerator=n
   const presentations=rosterPresentations(targets,preview.seed,reservedPresentationIds),byRow=new Map(targets.map(target=>[target.row,target])),names=new Set(),strata=createRosterStrata(targets,model,preview.seed),backstories=assignBackstories(preview.players,model,preview.seed);
   const replay=hasAthleticReferences(model)?new Map(solveFootballProfiles(targets,model,preview.seed,preview.preset).selected.map(item=>[item.target.row,item])):null;
   const expected=preview.players.map(player=>{const base=model.byId.get(player.provenance.football),source=replay?.get(player.row)?.profile??(base?athleticVariant(model,base,player.provenance.athleticProfile??'balanced'):null),target=byRow.get(player.row);if(!source||!target)throw new Error('Missing generation evidence.');return {row:player.row,position:player.position,fields:{...player.fields,...observedPlayerState(source,homePlan.byRow.get(player.row)?.home),LongSnapRating:source.ratings[RATING_FIELDS.indexOf('LongSnapRating')],RecruitingDealbreaker:originalDealbreaker(target)}};});
-  finishGeneratedRoster(expected,preview.team,preview.seed);
+  const finishing=finishGeneratedRoster(expected,preview.team,preview.seed,model.settings);
+  if(JSON.stringify(finishing.captains)!==JSON.stringify(preview.summary.finishing.captains))throw Error('Captain selections changed after generation.');
   // Family hometowns override only the seeded hometown of the two relatives.
   // All other health, eligibility, captain and finishing checks stay unchanged.
   const headHistory=createMixHeadHistory();

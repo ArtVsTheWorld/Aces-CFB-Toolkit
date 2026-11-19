@@ -25,9 +25,9 @@ test('equipment accepts the actual CFB bowl/championship stages, including absol
   // against a count of postseason weeks or invent a week-number cutoff.
   assert.doesNotThrow(() => validateEquipmentSeason({ CurrentWeekType:'BowlSeason1', CurrentWeek:17 }));
 });
-test('equipment continues rejecting offseason, unknown stages and invalid weeks', () => {
+test('equipment no longer uses season stages or week numbers as an availability gate', () => {
   for (const [type,week] of [['OffSeason',0],['Invalid',17],['PreSeason',1],['BowlSeason1',-1],['NationalChampionship',1.5],['PostSeason',5]]) {
-    assert.throws(() => validateEquipmentSeason({CurrentWeekType:type,CurrentWeek:week,PostSeasonNumWeeks:5}), /supported season window/);
+    assert.doesNotThrow(() => validateEquipmentSeason({CurrentWeekType:type,CurrentWeek:week,PostSeasonNumWeeks:5}));
   }
 });
 test('Clear Tattoos defaults off and conflicts with Add Tattoos in runner and core', () => {

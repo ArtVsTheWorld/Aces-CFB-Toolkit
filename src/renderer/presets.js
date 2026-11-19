@@ -8,7 +8,7 @@ function migrateOriginalEaProtectionSettings(values) {
 }
 function migrateRemovalSettings(values){
   const removal=document.getElementById('equipment-remove-items');
-  if(removal&&Array.isArray(values['equipment-remove-items'])){const allowed=new Set([...removal.options].map(option=>option.value));values['equipment-remove-items']=values['equipment-remove-items'].filter(id=>allowed.has(id));if(!values['equipment-remove-items'].length)values['fix-remove-equipment']=false;}
+  if(removal&&Array.isArray(values['equipment-remove-items'])){const retired=typeof MapperEditor==='undefined'?'':values['equipment-remove-items'].map(MapperEditor.retiredItemMessage).find(Boolean);if(retired&&typeof toast==='function')toast(retired);const allowed=new Set([...removal.options].map(option=>option.value));values['equipment-remove-items']=values['equipment-remove-items'].filter(id=>allowed.has(id));if(!values['equipment-remove-items'].length)values['fix-remove-equipment']=false;}
   return values;
 }
 function presetConfiguration() {

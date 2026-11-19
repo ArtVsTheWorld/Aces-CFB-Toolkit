@@ -1,0 +1,15 @@
+Retired Unlocked White Compression Tee
+
+Retired asset: G_CompressionT_Crew_ShortSleeve_BasicJ_JER
+
+In-game testing showed that this old entry is not a valid selectable undershirt. It has been removed from Mapper, category selections and Patcher removal choices, and is blocked from pool selections and donor copying. Historical inventory labels remain as reference evidence, with the retirement recorded by the catalog audit.
+
+These separate, supported items remain unchanged:
+- CFB 27 Equipment: White Compression Tee, G_CompressionT_Crew_ShortSleeve_Basic_WHI
+- Unlocked: Irish Jamo Sleeves White, G_CompressionT_Crew_ShortSleeve_BasicJ_WHI
+
+There is no automatic conversion between these three assets. A saved Mapper rule that actively references the retired asset shows a clear warning and requires the user to choose a supported item. Preview cannot apply the retired selection. Other saved filters, chances and settings stay intact. A stale Patcher removal preset drops the unavailable selection with an explanation and disables the removal pass if no selections remain.
+
+The retired asset no longer counts as a Compression Tee for sleeve restrictions or Quickstart's optional sleeve styling. Donors wearing it cannot introduce it to another player; the recipient's existing shirt is retained. Existing save data is not silently rewritten just because the entry was retired. No user saves were modified during this cleanup.
+
+The refreshed v26.0 portable also includes the equipment source labels and prior pending changes.

@@ -1,5 +1,6 @@
 import { EQUIPMENT_ITEMS, RAW_ACCESSORIES_POOLS, UNLOCKED_POOLS, EQUIPMENT_TRUCK_POOLS, canGenerateItem, equipmentDisplayName, equipmentItem, RAW_314, itemBrand } from "../catalog.js";
 import fs from "node:fs";
+import MapperEditor from "../../../../shared/mapperEditor.cjs";
 import PoolMigration from "../../../../shared/equipmentPoolMigration.cjs";
 import { MOD_FACE_PAINT_ITEMS, VANILLA_FACE_PAINT_OPTIONS } from "./facepaint.js";
 
@@ -87,6 +88,7 @@ export function normalizeModPools(value, defaultPercent = 10) {
       const chance = choice && Object.hasOwn(choice, "chance") ? choice.chance : category.defaultChance ?? defaultPercent;
       if (!Number.isInteger(chance) || chance < 0 || chance > 100) throw new Error(`${category.label}: use a whole percentage from 0 through 100.`);
       const items = choice && Object.hasOwn(choice, "items") ? choice.items : category.defaultItems;
+      if(Array.isArray(items)){const message=items.map(MapperEditor.retiredItemMessage).find(Boolean);if(message)throw Error(message);}
       if (!Array.isArray(items) || items.some(id => typeof id !== "string" || !category.items.some(item => item.itemName === id))) throw new Error(`${category.label}: choose only items in this mod's supported pool.`);
       const groups=choice?.rollGroups;
       if(groups!==undefined&&(!Array.isArray(groups)||groups.some(group=>!group||!Number.isInteger(group.chance)||group.chance<0||group.chance>100||!Array.isArray(group.items)||group.items.some(id=>!items.includes(id)))||new Set(groups.flatMap(g=>g.items)).size!==groups.flatMap(g=>g.items).length||items.some(id=>!groups.some(g=>g.items.includes(id)))))throw Error(`${category.label}: invalid saved item chances.`);

@@ -1,3 +1,4 @@
+import MapperEditor from '../../../shared/mapperEditor.cjs';
 import {createHash} from 'node:crypto';
 import {EQUIPMENT_ITEMS,equipmentItem,equipmentDisplayName,equipmentSemantics,itemBrand} from '../equipment/catalog.js';
 
@@ -7,6 +8,9 @@ export const mapperDigest=value=>createHash('sha256').update(JSON.stringify(cano
 const dependencySlots=slot=>slot==='HeadWear'?['FaceMask']:['WaistWear','LeftShoe','RightShoe'].includes(slot)?[`${slot}Override`]:[];
 export function resolveMapperSlot(element,evidence={}){
   if(typeof element?.slotType==='string'&&element.slotType)return element.slotType;
+  // Native and Unlocked ItemInfo both specify slot 135 (GuardianCap).
+  // Older merged catalog entries also listed Neckpad, preventing inference.
+  if(/^GuardianCap_(?:GuardianXT|None$)/.test(element?.itemAssetName??''))return 'GuardianCap';
   const known=equipmentItem(element?.itemAssetName)?.slots??[],observed=evidence[element?.itemAssetName]??[];
   if(known.length===1&&(!observed.length||observed.every(slot=>slot===known[0])))return known[0];
   if(!known.length&&observed.length===1)return observed[0];
@@ -50,7 +54,7 @@ export function mapperLibrary(players){
       if(typeof element?.itemAssetName!=='string'||!element.itemAssetName||!isGearElement(loadout,element))continue;
       const slot=resolveMapperSlot(element,evidence),normalized={...clone(element),...(slot?{slotType:slot}:{})},context=slot?mapperContext(elements,slot,evidence):{},onField=loadout.loadoutType==='PlayerOnField';
       const id=mapperDigest({element:normalized,context,...(!onField?{layer:loadout.loadoutType??loadout.loadoutCategory??'Other'}:{})}),known=equipmentItem(element.itemAssetName),semantic=equipmentSemantics(element.itemAssetName),duplicate=slot&&elements.filter(entry=>resolveMapperSlot(entry,evidence)===slot).length>1;
-      const copyable=Boolean(onField&&slot&&!duplicate),reason=!onField?'This gear belongs to a non-player equipment layer.':!slot?'The save does not identify an unambiguous slot for this item.':duplicate?'This equipment layer contains duplicate entries for the same slot.':null;
+      const retired=MapperEditor.retiredItemMessage(element.itemAssetName),copyable=Boolean(onField&&slot&&!duplicate&&!retired),reason=retired||(!onField?'This gear belongs to a non-player equipment layer.':!slot?'The save does not identify an unambiguous slot for this item.':duplicate?'This equipment layer contains duplicate entries for the same slot.':null);
       if(!entries.has(id))entries.set(id,{id,slot:slot??'Unresolved',asset:element.itemAssetName,name:mapperItemName(element.itemAssetName),category:mapperCategoryLabel(known?.category??slot??'Unresolved Gear'),brand:mapperBrandLabel(itemBrand(known)||'Universal / Unknown'),colors:semantic?.colors??[],side:/^(Left|Right)/.exec(slot??'')?.[1]??'Center',element:normalized,context,wearers:[],usage:0,known:Boolean(known),copyable,readOnlyReason:reason,locations:[]});
       const item=entries.get(id);item.usage++;if(!wearerSets.has(id))wearerSets.set(id,new Set());if(!wearerSets.get(id).has(player.row)){item.wearers.push(player.row);wearerSets.get(id).add(player.row);}item.copyable||=copyable;if(item.copyable)item.readOnlyReason=null;
       item.locations.push({row:player.row,loadout:loadoutIndex,layer:loadout.loadoutType??loadout.loadoutCategory??'Other',implicitSlot:!element.slotType});

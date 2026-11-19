@@ -23,7 +23,7 @@ test('supplemental named items remove only optional slots and do not become gene
   const parsed={loadouts:[{loadoutType:'PlayerOnField',loadoutElements:[{slotType:item.slots[0],itemAssetName:item.itemName},{slotType:'OuterShirt',itemAssetName:item.itemName},{slotType:'HeadWear',itemAssetName:item.itemName},{slotType:'HeadBand',itemAssetName:item.itemName},{slotType:'InnerShirt',itemAssetName:'KeepMe'}]}]};
   assert.equal(removeSelectedEquipment(parsed,[item.itemName]).length,1,item.itemName);assert.equal(parsed.loadouts[0].loadoutElements.length,4);
  }
- for(const id of ['G_Hoodie_Sleeveless_Ravens_ML_PUR','G_CompressionT_Crew_ShortSleeve_BasicJ_JER','FaceMarks_RawDiamondStudEarrings']){
+ for(const id of ['G_Hoodie_Sleeveless_Ravens_ML_PUR','FaceMarks_RawDiamondStudEarrings']){
   const parsed={loadouts:[{loadoutElements:[{itemAssetName:id}]}]};assert.equal(removeSelectedEquipment(parsed,[id]).length,0,'Unverified backing assets need an explicit optional saved slot');
   assert.ok(!EQUIPMENT_ITEMS.some(item=>item.itemName===id),'Removal does not add generation eligibility');
  }

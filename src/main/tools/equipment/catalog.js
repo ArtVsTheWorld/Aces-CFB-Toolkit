@@ -1,10 +1,11 @@
 import fs from "node:fs";
+import MapperEditor from "../../../shared/mapperEditor.cjs";
 import { fileURLToPath } from "node:url";
 import { UNLOCKED_TATTOO_POOL } from "./core/tattoos.js";
 import { GENERATION_METADATA, describeEquipment, uncataloguedEquipmentSemantics } from "./semantics.js";
 
 // Retired after an in-game report; do not offer or introduce this broken asset.
-export const RETIRED_EQUIPMENT_ITEMS = Object.freeze(new Set(['GearArmSleeve_Bands_armTape_normal_OffWhite']));
+export const RETIRED_EQUIPMENT_ITEMS = Object.freeze(new Set(Object.keys(MapperEditor.retiredEquipment)));
 
 const poolOwnership = JSON.parse(fs.readFileSync(new URL("./equipmentPoolOwnership.json", import.meta.url), "utf8"));
 const catalogPath = fileURLToPath(new URL("./equipmentCatalog.json", import.meta.url));
@@ -31,7 +32,7 @@ const modItems = Object.entries(modInventory.mods).flatMap(([origin, mod]) => (m
 const mergedItems = new Map([...catalog.items, ...modItems, ...colorInventory.items, ...sourcedInventory.items, ...liveFacemasks.items, ...raw204Inventory.items, ...mod191Inventory.items, ...unlocked097.items, ...unlockedLive210.items, ...equipmentTruck.items, ...offlineInventory.items, ...RAW_314.items, ...RAW_321.items].map(item => [item.itemName, item]));
 // Keep the published catalog order stable; only previously missing IDs append.
 for(const item of vanillaMenu.items)if(!mergedItems.has(item.itemName))mergedItems.set(item.itemName,item);
-export const EQUIPMENT_ITEMS = Object.freeze([...mergedItems.values()].map(item => {
+export const EQUIPMENT_ITEMS = Object.freeze([...mergedItems.values()].filter(item=>!RETIRED_EQUIPMENT_ITEMS.has(item.itemName)).map(item => {
   const resolved = { ...item, displayName: sourcedInventory.displayNames[item.itemName] ?? item.displayName, ...GENERATION_METADATA.itemOverrides[item.itemName] };
   if (unlocked097.cleatDisplayNames[item.itemName]) resolved.displayName = unlocked097.cleatDisplayNames[item.itemName];
   return Object.freeze({ ...resolved, semantic: describeEquipment(resolved) });
@@ -56,6 +57,7 @@ export const canGenerateItem = item => item?.semantic.poolEligible === true;
 
 export function equipmentDisplayName(itemName, options) {
   const value = String(itemName ?? "");
+  if(RETIRED_EQUIPMENT_ITEMS.has(value))return MapperEditor.retiredItemLabel(value);
   if (options?.usingRawAccessoriesMod && RAW_JAMO_BY_NAME.has(value)) return RAW_JAMO_BY_NAME.get(value).displayName;
   if(options?.usingUnlockedMod===true&&poolOwnership.vanillaItems[value]?.disabledWithUnlocked)return poolOwnership.vanillaItems[value].unlockedDisplayName;
   if(options?.usingUnlockedMod===false&&poolOwnership.vanillaItems[value])return poolOwnership.vanillaItems[value].displayName;
@@ -213,6 +215,7 @@ export function equipmentColorVariant(itemName, theme, options) {
   }
   if (rawStockOriginals.has(itemName)) return null;
   const value = String(itemName ?? "");
+  if(RETIRED_EQUIPMENT_ITEMS.has(value))return MapperEditor.retiredItemLabel(value);
   const explicit = EXPLICIT_COLOR_LOOKUP.get(value);
   if (explicit) return explicit.get(theme) ?? null;
   if (equipmentItem(value)?.displayOnly) return null;
@@ -246,6 +249,7 @@ for (const item of EQUIPMENT_ITEMS.filter(item => item.category === "Mouthpiece"
 
 export function recolorMouthpieceItem(itemName, theme) {
   const value = String(itemName ?? "");
+  if(RETIRED_EQUIPMENT_ITEMS.has(value))return MapperEditor.retiredItemLabel(value);
   const explicit = EXPLICIT_COLOR_LOOKUP.get(value);
   if (explicit) return explicit.get(theme) ?? value;
   const match = value.match(/^(.*_)([^_]+?)(\d*)$/);
@@ -261,6 +265,7 @@ export function recolorMouthpieceItem(itemName, theme) {
 
 export function isToolMouthpieceColor(itemName) {
   const value = String(itemName ?? "");
+  if(RETIRED_EQUIPMENT_ITEMS.has(value))return MapperEditor.retiredItemLabel(value);
   const item = BY_ITEM_NAME.get(value);
   if (!item || item.category !== "Mouthpiece") return false;
   if (item.themeColors) return item.themeColors.every(color => EQUIPMENT_COLOR_THEMES.includes(color));

@@ -1,0 +1,80 @@
+TEAMBUILDER EDITOR — FOUNDATION / RESEARCH STAGE
+
+Status
+The independent reader, typed editor and Preview/Apply foundation are implemented.
+They are intentionally not registered as a normal app tool until controlled game
+tests confirm container acceptance and field behavior. Existing app settings,
+saved presets, save picker, active dynasty and all other tools are unchanged.
+
+Modules
+src/main/tools/teambuilder/container.js: separate FBCHUNKS profile, bounded zlib,
+typed TDF round-trip, fixed reserved capacity, complete candidate reopen.
+src/main/tools/teambuilder/jsonPatch.js: exact scalar-token changes without
+rewriting unrelated JSON or rounding unknown numbers.
+src/main/tools/teambuilder/editor.js: allowlisted edits with synchronized verified
+header/TINF/TMDA copies. Existing unrelated discrepancies remain untouched.
+src/main/tools/teambuilder/runner.js: read-only Preview, reviewed-plan Apply,
+SHA-256 source checks, existing toolkit backup service, exclusive staged file,
+flush/reopen verification, atomic replacement and final disk verification.
+
+Supported research edits
+Team name, nickname, abbreviation (initially up to four UTF-8 bytes, the observed
+sample maximum), founding year, stored prestige (0–5 in half-star steps), observed
+My School template IDs (1, 2, 6, 7, 14), eleven grade min/max pairs (0–100), existing
+pipeline influences using observed values, existing rivalry win counts, and game/
+season/career record values. Only sacks allow half units. Structural validation
+does not establish game-supported limits; widen controls only after game checks.
+No arbitrary JSON editing, new pipeline/rival IDs, reordered maps or unverified
+record-position enums are exposed. Record-holder editing can follow later.
+
+Verified container layout
+Magic FBCHUNKS; version UInt16LE at 8 is 1; extra header size UInt32LE at 10 is
+17932; reserved compressed capacity UInt32LE at 14 repeats at 62. Bytes 18–61
+are zero in the verified profile. Payload begins at 17950 and zero padding fills
+the original capacity. Unknown nonzero integrity metadata is rejected, not guessed.
+Do not reuse the roster container offsets or its checksum routine.
+
+Verified header strings (offset / reserved bytes, including null terminator)
+264 / 64: compact team name
+328 / 64: internal asset name — preserved, never renamed
+392 / 64: display name
+456 / 64: nickname
+542 / 4096: pipelines JSON
+4638 / 8192: school records JSON
+12830 / 1024: top-player summary JSON — preserved, never merged with records
+13854 / 4096: rivalries JSON
+530 UInt32LE: founding year; 538 UInt32LE: My School template.
+Other header bytes are preserved. Overall/offense/defense header values are not
+prestige, and zero TMDA rating placeholders are not synchronized to real ratings.
+
+Important uncertainties
+Prestige, template and explicit school ranges are independent stored values.
+The game may choose one on import and recalculate some grades during dynasty.
+Coach prestige, coach stability and conference prestige have 0–0 ranges in all
+nine samples; do not label those as F grades or promise permanently locked values.
+Pipeline IDs/tier meanings, rivalry side conventions and grade-letter thresholds
+still need menu evidence. Existing Montana name differences are preserved on
+unrelated edits, not automatically reconciled.
+
+Sound editing is held until event/effect IDs have verified readable names. Empty
+sound event buckets, array order, timing floats and all sound data are preserved.
+All-time W–L, draft history, earned pride stickers and audio import remain separate
+research. Uniform recipes, PNG/DDS textures and internal asset IDs are untouched.
+
+Controlled tests
+Run scripts/teambuilder/create-controlled-tests.mjs with the original samples
+directory and a NEW output directory under outputs. It never writes the samples.
+Every case begins as its own exact copy of TEAMBUILDER-001. The actual Preview/
+Apply path edits that owned copy, verifies the exact original backup, then an
+independent expected-change comparison checks every header byte, typed map pair
+and unrelated TDF subtree. Delivery uses separate folders with the same original
+filename; never invent another slot ID. START-HERE.txt and per-case instructions
+explain new imports, existing-dynasty checks, reload and progression checks.
+
+Future app integration
+Keep the app's cards, clear labels and ordinary Preview/Back Up & Apply flow.
+Use a separate TeamBuilder context, not the Franchise dynasty parser or global
+active-dynasty state. Suggested sections: Identity, School Profile, Pipelines,
+Rivalries, School Records, Stadium Sounds. Show one setting once in human-facing
+Preview; retain detailed copy paths in verification reports. Explain school
+grades as starting values until tests establish which ones the game recalculates.

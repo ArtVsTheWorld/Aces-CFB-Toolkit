@@ -11,6 +11,8 @@ const renderer = fs.readFileSync(new URL("../src/renderer/renderer.js", import.m
 test("Randomizer gear details show readable, escaped before/after values in both Cards and Table", () => {
   const context = vm.createContext({ escapeHtml: value => String(value).replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]) });
   context.equipmentCorrectionTitle = value => value;
+  vm.runInContext(fs.readFileSync(new URL('../src/shared/ratingsDisplay.cjs',import.meta.url),'utf8'), context);
+  vm.runInContext(fs.readFileSync(new URL('../src/renderer/ratings-display.js',import.meta.url),'utf8'), context);
   const declaration = renderer.match(/function equipmentPlayerDetails\([\s\S]*?\n}/)[0];
   vm.runInContext(declaration, context);
   assert.match(context.equipmentPlayerDetails({changes:[]}, false), /No equipment slot changes/);
@@ -38,7 +40,7 @@ test("presentation deduplicates matching loadout changes without dropping distin
 });
 
 test("release versions, normal defaults, and professional control labels are consistent", () => {
-  assert.equal(JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url), "utf8")).version, "25.7.0");
+  assert.equal(JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url), "utf8")).version, "26.0.0");
   for (const id of ["freshman-equipment", "equipment-patcher"]) assert.equal(tools.find(tool => tool.id === id).version, undefined);
   for (const id of ["jersey-renumber", "automatic-force-win"]) assert.equal(tools.find(tool => tool.id === id).version, undefined);
   const randomizer = normalizeEquipmentOptions({}, true), patcher = normalizeEquipmentOptions({}, false);

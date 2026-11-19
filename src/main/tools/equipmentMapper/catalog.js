@@ -30,12 +30,21 @@ export function mapperCatalog(mods){
   const known=equipmentForSelectedMods(original,{usingUnlockedMod:mods.unlocked,usingRawAccessoriesMod:mods.raw});
   if(known.origin==='unverified'||!known.slots?.length)continue;
   const required=['unlocked','raw','eljax'].includes(known.origin)?known.origin:null;if(required&&!mods[required])continue;
-  const name=known.displayName??mapperItemName(known.itemName),category=mapperCategoryLabel(known.category),colors=equipmentSemantics(known.itemName)?.colors??[],brand=mapperBrandLabel(itemBrand(known)||'Universal'),variants=[];
-  for(const slot of [...new Set(known.slots)]){
+  const oldCategory=mapperCategoryLabel(known.category),cap=/^GuardianCap_(?:GuardianXT|None$)/.test(known.itemName);
+  const slots=cap?['GuardianCap']:[...new Set(known.slots)];
+  const category=cap?'Guardian Caps':/^GuardianCap_RawLongDreadlocks/.test(known.itemName)?'Dreadlocks':/^GuardianCap_Raw.*SkullCap/.test(known.itemName)?'Skullcaps':oldCategory;
+  const name=known.itemName==='GuardianCap_None'?'No Guardian Cap':known.displayName??mapperItemName(known.itemName),colors=equipmentSemantics(known.itemName)?.colors??[],brand=mapperBrandLabel(itemBrand(known)||'Universal'),variants=[];
+  for(const slot of slots){
    const id='catalog:'+slot+':'+known.itemName,element={slotType:slot,itemAssetName:known.itemName};variants.push(id);
-   items.push({id,slot,asset:known.itemName,name,category,brand,colors,side:/^(Left|Right)/.exec(slot)?.[1]??'Center',element,context:{},catalog:true,origin:required??'vanilla',wearers:[],usage:0,copyable:true,locations:[]});
+   items.push({id,slot,asset:known.itemName,name,category,brand,colors,side:/^(Left|Right)/.exec(slot)?.[1]??'Center',element,context:{},catalog:true,origin:required??'vanilla',wearers:[],usage:0,copyable:true,locations:[],...(category!==oldCategory?{legacyCategories:[{category:oldCategory,slot}]}:{})});
   }
-  groups.push({id:mapperDigest(known.itemName),asset:known.itemName,assets:[known.itemName],name,category,brand,colors,slots:[...new Set(known.slots)],variantIds:variants,wearers:[],usage:0,copyable:true});
+  // Keep persisted IDs resolvable, but never offer the old incorrect slot.
+  // Saved cap rules now target the verified GuardianCap slot.
+  if(cap)for(const oldSlot of known.slots.filter(slot=>slot!=='GuardianCap')){
+   const canonical=items.find(item=>item.id==='catalog:GuardianCap:'+known.itemName);
+   items.push({...canonical,id:'catalog:'+oldSlot+':'+known.itemName,legacy:true,legacyCategories:[{category:oldCategory,slot:oldSlot}]});
+  }
+  groups.push({id:mapperDigest(known.itemName),asset:known.itemName,assets:[known.itemName],name,category,brand,colors,slots,variantIds:variants,wearers:[],usage:0,copyable:true});
  }
  const compare=(a,b)=>a.category.localeCompare(b.category)||a.name.localeCompare(b.name)||a.asset.localeCompare(b.asset);
  return {items:items.sort(compare),groups:groups.sort(compare),resolution:{},issues:[],mods,catalog:true};

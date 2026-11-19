@@ -1,6 +1,6 @@
 import { POSITION_GROUPS, positionGroup } from "../../../../shared/positionGroups.js";
 import { selectFrequencyCandidates } from './frequency.js';
-import { ABOVE_KNEE_PANTS, CUTOFF_PANTS, STANDARD_PANTS, LOWER_JERSEY_REPLACEMENTS, CUTOFF_JERSEYS, cutoffPantsConflict, uniformItem } from "./uniformCompatibility.js";
+import { ABOVE_KNEE_PANTS, CUTOFF_PANTS, STANDARD_PANTS, LOWER_JERSEY_REPLACEMENTS, CUTOFF_JERSEYS, cutoffPantsConflict, uniformItem, removeCutoffTowels } from "./uniformCompatibility.js";
 import { enforceRelaxedTeeCompatibility } from "./compatibility.js";
 
 export const DEFAULT_LOWER_JERSEY_CAPS = Object.freeze(Object.fromEntries(POSITION_GROUPS.map(group => [group, ["OL", "DT"].includes(group) ? 0 : 100])));
@@ -79,7 +79,7 @@ export function buildUniformStylePlan(entries, options, rng) {
       const applicable = projected.filter(outfit => source(outfit) === ABOVE_KNEE_PANTS || options.replaceStandardWithCutoff && source(outfit) === STANDARD_PANTS);
       if (!applicable.length) continue;
       if (options.adjustOutfitForCutoff) for (const outfit of applicable) adjustCutoffOutfit(outfit.loadoutElements, options);
-      if (applicable.some(outfit => cutoffPantsConflict(outfit.loadoutElements,{allowLegLayers:options.allowCutoffLegLayers===true}))) { incompatible++; continue; }
+      if (applicable.some(outfit => cutoffPantsConflict(outfit.loadoutElements,{allowLegLayers:options.allowCutoffLegLayers===true,allowTowels:true}))) { incompatible++; continue; }
       (applicable.some(outfit => source(outfit) === STANDARD_PANTS) ? standards : candidates).push(entry);
     }
     if (options.cutoffPantsFix) {
@@ -93,6 +93,7 @@ export function buildUniformStylePlan(entries, options, rng) {
 export function applyUniformStylePlan(loadouts, originalOutfits, visualsRow, plan, options) {
   const changes = [];
   loadouts.forEach((outfit, index) => {
+    if(options.cutoffPantsFix)changes.push(...removeCutoffTowels(outfit.loadoutElements).map(change=>({...change,type:'cutoff-outfit'})));
     for (const element of outfit.loadoutElements) {
       const oldItem = element.itemAssetName;
       if (element.slotType === "OuterShirt" && plan.lower.has(visualsRow) && LOWER_JERSEY_REPLACEMENTS[oldItem]) {
@@ -110,9 +111,10 @@ export function applyUniformStylePlan(loadouts, originalOutfits, visualsRow, pla
       if (adjustments === null) return;
       changes.push(...adjustments);
     }
-    if (cutoffPantsConflict(outfit.loadoutElements,{allowLegLayers:options.allowCutoffLegLayers===true})) return;
+    if (cutoffPantsConflict(outfit.loadoutElements,{allowLegLayers:options.allowCutoffLegLayers===true,allowTowels:true})) return;
     const oldItem = element.itemAssetName; element.itemAssetName = CUTOFF_PANTS;
     changes.push({ type: "cutoff", slot: "OuterPants", oldItem, newItem: CUTOFF_PANTS, originalItem: original });
+    changes.push(...removeCutoffTowels(outfit.loadoutElements).map(change=>({...change,type:'cutoff-outfit'})));
   });
   return changes;
 }

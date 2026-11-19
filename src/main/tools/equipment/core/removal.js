@@ -15,6 +15,7 @@ const labels=new Map();
 for(const item of allItems){const names=labels.get(item.itemName)??new Set();names.add(item.displayName||equipmentDisplayName(item.itemName));names.add(equipmentDisplayName(item.itemName,{usingUnlockedMod:false}));labels.set(item.itemName,names);}
 export const removalCatalog=()=>[...catalog.values()].map(item=>({value:item.itemName,label:`${[item.displayName||equipmentDisplayName(item.itemName),...[...labels.get(item.itemName)].filter(name=>name!==item.displayName)].join(' / ')} · ${item.category||'Equipment'}`,searchAliases:REMOVAL_DISPLAY_ALIASES[item.itemName]??[],group:item.category==='Tattoos'?'Tattoo':item.category||'Equipment'})).sort((a,b)=>a.group.localeCompare(b.group)||a.label.localeCompare(b.label)||a.value.localeCompare(b.value));
 export function normalizeRemovalItems(items){
+  if(Array.isArray(items)){const message=items.map(MapperEditor.retiredItemMessage).find(Boolean);if(message)throw Error(message);}
   if(!Array.isArray(items)||items.some(item=>typeof item!=='string'||!catalog.has(item)))throw Error('Choose removable items with a supported None option. '+MapperEditor.removalRestriction);
   return [...new Set(items)];
 }

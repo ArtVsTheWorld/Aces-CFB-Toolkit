@@ -128,7 +128,7 @@ function runIssueMarkup(result){
 }
 function runDetailsMarkup(result){
   const d=result.details??{},issues=runIssues(result),overview=d.equipmentOverview;
-  const statistics=(result.summary??[]).map(item=>`<div><dt>${escapeHtml(item.label)}</dt><dd>${escapeHtml(item.value)}</dd></div>`).join('');
+  const statistics=(result.summary??[]).map(item=>`<div><dt>${escapeHtml(item.label)}</dt><dd>${escapeHtml(displayRatingSummary(item))}</dd></div>`).join('');
   return `<section class="run-detail-section"><h3>Run Summary</h3><dl class="run-statistics">${statistics}</dl>${originalEaProtectionSummary(result)}</section>
     ${overview?.byType?.length?`<details class="run-detail-section"><summary>Equipment Changes by Type</summary><table><thead><tr><th>Change</th><th>Players</th><th>Updates</th></tr></thead><tbody>${overview.byType.map(item=>`<tr><td>${escapeHtml(equipmentCorrectionTitle(item.type))}</td><td>${item.players.toLocaleString()}</td><td>${item.changes.toLocaleString()}</td></tr>`).join('')}</tbody></table></details>`:''}
     ${overview?.byTeam?.length?`<details class="run-detail-section"><summary>Players Changed by Team</summary><dl class="run-statistics">${overview.byTeam.map(item=>`<div><dt>${escapeHtml(item.team)}</dt><dd>${item.players.toLocaleString()}</dd></div>`).join('')}</dl></details>`:''}

@@ -1,4 +1,4 @@
-import { CUTOFF_PANTS, cutoffPantsConflict, uniformItem } from "./uniformCompatibility.js";
+import { CUTOFF_PANTS, cutoffPantsConflict, uniformItem, cutoffTowelConflict } from "./uniformCompatibility.js";
 import { canGenerateItem, equipmentItem, equipmentSemantics, equipmentDisplayName, equipmentTags } from "../catalog.js";
 import { armAccessoryRestrictions, sleeveUndershirtConflict, relaxedTeeNeckwearConflict, equippedMask, isMaskOrBalaclava, isHangingMouthpiece } from "./compatibility.js";
 
@@ -10,6 +10,7 @@ export function generatedItemConflict(elements, item, slots = item.slots, positi
   if (!canGenerateItem(item)) return "Item is not eligible for pool generation";
   const semantic = item.semantic;
   const proposed=elements.filter(element=>!slots.includes(element.slotType)).concat(slots.map(slotType=>({slotType,itemAssetName:item.itemName})));
+  if(slots.includes('Towel') && cutoffTowelConflict(proposed))return cutoffTowelConflict(proposed);
   if(slots.some(slot=>['FaceWear','NeckWear','Neckpad','MouthWear'].includes(slot))){
     const mask=equippedMask(proposed,options.usingUnlockedMod),mouth=get(proposed,'MouthWear');
     if(mask&&active(mouth)&&!isHangingMouthpiece(mouth))return 'Masks and balaclavas require a hanging mouthpiece or no mouthpiece';

@@ -1,0 +1,13 @@
+Mapper equipment source labels
+
+Every catalog item now identifies its equipment source: CFB 27 Equipment, Unlocked, RAW Accessories or GameDay Gear. The label uses the catalog's existing source metadata. It does not claim a visual difference, rename the equipment or change its asset ID.
+
+White Compression Tee shows CFB 27 Equipment; Irish Jamo Sleeves White shows Unlocked. The former Unlocked White Compression Tee entry was later retired after in-game testing showed that it was not a valid selectable item. It is not an alias for either supported item.
+
+Sources appear in Browse Equipment, Included Items lists, existing/replacement selections, paired selections, Only When Wearing, rule reviews, queued rules and new previews. Browse search also matches the readable source names. All-category selections list the sources actually included in that category.
+
+Rules, selected item IDs, settings and saved preset formats remain unchanged. New preview results include source summaries; older saved reviews without that metadata still open normally. A legacy item without verified source metadata is labelled Source not verified rather than guessed.
+
+Verified both duplicate-name selections, rule Save/reopen/Cancel, source search, category contents and light/dark narrow layouts in the normal Electron UI. A real save Preview retained the original selected IDs and displayed the correct sources without writing the save. All 1,268 source tests and 35 focused normal-runtime tests passed.
+
+Source remains v26.0. Included in the refreshed portable testing build alongside the invalid Unlocked tee retirement.

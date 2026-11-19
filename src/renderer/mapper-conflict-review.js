@@ -24,7 +24,7 @@ function openMapperConflictReview(preview,onSave){
     const group=groups[groupIndex],v=group.variants.find(v=>v.id===body.querySelector('[data-mcr-variant]')?.value)??group.variants[0],host=body.querySelector('[data-mcr-fix-details]');
     const usingFix=group.players.some(p=>action(group,p)==='fix');body.querySelector('[data-mcr-variant]').parentElement.hidden=!usingFix;
     if(!usingFix){host.innerHTML=decisions.groups[group.id]==='skip'?'<p>These players keep their original equipment.</p>':'<p class="mapper-fix-unavailable">These players keep your original mapping, including the known incompatibility.</p>';return;}
-    host.innerHTML=v.available?`<p>For players using Review Fix, keep your requested mapping and add these outfit adjustments:</p>${changesMarkup(v.changes)}`:`<div class="notice error"><strong>No Verified Fix</strong><p>${escapeHtml(v.reason)}</p></div>`;
+    host.innerHTML=v.available?`<p>For players using Review Fix, keep your requested mapping and add these outfit adjustments:</p><p class="muted">The same adjustment is shown once, even when it affects more than one outfit.</p>${changesMarkup(v.changes)}`:`<div class="notice error"><strong>No Verified Fix</strong><p>${escapeHtml(v.reason)}</p></div>`;
   };
   const renderRows=()=>{
     const group=groups[groupIndex],needle=query.trim().toLocaleLowerCase(),matches=group.players.filter(p=>(!team||p.team===team)&&(!needle||[p.player,p.team,localizedPosition(p.position)].join(' ').toLocaleLowerCase().includes(needle))),pages=Math.max(1,Math.ceil(matches.length/50));page=Math.min(page,pages-1);

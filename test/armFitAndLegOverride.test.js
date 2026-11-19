@@ -23,7 +23,7 @@ test('all Longsleeve Undershirt colors remove both sleeves and all wrist/elbow g
  for(const shirt of LONG_SLEEVE_UNDERSHIRTS)for(const sleeve of [quarter,SHORT_BLACK_TAPE_JAMO,full,'FutureUnknownSleeve']){const items=arms(sleeve,shirt);enforceEquipmentCompatibility(items);for(const side of ['Left','Right']){assert.equal(get(items,side+'ArmWear'),'ArmSleeve_None');assert.equal(get(items,side+'WristWear'),'GearWrist_None');assert.equal(get(items,side+'ElbowWear'),'ElbowGear_None');}assert.equal(get(items,'InnerShirt'),shirt);assert.deepEqual(enforceEquipmentCompatibility(items),[]);}
 });
 test('Compression Tee colors block exactly the five named sleeve families, retaining the shirt and permitted arm tape',()=>{
- assert.equal(COMPRESSION_TEES.size,5);assert.ok(COMPRESSION_TEE_BLOCKED_SLEEVES.size>=20);
+ assert.equal(COMPRESSION_TEES.size,4);assert.ok(COMPRESSION_TEE_BLOCKED_SLEEVES.size>=20);
  for(const shirt of COMPRESSION_TEES)for(const sleeve of COMPRESSION_TEE_BLOCKED_SLEEVES){const items=arms(sleeve,shirt);enforceEquipmentCompatibility(items);assert.equal(get(items,'LeftArmWear'),'ArmSleeve_None');assert.equal(get(items,'RightArmWear'),'ArmSleeve_None');assert.equal(get(items,'InnerShirt'),shirt);assert.equal(get(items,'LeftWristWear'),wrist);assert.equal(get(items,'LeftElbowWear'),elbow);}
  for(const shirt of COMPRESSION_TEES){const items=arms('GearArmSleeve_Undershirt_armTape_normal_TeamColor',shirt);assert.deepEqual(enforceEquipmentCompatibility(items),[]);}
  assert.ok(!COMPRESSION_TEES.has('G_CompressionT_Crew_ShortSleeve_BasicJ_WHI'));assert.ok(!COMPRESSION_TEES.has('G_CompressionT_Crew_ShortSleeve_99Club_B_WHI'));

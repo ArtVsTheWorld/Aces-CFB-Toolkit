@@ -22,7 +22,9 @@ function safeNeighbors(elements,locked,library,reason,options){
     const color=equipmentSemantics(get('InnerShirt'),options)?.colors?.[0]??'white',suffix=({black:'_Black',primary:'',secondary:'_Secondary',white:'_White'})[String(color).toLowerCase()]??'_White';
     put('InnerShirt',RELAXED_TEE_REPLACEMENTS[get('InnerShirt')]??'Gear_Undershirt_CompressionTCrewSleeveless'+suffix);
   };
-  if(/cutoff pants|leg base layer/i.test(reason)&&get('OuterPants')===CUTOFF_PANTS){
+  if(/Towels cannot be worn with cutoff pants/i.test(reason)&&get('OuterPants')===CUTOFF_PANTS){
+    clear('Towel');
+  }else if(/cutoff pants|leg base layer/i.test(reason)&&get('OuterPants')===CUTOFF_PANTS){
     put('OuterPants','GearPants_AboveKnee');
     if(cutoffPantsConflict(mapperElements(elements,resolution))){clear('InnerPants');if(empty(get('InnerShirt')))sleeveless();if(!CUTOFF_JERSEYS.has(get('OuterShirt')))put('OuterShirt','Gear_JerseyStyle_RolledLowest_Untucked');}
   }
@@ -88,6 +90,17 @@ export function proposeMapperFix(player,library){
   }
   return {available:true,newRawData:JSON.stringify(raw),edits:extras};
 }
+// Presentation identity ignores outfit positions and repeated edits. The exact
+// per-player/loadout edits remain in fixes and are the only data used to apply
+// a review choice. Different visible slots/items and unavailable fixes stay distinct.
+function visibleFixChanges(edits,options){
+  const changes=new Map();
+  for(const edit of edits){
+    const change={slot:edit.slot,before:edit.before?mapperItemName(edit.before.itemAssetName,options):'Not Equipped',after:edit.after?mapperItemName(edit.after.itemAssetName,options):'Not Equipped'};
+    changes.set(JSON.stringify([change.slot,change.before,change.after]),change);
+  }
+  return [...changes].sort(([a],[b])=>a<b?-1:a>b?1:0).map(([,change])=>change);
+}
 export function createMapperReviewSource(preview,library,progress=()=>{}){
   const groups=new Map(),variants=new Map(),fixes=new Map(),players=new Map(preview.changes.map(p=>[p.row,p])),options={usingUnlockedMod:library.mods?.unlocked===true,usingRawAccessoriesMod:library.mods?.raw===true};
   let completed=0;
@@ -96,7 +109,7 @@ export function createMapperReviewSource(preview,library,progress=()=>{}){
     const player=players.get(warning.row);if(!player)continue;
     const fix=proposeMapperFix(player,library),id=mapperDigest(['mapper-conflict',warning.reason]).slice(0,20);fixes.set(player.row,fix);
     if(!groups.has(id))groups.set(id,{id,reason:warning.reason,players:[],variants:[]});const group=groups.get(id);
-    const changes=(fix.edits??[]).map(e=>({loadout:e.loadout,slot:e.slot,before:e.before?mapperItemName(e.before.itemAssetName,options):'Not Equipped',after:e.after?mapperItemName(e.after.itemAssetName,options):'Not Equipped'})),variantId=mapperDigest([fix.available,changes,fix.reason]).slice(0,20);
+    const changes=visibleFixChanges(fix.edits??[],options),variantId=mapperDigest([fix.available,changes,fix.reason]).slice(0,20);
     let variant=variants.get(id+'|'+variantId);if(!variant){variant={id:variantId,available:fix.available,reason:fix.reason??'',changes,count:0};group.variants.push(variant);variants.set(id+'|'+variantId,variant);}variant.count++;
     group.players.push({row:player.row,player:player.player,team:player.team,position:player.position,variantId});
   }

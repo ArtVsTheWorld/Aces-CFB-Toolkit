@@ -16,15 +16,10 @@ export const VALID_POSITIONS = ["QB", "HB", "FB", "WR", "TE", "LT", "LG", "C", "
 export const VALID_CLASSES = ["Freshman", "Sophomore", "Junior", "Senior"];
 export const VALID_BODY_TYPES = ["Standard", "Lean", "Thin", "Muscular", "Heavy"];
 export const REDSHIRT_FILTERS = Object.freeze({ true: ["Eligible", "Current"], redshirt: ["Previous"] });
-// CurrentWeekType uses named bowl/playoff stages in CFB 27. Those stages can
-// carry absolute season weeks (e.g. BowlSeason1 at 17), not postseason indexes.
-export const EQUIPMENT_PLAYOFF_STAGES = new Set(["BowlSeason1", "BowlSeason2", "BowlSeason3", "NationalChampionship"]);
-export function validateEquipmentSeason(record, toolName = 'Equipment tools') {
+// Retain season metadata for displays; equipment editing has no week/stage gate.
+export function validateEquipmentSeason(record) {
   const type = String(sf(record, "CurrentWeekType") ?? ""), week = Number(sf(record, "CurrentWeek")), postWeeks = Number(sf(record, "PostSeasonNumWeeks"));
-  const validWeek = Number.isInteger(week) && week >= 0;
-  const allowed = validWeek && (type === "PreSeason" && week === 0 || type === "RegularSeason" && week <= 15 || EQUIPMENT_PLAYOFF_STAGES.has(type) || type === "PostSeason" && Number.isInteger(postWeeks) && week < postWeeks);
-  if (!allowed) throw new Error(`${toolName} ${toolName === 'Equipment tools' ? 'are' : 'is'} available from the preseason week immediately before Week 0 through National Championship week. This save is ${type || "an unknown season stage"}, week ${Number.isFinite(week) ? week : "unknown"}. Advance to the supported season window and try again.`);
-  return { currentWeekType: type, currentWeek: week, postSeasonWeeks: postWeeks };
+  return { currentWeekType: type, currentWeek: Number.isFinite(week)?week:null, postSeasonWeeks: Number.isFinite(postWeeks)?postWeeks:null };
 }
 // Settings pages do not use player ratings, abilities or history. Keep this
 // limited read separate from the full tables used by every Preview and Apply.

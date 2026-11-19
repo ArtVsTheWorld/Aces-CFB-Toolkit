@@ -1,0 +1,9 @@
+Mapper: targeted Review Fix
+
+Review Fix adjusts conflicts introduced by the queued equipment rules or their proposed repairs. It leaves unrelated equipment conflicts that were already present in the original outfit alone. The requested items remain locked, and Skip and Apply Anyway keep their existing behavior.
+
+Compatibility is compared using the participating equipment slots and asset names. For example, changing a relaxed tee to a sleeveless undershirt does not make an unchanged full sleeve and wrist tape into a new conflict. Adding a new full sleeve over wrist gear does introduce a conflict and still gets a warning. An old conflict on the left arm cannot hide a new one on the right arm, even when their explanations are identical.
+
+The checks reuse the shared equipment rules for sleeves, undershirts, neckwear, mouthpieces, equipment overlaps, and other supported pairings. Cutoff pants and helmet requirements are compared separately, including missing required items. Unresolved equipment without a verified slot stays untouched. No new settings or preset format changes.
+
+Read-only verification of a test dynasty: the same 6,679 matching players, 3,860 jersey changes and 1,535 jersey/relaxed-tee warnings. All 1,535 Review Fix proposals change only InnerShirt. Before this change, 47 players also lost wrist gear and 6 also lost elbow gear. Requested jerseys and every other slot remain exact. Nothing was applied to the user's save.

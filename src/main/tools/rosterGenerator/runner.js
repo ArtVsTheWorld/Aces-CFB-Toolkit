@@ -4,6 +4,8 @@ import {PLAYER_PICKER_FIELDS} from '../../services/settingsFields.js';
 import {progressRange,toolProgress} from '../../services/toolProgress.js';
 import path from 'node:path';
 import {planRosterDepthCharts,applyRosterDepthCharts,verifyRosterDepthCharts} from './depthCharts.js';
+import {ROSTER_CAPTAIN_COUNT} from './playerState.js';
+import {rosterCaptainStarterRows,finalizeRosterCaptains,planCaptainTeamCounts,applyCaptainTeamCounts,verifyCaptainTeamCounts} from './captainPlan.js';
 import {makeRosterEquipmentGenerator} from './equipment.js';
 import {randomBytes} from 'node:crypto';
 import {rosterGeneratorSeason} from './season.js';
@@ -12,7 +14,7 @@ import {POSITION_GROUPS,positionGroup} from '../../../shared/positionGroups.js';
 import {isDeepStrictEqual} from 'node:util';
 import {loadEquipmentTables,snapshotVisualRawData,VALID_POSITIONS} from '../equipment/shared.js';
 import {sf,parseRef} from '../equipment/openSave.js';
-import {isDirectionalFcsTeam,readTables,PLAYER_TABLE_UID} from '../../services/save.js';
+import {isDirectionalFcsTeam,readTables,PLAYER_TABLE_UID,TEAM_TABLE_UID} from '../../services/save.js';
 import {snapshotVisualsForVerification,saveEquipmentCandidate} from '../equipment/visualsSafety.js';
 import {createBackup} from '../../services/files.js';
 import {storePlan,takePlan,completePlan,saveFingerprint} from '../jersey/planStore.js';
@@ -56,7 +58,7 @@ function teamModelFactory(base,preset,settings){
 }
 function teamsWithRosters(loaded) {
   return loaded.teams.records.filter(team=>team&&!team.isEmpty&&!isDirectionalFcsTeam(team)&&parseRef(sf(team,'Roster'))?.tableId===loaded.rosters.header.tableId)
-    .map(team=>({record:team,name:String(sf(team,'DisplayName')??''),teamIndex:Number(sf(team,'TeamIndex')),branding:String(sf(team,'TeamApparel')??'').trim().toLowerCase(),captainCount:Number(sf(team,'DesiredTeamCaptains')??6)}))
+    .map(team=>({record:team,name:String(sf(team,'DisplayName')??''),teamIndex:Number(sf(team,'TeamIndex')),branding:String(sf(team,'TeamApparel')??'').trim().toLowerCase(),captainCount:ROSTER_CAPTAIN_COUNT}))
     .filter(team=>team.name&&Number.isSafeInteger(team.teamIndex)).sort((a,b)=>a.name.localeCompare(b.name));
 }
 function extractTargets(loaded,team,owners) {
@@ -157,7 +159,8 @@ export async function runRosterGenerator(context) {
   const statisticsReset=loaded.kind==='roster'?null:await planRosterStatisticsReset(loaded,rosters.flatMap(roster=>roster.players.map(player=>player.row)));
   if(statisticsReset)for(const roster of rosters){roster.summary.statisticsReset={mode:'season-and-career',players:roster.players.length};roster.generationNotes.push('Replaced players start with zero season and career statistics. Historical team records and awards are kept.');}
   const depthCharts=await planRosterDepthCharts(loaded,rosters);
-  for(const roster of rosters){const chart=depthCharts.find(chart=>chart.team===roster.team.name);roster.summary.depthChart=chart;(chart.status==='reordered'?roster.generationNotes:roster.warnings).push(`${roster.team.name}: ${chart.status==='reordered'?'':'Depth chart unchanged. '}${chart.reason}`);}
+  for(const roster of rosters){const chart=depthCharts.find(chart=>chart.team===roster.team.name);roster.summary.depthChart=chart;(chart.status==='reordered'?roster.generationNotes:roster.warnings).push(`${roster.team.name}: ${chart.status==='reordered'?'':'Depth chart unchanged. '}${chart.reason}`);finalizeRosterCaptains(roster,await rosterCaptainStarterRows(loaded,roster,chart));roster.generationNotes.push(roster.summary.finishing.captains.policy);}
+  const captainTeamCounts=planCaptainTeamCounts(loaded,rosters);
   const rosterCandidate=loaded.kind==='roster'&&!rosters.some(roster=>roster.blocking.length)?buildRosterGenerationCandidate(loaded,rosters):null;
   const rows=rosters.flatMap(roster=>roster.players.map(player=>previewRow(player,roster))),blocking=rosters.flatMap(roster=>roster.blocking.map(item=>({...item,team:roster.team.name}))),report=rosterGenerationReport(rosters,statisticsReset);
   if(rosterCandidate){report.headings.push('FileKind','PersistedFieldsJSON','RosterBeforeJSON','RosterAfterJSON','RosterVisualBeforeJSON','RosterVisualAfterJSON');const generated=rosters.flatMap(roster=>roster.players);report.rows=mapReportRows(report.rows,(row,index)=>{const player=generated[index],wire=rosterCandidate.changes.find(change=>change.playerId===player.rosterPlayerId);return [...row,'roster',JSON.stringify(player.persistedFields),JSON.stringify(wire.before),JSON.stringify(wire.after),JSON.stringify(wire.beforeVisual),JSON.stringify(wire.afterVisual)];});}
@@ -165,7 +168,7 @@ export async function runRosterGenerator(context) {
   const warnings=[...new Set(rosters.flatMap(roster=>roster.warnings.map(note=>note.startsWith(roster.team.name+':')?note:`${roster.team.name}: ${note}`)))];
   if(originalEaReplacements)warnings.unshift(`${originalEaReplacements} original EA roster players will be replaced in total.`);
   const result={resultKind:TOOL_ID,mode:'preview',status:'preview',savePath:loaded.savePath,backupPath:null,reportPath:context.reports.create({...report,toolId:TOOL_ID,toolName:TOOL_NAME}),summary:[{label:'Teams to regenerate',value:rosters.length},{label:'Players to replace',value:rows.length},{label:'Original EA roster players',value:originalEaReplacements},{label:'Apply blockers',value:blocking.length}],historySummary:[{label:'Players regenerated',value:rows.length}],details:{fileKind:loaded.kind??'dynasty',statisticsReset:statisticsReset?.summary??null,canApply:!blocking.length,preset,seed,blocking,warnings,teams:rosters.map(roster=>({team:roster.team.name,...roster.summary})),totalPreviewRows:rows.length,changes:rows.slice(0,1000)}};
-  const planId=storePlan({toolId:TOOL_ID,toolName:TOOL_NAME,savePath:loaded.savePath,saveFingerprint:fingerprint,previewRows:rows,report,result,rosters,presetId:preset.id,settings,configurations,depthCharts,statisticsReset});
+  const planId=storePlan({toolId:TOOL_ID,toolName:TOOL_NAME,savePath:loaded.savePath,saveFingerprint:fingerprint,previewRows:rows,report,result,rosters,presetId:preset.id,settings,configurations,depthCharts,statisticsReset,captainTeamCounts});
   return {...result,planId};
 }
 
@@ -176,6 +179,8 @@ async function applyRosterGenerator(context) {
   if(!plan.result.details.canApply)throw new Error('Resolve the appearance/roster blockers before Apply. No save was written.');
   if(saveFingerprint(context.savePath)!==plan.saveFingerprint)throw new Error('The save changed after Preview. Run Preview again.');
   const loaded=await loadGenerationSource(context.savePath,context.schemaPath),baseModel=loadObservedCatalog(),preset=rosterPreset(plan.presetId),owners=visualOwners(loaded),available=teamsWithRosters(loaded),assignments=[],reservedPresentationIds=allPresentationIds(loaded);
+  const captainCharts=await planRosterDepthCharts(loaded,plan.rosters);
+  if(!isDeepStrictEqual(planCaptainTeamCounts(loaded,plan.rosters),plan.captainTeamCounts))throw Error('Team captain settings changed after Preview.');
   await rosterGeneratorSeason(loaded);
   let equipmentGenerator=makeRosterEquipmentGenerator(loaded);
   for(const [teamProgressIndex,roster] of plan.rosters.entries()) {
@@ -185,6 +190,7 @@ async function applyRosterGenerator(context) {
     const currentContext=resolveSchemeContext(configuration.settings,await inspectTeamSchemes(loaded,team,context.schemaPath),schemeSchema(context.schemaPath),mulberry32(roster.seed^0x534348));
     if(!isDeepStrictEqual(currentContext,configuration.settings.schemeContext))throw new Error('Native scheme or roster requirements changed after Preview.');
     const targets=composeRosterTargets(originals,configuration.settings),model=teamModelFactory(baseModel,teamPreset,configuration.settings)(targets);if(!isDeepStrictEqual(roster.preset,teamPreset)||!isDeepStrictEqual(roster.summary.settings,configuration.settings))throw new Error('Team settings changed after Preview.');
+    if(!isDeepStrictEqual(await rosterCaptainStarterRows(loaded,roster,captainCharts.find(chart=>chart.team===roster.team.name)),roster.team.captainStarterRows))throw Error('Captain starter evidence changed after Preview.');
     progressRange(25+teamProgressIndex/plan.rosters.length*35,25+(teamProgressIndex+1)/plan.rosters.length*35,()=>validateRosterPreview(roster,targets,model,equipmentGenerator,reservedPresentationIds));
     for(const player of roster.players)reservedPresentationIds.add(player.fields.PresentationId);
     for(const player of roster.players) {
@@ -192,7 +198,7 @@ async function applyRosterGenerator(context) {
     }
     await new Promise(resolve=>setImmediate(resolve));
   }
-  const depthCharts=await planRosterDepthCharts(loaded,plan.rosters);if(!isDeepStrictEqual(depthCharts,plan.depthCharts))throw new Error('Depth-chart proposal changed after Preview. No save was written.');
+  const depthCharts=captainCharts;if(!isDeepStrictEqual(depthCharts,plan.depthCharts))throw new Error('Depth-chart proposal changed after Preview. No save was written.');
   equipmentGenerator=null;
   const statisticsReset=loaded.kind==='roster'?null:await planRosterStatisticsReset(loaded,plan.rosters.flatMap(roster=>roster.players.map(player=>player.row)));
   if(!isDeepStrictEqual(statisticsReset,plan.statisticsReset??null))throw new Error('Player statistics changed after Preview. No save was written.');
@@ -213,13 +219,15 @@ async function applyRosterGenerator(context) {
   }
   verifyProtectedPlayers(protectedPlayers,loaded.players);
   const depthGuards=applyRosterDepthCharts(loaded,depthCharts);
+  const captainTeamGuard=applyCaptainTeamCounts(loaded,plan.captainTeamCounts);
   const statisticsGuards=statisticsReset?applyRosterStatisticsReset(loaded,statisticsReset):new Map();
   // Materialize queued native strings before the candidate safety code hashes
   // all non-visual tables, just as it does for ordinary player assignments.
   loaded.players.updateBuffer?.();
   await saveEquipmentCandidate(loaded,context.schemaPath,before,assignments,plan.saveFingerprint,async opened=>{
     verifyRosterStatisticsReset(opened,statisticsGuards);
-    const {players}=await readTables(opened.franchise,{players:PLAYER_TABLE_UID},{players:ROSTER_GENERATION_PLAYER_FIELDS});
+    const {players,teams}=await readTables(opened.franchise,{players:PLAYER_TABLE_UID,teams:TEAM_TABLE_UID},{players:ROSTER_GENERATION_PLAYER_FIELDS});
+    verifyCaptainTeamCounts(teams,captainTeamGuard);
     await readGenerationPlayerStrings(players);
     for(const table of opened.franchise.tables.filter(t=>depthGuards.has(t.header.tableId)))await table.readRecords();verifyRosterDepthCharts(opened,depthGuards);
     verifyProtectedPlayers(protectedPlayers,players);
